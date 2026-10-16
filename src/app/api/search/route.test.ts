@@ -121,6 +121,9 @@ const mockCorpus = () => {
       category: { slug: 'general' },
     },
   ] as any);
+  prismaMock.forumComment.findMany.mockResolvedValue([]);
+  prismaMock.announcement.findMany.mockResolvedValue([]);
+  prismaMock.workPlace.findMany.mockResolvedValue([]);
 };
 
 describe('GET /api/search', () => {
@@ -234,5 +237,55 @@ describe('GET /api/search', () => {
     expect(response.status).toBe(200);
     expect(body.results.map((result) => result.type)).toEqual(['seccion', 'curso']);
     expect(console.error).toHaveBeenCalledWith('search: database lookup failed', expect.any(Error));
+  });
+
+  it('ignores accents and word order in database content, and finds replies, news and places', async () => {
+    mockCorpus();
+    prismaMock.forumPost.findMany.mockResolvedValue([
+      {
+        id: 'f9',
+        title: 'Programación funcional en la práctica',
+        content: 'Dudas',
+        author: { name: 'Fede' },
+        category: { slug: 'ayuda' },
+      },
+    ] as any);
+    prismaMock.forumComment.findMany.mockResolvedValue([
+      {
+        id: 'c1',
+        content: 'Probá programación reactiva',
+        author: { name: 'Gabi' },
+        post: { id: 'f9', title: 'Programación funcional en la práctica' },
+      },
+    ] as any);
+    prismaMock.announcement.findMany.mockResolvedValue([
+      { id: 'n1', title: 'Taller de programación', content: 'Inscribite', category: 'evento' },
+    ] as any);
+    prismaMock.workPlace.findMany.mockResolvedValue([
+      { id: 'w1', name: 'Café Programación', city: 'Córdoba', address: null, notes: 'Buen wifi' },
+    ] as any);
+
+    const { body } = await search('practica programacion');
+    expect(body.results).toContainEqual(
+      expect.objectContaining({ type: 'foro', href: '/foro/tema/f9' }),
+    );
+
+    const { body: replies } = await search('programacion');
+    expect(replies.results).toContainEqual(
+      expect.objectContaining({ type: 'foro', href: '/foro/tema/f9#comentario-c1' }),
+    );
+    expect(replies.results).toContainEqual(
+      expect.objectContaining({
+        type: 'anuncio',
+        title: 'Taller de programación',
+        href: '/anuncios',
+      }),
+    );
+    expect(replies.results).toContainEqual(
+      expect.objectContaining({ type: 'lugar', title: 'Café Programación', subtitle: 'Córdoba' }),
+    );
+    expect(prismaMock.announcement.findMany).toHaveBeenCalledWith(
+      expect.objectContaining({ where: { published: true } }),
+    );
   });
 });

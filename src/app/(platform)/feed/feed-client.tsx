@@ -34,6 +34,24 @@ const KINDS: Record<FeedKind, { label: string; tag: string; className: string }>
     tag: 'nuevo dev',
     className: 'border-violet-400/50 text-violet-300',
   },
+  foro: { label: 'foro', tag: 'foro', className: 'border-cyan-400/50 text-cyan-300' },
+  consejo: {
+    label: 'consejos',
+    tag: 'consejo',
+    className: 'border-emerald-400/50 text-emerald-300',
+  },
+  anuncio: { label: 'anuncios', tag: 'anuncio', className: 'border-orange-400/50 text-orange-300' },
+  testimonio: {
+    label: 'testimonios',
+    tag: 'testimonio',
+    className: 'border-yellow-300/50 text-yellow-200',
+  },
+  lugar: { label: 'lugares', tag: 'lugar', className: 'border-teal-400/50 text-teal-300' },
+  miembros: {
+    label: 'miembros',
+    tag: 'bienvenida',
+    className: 'border-indigo-400/50 text-indigo-300',
+  },
 };
 
 type Filter = 'todo' | FeedKind;

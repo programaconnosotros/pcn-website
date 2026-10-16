@@ -18,7 +18,10 @@ export type SearchResultType =
   | 'herramienta'
   | 'faq'
   | 'partner'
-  | 'changelog';
+  | 'changelog'
+  | 'anuncio'
+  | 'lugar'
+  | 'guia';
 
 export interface SearchResult {
   type: SearchResultType;
@@ -41,14 +44,17 @@ export const SEARCH_GROUPS: { type: SearchResultType; label: string }[] = [
   { type: 'conversacion', label: 'conversaciones' },
   { type: 'consejo', label: 'consejos' },
   { type: 'foro', label: 'foro' },
+  { type: 'anuncio', label: 'anuncios' },
   { type: 'historia', label: 'historia' },
   { type: 'charla', label: 'charlas' },
   { type: 'curso', label: 'cursos' },
   { type: 'video', label: 'videos' },
   { type: 'lectura', label: 'lectura' },
+  { type: 'guia', label: 'guías de entrevistas' },
   { type: 'especialidad', label: 'especialidades' },
   { type: 'herramienta', label: 'herramientas' },
   { type: 'setup', label: 'setups' },
+  { type: 'lugar', label: 'lugares' },
   { type: 'foto', label: 'galería' },
   { type: 'testimonio', label: 'testimonios' },
   { type: 'proyecto', label: 'proyectos' },

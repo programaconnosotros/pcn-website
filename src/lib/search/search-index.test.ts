@@ -68,6 +68,16 @@ describe('rankEntries', () => {
 });
 
 describe('getStaticIndex', () => {
+  it('indexes each section of the interview guides, linked to its anchor', () => {
+    const results = rankEntries(getStaticIndex(), 'closures');
+    expect(results).toContainEqual(
+      expect.objectContaining({
+        type: 'guia',
+        href: expect.stringMatching(/^\/entrevistas\/guias\/[a-z-]+#[a-z0-9-]+$/),
+      }),
+    );
+  });
+
   it('indexes sections, specialties, conversations and consejos', () => {
     const index = getStaticIndex();
     const types = new Set(index.map((entry) => entry.type));

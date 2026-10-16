@@ -11,6 +11,7 @@ import { softwareRecommendations } from '@/app/(platform)/herramientas/software'
 import { faqs } from '@/data/faqs';
 import { partners } from '@/data/partners';
 import { changelog } from '@/data/changelog';
+import { allGuideIds, getGuideMeta } from '@/app/(platform)/entrevistas/guias/guides';
 import type { SearchResult } from './types';
 
 /**
@@ -155,6 +156,25 @@ const buildContentIndex = (): IndexedEntry[] => [
       software.tags.join(' '),
     ),
   ),
+  // Each section of the interview guides, so "closures" or "system design" lands on the part that
+  // explains it.
+  ...allGuideIds.flatMap((id) => {
+    const meta = getGuideMeta(id);
+    if (!meta) return [];
+    return meta.guide.sections.map((section) =>
+      toEntry(
+        {
+          type: 'guia',
+          title: section.title,
+          subtitle: `guía de ${meta.label}`,
+          href: `/entrevistas/guias/${id}#${section.id}`,
+        },
+        meta.label,
+        meta.stack,
+        section.checklist.map((item) => item.text).join(' '),
+      ),
+    );
+  }),
   ...faqs.map((faq) =>
     toEntry({ type: 'faq', title: faq.question, href: '/preguntas-frecuentes' }, faq.answer),
   ),

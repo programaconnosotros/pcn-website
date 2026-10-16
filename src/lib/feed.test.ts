@@ -36,6 +36,12 @@ const emptySources = () => {
   prismaMock.galleryItem.findMany.mockResolvedValue([]);
   prismaMock.setup.findMany.mockResolvedValue([]);
   prismaMock.project.findMany.mockResolvedValue([]);
+  prismaMock.forumPost.findMany.mockResolvedValue([]);
+  prismaMock.advice.findMany.mockResolvedValue([]);
+  prismaMock.announcement.findMany.mockResolvedValue([]);
+  prismaMock.testimonial.findMany.mockResolvedValue([]);
+  prismaMock.workPlace.findMany.mockResolvedValue([]);
+  prismaMock.user.findMany.mockResolvedValue([]);
 };
 
 beforeEach(() => {
@@ -372,5 +378,80 @@ describe('fetchFeed', () => {
     );
     // 15 conversations + 15 changelog entries + 15 projects + 15 setups + 2 talks.
     expect(await fetchFeed()).toHaveLength(60);
+  });
+
+  it('lists forum threads, consejos, announcements, testimonials and places', async () => {
+    const day = at('2026-05-10T15:00:00Z');
+    prismaMock.forumPost.findMany.mockResolvedValue([
+      {
+        id: 'f1',
+        title: 'Monorepos',
+        createdAt: day,
+        author: { name: 'Ana' },
+        category: { name: 'Ayuda' },
+        _count: { comments: 2 },
+      },
+    ] as never);
+    prismaMock.advice.findMany.mockResolvedValue([
+      { id: 'a1', content: 'Leé el código de otros', createdAt: day, author: { name: 'Bruno' } },
+    ] as never);
+    prismaMock.announcement.findMany.mockResolvedValue([
+      { id: 'n1', title: 'Nuevo sponsor', content: 'Llegó', createdAt: day },
+    ] as never);
+    prismaMock.testimonial.findMany.mockResolvedValue([
+      { id: 't1', body: 'Conseguí trabajo', createdAt: day, user: { name: 'Caro' } },
+    ] as never);
+    prismaMock.workPlace.findMany.mockResolvedValue([
+      {
+        id: 'w1',
+        name: 'Café Martínez',
+        city: 'Córdoba',
+        createdAt: day,
+        author: { name: 'Dani' },
+      },
+    ] as never);
+
+    const feed = await fetchFeed();
+    const byKind = Object.fromEntries(feed.map((item) => [item.kind, item]));
+    expect(byKind.foro).toMatchObject({
+      title: 'Monorepos',
+      meta: 'Ana',
+      description: 'Tema nuevo en Ayuda · 2 respuestas',
+      href: '/foro/tema/f1',
+    });
+    expect(byKind.consejo).toMatchObject({ title: 'Leé el código de otros', href: '/consejos/a1' });
+    expect(byKind.anuncio).toMatchObject({ title: 'Nuevo sponsor', href: '/anuncios' });
+    expect(byKind.testimonio).toMatchObject({
+      title: 'Caro contó qué le dejó la comunidad',
+      href: '/testimonios/t1',
+    });
+    expect(byKind.lugar).toMatchObject({ title: 'Café Martínez, en Córdoba', href: '/lugares' });
+    expect(prismaMock.announcement.findMany).toHaveBeenCalledWith(
+      expect.objectContaining({ where: { published: true } }),
+    );
+  });
+
+  it('groups new members by day, naming a few', async () => {
+    prismaMock.user.findMany.mockResolvedValue([
+      { name: 'Ana Pérez', createdAt: at('2026-05-10T20:00:00Z') },
+      { name: 'Bruno Díaz', createdAt: at('2026-05-10T18:00:00Z') },
+      { name: 'Caro Gómez', createdAt: at('2026-05-10T17:00:00Z') },
+      { name: 'Dani Ruiz', createdAt: at('2026-05-10T16:00:00Z') },
+      { name: 'Eva Sosa', createdAt: at('2026-05-08T16:00:00Z') },
+    ] as never);
+
+    const members = (await fetchFeed()).filter((item) => item.kind === 'miembros');
+    expect(members.map(({ day, title, description }) => ({ day, title, description }))).toEqual([
+      {
+        day: '2026-05-10',
+        title: '4 personas se sumaron a la comunidad',
+        description: 'Ana, Bruno, Caro y 1 más. ¡Denles la bienvenida!',
+      },
+      {
+        day: '2026-05-08',
+        title: 'Eva se sumó a la comunidad',
+        description: '¡Dale la bienvenida!',
+      },
+    ]);
   });
 });

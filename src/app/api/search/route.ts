@@ -4,6 +4,7 @@ import { cached } from '@/lib/cache';
 import {
   buildRecommendationEntries,
   getStaticIndex,
+  normalizeSearchText,
   rankEntries,
   toEntry,
   type IndexedEntry,
@@ -22,77 +23,123 @@ const DB_CANDIDATES = 20;
 const loadSearchCorpus = cached(
   'search-corpus',
   async () => {
-    const [events, talks, advice, projects, users, setups, photos, testimonials, forumPosts] =
-      await Promise.all([
-        prisma.event.findMany({
-          where: { deletedAt: null },
-          orderBy: { date: 'desc' },
-          select: {
-            id: true,
-            name: true,
-            description: true,
-            date: true,
-            placeName: true,
-            city: true,
-            isOnline: true,
-          },
-        }),
-        prisma.talk.findMany({
-          select: { title: true, description: true, speakers: { select: { speakerName: true } } },
-        }),
-        prisma.advice.findMany({
-          orderBy: { createdAt: 'desc' },
-          select: { id: true, content: true, author: { select: { name: true } } },
-        }),
-        prisma.project.findMany({
-          select: { title: true, description: true, techStack: true, url: true },
-        }),
-        // Only what a public profile shows: never emails or phones. Suspended accounts stay out.
-        prisma.user.findMany({
-          where: ACTIVE_USER,
-          orderBy: { createdAt: 'asc' },
-          select: {
-            id: true,
-            name: true,
-            jobTitle: true,
-            enterprise: true,
-            slogan: true,
-            career: true,
-            studyPlace: true,
-          },
-        }),
-        prisma.setup.findMany({
-          orderBy: { date: 'desc' },
-          select: { id: true, title: true, description: true, author: { select: { name: true } } },
-        }),
-        // Untitled photos would only add noise: just the ones with a description.
-        prisma.galleryItem.findMany({
-          where: { ...visibleGalleryItem, description: { not: null } },
-          orderBy: { takenAt: 'desc' },
-          select: {
-            id: true,
-            description: true,
-            takenAt: true,
-            event: { select: { name: true } },
-            tags: { select: { user: { select: { name: true } } } },
-          },
-        }),
-        prisma.testimonial.findMany({
-          orderBy: { createdAt: 'desc' },
-          select: { id: true, body: true, user: { select: { name: true } } },
-        }),
-        prisma.forumPost.findMany({
-          orderBy: { activeAt: 'desc' },
-          select: {
-            id: true,
-            title: true,
-            content: true,
-            author: { select: { name: true } },
-            category: { select: { slug: true } },
-          },
-        }),
-      ]);
-    return { events, talks, advice, projects, users, setups, photos, testimonials, forumPosts };
+    const [
+      events,
+      talks,
+      advice,
+      projects,
+      users,
+      setups,
+      photos,
+      testimonials,
+      forumPosts,
+      forumComments,
+      announcements,
+      workPlaces,
+    ] = await Promise.all([
+      prisma.event.findMany({
+        where: { deletedAt: null },
+        orderBy: { date: 'desc' },
+        select: {
+          id: true,
+          name: true,
+          description: true,
+          date: true,
+          placeName: true,
+          city: true,
+          isOnline: true,
+        },
+      }),
+      prisma.talk.findMany({
+        select: { title: true, description: true, speakers: { select: { speakerName: true } } },
+      }),
+      prisma.advice.findMany({
+        orderBy: { createdAt: 'desc' },
+        select: { id: true, content: true, author: { select: { name: true } } },
+      }),
+      prisma.project.findMany({
+        select: { title: true, description: true, techStack: true, url: true },
+      }),
+      // Only what a public profile shows: never emails or phones. Suspended accounts stay out.
+      prisma.user.findMany({
+        where: ACTIVE_USER,
+        orderBy: { createdAt: 'asc' },
+        select: {
+          id: true,
+          name: true,
+          jobTitle: true,
+          enterprise: true,
+          slogan: true,
+          career: true,
+          studyPlace: true,
+        },
+      }),
+      prisma.setup.findMany({
+        orderBy: { date: 'desc' },
+        select: { id: true, title: true, description: true, author: { select: { name: true } } },
+      }),
+      // Untitled photos would only add noise: just the ones with a description.
+      prisma.galleryItem.findMany({
+        where: { ...visibleGalleryItem, description: { not: null } },
+        orderBy: { takenAt: 'desc' },
+        select: {
+          id: true,
+          description: true,
+          takenAt: true,
+          event: { select: { name: true } },
+          tags: { select: { user: { select: { name: true } } } },
+        },
+      }),
+      prisma.testimonial.findMany({
+        where: { user: ACTIVE_USER },
+        orderBy: { createdAt: 'desc' },
+        select: { id: true, body: true, user: { select: { name: true } } },
+      }),
+      prisma.forumPost.findMany({
+        orderBy: { activeAt: 'desc' },
+        select: {
+          id: true,
+          title: true,
+          content: true,
+          author: { select: { name: true } },
+          category: { select: { slug: true } },
+        },
+      }),
+      // Replies too: the answer someone is looking for is often in one.
+      prisma.forumComment.findMany({
+        orderBy: { createdAt: 'desc' },
+        take: 2000,
+        select: {
+          id: true,
+          content: true,
+          author: { select: { name: true } },
+          post: { select: { id: true, title: true } },
+        },
+      }),
+      prisma.announcement.findMany({
+        where: { published: true },
+        orderBy: { createdAt: 'desc' },
+        select: { id: true, title: true, content: true, category: true },
+      }),
+      prisma.workPlace.findMany({
+        orderBy: { createdAt: 'desc' },
+        select: { id: true, name: true, city: true, address: true, notes: true },
+      }),
+    ]);
+    return {
+      events,
+      talks,
+      advice,
+      projects,
+      users,
+      setups,
+      photos,
+      testimonials,
+      forumPosts,
+      forumComments,
+      announcements,
+      workPlaces,
+    };
   },
   {
     models: [
@@ -107,6 +154,9 @@ const loadSearchCorpus = cached(
       'GalleryItemTag',
       'Testimonial',
       'ForumPost',
+      'ForumComment',
+      'Announcement',
+      'WorkPlace',
     ],
   },
 );
@@ -125,9 +175,13 @@ const clip = (text: string, max = 90) =>
   text.length > max ? `${text.slice(0, max - 1).trimEnd()}…` : text;
 
 const loadDatabaseEntries = async (query: string) => {
-  const needle = query.toLocaleLowerCase('es');
-  const contains = (...texts: (string | null | undefined)[]) =>
-    texts.some((text) => text?.toLocaleLowerCase('es').includes(needle));
+  // The same matching as the ranking (rankEntries): every word, at the start of a word, ignoring
+  // accents and case, so "programacion" finds "Programación" and word order doesn't matter.
+  const words = normalizeSearchText(query).split(' ').filter(Boolean);
+  const contains = (...texts: (string | null | undefined)[]) => {
+    const text = normalizeSearchText(texts.filter(Boolean).join(' '));
+    return words.every((word) => text.includes(` ${word}`));
+  };
   const corpus = await loadSearchCorpus();
   const events = corpus.events
     .filter((event) => contains(event.name, event.description))
@@ -165,6 +219,15 @@ const loadDatabaseEntries = async (query: string) => {
     .slice(0, DB_CANDIDATES);
   const forumPosts = corpus.forumPosts
     .filter((post) => contains(post.title, post.content, post.author.name))
+    .slice(0, DB_CANDIDATES);
+  const forumComments = corpus.forumComments
+    .filter((comment) => contains(comment.content, comment.author.name))
+    .slice(0, DB_CANDIDATES);
+  const announcements = corpus.announcements
+    .filter((announcement) => contains(announcement.title, announcement.content))
+    .slice(0, DB_CANDIDATES);
+  const workPlaces = corpus.workPlaces
+    .filter((place) => contains(place.name, place.city, place.address, place.notes))
     .slice(0, DB_CANDIDATES);
   const testimonials = corpus.testimonials
     .filter((testimonial) => contains(testimonial.body, testimonial.user.name))
@@ -259,6 +322,39 @@ const loadDatabaseEntries = async (query: string) => {
           href: `/foro/tema/${post.id}`,
         },
         post.content,
+      ),
+    ),
+    ...forumComments.map((comment) =>
+      toEntry(
+        {
+          type: 'foro',
+          title: clip(comment.content),
+          subtitle: `respuesta en "${clip(comment.post.title, 50)}" · ${comment.author.name}`,
+          href: `/foro/tema/${comment.post.id}#comentario-${comment.id}`,
+        },
+        comment.content,
+      ),
+    ),
+    ...announcements.map((announcement) =>
+      toEntry(
+        {
+          type: 'anuncio',
+          title: announcement.title,
+          subtitle: announcement.category,
+          href: '/anuncios',
+        },
+        announcement.content,
+      ),
+    ),
+    ...workPlaces.map((place) =>
+      toEntry(
+        {
+          type: 'lugar',
+          title: place.name,
+          subtitle: [place.city, place.address].filter(Boolean).join(' · '),
+          href: `/lugares?q=${encodeURIComponent(place.name)}`,
+        },
+        place.notes,
       ),
     ),
     ...testimonials.map((testimonial) =>

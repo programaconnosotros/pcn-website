@@ -10,6 +10,8 @@ import { getEventNames } from '@/lib/event-index';
 import { getCollaborationStats } from '@/lib/github-stats';
 import { getIdentityMap } from '@/lib/identity-links';
 import { pullSummary } from '@/lib/pull-kinds';
+import { ACTIVE_USER } from '@/lib/active-user';
+import { excerpt } from '@/actions/notifications/excerpt';
 
 export type FeedKind =
   | 'evento'
@@ -19,7 +21,13 @@ export type FeedKind =
   | 'proyecto'
   | 'conversacion'
   | 'changelog'
-  | 'desarrollo';
+  | 'desarrollo'
+  | 'foro'
+  | 'consejo'
+  | 'anuncio'
+  | 'testimonio'
+  | 'lugar'
+  | 'miembros';
 
 export interface FeedItem {
   id: string;
@@ -264,6 +272,147 @@ const firstContributionItems = async (): Promise<FeedItem[]> => {
   });
 };
 
+const forumItems = async (): Promise<FeedItem[]> => {
+  const posts = await prisma.forumPost.findMany({
+    orderBy: { createdAt: 'desc' },
+    take: PER_SOURCE,
+    select: {
+      id: true,
+      title: true,
+      createdAt: true,
+      author: { select: { name: true } },
+      category: { select: { name: true } },
+      _count: { select: { comments: true } },
+    },
+  });
+  return posts.map((post) => ({
+    id: `foro-${post.id}`,
+    kind: 'foro',
+    day: toFeedDay(post.createdAt),
+    sortKey: post.createdAt.toISOString(),
+    title: post.title,
+    meta: post.author.name,
+    description: `Tema nuevo en ${post.category.name}${
+      post._count.comments > 0
+        ? ` · ${post._count.comments} ${post._count.comments === 1 ? 'respuesta' : 'respuestas'}`
+        : '. Sumá tu respuesta.'
+    }`,
+    href: `/foro/tema/${post.id}`,
+  }));
+};
+
+const adviceItems = async (): Promise<FeedItem[]> => {
+  const advice = await prisma.advice.findMany({
+    orderBy: { createdAt: 'desc' },
+    take: PER_SOURCE,
+    select: { id: true, content: true, createdAt: true, author: { select: { name: true } } },
+  });
+  return advice.map((item) => ({
+    id: `consejo-${item.id}`,
+    kind: 'consejo',
+    day: toFeedDay(item.createdAt),
+    sortKey: item.createdAt.toISOString(),
+    title: excerpt(item.content, 90),
+    meta: item.author.name,
+    href: `/consejos/${item.id}`,
+  }));
+};
+
+const announcementItems = async (): Promise<FeedItem[]> => {
+  const announcements = await prisma.announcement.findMany({
+    where: { published: true },
+    orderBy: { createdAt: 'desc' },
+    take: PER_SOURCE,
+    select: { id: true, title: true, content: true, createdAt: true },
+  });
+  return announcements.map((announcement) => ({
+    id: `anuncio-${announcement.id}`,
+    kind: 'anuncio',
+    day: toFeedDay(announcement.createdAt),
+    sortKey: announcement.createdAt.toISOString(),
+    title: announcement.title,
+    description: excerpt(announcement.content, 160),
+    href: '/anuncios',
+  }));
+};
+
+const testimonialItems = async (): Promise<FeedItem[]> => {
+  const testimonials = await prisma.testimonial.findMany({
+    where: { user: ACTIVE_USER },
+    orderBy: { createdAt: 'desc' },
+    take: PER_SOURCE,
+    select: { id: true, body: true, createdAt: true, user: { select: { name: true } } },
+  });
+  return testimonials.map((testimonial) => ({
+    id: `testimonio-${testimonial.id}`,
+    kind: 'testimonio',
+    day: toFeedDay(testimonial.createdAt),
+    sortKey: testimonial.createdAt.toISOString(),
+    title: `${testimonial.user.name} contó qué le dejó la comunidad`,
+    description: excerpt(testimonial.body, 160),
+    href: `/testimonios/${testimonial.id}`,
+  }));
+};
+
+const workPlaceItems = async (): Promise<FeedItem[]> => {
+  const places = await prisma.workPlace.findMany({
+    orderBy: { createdAt: 'desc' },
+    take: PER_SOURCE,
+    select: {
+      id: true,
+      name: true,
+      city: true,
+      createdAt: true,
+      author: { select: { name: true } },
+    },
+  });
+  return places.map((place) => ({
+    id: `lugar-${place.id}`,
+    kind: 'lugar',
+    day: toFeedDay(place.createdAt),
+    sortKey: place.createdAt.toISOString(),
+    title: `${place.name}, en ${place.city}`,
+    meta: place.author.name,
+    description: 'Un lugar nuevo para ir a laburar.',
+    href: '/lugares',
+  }));
+};
+
+/** New members, one entry per day: who joins is news, a row per person would flood the feed. */
+const memberItems = async (): Promise<FeedItem[]> => {
+  const users = await prisma.user.findMany({
+    where: { ...ACTIVE_USER, emailVerified: true },
+    orderBy: { createdAt: 'desc' },
+    take: 60,
+    select: { name: true, createdAt: true },
+  });
+  const byDay = new Map<string, typeof users>();
+  for (const user of users) {
+    const day = toFeedDay(user.createdAt);
+    byDay.set(day, [...(byDay.get(day) ?? []), user]);
+  }
+  return [...byDay.entries()].slice(0, PER_SOURCE).map(([day, joined]) => {
+    const names = joined.map((user) => user.name.split(' ')[0]);
+    const shown = names.slice(0, 3).join(', ');
+    const rest = names.length - 3;
+    return {
+      id: `miembros-${day}`,
+      kind: 'miembros' as const,
+      day,
+      sortKey: joined[0].createdAt.toISOString(),
+      title:
+        joined.length === 1
+          ? `${names[0]} se sumó a la comunidad`
+          : `${joined.length} personas se sumaron a la comunidad`,
+      description:
+        joined.length === 1
+          ? '¡Dale la bienvenida!'
+          : `${shown}${rest > 0 ? ` y ${rest} más` : ''}. ¡Denles la bienvenida!`,
+      href: '/miembros',
+    };
+  });
+};
+
 const buildFeed = cached(
   'feed',
   async (): Promise<FeedItem[]> => {
@@ -276,6 +425,12 @@ const buildFeed = cached(
       conversationItems(),
       changelogItems(),
       firstContributionItems(),
+      forumItems(),
+      adviceItems(),
+      announcementItems(),
+      testimonialItems(),
+      workPlaceItems(),
+      memberItems(),
     ]);
     return sources
       .flat()
@@ -292,6 +447,13 @@ const buildFeed = cached(
       'Setup',
       'Project',
       'IdentityLink',
+      'ForumPost',
+      'ForumCategory',
+      'ForumComment',
+      'Advice',
+      'Announcement',
+      'Testimonial',
+      'WorkPlace',
     ],
   },
 );
