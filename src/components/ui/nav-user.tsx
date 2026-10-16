@@ -3,8 +3,7 @@
 import { ChevronsUpDown, IdCard, Keyboard, LogIn, LogOut, UserPen, UserPlus } from 'lucide-react';
 import { openShortcutsDialog } from '@/components/shortcuts/shortcuts-dialog';
 
-import { signOut } from '@/actions/auth/sign-out';
-import { notifyOsSessionChange } from '@/components/os/os-env';
+import { signOutAndGo } from '@/components/auth/sign-out-and-go';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import {
@@ -25,7 +24,6 @@ import {
 import type { SessionUser } from '@/lib/session';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 
 const initials = (name: string) =>
@@ -35,10 +33,6 @@ const initials = (name: string) =>
     .slice(0, 2)
     .map((part) => part[0]?.toUpperCase())
     .join('');
-
-// signOut redirects, so its promise settles (rejecting with the redirect) once the session is
-// gone: only then can a PCN OS window tell the desktop to reload who it shows.
-const signOutAndNotifyOs = () => signOut().finally(notifyOsSessionChange);
 
 export function NavUser({
   user,
@@ -191,13 +185,7 @@ export function NavUser({
 
               <DropdownMenuItem
                 className="flex cursor-pointer flex-row gap-2"
-                onClick={() =>
-                  toast.promise(signOutAndNotifyOs(), {
-                    loading: 'Cerrando sesión...',
-                    success: 'Sesión cerrada correctamente',
-                    error: 'Error al cerrar sesión',
-                  })
-                }
+                onClick={() => signOutAndGo(router)}
               >
                 <LogOut size={16} />
                 Cerrar sesión

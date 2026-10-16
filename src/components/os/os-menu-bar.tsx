@@ -3,8 +3,8 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { IdCard, LogOut, Search, UserPen } from 'lucide-react';
-import { toast } from 'sonner';
-import { signOut } from '@/actions/auth/sign-out';
+import { useRouter } from 'next/navigation';
+import { signOutAndGo } from '@/components/auth/sign-out-and-go';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { secondaryItems, socialNetworks } from '@/components/ui/app-sidebar';
 import {
@@ -98,6 +98,7 @@ export function OsMenuBar({
   onOpenPath,
   onOpenLauncher,
 }: OsMenuBarProps) {
+  const router = useRouter();
   const shortcutLabel = useSearchShortcutLabel();
   const displayMode = useDisplayMode();
 
@@ -228,16 +229,7 @@ export function OsMenuBar({
               >
                 <UserPen className="size-4" /> Editar perfil
               </DropdownMenuItem>
-              <DropdownMenuItem
-                className="gap-2"
-                onSelect={() =>
-                  toast.promise(signOut(), {
-                    loading: 'Cerrando sesión...',
-                    success: 'Sesión cerrada correctamente',
-                    error: 'Error al cerrar sesión',
-                  })
-                }
-              >
+              <DropdownMenuItem className="gap-2" onSelect={() => signOutAndGo(router)}>
                 <LogOut className="size-4" /> Cerrar sesión
               </DropdownMenuItem>
             </DropdownMenuContent>

@@ -718,9 +718,9 @@ export const automatedSuites: AutomatedSuite[] = [
     tests: [
       [
         'TC-AUT-A076',
-        'signOut › deletes the session row and cookie, then redirects to the sign-in page',
+        'signOut › deletes the session row and cookie and resolves, so the caller can navigate',
       ],
-      ['TC-AUT-A077', 'signOut › still redirects even when there is no sessionId cookie'],
+      ['TC-AUT-A077', 'signOut › still clears the cookie when there is no session'],
     ],
   },
   {
@@ -10482,7 +10482,10 @@ export const automatedSuites: AutomatedSuite[] = [
         'TC-PLT-A735',
         'NavUser › shows the member with initials and admin badge and navigates from the menu',
       ],
-      ['TC-PLT-A736', 'NavUser › signs out and then tells PCN OS the session changed'],
+      [
+        'TC-PLT-A736',
+        'NavUser › signs out, tells PCN OS the session changed and goes to the sign-in page',
+      ],
       [
         'TC-PLT-A737',
         'NavUser › shows only the avatar without a menu in a collapsed desktop sidebar',

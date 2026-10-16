@@ -79,11 +79,11 @@ describe('NavUser', () => {
     expect(mockRouter.push).toHaveBeenCalledWith('/perfil');
   });
 
-  it('signs out and then tells PCN OS the session changed', async () => {
-    let reject!: (_error: Error) => void;
+  it('signs out, tells PCN OS the session changed and goes to the sign-in page', async () => {
+    let resolve!: (_value: { success: true }) => void;
     jest.mocked(signOut).mockReturnValue(
-      new Promise<never>((_resolve, rej) => {
-        reject = rej;
+      new Promise((res) => {
+        resolve = res;
       }),
     );
     renderNav({ ...user, role: 'USER' } as unknown as SessionUser);
@@ -100,11 +100,13 @@ describe('NavUser', () => {
     });
     const promise = jest.mocked(toast.promise).mock.calls[0][0] as Promise<unknown>;
     expect(notifyOsSessionChange).not.toHaveBeenCalled();
+    // The action resolves (it no longer redirects), so the toast shows success, not an error.
     await act(async () => {
-      reject(new Error('NEXT_REDIRECT'));
-      await promise.catch(() => {});
+      resolve({ success: true });
+      await expect(promise).resolves.toBeUndefined();
     });
     expect(notifyOsSessionChange).toHaveBeenCalled();
+    expect(mockRouter.push).toHaveBeenCalledWith('/iniciar-sesion');
   });
 
   it('shows only the avatar without a menu in a collapsed desktop sidebar', async () => {
