@@ -1,7 +1,12 @@
 'use client';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Megaphone, User as UserIcon, Pin } from 'lucide-react';
+import { useTransition } from 'react';
+import { Megaphone, User as UserIcon, Pin, Trash2 } from 'lucide-react';
+import { toast } from 'sonner';
+import { deleteEventAnnouncement } from '@/actions/announcements/event-announcement';
+import { actionErrorMessage } from '@/lib/rate-limit-messages';
+import { EventAnnouncementForm } from './event-announcement-form';
 import { cn } from '@/lib/utils';
 import { Announcement, User } from '@/generated/prisma/browser';
 import { formatDistanceToNow } from 'date-fns';
@@ -13,10 +18,41 @@ type AnnouncementWithAuthor = Announcement & {
 
 interface EventAnnouncementsProps {
   announcements: AnnouncementWithAuthor[];
+  eventId: string;
+  /** Whoever manages the event can post announcements (notifying everyone signed up) and delete them. */
+  canManage?: boolean;
 }
 
-export function EventAnnouncements({ announcements }: EventAnnouncementsProps) {
-  if (announcements.length === 0) return null;
+const DeleteAnnouncementButton = ({ id }: { id: string }) => {
+  const [isPending, startTransition] = useTransition();
+  return (
+    <button
+      type="button"
+      aria-label="Eliminar anuncio"
+      disabled={isPending}
+      onClick={() =>
+        startTransition(async () => {
+          try {
+            await deleteEventAnnouncement(id);
+            toast.success('Anuncio eliminado');
+          } catch (error) {
+            toast.error(actionErrorMessage(error, 'Error al eliminar el anuncio'));
+          }
+        })
+      }
+      className="shrink-0 text-muted-foreground transition-colors hover:text-destructive disabled:opacity-50"
+    >
+      <Trash2 className="size-3.5" />
+    </button>
+  );
+};
+
+export function EventAnnouncements({
+  announcements,
+  eventId,
+  canManage = false,
+}: EventAnnouncementsProps) {
+  if (announcements.length === 0 && !canManage) return null;
 
   return (
     <section className="divide-y divide-pcnGreen-200 border border-pcnGreen-200">
@@ -47,6 +83,7 @@ export function EventAnnouncements({ announcements }: EventAnnouncementsProps) {
                 locale: es,
               })}
             </span>
+            {canManage && <DeleteAnnouncementButton id={announcement.id} />}
           </div>
           <p className="text-xs leading-relaxed whitespace-pre-wrap text-muted-foreground">
             {announcement.content}
@@ -69,6 +106,7 @@ export function EventAnnouncements({ announcements }: EventAnnouncementsProps) {
           </div>
         </div>
       ))}
+      {canManage && <EventAnnouncementForm eventId={eventId} />}
     </section>
   );
 }

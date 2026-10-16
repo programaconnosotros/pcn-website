@@ -22,6 +22,15 @@ export interface ChangelogEntry {
 export const changelog: ChangelogEntry[] = [
   {
     date: '2026-10-15',
+    area: 'eventos',
+    title: 'Anuncios de los organizadores',
+    description:
+      'Quien organiza un evento puede publicar anuncios desde su página (un cambio de aula, qué traer, un horario nuevo): aparecen en el detalle del evento y les llega una notificación a todos los inscriptos.',
+    authors: ['agustin-sanc'],
+    href: '/eventos',
+  },
+  {
+    date: '2026-10-15',
     area: 'charlas',
     title: 'Ideas para dar una charla',
     description:

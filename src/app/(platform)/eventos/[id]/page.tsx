@@ -461,9 +461,13 @@ const EventDetailPage: React.FC<{ params: Promise<{ id: string }> }> = async (pr
             )}
 
             {/* Anuncios del evento */}
-            {eventAnnouncements.length > 0 && (
+            {(eventAnnouncements.length > 0 || canEdit) && (
               <div className="p-3">
-                <EventAnnouncements announcements={eventAnnouncements} />
+                <EventAnnouncements
+                  announcements={eventAnnouncements}
+                  eventId={event.id}
+                  canManage={canEdit}
+                />
               </div>
             )}
 

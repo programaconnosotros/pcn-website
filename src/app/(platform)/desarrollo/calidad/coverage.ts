@@ -27,11 +27,11 @@ export const coverage: { total: CoverageMetrics; groups: CoverageGroup[] } = {
     {
       folder: 'src/actions',
       detail: 'server actions',
-      files: 117,
+      files: 118,
       lines: 96.7,
       statements: 95.6,
       functions: 96.7,
-      branches: 88.5,
+      branches: 88.6,
     },
     {
       folder: 'src/schemas',
@@ -54,10 +54,10 @@ export const coverage: { total: CoverageMetrics; groups: CoverageGroup[] } = {
     {
       folder: 'src/components',
       detail: 'componentes',
-      files: 429,
+      files: 430,
       lines: 97.6,
       statements: 96.9,
-      functions: 95.6,
+      functions: 95.5,
       branches: 92.8,
     },
     {
