@@ -1,7 +1,10 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { FATAL_TAB_TITLE } from '@/lib/tab-title';
+import { logClientError } from '@/actions/errors/log-error';
 import GlobalError from './global-error';
+
+jest.mock('@/actions/errors/log-error', () => ({ logClientError: jest.fn(async () => {}) }));
 
 // Interaction tests run slowly when the whole suite shares a busy machine
 jest.setTimeout(20_000);
@@ -19,5 +22,16 @@ describe('GlobalError', () => {
 
     await userEvent.click(screen.getByRole('button', { name: /reiniciar/ }));
     expect(reset).toHaveBeenCalled();
+  });
+
+  it('records the error, like the platform boundary does', () => {
+    const error = Object.assign(new Error('root'), { digest: 'abc' });
+    render(<GlobalError error={error} reset={jest.fn()} />, { container: document });
+    expect(logClientError).toHaveBeenCalledWith(
+      expect.objectContaining({
+        message: 'root',
+        metadata: { digest: 'abc', boundary: 'app/global-error.tsx' },
+      }),
+    );
   });
 });

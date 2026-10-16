@@ -1,24 +1,9 @@
-import { logError, logClientError } from '@/actions/errors/log-error';
+import { logClientError } from '@/actions/errors/log-error';
 import { isRedirectError } from 'next/dist/client/components/redirect-error';
 
 export { isRedirectError };
 
-/**
- * Wrapper para server actions que captura y registra errores automáticamente
- */
-export async function withErrorLogging<T>(
-  action: () => Promise<T>,
-  context?: { path?: string; metadata?: Record<string, any> },
-): Promise<T> {
-  try {
-    return await action();
-  } catch (error) {
-    // Logear el error
-    await logError(error, context);
-    // Re-lanzar el error para que se maneje normalmente
-    throw error;
-  }
-}
+// Server errors don't need a wrapper: onRequestError (src/instrumentation.ts) records every one.
 
 /**
  * Helper para capturar errores de promesas en el cliente

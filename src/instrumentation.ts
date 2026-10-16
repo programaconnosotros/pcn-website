@@ -12,3 +12,22 @@ export async function register() {
     );
   }
 }
+
+/**
+ * Next calls this for every error while answering a request: a render, a route handler or a
+ * server action. It goes to ErrorLog (/monitoreo), in production only; in dev the overlay
+ * already shows it.
+ */
+export async function onRequestError(
+  error: unknown,
+  request: {
+    path: string;
+    method: string;
+    headers: Record<string, string | string[] | undefined>;
+  },
+  context: { routerKind: string; routePath: string; routeType: string },
+) {
+  if (process.env.NEXT_RUNTIME !== 'nodejs' || process.env.NODE_ENV !== 'production') return;
+  const { recordServerError } = await import('@/lib/server-errors');
+  await recordServerError(error, request, context);
+}

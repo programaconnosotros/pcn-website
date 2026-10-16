@@ -1,32 +1,11 @@
-import { logClientError, logError } from '@/actions/errors/log-error';
-import { catchClientError, isRedirectError, withErrorLogging } from './error-handler';
+import { logClientError } from '@/actions/errors/log-error';
+import { catchClientError, isRedirectError } from './error-handler';
 
 jest.mock('@/actions/errors/log-error', () => ({
-  logError: jest.fn(),
   logClientError: jest.fn(),
 }));
 
-const mockLogError = logError as jest.Mock;
 const mockLogClientError = logClientError as jest.Mock;
-
-describe('withErrorLogging', () => {
-  it('returns what the action returns without logging', async () => {
-    await expect(withErrorLogging(async () => 42)).resolves.toBe(42);
-    expect(mockLogError).not.toHaveBeenCalled();
-  });
-
-  it('logs the error with its context and rethrows it', async () => {
-    const error = new Error('boom');
-    const context = { path: '/x', metadata: { a: 1 } };
-
-    await expect(
-      withErrorLogging(async () => {
-        throw error;
-      }, context),
-    ).rejects.toBe(error);
-    expect(mockLogError).toHaveBeenCalledWith(error, context);
-  });
-});
 
 describe('catchClientError', () => {
   afterEach(() => {
