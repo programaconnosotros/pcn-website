@@ -1,6 +1,10 @@
 import { prismaMock } from '@/test/prisma';
 import { mockCookies } from '@/test/cookies';
+import { sendEmail } from '@/lib/email';
 import { verifyEmailCode } from './verify-email-code';
+
+jest.mock('@/lib/email', () => ({ sendEmail: jest.fn() }));
+jest.mock('@react-email/render', () => ({ render: jest.fn().mockResolvedValue('<html/>') }));
 
 const baseUser = {
   id: 'user-1',
@@ -76,13 +80,44 @@ describe('verifyEmailCode', () => {
 
     const result = await verifyEmailCode('test@example.com', '123456');
 
-    expect(result).toEqual({ success: true });
+    expect(result).toEqual({ success: true, isNewMember: true });
     expect(prismaMock.$transaction).toHaveBeenCalledTimes(1);
+    // The first verification is the sign-up: a welcome email and notification go out.
+    expect(sendEmail).toHaveBeenCalledWith(
+      expect.objectContaining({ to: 'test@example.com', subject: expect.stringMatching(/parte/) }),
+    );
+    expect(prismaMock.notification.createMany).toHaveBeenCalledWith({
+      data: [expect.objectContaining({ userId: 'user-1', type: 'welcome' })],
+    });
     expect(prismaMock.session.create).toHaveBeenCalledTimes(1);
     expect(store.set).toHaveBeenCalledWith(
       'sessionId',
       expect.any(String),
       expect.objectContaining({ httpOnly: true }),
     );
+  });
+
+  it('only welcomes once, and a failed welcome email does not block the sign-in', async () => {
+    mockCookies();
+    prismaMock.emailVerificationToken.findFirst.mockResolvedValue(validToken as any);
+    prismaMock.$transaction.mockResolvedValue([undefined, undefined] as any);
+    prismaMock.session.create.mockResolvedValue({
+      id: 's',
+      expires: new Date('2027-01-01'),
+    } as any);
+
+    prismaMock.user.findUnique.mockResolvedValue({ ...baseUser, emailVerified: true } as any);
+    await expect(verifyEmailCode('test@example.com', '123456')).resolves.toEqual({
+      success: true,
+      isNewMember: false,
+    });
+    expect(sendEmail).not.toHaveBeenCalled();
+
+    prismaMock.user.findUnique.mockResolvedValue(baseUser as any);
+    jest.mocked(sendEmail).mockRejectedValueOnce(new Error('Resend caído'));
+    jest.spyOn(console, 'error').mockImplementation(() => {});
+    await expect(verifyEmailCode('test@example.com', '123456')).resolves.toMatchObject({
+      isNewMember: true,
+    });
   });
 });

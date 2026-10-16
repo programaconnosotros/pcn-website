@@ -86,7 +86,7 @@ describe('VerifyEmailPage', () => {
     jest.useFakeTimers();
     setLocation('/verificar-email', 'email=ana@example.com&redirect=/eventos/3');
     sendMock.mockResolvedValue({ waitSeconds: 10 });
-    verifyMock.mockResolvedValue(undefined);
+    verifyMock.mockResolvedValue({ success: true, isNewMember: true });
     const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
     render(<VerifyEmailPage />);
 
@@ -99,6 +99,20 @@ describe('VerifyEmailPage', () => {
 
     act(() => jest.advanceTimersByTime(1500));
     expect(mockRouter.push).toHaveBeenCalledWith('/eventos/3');
+  });
+
+  it('sends a brand-new member without a destination to the first steps', async () => {
+    jest.useFakeTimers();
+    setLocation('/verificar-email', 'email=ana@example.com');
+    sendMock.mockResolvedValue({ waitSeconds: 10 });
+    verifyMock.mockResolvedValue({ success: true, isNewMember: true });
+    const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
+    render(<VerifyEmailPage />);
+
+    await submitCode(user);
+    await screen.findByRole('heading', { name: '¡Email verificado!' });
+    act(() => jest.advanceTimersByTime(1500));
+    expect(mockRouter.push).toHaveBeenCalledWith('/bienvenida');
   });
 
   it('reports an invalid code', async () => {

@@ -14,6 +14,7 @@ export default function robots(): MetadataRoute.Robots {
         '/verificar-email',
         '/recuperar-clave',
         '/perfil',
+        '/bienvenida',
         '/analiticas',
         '/visitas',
         '/notificaciones',

@@ -15,6 +15,7 @@ export const SITE_ROUTES = [
   '/recuperar-clave',
   '/crear-cuenta',
   '/verificar-email',
+  '/bienvenida',
   '/changelog',
   '/charlas',
   '/code-warfare',

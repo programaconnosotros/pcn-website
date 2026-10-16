@@ -95,12 +95,15 @@ function VerifyEmailContent() {
 
     setIsVerifying(true);
     try {
-      await verifyEmailCode(email, values.code);
+      const { isNewMember } = await verifyEmailCode(email, values.code);
       setIsVerified(true);
       notifyOsSessionChange();
       toast.success('¡Email verificado! Redirigiendo...');
+      // Quien recién se registra y no venía de ninguna página en particular arranca por los
+      // primeros pasos.
+      const destination = isNewMember && redirectTo === '/' ? '/bienvenida' : redirectTo;
       setTimeout(() => {
-        router.push(redirectTo);
+        router.push(destination);
       }, 1500);
     } catch (error) {
       toast.error(actionErrorMessage(error, 'Código inválido o expirado. Intentá de nuevo.'));
