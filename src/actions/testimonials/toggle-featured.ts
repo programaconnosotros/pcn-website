@@ -4,6 +4,7 @@ import prisma from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
 import { findSession } from '@/lib/session';
+import { notifyUsers } from '@/actions/notifications/notify-users';
 
 export const toggleFeatured = async (id: string) => {
   const sessionId = (await cookies()).get('sessionId')?.value;
@@ -31,6 +32,21 @@ export const toggleFeatured = async (id: string) => {
       featured: !testimonial.featured,
     },
   });
+
+  if (!testimonial.featured) {
+    await notifyUsers(
+      [testimonial.userId],
+      {
+        type: 'testimonial_featured',
+        title: 'Destacamos tu testimonio',
+        message:
+          'Tu testimonio ahora aparece entre los destacados de la home. ¡Gracias por compartirlo!',
+        href: `/testimonios/${id}`,
+        metadata: { testimonialId: id },
+      },
+      session.userId,
+    );
+  }
 
   revalidatePath('/testimonios');
   revalidatePath('/');

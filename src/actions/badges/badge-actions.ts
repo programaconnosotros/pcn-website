@@ -5,6 +5,7 @@ import { z } from 'zod';
 import prisma from '@/lib/prisma';
 import { requireAdmin } from '@/lib/admin';
 import { isBadgeIcon, isBadgeTone } from '@/lib/badges';
+import { notifyUsers } from '@/actions/notifications/notify-users';
 
 const badgeSchema = z.object({
   name: z.string().trim().min(2, 'El nombre es muy corto').max(40, 'Máximo 40 caracteres'),
@@ -70,15 +71,26 @@ export async function revokeBadge(userId: string, badgeId: string) {
 async function award(userId: string, badgeId: string, awardedById: string) {
   const [user, badge] = await Promise.all([
     prisma.user.findUnique({ where: { id: userId }, select: { id: true } }),
-    prisma.badge.findUnique({ where: { id: badgeId }, select: { id: true } }),
+    prisma.badge.findUnique({ where: { id: badgeId }, select: { id: true, name: true } }),
   ]);
   if (!user) throw new Error('Usuario no encontrado');
   if (!badge) throw new Error('Badge no encontrado');
 
-  await prisma.userBadge.upsert({
-    where: { userId_badgeId: { userId, badgeId } },
-    create: { userId, badgeId, awardedById },
-    update: {},
-  });
+  const where = { userId_badgeId: { userId, badgeId } };
+  const alreadyHad = await prisma.userBadge.findUnique({ where, select: { id: true } });
+  await prisma.userBadge.upsert({ where, create: { userId, badgeId, awardedById }, update: {} });
+  if (!alreadyHad) {
+    await notifyUsers(
+      [userId],
+      {
+        type: 'badge_awarded',
+        title: 'Ganaste una insignia',
+        message: `Recibiste la insignia "${badge.name}". Ya aparece en tu perfil.`,
+        href: `/perfil/${userId}`,
+        metadata: { badgeId, awardedById },
+      },
+      awardedById,
+    );
+  }
   revalidatePath(`/perfil/${userId}`);
 }

@@ -4,7 +4,7 @@ import prisma from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
 import { projectSchema, ProjectFormData } from '@/schemas/project-schema';
 import { requireSessionUser } from './get-session-user';
-import { buildProjectMembers } from './build-project-members';
+import { buildProjectMembers, notifyNewProjectMembers } from './build-project-members';
 import { enforceRateLimit } from '@/lib/rate-limit';
 
 export const createProject = async (data: ProjectFormData) => {
@@ -22,6 +22,7 @@ export const createProject = async (data: ProjectFormData) => {
   // Los proyectos nuevos van al final; solo un admin los reordena desde la lista.
   const last = await prisma.project.aggregate({ _max: { order: true } });
 
+  const members = buildProjectMembers(projectData.members, user.id);
   const project = await prisma.project.create({
     data: {
       title: projectData.title,
@@ -39,10 +40,17 @@ export const createProject = async (data: ProjectFormData) => {
       // El autor es siempre quien carga el proyecto, nunca un valor enviado por el cliente.
       authorId: user.id,
       members: {
-        create: buildProjectMembers(projectData.members, user.id),
+        create: members,
       },
     },
   });
+
+  await notifyNewProjectMembers(
+    project,
+    members.map((member) => member.userId),
+    [],
+    user,
+  );
 
   revalidatePath('/proyectos');
 

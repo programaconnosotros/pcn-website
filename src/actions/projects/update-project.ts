@@ -4,7 +4,7 @@ import prisma from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
 import { projectSchema, ProjectFormData } from '@/schemas/project-schema';
 import { canEditProject, canManageProject, requireSessionUser } from './get-session-user';
-import { buildProjectMembers } from './build-project-members';
+import { buildProjectMembers, notifyNewProjectMembers } from './build-project-members';
 import { enforceRateLimit } from '@/lib/rate-limit';
 
 export const updateProject = async (id: string, data: ProjectFormData) => {
@@ -53,6 +53,7 @@ export const updateProject = async (id: string, data: ProjectFormData) => {
     return { success: true };
   }
 
+  const members = buildProjectMembers(projectData.members, existing.authorId);
   await prisma.$transaction([
     prisma.project.update({
       where: { id },
@@ -60,12 +61,19 @@ export const updateProject = async (id: string, data: ProjectFormData) => {
     }),
     prisma.projectMember.deleteMany({ where: { projectId: id } }),
     prisma.projectMember.createMany({
-      data: buildProjectMembers(projectData.members, existing.authorId).map((member) => ({
+      data: members.map((member) => ({
         ...member,
         projectId: id,
       })),
     }),
   ]);
+
+  await notifyNewProjectMembers(
+    { id, title: projectData.title },
+    members.map((member) => member.userId),
+    existing.members.map((member) => member.userId),
+    user,
+  );
 
   revalidatePath('/proyectos');
   revalidatePath(`/proyectos/${id}`);
