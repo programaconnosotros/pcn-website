@@ -96,7 +96,7 @@ describe('/cursos/[courseId]', () => {
 
   it('says when the course does not exist', async () => {
     renderInPlatform(await Course(params('nope')));
-    expect(screen.getByText('El curso no existe.')).toBeInTheDocument();
+    expect(screen.getByText('No encontramos este curso')).toBeInTheDocument();
   });
 
   it('links the teachers who are platform users to their profiles', async () => {

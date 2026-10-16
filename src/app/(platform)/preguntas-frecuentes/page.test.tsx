@@ -26,6 +26,20 @@ describe('/preguntas-frecuentes', () => {
     expect(screen.getByText(faqs.at(-1)!.answer)).toBeInTheDocument();
   });
 
+  it('tells search engines the questions and answers as a FAQPage', async () => {
+    const { container } = await renderPage(FAQPage());
+    const data = JSON.parse(
+      container.querySelector('script[type="application/ld+json"]')!.textContent!,
+    );
+    expect(data['@type']).toBe('FAQPage');
+    expect(data.mainEntity).toHaveLength(faqs.length);
+    expect(data.mainEntity[0]).toEqual({
+      '@type': 'Question',
+      name: faqs[0].question,
+      acceptedAnswer: { '@type': 'Answer', text: faqs[0].answer },
+    });
+  });
+
   it('uses the FAQ section card for link previews', async () => {
     expect(alt).toBe('preguntas-frecuentes · programaConNosotros');
     await expect(Image()).resolves.toEqual({ section: 'preguntas-frecuentes' });

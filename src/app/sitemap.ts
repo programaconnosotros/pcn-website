@@ -3,6 +3,7 @@ import { visibleExtractedConsejos } from '@/lib/hidden-consejos';
 import prisma from '@/lib/prisma';
 import { cached } from '@/lib/cache';
 import { getAllCourses } from '@/lib/recommendations';
+import { visibleGalleryItem } from '@/lib/gallery';
 import { TRACKS } from './(platform)/entrevistas/questions/types';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
@@ -52,29 +53,51 @@ const STATIC_ROUTES = [
   '/estadisticas',
   '/feed',
   '/usuarios',
+  '/code-warfare',
+  '/conversaciones/opiniones',
 ];
 
 const listSitemapRecords = cached(
   'sitemap-records',
   async () => {
-    const [events, advice, testimonials, setups, projects] = await Promise.all([
-      prisma.event.findMany({
-        where: { deletedAt: null },
-        select: { id: true, updatedAt: true },
-      }),
-      prisma.advice.findMany({ select: { id: true, updatedAt: true } }),
-      prisma.testimonial.findMany({ select: { id: true, updatedAt: true } }),
-      prisma.setup.findMany({ select: { id: true, updatedAt: true } }),
-      prisma.project.findMany({ select: { id: true, updatedAt: true } }),
-    ]);
-    return { events, advice, testimonials, setups, projects };
+    const [events, advice, testimonials, setups, projects, photos, threads, categories] =
+      await Promise.all([
+        prisma.event.findMany({
+          where: { deletedAt: null },
+          select: { id: true, updatedAt: true },
+        }),
+        prisma.advice.findMany({ select: { id: true, updatedAt: true } }),
+        prisma.testimonial.findMany({ select: { id: true, updatedAt: true } }),
+        prisma.setup.findMany({ select: { id: true, updatedAt: true } }),
+        prisma.project.findMany({ select: { id: true, updatedAt: true } }),
+        // Only what anyone can open: pending photos stay out.
+        prisma.galleryItem.findMany({
+          where: visibleGalleryItem,
+          select: { id: true, updatedAt: true },
+        }),
+        prisma.forumPost.findMany({ select: { id: true, activeAt: true } }),
+        prisma.forumCategory.findMany({ select: { slug: true } }),
+      ]);
+    return { events, advice, testimonials, setups, projects, photos, threads, categories };
   },
-  { models: ['Event', 'Advice', 'Testimonial', 'Setup', 'Project'] },
+  {
+    models: [
+      'Event',
+      'Advice',
+      'Testimonial',
+      'Setup',
+      'Project',
+      'GalleryItem',
+      'ForumPost',
+      'ForumCategory',
+    ],
+  },
 );
 
 async function dynamicRoutes(): Promise<MetadataRoute.Sitemap> {
   try {
-    const { events, advice, testimonials, setups, projects } = await listSitemapRecords();
+    const { events, advice, testimonials, setups, projects, photos, threads, categories } =
+      await listSitemapRecords();
 
     return [
       ...events.map((e) => ({ url: `${SITE_URL}/eventos/${e.id}`, lastModified: e.updatedAt })),
@@ -89,6 +112,9 @@ async function dynamicRoutes(): Promise<MetadataRoute.Sitemap> {
       })),
       ...setups.map((s) => ({ url: `${SITE_URL}/setups/${s.id}`, lastModified: s.updatedAt })),
       ...projects.map((p) => ({ url: `${SITE_URL}/proyectos/${p.id}`, lastModified: p.updatedAt })),
+      ...photos.map((g) => ({ url: `${SITE_URL}/galeria/${g.id}`, lastModified: g.updatedAt })),
+      ...threads.map((t) => ({ url: `${SITE_URL}/foro/tema/${t.id}`, lastModified: t.activeAt })),
+      ...categories.map((c) => ({ url: `${SITE_URL}/foro/categoria/${c.slug}` })),
     ];
   } catch (error) {
     // A database outage should still serve the static part of the sitemap.

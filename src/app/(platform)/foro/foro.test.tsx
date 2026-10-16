@@ -163,6 +163,15 @@ describe('/foro/tema/[id]', () => {
     expect(screen.getByText(/editado/)).toBeInTheDocument();
     expect(screen.getByText('Turborepo')).toBeInTheDocument();
     expect(screen.queryByRole('link', { name: /editar/ })).not.toBeInTheDocument();
+
+    const data = JSON.parse(
+      document.querySelector('script[type="application/ld+json"]')!.textContent!,
+    );
+    expect(data).toMatchObject({
+      '@type': 'DiscussionForumPosting',
+      headline: expect.stringMatching(/Monorepos/),
+      comment: [expect.objectContaining({ '@type': 'Comment', text: 'Turborepo' })],
+    });
   });
 
   it('gives its author the edit controls', async () => {

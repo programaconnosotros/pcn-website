@@ -18,6 +18,7 @@ import './globals.css';
 import { HOME_TAB_TITLE, TAB_TITLE_TEMPLATE } from '@/lib/tab-title';
 import { headers } from 'next/headers';
 import { NONCE_HEADER } from '@/lib/csp';
+import { JsonLd, website } from '@/components/seo/json-ld';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
 
@@ -93,6 +94,7 @@ const RootLayout = async ({
         />
       </head>
       <body className={GeistSans.className}>
+        <JsonLd data={website} />
         <AppSplash />
         <ThemeProvider
           nonce={nonce}

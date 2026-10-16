@@ -1,6 +1,7 @@
 import { cache, Suspense } from 'react';
 import { EmptyState } from '@/components/empty-state';
 import { RealtimeRefresh } from '@/components/realtime/realtime-refresh';
+import { JsonLd, organization, SITE_URL } from '@/components/seo/json-ld';
 import { PageTitle } from '@/components/ui/page-title';
 import { StickyHeader } from '@/components/ui/sticky-header';
 import { CalendarPlus, Download, Edit, Users, Video, Mic, MapPin } from 'lucide-react';
@@ -191,8 +192,39 @@ const EventDetailPage: React.FC<{ params: Promise<{ id: string }> }> = async (pr
   const waitlistPosition =
     userId && !isRegistered && waitlistCount > 0 ? await getWaitlistPosition(id, userId) : null;
 
+  const absolute = (src: string) => (src.startsWith('/') ? `${SITE_URL}${src}` : src);
+  const eventJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Event',
+    name: event.name,
+    description: normalizeDescription(event.description).slice(0, 5000),
+    startDate: event.date.toISOString(),
+    endDate: (event.endDate ?? event.date).toISOString(),
+    eventStatus: 'https://schema.org/EventScheduled',
+    eventAttendanceMode: event.isOnline
+      ? 'https://schema.org/OnlineEventAttendanceMode'
+      : 'https://schema.org/OfflineEventAttendanceMode',
+    location: event.isOnline
+      ? { '@type': 'VirtualLocation', url: `${SITE_URL}/eventos/${event.id}` }
+      : {
+          '@type': 'Place',
+          name: event.placeName || event.city || 'A confirmar',
+          address: {
+            '@type': 'PostalAddress',
+            streetAddress: event.address ?? undefined,
+            addressLocality: event.city ?? undefined,
+            addressCountry: 'AR',
+          },
+        },
+    ...(event.flyerImages[0] && { image: [absolute(event.flyerImages[0])] }),
+    organizer: organization,
+    isAccessibleForFree: true,
+    url: `${SITE_URL}/eventos/${event.id}`,
+  };
+
   return (
     <>
+      <JsonLd data={eventJsonLd} />
       {/* Places left update live as people sign up or cancel. */}
       {!isExternalEvent && <RealtimeRefresh topics={[`event:${event.id}`]} />}
       <div className="mx-auto flex w-full max-w-5xl flex-1 flex-col p-4 pt-0">

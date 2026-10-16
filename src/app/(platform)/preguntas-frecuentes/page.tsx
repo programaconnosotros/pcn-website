@@ -4,6 +4,7 @@ import { RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
 import { cn } from '@/lib/utils';
 import { faqs } from '@/data/faqs';
 import type { Metadata } from 'next';
+import { JsonLd } from '@/components/seo/json-ld';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
 
@@ -27,9 +28,20 @@ export const metadata: Metadata = {
   },
 };
 
+const faqJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((faq) => ({
+    '@type': 'Question',
+    name: faq.question,
+    acceptedAnswer: { '@type': 'Answer', text: faq.answer },
+  })),
+};
+
 const FAQPage = async () => {
   return (
     <>
+      <JsonLd data={faqJsonLd} />
       <div className="flex flex-1 flex-col p-4 pt-0">
         <div className="mt-4">
           <StickyHeader>

@@ -16,6 +16,9 @@ const mockRecords = () => {
   prismaMock.testimonial.findMany.mockResolvedValue([{ id: 't1', updatedAt }] as any);
   prismaMock.setup.findMany.mockResolvedValue([{ id: 's1', updatedAt }] as any);
   prismaMock.project.findMany.mockResolvedValue([{ id: 'p1', updatedAt }] as any);
+  prismaMock.galleryItem.findMany.mockResolvedValue([{ id: 'g1', updatedAt }] as any);
+  prismaMock.forumPost.findMany.mockResolvedValue([{ id: 'f1', activeAt: updatedAt }] as any);
+  prismaMock.forumCategory.findMany.mockResolvedValue([{ slug: 'ayuda' }] as any);
 };
 
 describe('sitemap', () => {
@@ -50,6 +53,8 @@ describe('sitemap', () => {
       '/testimonios/t1',
       '/setups/s1',
       '/proyectos/p1',
+      '/galeria/g1',
+      '/foro/tema/f1',
     ])
       expect(entries).toContainEqual({ url: `${SITE}${path}`, lastModified: updatedAt });
     const extracted = extractedConsejos[0];
@@ -86,5 +91,17 @@ describe('sitemap', () => {
 
     expect(urls).toContain(`${SITE}/cursos`);
     expect(urls.some((url) => url.startsWith(`${SITE}/cursos/`))).toBe(false);
+  });
+
+  it('lists the forum categories and the public pages that were missing, but not admin ones', async () => {
+    mockRecords();
+    const urls = (await sitemap()).map((entry) => entry.url);
+    expect(urls).toContain(`${SITE}/foro/categoria/ayuda`);
+    for (const path of ['/code-warfare', '/conversaciones/opiniones', '/empleos'])
+      expect(urls).toContain(`${SITE}${path}`);
+    expect(urls).not.toContain(`${SITE}/vinculos`);
+    expect(prismaMock.galleryItem.findMany).toHaveBeenCalledWith(
+      expect.objectContaining({ where: expect.objectContaining({ status: 'APPROVED' }) }),
+    );
   });
 });

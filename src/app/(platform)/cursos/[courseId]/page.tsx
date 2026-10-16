@@ -16,6 +16,8 @@ import { RuledGrid } from '@/components/ui/ruled-grid';
 import { rankRelated } from '@/lib/related';
 import type { Metadata } from 'next';
 import { MISSING_TAB_TITLE, tabTitle } from '@/lib/tab-title';
+import { EmptyState } from '@/components/empty-state';
+import { JsonLd } from '@/components/seo/json-ld';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
 
@@ -78,7 +80,25 @@ const Course = async (props: { params: Promise<{ courseId: string }> }) => {
 
   const course = await getCourseById(courseId);
 
-  if (!course) return <div>El curso no existe.</div>;
+  if (!course)
+    return (
+      <div className="flex flex-1 flex-col p-4 pt-0">
+        <div className="mt-4">
+          <PageTitle path={[{ label: 'cursos', href: '/cursos' }, { label: '404' }]} />
+          <EmptyState
+            command={`cat ~/cursos/${courseId}`}
+            output={`cat: ~/cursos/${courseId}: no such file or directory`}
+            title="No encontramos este curso"
+            description="Puede que lo hayan sacado de la lista o que el enlace esté mal."
+            action={
+              <Link href="/cursos" className="text-pcnGreen hover:underline">
+                cd ~/cursos
+              </Link>
+            }
+          />
+        </div>
+      </div>
+    );
 
   // Teachers who are platform users, linked in /vinculos.
   const [teacherProfiles, allCourses, articles] = await Promise.all([
@@ -158,8 +178,19 @@ const Course = async (props: { params: Promise<{ courseId: string }> }) => {
     </p>
   );
 
+  const courseJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Course',
+    name: course.name,
+    description: course.description,
+    url: `${SITE_URL}/cursos/${course.id}`,
+    inLanguage: 'es',
+    provider: { '@type': 'Organization', name: course.teachedBy },
+  };
+
   return (
     <>
+      <JsonLd data={courseJsonLd} />
       <div className="flex flex-1 flex-col p-4 pt-0">
         <div className="mt-4">
           <StickyHeader>

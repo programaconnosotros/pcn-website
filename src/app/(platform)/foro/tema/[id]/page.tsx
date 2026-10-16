@@ -14,6 +14,7 @@ import { getForumPost } from '@/lib/forum';
 import { nestComments, timeAgo } from '@/lib/forum-utils';
 import { Markdown, plainText } from '@/lib/markdown';
 import { MISSING_TAB_TITLE, tabTitle } from '@/lib/tab-title';
+import { JsonLd } from '@/components/seo/json-ld';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
 
@@ -46,8 +47,42 @@ export default async function ForumThreadPage(props: { params: Promise<{ id: str
   const canEdit = !!session && (isAdmin || session.user.id === post.authorId);
   const edited = post.updatedAt.getTime() - post.createdAt.getTime() > 60_000;
 
+  const threadJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'DiscussionForumPosting',
+    headline: post.title,
+    text: post.content.slice(0, 5000),
+    url: `${SITE_URL}/foro/tema/${post.id}`,
+    datePublished: post.createdAt.toISOString(),
+    ...(edited && { dateModified: post.updatedAt.toISOString() }),
+    author: {
+      '@type': 'Person',
+      name: post.author.name,
+      url: `${SITE_URL}/perfil/${post.author.id}`,
+    },
+    interactionStatistic: [
+      {
+        '@type': 'InteractionCounter',
+        interactionType: 'https://schema.org/CommentAction',
+        userInteractionCount: post.comments.length,
+      },
+      {
+        '@type': 'InteractionCounter',
+        interactionType: 'https://schema.org/LikeAction',
+        userInteractionCount: post.likes.length,
+      },
+    ],
+    comment: post.comments.slice(0, 20).map((comment) => ({
+      '@type': 'Comment',
+      text: comment.content.slice(0, 2000),
+      datePublished: comment.createdAt.toISOString(),
+      author: { '@type': 'Person', name: comment.author.name },
+    })),
+  };
+
   return (
     <div className="flex flex-1 flex-col p-4 pt-0">
+      <JsonLd data={threadJsonLd} />
       <div className="mx-auto mt-4 w-full max-w-4xl">
         <StickyHeader>
           <PageTitle
