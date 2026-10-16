@@ -1,7 +1,10 @@
 import { cookies } from 'next/headers';
 import { PageTitle } from '@/components/ui/page-title';
 import { StickyHeader } from '@/components/ui/sticky-header';
-import { fetchNotifications } from '@/actions/notifications/fetch-notifications';
+import {
+  countNotifications,
+  fetchNotifications,
+} from '@/actions/notifications/fetch-notifications';
 import { NotificationsClient } from './notifications-client';
 import { redirect } from 'next/navigation';
 import type { Metadata } from 'next';
@@ -27,8 +30,7 @@ const NotificacionesPage = async () => {
     redirect('/');
   }
 
-  const notifications = await fetchNotifications();
-  const unreadCount = notifications.filter((n) => !n.read).length;
+  const [notifications, counts] = await Promise.all([fetchNotifications(), countNotifications()]);
 
   return (
     <>
@@ -37,7 +39,7 @@ const NotificacionesPage = async () => {
           <StickyHeader>
             <PageTitle
               path="notificaciones"
-              meta={`${notifications.length} en total · ${unreadCount} sin leer`}
+              meta={`${counts.total} en total · ${counts.unread} sin leer`}
             />
           </StickyHeader>
 

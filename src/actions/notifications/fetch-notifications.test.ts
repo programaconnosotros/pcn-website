@@ -1,7 +1,7 @@
 import { prismaMock } from '@/test/prisma';
 import { hashSessionToken } from '@/lib/session';
 import { mockCookies } from '@/test/cookies';
-import { fetchNotifications } from './fetch-notifications';
+import { countNotifications, fetchNotifications } from './fetch-notifications';
 
 const adminUser = {
   id: 'user-admin',
@@ -98,6 +98,7 @@ describe('fetchNotifications', () => {
     expect(prismaMock.notification.findMany).toHaveBeenCalledWith({
       where: { userId: 'user-admin' },
       orderBy: { createdAt: 'desc' },
+      take: 200,
     });
     expect(result).toEqual(stubNotifications);
   });
@@ -110,5 +111,21 @@ describe('fetchNotifications', () => {
     const result = await fetchNotifications();
 
     expect(result).toEqual([]);
+  });
+});
+
+describe('countNotifications', () => {
+  it('counts all and unread notifications of the session user, and nothing without one', async () => {
+    mockCookies();
+    await expect(countNotifications()).resolves.toEqual({ total: 0, unread: 0 });
+    expect(prismaMock.notification.count).not.toHaveBeenCalled();
+
+    mockCookies({ sessionId: 's1' });
+    prismaMock.session.findUnique.mockResolvedValue({ userId: 'u1', user: { id: 'u1' } } as never);
+    prismaMock.notification.count.mockResolvedValueOnce(340).mockResolvedValueOnce(2);
+    await expect(countNotifications()).resolves.toEqual({ total: 340, unread: 2 });
+    expect(prismaMock.notification.count).toHaveBeenCalledWith({
+      where: { userId: 'u1', read: false },
+    });
   });
 });

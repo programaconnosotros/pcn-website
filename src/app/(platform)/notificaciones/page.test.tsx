@@ -1,5 +1,8 @@
 import { screen } from '@testing-library/react';
-import { fetchNotifications } from '@/actions/notifications/fetch-notifications';
+import {
+  countNotifications,
+  fetchNotifications,
+} from '@/actions/notifications/fetch-notifications';
 import { findSession } from '@/lib/session';
 import { mockCookies } from '@/test/cookies';
 import {
@@ -17,6 +20,7 @@ jest.mock('next/headers', () => ({ cookies: jest.fn(), headers: jest.fn() }));
 jest.mock('@/lib/session', () => ({ findSession: jest.fn() }));
 jest.mock('@/actions/notifications/fetch-notifications', () => ({
   fetchNotifications: jest.fn(),
+  countNotifications: jest.fn(async () => ({ total: 0, unread: 0 })),
 }));
 jest.mock('./notifications-client', () => ({
   NotificationsClient: jest.fn(() => <p>bandeja</p>),
@@ -50,7 +54,7 @@ describe('/notificaciones', () => {
     expect(screen.getByText('0 en total · 0 sin leer')).toBeInTheDocument();
   });
 
-  it('counts the unread notifications and hands them all to the inbox', async () => {
+  it('counts every notification and unread one, and hands the latest to the inbox', async () => {
     const notifications = [
       { id: 'n1', read: false },
       { id: 'n2', read: true },
@@ -59,11 +63,13 @@ describe('/notificaciones', () => {
     mockCookies({ sessionId: 'token' });
     jest.mocked(findSession).mockResolvedValue(adminRow());
     jest.mocked(fetchNotifications).mockResolvedValue(notifications as never);
+    // More than the inbox lists: the counts come from the database, not from the list.
+    jest.mocked(countNotifications).mockResolvedValueOnce({ total: 340, unread: 2 });
 
     await renderPage(NotificacionesPage());
 
     expect(findSession).toHaveBeenCalledWith('token');
-    expect(screen.getByText('3 en total · 2 sin leer')).toBeInTheDocument();
+    expect(screen.getByText('340 en total · 2 sin leer')).toBeInTheDocument();
     expect(screen.getByText('bandeja')).toBeInTheDocument();
     expect(jest.mocked(NotificationsClient).mock.calls[0][0]).toEqual({ notifications });
   });

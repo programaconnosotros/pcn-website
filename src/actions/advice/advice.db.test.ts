@@ -4,7 +4,6 @@ import { editAdvice } from '@/actions/advice/edit-advice';
 import { deleteAdvice } from '@/actions/advice/delete-advice';
 import { toggleLike } from '@/actions/advice/like-advice';
 import { getBestAdvice } from '@/actions/advice/get-best-advice';
-import { getAdviceById } from '@/actions/advice/get-advice';
 import { getRandomAdvice } from '@/actions/advice/get-random-advice';
 import { actAs } from '@/test/db/fixtures';
 import { expiredModel, makeAdvice, quickUser, uid } from '@/test/db/actions-fixtures';
@@ -264,75 +263,6 @@ describe('toggleLike', () => {
 
     await expect(toggleLike('no-existe')).rejects.toThrow();
     expect(await prisma.like.count({ where: { userId: fan.id } })).toBe(0);
-  });
-});
-
-describe('getAdviceById', () => {
-  it('returns the advice with its likes and threaded comments, newest first', async () => {
-    const author = await quickUser();
-    const fan = await quickUser();
-    const advice = await makeAdvice(author.id);
-    await prisma.like.create({ data: { userId: fan.id, adviceId: advice.id } });
-    const older = await prisma.comment.create({
-      data: {
-        content: 'Primero',
-        authorId: fan.id,
-        adviceId: advice.id,
-        createdAt: new Date('2024-01-01'),
-      },
-    });
-    await prisma.comment.create({
-      data: {
-        content: 'Segundo',
-        authorId: author.id,
-        adviceId: advice.id,
-        createdAt: new Date('2024-01-02'),
-      },
-    });
-    const reply = await prisma.comment.create({
-      data: {
-        content: 'Respuesta',
-        authorId: author.id,
-        adviceId: advice.id,
-        parentCommentId: older.id,
-      },
-    });
-    await prisma.comment.create({
-      data: {
-        content: 'Respuesta anidada',
-        authorId: fan.id,
-        adviceId: advice.id,
-        parentCommentId: reply.id,
-      },
-    });
-
-    const result = await getAdviceById(advice.id);
-
-    expect(result?.author).toEqual({ id: author.id, name: author.name, image: null });
-    expect(result?.likes.map((like) => like.userId)).toEqual([fan.id]);
-    expect(result?.comments?.map((comment) => comment.content)).toEqual(['Segundo', 'Primero']);
-    const first = result?.comments?.[1];
-    expect(first?.replies.map((r) => r.content)).toEqual(['Respuesta']);
-    expect(first?.replies[0].replies.map((r) => r.content)).toEqual(['Respuesta anidada']);
-    // El autor solo lleva datos públicos
-    expect(first?.author).toEqual({ id: fan.id, name: fan.name, image: null });
-  });
-
-  it('skips the comments when asked to', async () => {
-    const author = await quickUser();
-    const advice = await makeAdvice(author.id);
-    await prisma.comment.create({
-      data: { content: 'Hola', authorId: author.id, adviceId: advice.id },
-    });
-
-    const result = await getAdviceById(advice.id, { includeComments: false });
-
-    expect(result).not.toBeNull();
-    expect(result).not.toHaveProperty('comments');
-  });
-
-  it('returns null for an advice that does not exist', async () => {
-    await expect(getAdviceById('no-existe')).resolves.toBeNull();
   });
 });
 
