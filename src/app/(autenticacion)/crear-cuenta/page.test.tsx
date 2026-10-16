@@ -158,6 +158,22 @@ describe('SignUpPage', () => {
     expect(toast.success).toHaveBeenCalled();
   });
 
+  it('warns that the code did not go out when emails are down', async () => {
+    signUpMock.mockResolvedValue({
+      success: true,
+      redirectUrl: '/verificar-email',
+      emailUnavailable: true,
+    } as never);
+    const user = userEvent.setup();
+    render(<SignUpPage />);
+
+    await fillRequired(user);
+    await submit(user);
+
+    await waitFor(() => expect(mockRouter.push).toHaveBeenCalledWith('/verificar-email'));
+    expect(toast.error).toHaveBeenCalledWith(expect.stringMatching(/lo estamos solucionando/));
+  });
+
   it('uses & when the redirect already has a query and skips push without redirectUrl', async () => {
     setLocation('/crear-cuenta', 'redirect=%2Feventos%3Fa%3D1&autoRegister=true');
     signUpMock.mockResolvedValue({ success: true } as never);

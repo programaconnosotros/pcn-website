@@ -25,6 +25,7 @@ import { AuthLinks, AuthSection, AuthShell } from '@/components/auth/auth-shell'
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { Suspense, useState } from 'react';
+import { EMAIL_UNAVAILABLE_MESSAGE } from '@/lib/email-unavailable';
 import { toast } from 'sonner';
 import * as z from 'zod';
 import { safeRedirectPath } from '@/lib/safe-redirect';
@@ -82,6 +83,8 @@ function SignUpContent() {
 
       if (result.success) {
         toast.success('Usuario creado exitosamente! 🥳');
+        // La cuenta quedó creada, pero el código de verificación no salió.
+        if (result.emailUnavailable) toast.error(EMAIL_UNAVAILABLE_MESSAGE);
         // Redirigir a la página de verificación
         // No llamamos setIsSubmitting(false) aquí para mantener el botón deshabilitado durante la redirección
         if (result.redirectUrl) {

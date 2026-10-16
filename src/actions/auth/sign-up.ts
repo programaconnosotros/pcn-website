@@ -5,7 +5,12 @@ import { z } from 'zod';
 import { signUpActionSchema } from '@/lib/validations/auth-schemas';
 import { EmailVerificationEmail } from '@/components/auth/verification-email';
 import { render } from '@react-email/render';
-import { generateVerificationCode, getCodeExpirationDate, sendEmail } from '@/lib/email';
+import {
+  EmailQuotaError,
+  generateVerificationCode,
+  getCodeExpirationDate,
+  sendEmail,
+} from '@/lib/email';
 import { hashPassword } from '@/lib/password';
 import { enforceRateLimit } from '@/lib/rate-limit';
 import { safeRedirectPath } from '@/lib/safe-redirect';
@@ -14,7 +19,8 @@ import { verifyCaptcha } from '@/lib/captcha';
 export const signUp = async (
   data: z.infer<typeof signUpActionSchema>,
 ): Promise<
-  | { success: true; redirectUrl: string }
+  // emailUnavailable: la cuenta se creó pero el código no salió (Resend sin cuota)
+  | { success: true; redirectUrl: string; emailUnavailable?: boolean }
   | { success: false; error: 'CAPTCHA_FAILED' }
   | { success: false; error: 'EMAIL_ALREADY_EXISTS' }
   | { success: false; error: 'UNKNOWN_ERROR' }
@@ -81,6 +87,7 @@ export const signUp = async (
     });
 
     // Enviar email con el código
+    let emailUnavailable = false;
     try {
       const emailHtml = await render(EmailVerificationEmail({ userName: user.name, code }));
       await sendEmail({
@@ -95,13 +102,16 @@ export const signUp = async (
       );
       // No lanzar error para no bloquear el registro
       // El usuario podrá reenviar el código desde la página de verificación
+      emailUnavailable = error instanceof EmailQuotaError;
     }
 
     const redirectTo = safeRedirectPath(rawRedirectTo, '');
 
     // Devolver la URL de verificación para que el cliente redirija
     const verifyUrl = `/verificar-email?email=${encodeURIComponent(user.email)}${redirectTo ? `&redirect=${encodeURIComponent(redirectTo)}` : ''}`;
-    return { success: true, redirectUrl: verifyUrl };
+    return emailUnavailable
+      ? { success: true, redirectUrl: verifyUrl, emailUnavailable }
+      : { success: true, redirectUrl: verifyUrl };
   } catch (error: any) {
     // Capturar error de Prisma P2002 (unique constraint) como fallback
     if (error?.code === 'P2002' && error?.meta?.target?.includes('email')) {

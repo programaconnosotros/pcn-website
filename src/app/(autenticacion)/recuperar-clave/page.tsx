@@ -1,5 +1,6 @@
 'use client';
 
+import { EMAIL_UNAVAILABLE_MESSAGE } from '@/lib/email-unavailable';
 import { requestPasswordReset } from '@/actions/auth/request-password-reset';
 import { verifyResetCode } from '@/actions/auth/verify-reset-code';
 import { completePasswordReset } from '@/actions/auth/complete-password-reset';
@@ -103,7 +104,9 @@ export default function ResetPasswordPage() {
             ? rateLimitMessage('sendCode', result.waitSeconds)
             : result.error === 'CAPTCHA_FAILED'
               ? CAPTCHA_FAILED_MESSAGE
-              : 'No pudimos enviar el código. Intentá de nuevo en unos minutos.',
+              : result.error === 'EMAIL_UNAVAILABLE'
+                ? EMAIL_UNAVAILABLE_MESSAGE
+                : 'No pudimos enviar el código. Intentá de nuevo en unos minutos.',
         );
         return;
       }
@@ -185,6 +188,8 @@ export default function ResetPasswordPage() {
         toast.error(rateLimitMessage('sendCode', result.waitSeconds));
       } else if (result.error === 'CAPTCHA_FAILED') {
         toast.error(CAPTCHA_FAILED_MESSAGE);
+      } else if (result.error === 'EMAIL_UNAVAILABLE') {
+        toast.error(EMAIL_UNAVAILABLE_MESSAGE);
       } else {
         toast.error('No pudimos reenviar el código. Intentá de nuevo en unos minutos.');
       }

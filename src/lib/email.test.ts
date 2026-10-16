@@ -11,9 +11,13 @@ import {
   sendEmail,
   sendEmails,
   RESEND_BATCH_TIMEOUT_MS,
+  EmailQuotaError,
 } from './email';
+import { reportEmailQuotaExceeded } from '@/lib/system-alerts';
+import { EMAIL_UNAVAILABLE_MESSAGE } from '@/lib/email-unavailable';
 
 jest.mock('nodemailer');
+jest.mock('@/lib/system-alerts', () => ({ reportEmailQuotaExceeded: jest.fn() }));
 jest.mock('resend', () => ({ Resend: jest.fn() }));
 
 const sendMail = jest.fn();
@@ -92,6 +96,20 @@ describe('sendEmail with Resend (production)', () => {
     jest.spyOn(console, 'error').mockImplementation(() => {});
 
     await expect(sendEmail(message)).rejects.toThrow('Error al enviar el email');
+  });
+
+  it('alerts the admins and tells the user it is being fixed when the plan runs out of quota', async () => {
+    jest.spyOn(console, 'error').mockImplementation(() => {});
+    resendSend.mockResolvedValue({
+      data: null,
+      error: { name: 'monthly_quota_exceeded', message: 'Monthly quota reached', statusCode: 429 },
+    });
+
+    const sending = sendEmail(message);
+
+    await expect(sending).rejects.toBeInstanceOf(EmailQuotaError);
+    await expect(sending).rejects.toThrow(EMAIL_UNAVAILABLE_MESSAGE);
+    expect(reportEmailQuotaExceeded).toHaveBeenCalledWith('Monthly quota reached');
   });
 
   it('never reaches Resend in the e2e suite, even with a key', async () => {
@@ -174,6 +192,7 @@ describe('sendEmails', () => {
 
     expect(await sendEmails(many(350))).toBe(250);
     expect(resendBatchSend).toHaveBeenCalledTimes(2);
+    expect(reportEmailQuotaExceeded).toHaveBeenCalledWith('quota');
   });
 
   it('gives up on a batch Resend does not answer in time and goes on', async () => {

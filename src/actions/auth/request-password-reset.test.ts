@@ -3,6 +3,7 @@ import { getRateLimitWait, resetRateLimits } from '@/lib/rate-limit';
 import { requestPasswordReset } from './request-password-reset';
 
 jest.mock('@/lib/email', () => ({
+  EmailQuotaError: class EmailQuotaError extends Error {},
   sendEmail: jest.fn().mockResolvedValue(undefined),
   generateVerificationCode: jest.fn().mockReturnValue('654321'),
   getCodeExpirationDate: jest.fn().mockReturnValue(new Date('2027-01-01')),
@@ -107,6 +108,16 @@ describe('requestPasswordReset', () => {
     await expect(requestPasswordReset('test@example.com')).resolves.toEqual({
       success: false,
       error: 'SEND_FAILED',
+    });
+  });
+
+  it('returns EMAIL_UNAVAILABLE when Resend is out of quota', async () => {
+    prismaMock.user.findUnique.mockResolvedValue(baseUser as any);
+    emailLibMock.sendEmail.mockRejectedValue(new emailLib.EmailQuotaError());
+
+    await expect(requestPasswordReset('test@example.com')).resolves.toEqual({
+      success: false,
+      error: 'EMAIL_UNAVAILABLE',
     });
   });
 });

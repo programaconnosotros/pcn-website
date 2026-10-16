@@ -3,6 +3,7 @@ import { enforceRateLimit } from '@/lib/rate-limit';
 import { signUp } from './sign-up';
 
 jest.mock('@/lib/email', () => ({
+  EmailQuotaError: class EmailQuotaError extends Error {},
   sendEmail: jest.fn().mockResolvedValue(undefined),
   generateVerificationCode: jest.fn().mockReturnValue('123456'),
   getCodeExpirationDate: jest.fn().mockReturnValue(new Date('2027-01-01')),
@@ -166,6 +167,16 @@ describe('signUp', () => {
     mockCreate();
     emailLibMock.sendEmail.mockRejectedValueOnce('not an error');
     await expect(signUp(input)).resolves.toMatchObject({ success: true });
+  });
+
+  it('creates the account but says the code did not go out when Resend is out of quota', async () => {
+    mockCreate();
+    emailLibMock.sendEmail.mockRejectedValueOnce(new emailLib.EmailQuotaError());
+
+    await expect(signUp(input)).resolves.toMatchObject({ success: true, emailUnavailable: true });
+
+    mockCreate();
+    await expect(signUp(input)).resolves.not.toHaveProperty('emailUnavailable');
   });
 
   it('rejects invalid input before touching the database', async () => {

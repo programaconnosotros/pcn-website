@@ -13,6 +13,8 @@ import { PullToRefresh } from '@/components/pull-to-refresh';
 import { LiveNews } from '@/components/realtime/live-news';
 import { NewsTicker } from '@/components/realtime/news-ticker';
 import { findSession, type SessionUser } from '@/lib/session';
+import { getOpenSystemAlerts } from '@/lib/system-alerts';
+import { SystemAlertDialog } from '@/components/system-alerts/system-alert-dialog';
 
 const PlatformLayout = async ({
   children,
@@ -31,15 +33,21 @@ const PlatformLayout = async ({
   const user: SessionUser | null = session?.user ?? null;
 
   // Contador de notificaciones no leídas de quien tiene sesión
-  const unreadNotificationsCount = user ? await getUnreadNotificationsCount() : 0;
+  const isAdmin = user?.role === 'ADMIN';
+  const [unreadNotificationsCount, systemAlerts] = await Promise.all([
+    user ? getUnreadNotificationsCount() : 0,
+    // Problemas de la plataforma que tiene que resolver un admin: un diálogo crítico al entrar.
+    isAdmin ? getOpenSystemAlerts() : [],
+  ]);
 
   return (
     <>
       {/* Pantallas grandes: PCN OS, un escritorio con dock y ventanas movibles. */}
       <PcnOs
         user={user ? { id: user.id, name: user.name, email: user.email, image: user.image } : null}
-        isAdmin={user?.role === 'ADMIN'}
+        isAdmin={isAdmin}
       />
+      {systemAlerts.length > 0 && <SystemAlertDialog alerts={systemAlerts} />}
       <PageVisitTracker />
       <LiveNews />
       <OsBridge />

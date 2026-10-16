@@ -2,6 +2,7 @@ import { prismaMock } from '@/test/prisma';
 import { sendVerificationCode } from './send-verification-code';
 
 jest.mock('@/lib/email', () => ({
+  EmailQuotaError: class EmailQuotaError extends Error {},
   sendEmail: jest.fn().mockResolvedValue(undefined),
   generateVerificationCode: jest.fn().mockReturnValue('123456'),
   getCodeExpirationDate: jest.fn().mockReturnValue(new Date('2027-01-01')),
@@ -101,5 +102,20 @@ describe('sendVerificationCode', () => {
     );
     expect(prismaMock.emailVerificationToken.create).toHaveBeenCalledTimes(1);
     expect(emailLibMock.sendEmail).toHaveBeenCalledTimes(1);
+  });
+
+  it('answers EMAIL_UNAVAILABLE when Resend is out of quota, and rethrows other failures', async () => {
+    prismaMock.user.findUnique.mockResolvedValue(baseUser as any);
+    prismaMock.emailVerificationToken.findFirst.mockResolvedValue(null);
+    emailLibMock.sendEmail.mockRejectedValueOnce(new emailLib.EmailQuotaError());
+
+    await expect(sendVerificationCode('test@example.com')).resolves.toEqual({
+      success: false,
+      error: 'EMAIL_UNAVAILABLE',
+      waitSeconds: 0,
+    });
+
+    emailLibMock.sendEmail.mockRejectedValueOnce(new Error('SMTP down'));
+    await expect(sendVerificationCode('test@example.com')).rejects.toThrow('SMTP down');
   });
 });

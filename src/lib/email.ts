@@ -1,6 +1,8 @@
 import { randomInt } from 'node:crypto';
 import nodemailer from 'nodemailer';
 import { Resend } from 'resend';
+import { EMAIL_UNAVAILABLE_MESSAGE } from '@/lib/email-unavailable';
+import { reportEmailQuotaExceeded } from '@/lib/system-alerts';
 
 // Constantes de configuración
 export const RATE_LIMIT_SECONDS = 60; // 1 minuto entre envíos
@@ -77,6 +79,20 @@ export const getSender = () => ({
   address: process.env.EMAIL_FROM || DEFAULT_SENDER_ADDRESS,
 });
 
+/** Errores de Resend que no se arreglan reintentando: el plan no da más emails por hoy o por mes. */
+const QUOTA_ERRORS = new Set(['daily_quota_exceeded', 'monthly_quota_exceeded']);
+
+/**
+ * Resend se quedó sin cuota: no sale ningún email hasta que se amplíe el plan o se renueve. Su
+ * mensaje es el que lee el usuario (EMAIL_UNAVAILABLE_MESSAGE); los admins ya tienen la alerta.
+ */
+export class EmailQuotaError extends Error {
+  constructor() {
+    super(EMAIL_UNAVAILABLE_MESSAGE);
+    this.name = 'EmailQuotaError';
+  }
+}
+
 const formatSender = ({ name, address }: { name: string; address: string }) =>
   `${name} <${address}>`;
 
@@ -103,6 +119,10 @@ export const sendEmail = async ({
         subject,
         html,
       });
+      if (error && QUOTA_ERRORS.has(error.name)) {
+        await reportEmailQuotaExceeded(error.message);
+        throw new EmailQuotaError();
+      }
       if (error) throw new Error(`Resend: ${error.message}`);
       return;
     }
@@ -114,6 +134,7 @@ export const sendEmail = async ({
       error instanceof Error ? error.message : 'Unknown error',
     );
 
+    if (error instanceof EmailQuotaError) throw error;
     if (error instanceof Error && error.message.startsWith('Email not configured')) {
       throw new Error('Error de configuración: el envío de emails no está configurado');
     }
@@ -127,11 +148,6 @@ const RESEND_BATCH_SIZE = 100;
 
 /** Cuánto se espera a Resend por cada lote antes de darlo por perdido. */
 export const RESEND_BATCH_TIMEOUT_MS = 10_000;
-
-/** Errores de Resend que no se arreglan reintentando con el lote siguiente: el plan no da más. */
-const QUOTA_ERRORS = new Set(['daily_quota_exceeded', 'monthly_quota_exceeded']);
-
-class QuotaExceededError extends Error {}
 
 /** La promesa, o un error si no termina a tiempo: un Resend colgado no frena a quien guarda. */
 const withTimeout = <T>(promise: Promise<T>, ms: number) => {
@@ -165,14 +181,17 @@ export const sendEmails = async (
           resend.batch.send(chunk.map((message) => ({ from, ...message }))),
           RESEND_BATCH_TIMEOUT_MS,
         );
-        if (error && QUOTA_ERRORS.has(error.name)) throw new QuotaExceededError(error.message);
+        if (error && QUOTA_ERRORS.has(error.name)) {
+          await reportEmailQuotaExceeded(error.message);
+          throw new EmailQuotaError();
+        }
         if (error) throw new Error(error.message);
       } catch (error) {
         console.error(
           'Failed to send email batch:',
           error instanceof Error ? error.message : 'Unknown error',
         );
-        if (error instanceof QuotaExceededError) return failed + messages.length - i;
+        if (error instanceof EmailQuotaError) return failed + messages.length - i;
         failed += chunk.length;
       }
     }

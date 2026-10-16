@@ -2,6 +2,7 @@ import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent, { type UserEvent } from '@testing-library/user-event';
 import { toast } from 'sonner';
 import { sendVerificationCode } from '@/actions/auth/send-verification-code';
+import { EMAIL_UNAVAILABLE_MESSAGE } from '@/lib/email-unavailable';
 import { verifyEmailCode } from '@/actions/auth/verify-email-code';
 import { notifyOsSessionChange } from '@/components/os/os-env';
 import { rateLimitDigest } from '@/lib/rate-limit-messages';
@@ -152,6 +153,22 @@ describe('VerifyEmailPage', () => {
 
     await waitFor(() => expect(toast.error).toHaveBeenCalledWith('Error al reenviar el código.'));
     expect(screen.getByRole('button', { name: 'Reenviar código' })).toBeEnabled();
+  });
+
+  it('explains that emails are down when Resend is out of quota', async () => {
+    setLocation('/verificar-email', 'email=ana@example.com');
+    const unavailable = { success: false, error: 'EMAIL_UNAVAILABLE', waitSeconds: 0 };
+    sendMock.mockResolvedValue(unavailable);
+    const user = userEvent.setup();
+    render(<VerifyEmailPage />);
+
+    expect(await screen.findByRole('alert')).toHaveTextContent(EMAIL_UNAVAILABLE_MESSAGE);
+    await user.click(screen.getByRole('button', { name: 'Reenviar código' }));
+    expect(toast.error).toHaveBeenCalledWith(EMAIL_UNAVAILABLE_MESSAGE);
+
+    sendMock.mockResolvedValue({ success: true, waitSeconds: 30 });
+    await user.click(screen.getByRole('button', { name: 'Reenviar código' }));
+    expect(screen.queryByRole('alert')).not.toBeInTheDocument();
   });
 
   it('counts the cooldown down every second', async () => {

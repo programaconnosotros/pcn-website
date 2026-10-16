@@ -24,6 +24,7 @@ import { toast } from 'sonner';
 import * as z from 'zod';
 import { safeRedirectPath } from '@/lib/safe-redirect';
 import { actionErrorMessage, parseRateLimitError } from '@/lib/rate-limit-messages';
+import { EMAIL_UNAVAILABLE_MESSAGE } from '@/lib/email-unavailable';
 
 const codeSchema = z.object({
   code: z
@@ -42,6 +43,8 @@ function VerifyEmailContent() {
   const [isResending, setIsResending] = useState(false);
   const [resendCooldown, setResendCooldown] = useState(0);
   const [isVerified, setIsVerified] = useState(false);
+  // Resend sin cuota: el código no salió y se explica en la página, no solo en un toast.
+  const [emailUnavailable, setEmailUnavailable] = useState(false);
 
   // Timer para el cooldown de reenvío
   useEffect(() => {
@@ -67,6 +70,10 @@ function VerifyEmailContent() {
 
     try {
       const result = await sendVerificationCode(email);
+      if (result.success === false) {
+        setEmailUnavailable(true);
+        return;
+      }
       setResendCooldown(result.waitSeconds || 60);
     } catch (error) {
       // Sin aviso en el envío automático; si es el rate limit, el botón de reenviar muestra la espera
@@ -107,6 +114,12 @@ function VerifyEmailContent() {
     setIsResending(true);
     try {
       const result = await sendVerificationCode(email);
+      if (result.success === false) {
+        setEmailUnavailable(true);
+        toast.error(EMAIL_UNAVAILABLE_MESSAGE);
+        return;
+      }
+      setEmailUnavailable(false);
       setResendCooldown(result.waitSeconds || 60);
       toast.success('Nuevo código enviado. Revisá tu correo electrónico.');
     } catch (error) {
@@ -150,6 +163,14 @@ function VerifyEmailContent() {
       ) : (
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            {emailUnavailable && (
+              <p
+                role="alert"
+                className="border border-dashed border-amber-500/50 px-3 py-2 text-sm text-amber-500"
+              >
+                {EMAIL_UNAVAILABLE_MESSAGE}
+              </p>
+            )}
             <FormField
               control={form.control}
               name="code"

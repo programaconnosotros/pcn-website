@@ -6,6 +6,7 @@ import { PcnOs } from '@/components/os/pcn-os';
 import { AppSidebar } from '@/components/ui/app-sidebar';
 import { SidebarProvider } from '@/components/ui/sidebar';
 import { findSession } from '@/lib/session';
+import { getOpenSystemAlerts } from '@/lib/system-alerts';
 import { mockCookies } from '@/test/cookies';
 import PlatformLayout from './layout';
 
@@ -32,6 +33,12 @@ jest.mock('@/components/search/classic-global-search', () => ({
   ClassicGlobalSearch: () => null,
 }));
 jest.mock('@/components/pull-to-refresh', () => ({ PullToRefresh: () => null }));
+jest.mock('@/lib/system-alerts', () => ({ getOpenSystemAlerts: jest.fn() }));
+jest.mock('@/components/system-alerts/system-alert-dialog', () => ({
+  SystemAlertDialog: ({ alerts }: { alerts: { kind: string }[] }) => (
+    <p>alerta crítica: {alerts.map((alert) => alert.kind).join(', ')}</p>
+  ),
+}));
 
 const events = [{ id: 'e1' }];
 const user = { id: 'u1', name: 'Ana', email: 'ana@test.com', image: null, role: 'USER' };
@@ -43,6 +50,7 @@ describe('PlatformLayout', () => {
   beforeEach(() => {
     jest.mocked(fetchUpcomingEvents).mockResolvedValue(events as never);
     jest.mocked(getUnreadNotificationsCount).mockResolvedValue(7 as never);
+    jest.mocked(getOpenSystemAlerts).mockResolvedValue([{ kind: 'email_quota' }] as never);
   });
 
   it('renders the page for an anonymous visitor with a closed sidebar and no notifications', async () => {
@@ -94,6 +102,25 @@ describe('PlatformLayout', () => {
       unreadNotificationsCount: 7,
     });
     expect(jest.mocked(PcnOs).mock.calls[0][0]).toMatchObject({ isAdmin: true });
+  });
+
+  it('shows admins, and only admins, the critical dialog for open platform problems', async () => {
+    mockCookies({ sessionId: 's1' });
+    jest.mocked(findSession).mockResolvedValue({ user: { ...user, role: 'ADMIN' } } as never);
+    const { unmount } = await renderLayout();
+    expect(screen.getByText('alerta crítica: email_quota')).toBeInTheDocument();
+    unmount();
+
+    jest.mocked(getOpenSystemAlerts).mockResolvedValue([]);
+    const { unmount: unmountQuiet } = await renderLayout();
+    expect(screen.queryByText(/alerta crítica/)).not.toBeInTheDocument();
+    unmountQuiet();
+
+    jest.mocked(getOpenSystemAlerts).mockClear();
+    jest.mocked(findSession).mockResolvedValue({ user } as never);
+    await renderLayout();
+    expect(getOpenSystemAlerts).not.toHaveBeenCalled();
+    expect(screen.queryByText(/alerta crítica/)).not.toBeInTheDocument();
   });
 
   it('treats an expired session as anonymous', async () => {

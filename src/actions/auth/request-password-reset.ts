@@ -7,6 +7,7 @@ import {
   generateVerificationCode,
   getCodeExpirationDate,
   sendEmail,
+  EmailQuotaError,
 } from '@/lib/email';
 import { render } from '@react-email/render';
 import { consumeRateLimit, getRateLimitWait } from '@/lib/rate-limit';
@@ -18,7 +19,8 @@ export type RequestPasswordResetResult =
   | { success: true; waitSeconds: number }
   | { success: false; error: 'RATE_LIMIT'; waitSeconds: number }
   | { success: false; error: 'CAPTCHA_FAILED' }
-  | { success: false; error: 'SEND_FAILED' };
+  | { success: false; error: 'SEND_FAILED' }
+  | { success: false; error: 'EMAIL_UNAVAILABLE' };
 
 export const requestPasswordReset = async (
   email: string,
@@ -80,8 +82,10 @@ export const requestPasswordReset = async (
       subject: 'Código de verificación para restablecer contraseña',
       html: emailHtml,
     });
-  } catch {
-    // sendEmail ya registra el detalle en el log del servidor
+  } catch (error) {
+    // sendEmail ya registra el detalle en el log del servidor; sin cuota en Resend, los admins ya
+    // tienen la alerta y al usuario se le explica que lo estamos solucionando.
+    if (error instanceof EmailQuotaError) return { success: false, error: 'EMAIL_UNAVAILABLE' };
     return { success: false, error: 'SEND_FAILED' };
   }
 

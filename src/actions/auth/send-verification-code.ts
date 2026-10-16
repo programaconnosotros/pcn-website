@@ -8,11 +8,16 @@ import {
   getCodeExpirationDate,
   checkRateLimit,
   sendEmail,
+  EmailQuotaError,
 } from '@/lib/email';
 import { render } from '@react-email/render';
 import { RateLimitError, enforceRateLimit } from '@/lib/rate-limit';
 
-export const sendVerificationCode = async (email: string) => {
+const EMAIL_UNAVAILABLE = { success: false, error: 'EMAIL_UNAVAILABLE', waitSeconds: 0 } as const;
+
+export const sendVerificationCode = async (
+  email: string,
+): Promise<{ success: true; waitSeconds: number } | typeof EMAIL_UNAVAILABLE> => {
   await enforceRateLimit('sendCode');
 
   const user = await prisma.user.findUnique({
@@ -62,11 +67,18 @@ export const sendVerificationCode = async (email: string) => {
 
   // Enviar email con el código
   const emailHtml = await render(EmailVerificationEmail({ userName: user.name, code }));
-  await sendEmail({
-    to: user.email,
-    subject: 'Verificá tu correo electrónico - Programa Con Nosotros',
-    html: emailHtml,
-  });
+  try {
+    await sendEmail({
+      to: user.email,
+      subject: 'Verificá tu correo electrónico - Programa Con Nosotros',
+      html: emailHtml,
+    });
+  } catch (error) {
+    // Sin cuota en Resend: se devuelve (en producción Next oculta el mensaje de lo que se lanza)
+    // para que la página le explique al usuario qué pasa. Los admins ya tienen la alerta.
+    if (error instanceof EmailQuotaError) return EMAIL_UNAVAILABLE;
+    throw error;
+  }
 
   return { success: true, waitSeconds: RATE_LIMIT_SECONDS };
 };

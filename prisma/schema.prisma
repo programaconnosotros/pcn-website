@@ -673,6 +673,20 @@ model ErrorLog {
   @@index([createdAt])
 }
 
+/// A problem with the platform itself that an admin has to fix (e.g. Resend out of quota): admins
+/// see a critical dialog while one is open. At most one open alert per kind.
+model SystemAlert {
+  id         String    @id @default(cuid())
+  /// "email_quota"
+  kind       String
+  detail     String
+  createdAt  DateTime  @default(now())
+  resolvedAt DateTime?
+  resolvedBy String?
+
+  @@index([kind, resolvedAt])
+}
+
 model AppLog {
   id        String   @id @default(cuid())
   level     String // Nivel del log: info, warn, error, debug

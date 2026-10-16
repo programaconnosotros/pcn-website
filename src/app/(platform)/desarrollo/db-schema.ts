@@ -1443,6 +1443,40 @@ export const dbModels: DbModel[] = [
     uniques: [],
   },
   {
+    name: 'SystemAlert',
+    domain: 'sistema',
+    fields: [
+      {
+        name: 'id',
+        type: 'String',
+        pk: true,
+      },
+      {
+        name: 'kind',
+        type: 'String',
+      },
+      {
+        name: 'detail',
+        type: 'String',
+      },
+      {
+        name: 'createdAt',
+        type: 'DateTime',
+      },
+      {
+        name: 'resolvedAt',
+        type: 'DateTime',
+        optional: true,
+      },
+      {
+        name: 'resolvedBy',
+        type: 'String',
+        optional: true,
+      },
+    ],
+    uniques: [],
+  },
+  {
     name: 'AppLog',
     domain: 'sistema',
     fields: [

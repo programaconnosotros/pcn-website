@@ -62,6 +62,7 @@ describe('ResetPasswordPage', () => {
   it.each([
     [{ success: false, error: 'RATE_LIMIT', waitSeconds: 30 }, /30 segundos/],
     [{ success: false, error: 'SEND_FAILED' }, /No pudimos enviar el código/],
+    [{ success: false, error: 'EMAIL_UNAVAILABLE' }, /lo estamos solucionando/],
   ])('reports request failures (%o)', async (result, message) => {
     requestMock.mockResolvedValue(result);
     const user = userEvent.setup();
@@ -229,6 +230,7 @@ describe('ResetPasswordPage', () => {
     it.each([
       [{ success: false, error: 'RATE_LIMIT', waitSeconds: 0 }, /esperá 0 segundos/],
       [{ success: false, error: 'SEND_FAILED' }, /No pudimos reenviar el código/],
+      [{ success: false, error: 'EMAIL_UNAVAILABLE' }, /lo estamos solucionando/],
     ])('reports resend failures (%o)', async (result, message) => {
       requestMock.mockResolvedValueOnce({ success: true, waitSeconds: 0 });
       requestMock.mockResolvedValueOnce(result);
