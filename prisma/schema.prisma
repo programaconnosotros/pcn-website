@@ -55,6 +55,8 @@ model User {
   // Especialidades de /especialidades en las que la persona se considera especialista (ids del
   // repo, src/components/especialidades/specialties.ts, sin clave foránea).
   specialties          String[]              @default([])
+  // Sistemas operativos que usa (ids de src/lib/tech-stack.ts).
+  operatingSystems     String[]              @default([])
   sessions             Session[]
   advice               Advice[]
   hiddenConsejos       HiddenConsejo[]

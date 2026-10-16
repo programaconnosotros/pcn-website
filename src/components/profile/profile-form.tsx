@@ -39,6 +39,8 @@ import { specialtyGroups } from '@/components/especialidades/specialties';
 import { actionErrorMessage } from '@/lib/rate-limit-messages';
 import { displayName } from '@/lib/people-names';
 import { COUNTRIES, DEFAULT_COUNTRY } from '@/lib/countries';
+import { OPERATING_SYSTEMS } from '@/lib/tech-stack';
+import { OptionChips } from './option-chips';
 
 const SLOGAN_MAX = 160;
 const BAR_WIDTH = 20;
@@ -127,6 +129,7 @@ export const ProfileForm = ({
       career: user.career ?? '',
       studyPlace: user.studyPlace ?? '',
       specialties: user.specialties ?? [],
+      operatingSystems: user.operatingSystems ?? [],
       programmingLanguages: languages || [],
     },
   });
@@ -135,6 +138,7 @@ export const ProfileForm = ({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const values = form.watch();
   const selectedSpecialties = values.specialties ?? [];
+  const selectedOperatingSystems = values.operatingSystems ?? [];
   const dirtyCount = Object.keys(form.formState.dirtyFields).length;
 
   useEffect(() => {
@@ -241,6 +245,12 @@ export const ProfileForm = ({
       checks: LINKS.map((link) => !!values[link.name]),
     },
     { id: 'stack', title: 'stack', checks: [userLanguages.length > 0] },
+    {
+      id: 'herramientas',
+      title: 'herramientas',
+      optional: true,
+      checks: [selectedOperatingSystems.length > 0],
+    },
     {
       id: 'especialidades',
       title: 'especialidades',
@@ -587,8 +597,28 @@ export const ProfileForm = ({
           </FormSection>
 
           <FormSection
-            id="especialidades"
+            id="herramientas"
             index={6}
+            title="herramientas"
+            description="con qué trabajás todos los días"
+            {...progress('herramientas')}
+          >
+            <div className="space-y-1.5">
+              <p className="font-mono text-[10px] tracking-[0.18em] text-muted-foreground uppercase">
+                sistemas operativos
+              </p>
+              <OptionChips
+                label="Sistemas operativos"
+                options={OPERATING_SYSTEMS}
+                selected={selectedOperatingSystems}
+                onChange={(ids) => form.setValue('operatingSystems', ids, { shouldDirty: true })}
+              />
+            </div>
+          </FormSection>
+
+          <FormSection
+            id="especialidades"
+            index={7}
             title="especialidades"
             description="en qué sos especialista: te listamos en /especialidades para que te contacten"
             {...progress('especialidades')}

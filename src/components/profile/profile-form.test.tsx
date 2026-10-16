@@ -38,6 +38,7 @@ const baseUser = {
   career: null,
   studyPlace: null,
   positions: [],
+  operatingSystems: ['windows'],
 };
 const ts = { languageId: 'typescript', color: '#4aa3ff', logo: 'ts', experienceLevel: 100 };
 
@@ -244,5 +245,25 @@ describe('ProfileForm', () => {
     fireEvent.submit(form());
 
     expect(await screen.findByText('Máximo 80 caracteres')).toBeInTheDocument();
+  });
+
+  it('marks and unmarks the operating systems', async () => {
+    jest.mocked(updateProfile).mockResolvedValue(undefined as never);
+    renderForm();
+
+    const systems = screen.getByRole('group', { name: 'Sistemas operativos' });
+    expect(within(systems).getByRole('button', { name: 'Windows' })).toHaveAttribute(
+      'aria-pressed',
+      'true',
+    );
+    await userEvent.click(within(systems).getByRole('button', { name: 'Windows' }));
+    await userEvent.click(within(systems).getByRole('button', { name: 'Arch Linux' }));
+    await userEvent.click(screen.getByRole('button', { name: 'guardarCambios();' }));
+
+    await waitFor(() =>
+      expect(updateProfile).toHaveBeenCalledWith(
+        expect.objectContaining({ operatingSystems: ['arch'] }),
+      ),
+    );
   });
 });

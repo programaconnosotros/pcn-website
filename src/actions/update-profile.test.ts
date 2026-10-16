@@ -23,6 +23,7 @@ const validProfileData: ProfileFormData = {
   career: null,
   studyPlace: null,
   specialties: [],
+  operatingSystems: [],
   programmingLanguages: [],
 };
 
@@ -194,6 +195,11 @@ describe('updateProfile', () => {
     ['a huge slogan', { slogan: 'x'.repeat(501) }, 'Máximo 500 caracteres'],
     ['a huge name', { name: 'x'.repeat(101) }, 'Máximo 100 caracteres'],
     ['a profile without a country', { countryOfOrigin: '' }, 'El país es requerido'],
+    [
+      'an unknown operating system',
+      { operatingSystems: ['TempleOS'] },
+      'Sistema operativo inválido',
+    ],
   ])('rejects %s', async (_case, override, message) => {
     mockCookies({ sessionId: 'session-1' });
     prismaMock.session.findUnique.mockResolvedValue(baseSession as any);
@@ -211,5 +217,16 @@ describe('updateProfile', () => {
     );
 
     expect(prismaMock.user.update).not.toHaveBeenCalled();
+  });
+
+  it('saves the operating systems once each', async () => {
+    mockCookies({ sessionId: 'session-1' });
+    prismaMock.session.findUnique.mockResolvedValue(baseSession as any);
+
+    await updateProfile({ ...validProfileData, operatingSystems: ['ubuntu', 'macos', 'ubuntu'] });
+
+    expect(prismaMock.user.update.mock.calls[0][0].data).toMatchObject({
+      operatingSystems: ['ubuntu', 'macos'],
+    });
   });
 });

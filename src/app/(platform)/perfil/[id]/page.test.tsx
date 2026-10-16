@@ -74,6 +74,7 @@ const profile = (overrides: Record<string, unknown> = {}) => ({
   badges: [],
   languages: [],
   positions: [],
+  operatingSystems: [],
   createdAt: new Date('2024-03-15T12:00:00Z'),
   ...overrides,
 });
@@ -284,6 +285,21 @@ describe('/perfil/[id]', () => {
     expect(jest.mocked(LanguageCoinsContainer).mock.calls[0][0]).toEqual({
       languages: [{ languageId: 'ts', color: '#3178c6', logo: '/ts.svg' }],
     });
+  });
+
+  it('lists the tools the member works with, and hides the block without any', async () => {
+    findUser.mockResolvedValue(profile({ operatingSystems: ['ubuntu', 'windows', 'nada'] }));
+
+    const { unmount } = await renderPage(page());
+
+    const tools = screen.getByRole('heading', { name: /herramientas/ }).parentElement!;
+    expect(within(tools).getByText('so')).toBeInTheDocument();
+    expect(within(tools).getByText('Windows · Ubuntu')).toBeInTheDocument();
+    unmount();
+
+    findUser.mockResolvedValue(profile());
+    await renderPage(page());
+    expect(screen.queryByRole('heading', { name: /herramientas/ })).not.toBeInTheDocument();
   });
 
   it('falls back to the old single job title, and studies with only a place', async () => {
