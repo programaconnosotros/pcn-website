@@ -24,6 +24,7 @@ const validProfileData: ProfileFormData = {
   studyPlace: null,
   specialties: [],
   operatingSystems: [],
+  favoriteIde: null,
   programmingLanguages: [],
 };
 
@@ -228,5 +229,16 @@ describe('updateProfile', () => {
     expect(prismaMock.user.update.mock.calls[0][0].data).toMatchObject({
       operatingSystems: ['ubuntu', 'macos'],
     });
+  });
+
+  it('saves the favorite IDE, and none when left empty', async () => {
+    mockCookies({ sessionId: 'session-1' });
+    prismaMock.session.findUnique.mockResolvedValue(baseSession as any);
+
+    await updateProfile({ ...validProfileData, favoriteIde: 'zed' });
+    expect(prismaMock.user.update.mock.calls[0][0].data).toMatchObject({ favoriteIde: 'zed' });
+
+    await updateProfile({ ...validProfileData, favoriteIde: '' });
+    expect(prismaMock.user.update.mock.calls[1][0].data).toMatchObject({ favoriteIde: null });
   });
 });

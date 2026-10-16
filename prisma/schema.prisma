@@ -57,6 +57,8 @@ model User {
   specialties          String[]              @default([])
   // Sistemas operativos que usa (ids de src/lib/tech-stack.ts).
   operatingSystems     String[]              @default([])
+  // IDE o editor favorito (id de src/lib/tech-stack.ts).
+  favoriteIde          String?
   sessions             Session[]
   advice               Advice[]
   hiddenConsejos       HiddenConsejo[]

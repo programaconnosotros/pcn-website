@@ -203,6 +203,11 @@ export const dbModels: DbModel[] = [
         list: true,
       },
       {
+        name: 'favoriteIde',
+        type: 'String',
+        optional: true,
+      },
+      {
         name: 'createdAt',
         type: 'DateTime',
       },

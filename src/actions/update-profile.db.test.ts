@@ -33,6 +33,7 @@ const profile = (overrides: Partial<ProfileFormData> = {}): ProfileFormData => (
   studyPlace: 'UTN',
   specialties: ['backend', 'devops'],
   operatingSystems: ['ubuntu', 'macos'],
+  favoriteIde: 'neovim',
   programmingLanguages: [
     { languageId: 'typescript', color: '#3178c6', logo: 'ts.svg' },
     { languageId: 'go', color: '#00add8', logo: 'go.svg' },

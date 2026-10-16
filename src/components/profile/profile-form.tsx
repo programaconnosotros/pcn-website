@@ -39,10 +39,11 @@ import { specialtyGroups } from '@/components/especialidades/specialties';
 import { actionErrorMessage } from '@/lib/rate-limit-messages';
 import { displayName } from '@/lib/people-names';
 import { COUNTRIES, DEFAULT_COUNTRY } from '@/lib/countries';
-import { OPERATING_SYSTEMS } from '@/lib/tech-stack';
+import { IDES, OPERATING_SYSTEMS } from '@/lib/tech-stack';
 import { OptionChips } from './option-chips';
 
 const SLOGAN_MAX = 160;
+const NO_IDE = 'ninguno';
 const BAR_WIDTH = 20;
 
 const LINKS = [
@@ -130,6 +131,7 @@ export const ProfileForm = ({
       studyPlace: user.studyPlace ?? '',
       specialties: user.specialties ?? [],
       operatingSystems: user.operatingSystems ?? [],
+      favoriteIde: user.favoriteIde ?? null,
       programmingLanguages: languages || [],
     },
   });
@@ -249,7 +251,7 @@ export const ProfileForm = ({
       id: 'herramientas',
       title: 'herramientas',
       optional: true,
-      checks: [selectedOperatingSystems.length > 0],
+      checks: [selectedOperatingSystems.length > 0, !!values.favoriteIde],
     },
     {
       id: 'especialidades',
@@ -603,16 +605,48 @@ export const ProfileForm = ({
             description="con qué trabajás todos los días"
             {...progress('herramientas')}
           >
-            <div className="space-y-1.5">
-              <p className="font-mono text-[10px] tracking-[0.18em] text-muted-foreground uppercase">
-                sistemas operativos
-              </p>
-              <OptionChips
-                label="Sistemas operativos"
-                options={OPERATING_SYSTEMS}
-                selected={selectedOperatingSystems}
-                onChange={(ids) => form.setValue('operatingSystems', ids, { shouldDirty: true })}
+            <div className="space-y-4">
+              <FormField
+                control={form.control}
+                name="favoriteIde"
+                render={({ field }) => (
+                  <FormItem className="sm:max-w-xs">
+                    <FormLabel>ide favorito</FormLabel>
+                    <Select
+                      // Radix no acepta un ítem con valor vacío: "ninguno" es no tener favorito.
+                      onValueChange={(value) => field.onChange(value === NO_IDE ? null : value)}
+                      value={field.value || NO_IDE}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value={NO_IDE}>ninguno</SelectItem>
+                        {IDES.map((ide) => (
+                          <SelectItem key={ide.id} value={ide.id}>
+                            {ide.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
+
+              <div className="space-y-1.5">
+                <p className="font-mono text-[10px] tracking-[0.18em] text-muted-foreground uppercase">
+                  sistemas operativos
+                </p>
+                <OptionChips
+                  label="Sistemas operativos"
+                  options={OPERATING_SYSTEMS}
+                  selected={selectedOperatingSystems}
+                  onChange={(ids) => form.setValue('operatingSystems', ids, { shouldDirty: true })}
+                />
+              </div>
             </div>
           </FormSection>
 

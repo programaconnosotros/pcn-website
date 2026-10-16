@@ -39,6 +39,7 @@ const baseUser = {
   studyPlace: null,
   positions: [],
   operatingSystems: ['windows'],
+  favoriteIde: 'vscode',
 };
 const ts = { languageId: 'typescript', color: '#4aa3ff', logo: 'ts', experienceLevel: 100 };
 
@@ -264,6 +265,22 @@ describe('ProfileForm', () => {
       expect(updateProfile).toHaveBeenCalledWith(
         expect.objectContaining({ operatingSystems: ['arch'] }),
       ),
+    );
+  });
+
+  it('picks a favorite IDE, or none', async () => {
+    jest.mocked(updateProfile).mockResolvedValue(undefined as never);
+    const user = userEvent.setup();
+    renderForm();
+
+    const ide = screen.getByRole('combobox', { name: 'ide favorito' });
+    expect(ide).toHaveTextContent('VS Code');
+    await user.click(ide);
+    await user.click(await screen.findByRole('option', { name: 'ninguno' }));
+    await user.click(screen.getByRole('button', { name: 'guardarCambios();' }));
+
+    await waitFor(() =>
+      expect(updateProfile).toHaveBeenCalledWith(expect.objectContaining({ favoriteIde: null })),
     );
   });
 });

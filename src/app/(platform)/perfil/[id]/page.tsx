@@ -31,7 +31,7 @@ import { Suspense } from 'react';
 import { ProfileCountsLoader, ProfileTabContent } from './profile-tab-content';
 import type { Metadata } from 'next';
 import { MISSING_TAB_TITLE, tabTitle } from '@/lib/tab-title';
-import { operatingSystemLabels } from '@/lib/tech-stack';
+import { ideLabel, operatingSystemLabels } from '@/lib/tech-stack';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
 
@@ -123,6 +123,7 @@ const findProfileUser = cached(
         twitchUrl: true,
         kickUrl: true,
         operatingSystems: true,
+        favoriteIde: true,
         createdAt: true,
         badges: {
           include: { badge: true },
@@ -178,6 +179,7 @@ async function getUser(id: string) {
     kickUrl: user.kickUrl,
     languages: user.languages,
     operatingSystems: user.operatingSystems,
+    favoriteIde: user.favoriteIde,
     createdAt: user.createdAt,
   };
 }
@@ -291,9 +293,10 @@ export default async function ProfilePage(props: ProfilePageProps) {
   ].filter((fact): fact is { label: string; value: string; href?: string } => !!fact.value);
 
   // Con qué trabaja: una fila por herramienta que haya cargado.
-  const tools: { label: string; value: string }[] = [
+  const tools = [
+    { label: 'ide', value: ideLabel(user.favoriteIde) },
     { label: 'so', value: operatingSystemLabels(user.operatingSystems).join(' · ') },
-  ].filter((tool) => !!tool.value);
+  ].filter((tool): tool is { label: string; value: string } => !!tool.value);
 
   const firstName = user.name?.split(' ')[0] ?? 'Este usuario';
 

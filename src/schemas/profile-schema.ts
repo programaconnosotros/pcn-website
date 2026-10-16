@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { UserProgrammingLanguage } from '@/types/programming-language';
 import { isSpecialtyId } from '@/components/especialidades/specialties';
-import { isOperatingSystem } from '@/lib/tech-stack';
+import { isIde, isOperatingSystem } from '@/lib/tech-stack';
 
 // Helper para validar URLs opcionales (permite string vacío o URL válida)
 const optionalUrl = z
@@ -83,6 +83,12 @@ export const profileSchema = z.object({
     .array(z.string().refine(isOperatingSystem, { message: 'Sistema operativo inválido' }))
     .default([])
     .transform((ids) => [...new Set(ids)]),
+  // IDE favorito, del catálogo; vacío es que no eligió ninguno.
+  favoriteIde: z
+    .string()
+    .nullish()
+    .transform((id) => id || null)
+    .refine((id) => id === null || isIde(id), { message: 'IDE inválido' }),
   programmingLanguages: z.array(
     z.object({
       languageId: z.string(),

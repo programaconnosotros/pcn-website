@@ -23,6 +23,15 @@ export const changelog: ChangelogEntry[] = [
   {
     date: '2026-10-15',
     area: 'perfil',
+    title: 'Tu IDE favorito',
+    description:
+      'En la sección herramientas del perfil podés elegir tu IDE o editor favorito (VS Code, Cursor, Neovim, IntelliJ y más), y aparece en tu perfil.',
+    authors: ['agustin-sanc'],
+    href: '/perfil',
+  },
+  {
+    date: '2026-10-15',
+    area: 'perfil',
     title: 'Tus sistemas operativos',
     description:
       'En la nueva sección herramientas del perfil podés marcar los sistemas operativos que usás (Windows, macOS, las distros de Linux y más), y se muestran en tu perfil.',

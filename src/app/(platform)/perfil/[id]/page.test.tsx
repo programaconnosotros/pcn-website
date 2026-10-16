@@ -75,6 +75,7 @@ const profile = (overrides: Record<string, unknown> = {}) => ({
   languages: [],
   positions: [],
   operatingSystems: [],
+  favoriteIde: null,
   createdAt: new Date('2024-03-15T12:00:00Z'),
   ...overrides,
 });
@@ -288,11 +289,14 @@ describe('/perfil/[id]', () => {
   });
 
   it('lists the tools the member works with, and hides the block without any', async () => {
-    findUser.mockResolvedValue(profile({ operatingSystems: ['ubuntu', 'windows', 'nada'] }));
+    findUser.mockResolvedValue(
+      profile({ operatingSystems: ['ubuntu', 'windows', 'nada'], favoriteIde: 'neovim' }),
+    );
 
     const { unmount } = await renderPage(page());
 
     const tools = screen.getByRole('heading', { name: /herramientas/ }).parentElement!;
+    expect(within(tools).getByText('Neovim')).toBeInTheDocument();
     expect(within(tools).getByText('so')).toBeInTheDocument();
     expect(within(tools).getByText('Windows · Ubuntu')).toBeInTheDocument();
     unmount();
