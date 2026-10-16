@@ -1,6 +1,7 @@
 'use client';
 
 import { createComment } from '@/actions/comments/create-comment';
+import { editComment } from '@/actions/comments/edit-comment';
 import { formatDate } from '@/lib/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { User } from '@/generated/prisma/browser';
@@ -34,10 +35,70 @@ type CommentSectionProps = {
   session: SessionWithUser | null;
 };
 
+/** A comment that changed after it was posted (Prisma bumps updatedAt only on edits). */
+const wasEdited = (comment: Pick<Comment, 'createdAt' | 'updatedAt'>) =>
+  new Date(comment.updatedAt).getTime() - new Date(comment.createdAt).getTime() > 1000;
+
+// Lives outside CommentSection: the comment tree there re-mounts on every render, and this keeps
+// what you're typing.
+const EditCommentForm = ({
+  commentId,
+  content,
+  onDone,
+}: {
+  commentId: string;
+  content: string;
+  onDone: () => void;
+}) => {
+  const [isSaving, setIsSaving] = useState(false);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<CommentFormData>({
+    resolver: zodResolver(commentSchema),
+    defaultValues: { content },
+  });
+
+  const onSubmit = async (data: CommentFormData) => {
+    setIsSaving(true);
+    try {
+      await editComment({ commentId, content: data.content });
+      toast.success('Comentario editado');
+      onDone();
+    } catch (error) {
+      toast.error(actionErrorMessage(error, 'Error al editar el comentario'));
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-2">
+      <Textarea
+        {...register('content')}
+        aria-label="Editar comentario"
+        className="min-h-[72px] resize-none"
+        autoFocus
+      />
+      {errors.content && <p className="text-sm text-destructive">{errors.content.message}</p>}
+      <div className="flex gap-2">
+        <Button type="submit" size="sm" loading={isSaving} loadingText="guardando...">
+          guardar();
+        </Button>
+        <Button type="button" variant="ghost" size="sm" onClick={onDone} disabled={isSaving}>
+          Cancelar
+        </Button>
+      </div>
+    </form>
+  );
+};
+
 export const CommentSection = ({ adviceId, comments, session }: CommentSectionProps) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [replyingTo, setReplyingTo] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [editingId, setEditingId] = useState<string | null>(null);
   const isAdmin = session?.user?.role === 'ADMIN';
   // De cada respuesta, el comentario que abre su hilo
   const threadOf = new Map(
@@ -101,12 +162,21 @@ export const CommentSection = ({ adviceId, comments, session }: CommentSectionPr
             <span className="text-xs font-semibold">{comment.author.name}</span>
             <span className="text-[11px] text-muted-foreground">
               {formatDate(comment.createdAt)}
+              {wasEdited(comment) && ' (editado)'}
             </span>
           </div>
 
-          <p className="text-sm">{comment.content}</p>
+          {editingId === comment.id ? (
+            <EditCommentForm
+              commentId={comment.id}
+              content={comment.content}
+              onDone={() => setEditingId(null)}
+            />
+          ) : (
+            <p className="text-sm">{comment.content}</p>
+          )}
 
-          {session && (
+          {session && editingId !== comment.id && (
             <div className="flex gap-3">
               <Button
                 variant="ghost"
@@ -116,6 +186,16 @@ export const CommentSection = ({ adviceId, comments, session }: CommentSectionPr
               >
                 Responder
               </Button>
+              {comment.authorId === session.user.id && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setEditingId(comment.id)}
+                  className="h-auto p-0 text-xs text-muted-foreground hover:text-foreground"
+                >
+                  Editar
+                </Button>
+              )}
               {(comment.authorId === session.user.id || isAdmin) && (
                 <Button
                   variant="ghost"

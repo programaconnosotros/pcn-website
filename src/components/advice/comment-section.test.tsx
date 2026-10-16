@@ -3,11 +3,13 @@ import userEvent, { type UserEvent } from '@testing-library/user-event';
 import { toast } from 'sonner';
 import { createComment } from '@/actions/comments/create-comment';
 import { deleteComment } from '@/actions/comments/delete-comment';
+import { editComment } from '@/actions/comments/edit-comment';
 import { buildSession } from '@/test/platform';
 import { CommentSection } from './comment-section';
 
 jest.mock('@/actions/comments/create-comment', () => ({ createComment: jest.fn() }));
 jest.mock('@/actions/comments/delete-comment', () => ({ deleteComment: jest.fn() }));
+jest.mock('@/actions/comments/edit-comment', () => ({ editComment: jest.fn() }));
 jest.mock('sonner', () => require('@/test/platform').mockSonner());
 
 type Comments = Parameters<typeof CommentSection>[0]['comments'];
@@ -175,5 +177,42 @@ describe('CommentSection', () => {
 
     expect(deleteComment).toHaveBeenCalledWith('c1');
     await waitFor(() => expect(screen.queryByRole('alertdialog')).not.toBeInTheDocument());
+  });
+
+  it('lets only the author edit a comment, and marks edited ones', () => {
+    const edited = [
+      {
+        ...comment('c1', 'Muy bueno', 'Bruno'),
+        updatedAt: new Date('2025-03-02T12:00:00Z'),
+        replies: [comment('r1', 'Coincido', 'Carla')],
+      },
+    ] as unknown as Comments;
+    render(
+      <CommentSection adviceId="a1" comments={edited} session={buildSession({ role: 'ADMIN' })} />,
+    );
+
+    expect(screen.queryByRole('button', { name: 'Editar' })).not.toBeInTheDocument();
+    expect(screen.getAllByText(/\(editado\)/)).toHaveLength(1);
+  });
+
+  it('edits a comment in place', async () => {
+    (editComment as jest.Mock).mockResolvedValue(undefined);
+    const user = userEvent.setup();
+    render(
+      <CommentSection adviceId="a1" comments={comments} session={buildSession({ id: 'u-r1' })} />,
+    );
+
+    await user.click(screen.getByRole('button', { name: 'Editar' }));
+    const box = screen.getByRole('textbox', { name: 'Editar comentario' });
+    expect(box).toHaveValue('Coincido');
+    await user.clear(box);
+    await user.paste('Coincido totalmente');
+    await user.click(screen.getByRole('button', { name: 'guardar();' }));
+
+    expect(editComment).toHaveBeenCalledWith({ commentId: 'r1', content: 'Coincido totalmente' });
+    expect(toast.success).toHaveBeenCalledWith('Comentario editado');
+    await waitFor(() =>
+      expect(screen.queryByRole('textbox', { name: 'Editar comentario' })).not.toBeInTheDocument(),
+    );
   });
 });

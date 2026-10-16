@@ -27,7 +27,7 @@ export const coverage: { total: CoverageMetrics; groups: CoverageGroup[] } = {
     {
       folder: 'src/actions',
       detail: 'server actions',
-      files: 116,
+      files: 117,
       lines: 96.7,
       statements: 95.6,
       functions: 96.7,

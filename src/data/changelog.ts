@@ -23,9 +23,9 @@ export const changelog: ChangelogEntry[] = [
   {
     date: '2026-10-15',
     area: 'consejos',
-    title: 'Eliminá tus comentarios',
+    title: 'Editá y eliminá tus comentarios',
     description:
-      'Podés eliminar los comentarios que dejaste en un consejo (si abrían un hilo, se van con sus respuestas). Los admins pueden eliminar cualquiera.',
+      'Podés editar o eliminar los comentarios que dejaste en un consejo (si abrían un hilo, se eliminan con sus respuestas); los editados se marcan como tales. Los admins pueden eliminar cualquiera.',
     authors: ['agustin-sanc'],
     href: '/consejos',
   },
