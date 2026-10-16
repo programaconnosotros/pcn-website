@@ -29,6 +29,7 @@ import { deleteTalk } from '@/actions/talks/delete-talk';
 import { fetchTalkForEdit } from '@/actions/talks/fetch-talks';
 import { actionErrorMessage } from '@/lib/rate-limit-messages';
 import { CommunityTalks, type TalkWithEvent } from './community-talks';
+import { TALK_CONTACT_URL, TalkIdeas } from './talk-ideas';
 
 interface Props {
   talks: TalkWithEvent[];
@@ -48,9 +49,11 @@ export function CharlasAdminWrapper({ talks, externalTalks, isAdmin }: Props) {
   const [isDeleting, setIsDeleting] = useState(false);
   const [tab, setTab] = useState('comunidad');
 
-  // `/charlas?tab=externas` (linked from the home) opens the recommended external talks.
+  // `/charlas?tab=externas` (linked from the home) opens the recommended external talks, and
+  // `?tab=ideas` the ideas for a talk.
   useEffect(() => {
-    if (new URLSearchParams(window.location.search).get('tab') === 'externas') setTab('externas');
+    const requested = new URLSearchParams(window.location.search).get('tab');
+    if (requested === 'externas' || requested === 'ideas') setTab(requested);
   }, []);
 
   // El listado no trae los teléfonos de los oradores y el form los reescribe: se piden al editar
@@ -89,7 +92,7 @@ export function CharlasAdminWrapper({ talks, externalTalks, isAdmin }: Props) {
             {/* External talks are recommended like any video; community ones are given at PCN. */}
             {tab === 'externas' ? (
               <RecommendButton kind="VIDEO" defaults={{ isTalk: true }} label="recomendar charla" />
-            ) : isAdmin ? (
+            ) : isAdmin && tab === 'comunidad' ? (
               <div className="flex gap-2">
                 <Button variant="outline" size="sm" onClick={() => setShowFromPhoto(true)}>
                   <Sparkles className="mr-1.5 h-4 w-4" />
@@ -102,7 +105,7 @@ export function CharlasAdminWrapper({ talks, externalTalks, isAdmin }: Props) {
               </div>
             ) : (
               <Link
-                href="https://wa.me/5493815777562"
+                href={TALK_CONTACT_URL}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-1.5 font-mono text-xs text-pcnGreen-700 hover:text-pcnGreen"
@@ -116,6 +119,7 @@ export function CharlasAdminWrapper({ talks, externalTalks, isAdmin }: Props) {
           <TabsList className="mb-4">
             <TabsTrigger value="comunidad">Comunidad</TabsTrigger>
             <TabsTrigger value="externas">Externas</TabsTrigger>
+            <TabsTrigger value="ideas">Ideas</TabsTrigger>
           </TabsList>
         </StickyHeader>
 
@@ -139,6 +143,10 @@ export function CharlasAdminWrapper({ talks, externalTalks, isAdmin }: Props) {
               <span className="ml-0.5 animate-blink text-pcnGreen">_</span>
             </p>
           </div>
+        </TabsContent>
+
+        <TabsContent value="ideas">
+          <TalkIdeas />
         </TabsContent>
 
         {/* Talks from other conferences that the community recommends watching. */}

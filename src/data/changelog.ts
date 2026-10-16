@@ -22,6 +22,15 @@ export interface ChangelogEntry {
 export const changelog: ChangelogEntry[] = [
   {
     date: '2026-10-15',
+    area: 'charlas',
+    title: 'Ideas para dar una charla',
+    description:
+      'Si querés dar una charla y no sabés de qué, la pestaña ideas de /charlas tiene temas de web, backend, seguridad, infra, calidad, IA y carrera, con su nivel. Los que usa esta web traen el link a cómo los usa, para contarlos con un caso real.',
+    authors: ['agustin-sanc'],
+    href: '/charlas?tab=ideas',
+  },
+  {
+    date: '2026-10-15',
     area: 'inicio',
     title: 'Los colaboradores de la web, en el inicio',
     description:

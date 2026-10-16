@@ -105,6 +105,16 @@ describe('CharlasAdminWrapper', () => {
     expect(screen.getByRole('tab', { name: 'Externas' })).toHaveAttribute('aria-selected', 'true');
   });
 
+  it('opens the talk ideas from ?tab=ideas, inviting even admins to give one', () => {
+    window.history.replaceState(null, '', '/charlas?tab=ideas');
+    renderWrapper(true);
+
+    expect(screen.getByRole('tab', { name: 'Ideas' })).toHaveAttribute('aria-selected', 'true');
+    expect(screen.getByText(/no sabés de qué/)).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /quiero dar una charla/ })).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /nuevaCharla/ })).not.toBeInTheDocument();
+  });
+
   it('lets admins create a talk', async () => {
     renderWrapper(true);
 
