@@ -7,24 +7,7 @@ import { ExternalLink, Globe } from 'lucide-react';
 import { Github, Instagram, Linkedin, Youtube } from '@/components/icons/brand-icons';
 import Link from 'next/link';
 import React from 'react';
-
-interface Platform {
-  youtube?: string;
-  instagram?: string;
-  twitter?: string;
-  linkedin?: string;
-  github?: string;
-  page?: string;
-}
-
-interface Influencer {
-  id: string;
-  name: string;
-  image: string;
-  description: string;
-  platforms: Platform;
-  specialties: string[];
-}
+import type { Influencer } from './influencers';
 
 const PlatformIcon: Record<string, React.ComponentType<any>> = {
   youtube: Youtube,
@@ -46,9 +29,11 @@ const PlatformLabel: Record<string, string> = {
 
 export function InfluencerCard({ influencer }: { influencer: Influencer }) {
   // Ajustar la ruta de la imagen para que apunte al directorio correcto
-  const imagePath = influencer.image.startsWith('/')
-    ? influencer.image
-    : `/influencers/${influencer.image}`;
+  const imagePath = !influencer.image
+    ? undefined
+    : influencer.image.startsWith('/') || influencer.image.startsWith('https://')
+      ? influencer.image
+      : `/influencers/${influencer.image}`;
 
   return (
     <div className={cn(ruledCellClassName, 'flex gap-3 p-3')}>

@@ -4,8 +4,13 @@ import { expectOnlyPlaceholders, renderPage } from '@/test/pages-m-z';
 import SeriesYPeliculasLayout, { metadata } from './layout';
 import Loading from './loading';
 import Image, { alt } from './opengraph-image';
+import { getSeriesTitles } from '@/lib/recommendations';
 import SeriesYPeliculasPage from './page';
 
+jest.mock('@/lib/recommendations', () => ({ getSeriesTitles: jest.fn(async () => []) }));
+jest.mock('@/components/recommendations/recommend-button', () => ({
+  RecommendButton: ({ kind }: { kind: string }) => <button type="button">recomendar {kind}</button>,
+}));
 jest.mock('@/lib/og/section-cards', () => require('@/test/pages-m-z').mockSectionCards());
 jest.mock('@/lib/og/terminal-card', () => require('@/test/pages-m-z').mockTerminalCard());
 
@@ -23,7 +28,7 @@ describe('/series-y-peliculas', () => {
   });
 
   it('lists the featured titles first, then the rest alphabetically', async () => {
-    await renderPage(<SeriesYPeliculasPage />);
+    await renderPage(SeriesYPeliculasPage());
 
     expect(screen.getByText('6 series · 11 películas')).toBeInTheDocument();
     const all = titles();
@@ -43,7 +48,7 @@ describe('/series-y-peliculas', () => {
 
   it('searches by title, director or description', async () => {
     const user = userEvent.setup();
-    await renderPage(<SeriesYPeliculasPage />);
+    await renderPage(SeriesYPeliculasPage());
     const search = screen.getByRole('textbox', { name: /Buscar por título/ });
 
     await user.type(search, 'FINCHER');
@@ -56,7 +61,7 @@ describe('/series-y-peliculas', () => {
 
   it('filters by genre and says when nothing matches', async () => {
     const user = userEvent.setup();
-    await renderPage(<SeriesYPeliculasPage />);
+    await renderPage(SeriesYPeliculasPage());
 
     await user.click(screen.getByRole('combobox'));
     await user.click(screen.getByRole('option', { name: 'Comedia' }));
@@ -75,5 +80,33 @@ describe('/series-y-peliculas', () => {
 
   it('shows only placeholders while loading', () => {
     expectOnlyPlaceholders(<Loading />);
+  });
+
+  it('adds what the community recommended, without repeating the curated titles', async () => {
+    jest.mocked(getSeriesTitles).mockResolvedValueOnce([
+      {
+        id: 'rec-1',
+        title: 'Severance',
+        director: 'Dan Erickson',
+        type: 'Serie',
+        genre: 'Drama',
+        description: 'Trabajo y memoria.',
+        year: 2022,
+      },
+      {
+        id: 'rec-2',
+        title: 'Mr. Robot',
+        director: 'Sam Esmail',
+        type: 'Serie',
+        genre: 'Thriller',
+        description: 'Repetida',
+      },
+    ]);
+    await renderPage(SeriesYPeliculasPage());
+
+    expect(screen.getByText('7 series · 11 películas')).toBeInTheDocument();
+    expect(titles()).toContain('Severance');
+    expect(titles().filter((title) => title === 'Mr. Robot')).toHaveLength(1);
+    expect(screen.getByRole('button', { name: 'recomendar SERIES' })).toBeInTheDocument();
   });
 });

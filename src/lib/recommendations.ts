@@ -7,6 +7,9 @@ import type { Video } from '@/components/videos/videos';
 import type { Article } from '@/app/(platform)/lectura/articles';
 import type { Book } from '@/app/(platform)/lectura/books';
 import type { Course } from '@/app/(platform)/cursos/courses';
+import type { Title } from '@/app/(platform)/series-y-peliculas/titles';
+import { platformsOf, type Influencer } from '@/components/influencers/influencers';
+import { isSeries } from '@/schemas/recommendation-schema';
 
 // What /lectura, /cursos, /videos and the external talks of /charlas list: the approved rows of
 // Recommendation, read once (cached, a few hundred short rows) and shaped like each page's type.
@@ -128,6 +131,32 @@ export const getExternalTalks = cache(async () =>
 /** Videos that are not conference talks, so they never repeat what the external talks list. */
 export const getOtherVideos = cache(async () =>
   (await getVideos()).filter((video) => !video.isTalk),
+);
+
+/** The series and movies members recommended, shaped like the curated list's titles. */
+export const getSeriesTitles = cache(async (): Promise<Title[]> =>
+  (await ofKind('SERIES')).map((row) => ({
+    id: `rec-${row.id}`,
+    title: row.title,
+    director: row.author ?? '',
+    type: isSeries(row.source) ? 'Serie' : 'Película',
+    genre: row.categories[0] ?? 'Otros',
+    description: row.description,
+    ...(row.year !== null && { year: row.year }),
+    ...(row.imageUrl && { poster: row.imageUrl }),
+  })),
+);
+
+/** The content creators members recommended, shaped like the curated list's influencers. */
+export const getCommunityInfluencers = cache(async (): Promise<Influencer[]> =>
+  (await ofKind('INFLUENCER')).map((row) => ({
+    id: `rec-${row.id}`,
+    name: row.title,
+    image: row.imageUrl ?? '',
+    description: row.description,
+    platforms: platformsOf(row.url),
+    specialties: row.categories,
+  })),
 );
 
 /** Every article, newest first. */

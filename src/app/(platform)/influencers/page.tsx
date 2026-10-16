@@ -2,24 +2,9 @@ import { InfluencerCard } from '@/components/influencers/influencer-card';
 import { PageTitle } from '@/components/ui/page-title';
 import { StickyHeader } from '@/components/ui/sticky-header';
 import { RuledGrid } from '@/components/ui/ruled-grid';
-
-interface Platform {
-  youtube?: string;
-  instagram?: string;
-  twitter?: string;
-  linkedin?: string;
-  github?: string;
-  page?: string;
-}
-
-interface Influencer {
-  id: string;
-  name: string;
-  image: string;
-  description: string;
-  platforms: Platform;
-  specialties: string[];
-}
+import { RecommendButton } from '@/components/recommendations/recommend-button';
+import type { Influencer } from '@/components/influencers/influencers';
+import { getCommunityInfluencers } from '@/lib/recommendations';
 
 interface InfluencersData {
   influencers: Influencer[];
@@ -399,18 +384,26 @@ const influencersData: InfluencersData = {
 };
 
 export default async function InfluencersPage() {
+  // The curated list first, then the ones members recommended and an admin approved.
+  const curated = new Set(influencersData.influencers.map((i) => i.name.toLowerCase()));
+  const influencers = [
+    ...influencersData.influencers,
+    ...(await getCommunityInfluencers()).filter((i) => !curated.has(i.name.toLowerCase())),
+  ];
+
   return (
     <>
       <div className="flex flex-1 flex-col p-4 pt-0">
         <StickyHeader className="mt-4">
           <PageTitle
             path="influencers"
-            meta={`${influencersData.influencers.length} referentes para seguir`}
+            meta={`${influencers.length} referentes para seguir`}
+            action={<RecommendButton kind="INFLUENCER" />}
           />
         </StickyHeader>
 
         <RuledGrid className="mb-14 grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3">
-          {influencersData.influencers.map((influencer: Influencer) => (
+          {influencers.map((influencer) => (
             <InfluencerCard key={influencer.id} influencer={influencer} />
           ))}
         </RuledGrid>

@@ -2,6 +2,7 @@ import {
   EMPTY_RECOMMENDATION_FORM,
   fieldLabel,
   formatDuration,
+  isSeries,
   missingToPublish,
   parseDuration,
   parseRecommendation,
@@ -328,5 +329,55 @@ describe('fieldLabel', () => {
     expect(fieldLabel('VIDEO', 'source')).toBe('canal');
     expect(fieldLabel('ARTICLE', 'source')).toBe('sitio');
     expect(fieldLabel('COURSE', 'author')).toBe('lo dicta');
+  });
+});
+
+describe('series, movies and content creators', () => {
+  it('asks a series or movie for its title and whether it is a series', () => {
+    expect(parseRecommendation('SERIES', { title: 'Severance' })).toEqual({
+      success: false,
+      error: 'Completá ¿serie o película?',
+    });
+    const parsed = parseRecommendation('SERIES', {
+      title: 'Severance',
+      source: 'Serie',
+      author: 'Dan Erickson',
+      categories: 'Drama, Thriller',
+      year: '2022',
+      imageUrl: 'https://img.dev/poster.jpg',
+    });
+    expect(parsed).toMatchObject({
+      success: true,
+      data: { title: 'Severance', source: 'Serie', categories: ['Drama', 'Thriller'], year: 2022 },
+    });
+    // The poster is for admins to set.
+    expect(parsed.success && parsed.data.imageUrl).toBeNull();
+    expect(isSeries('serie')).toBe(true);
+    expect(isSeries('Película')).toBe(false);
+  });
+
+  it('asks a creator for a link and says what is missing to publish each', () => {
+    expect(parseRecommendation('INFLUENCER', { title: 'Midu' })).toEqual({
+      success: false,
+      error: 'Completá link a su canal o perfil',
+    });
+    const item = {
+      title: 'Midu',
+      description: '',
+      url: 'https://youtube.com/@midudev',
+      author: null,
+      source: null,
+      categories: [],
+      publishedAt: null,
+      durationSeconds: null,
+      youtubeUrls: [],
+    };
+    expect(missingToPublish('INFLUENCER', item)).toEqual(['descripción']);
+    expect(missingToPublish('SERIES', { ...item, url: null })).toEqual([
+      'dirección o creadores',
+      'descripción',
+      '¿serie o película?',
+      'género',
+    ]);
   });
 });

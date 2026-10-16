@@ -251,3 +251,49 @@ describe('recommending and reviewing', () => {
     });
   });
 });
+
+it('publishes a series and a content creator a member recommended once an admin approves them', async () => {
+  const [member, admin] = [await quickUser(), await quickUser({ role: 'ADMIN' })];
+  const { getSeriesTitles, getCommunityInfluencers } = await import('@/lib/recommendations');
+  const title = `Serie ${uid()}`;
+  const name = `Creadora ${uid()}`;
+
+  await actAs(member.id);
+  await expect(
+    submitRecommendation('SERIES', {
+      ...EMPTY_RECOMMENDATION_FORM,
+      title,
+      source: 'Serie',
+      author: 'Dan Erickson',
+      categories: 'Drama',
+      year: '2022',
+      description: 'Trabajo y memoria en una empresa misteriosa.',
+    }),
+  ).resolves.toEqual({ success: true, status: 'PENDING' });
+  await submitRecommendation('INFLUENCER', {
+    ...EMPTY_RECOMMENDATION_FORM,
+    title: name,
+    url: 'https://www.youtube.com/@creadora',
+    categories: 'rust, linux',
+    description: 'Explica sistemas operativos.',
+  });
+  expect((await getSeriesTitles()).map((t) => t.title)).not.toContain(title);
+
+  await actAs(admin.id);
+  for (const row of await prisma.recommendation.findMany({
+    where: { title: { in: [title, name] } },
+  })) {
+    await expect(approveRecommendation(row.id)).resolves.toMatchObject({ success: true });
+  }
+
+  expect((await getSeriesTitles()).find((t) => t.title === title)).toMatchObject({
+    type: 'Serie',
+    genre: 'Drama',
+    director: 'Dan Erickson',
+    year: 2022,
+  });
+  expect((await getCommunityInfluencers()).find((i) => i.name === name)).toMatchObject({
+    platforms: { youtube: 'https://www.youtube.com/@creadora' },
+    specialties: ['rust', 'linux'],
+  });
+});

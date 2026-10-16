@@ -1147,6 +1147,10 @@ enum RecommendationKind {
   BOOK
   COURSE
   VIDEO
+  // Una serie o película sobre tecnología (/series-y-peliculas).
+  SERIES
+  // Un creador de contenido de ingeniería de software (/influencers).
+  INFLUENCER
 }
 
 enum RecommendationStatus {

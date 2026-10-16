@@ -60,7 +60,7 @@ export const dbEnums: { name: string; values: string[] }[] = [
   },
   {
     name: 'RecommendationKind',
-    values: ['ARTICLE', 'BOOK', 'COURSE', 'VIDEO'],
+    values: ['ARTICLE', 'BOOK', 'COURSE', 'VIDEO', 'SERIES', 'INFLUENCER'],
   },
   {
     name: 'RecommendationStatus',

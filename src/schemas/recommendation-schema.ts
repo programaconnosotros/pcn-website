@@ -1,10 +1,17 @@
 import { z } from 'zod';
 
-// Recommending an article, book, course or video: what each kind asks for, how the form's text
+// Recommending an article, book, course, video, series or movie, or content creator: what each kind asks for, how the form's text
 // becomes the Recommendation's columns and what an item needs before it can be published.
 // Shared by the forms (client) and the server actions, which validate everything again.
 
-export const RECOMMENDATION_KINDS = ['ARTICLE', 'BOOK', 'COURSE', 'VIDEO'] as const;
+export const RECOMMENDATION_KINDS = [
+  'ARTICLE',
+  'BOOK',
+  'COURSE',
+  'VIDEO',
+  'SERIES',
+  'INFLUENCER',
+] as const;
 export type RecommendationKindValue = (typeof RECOMMENDATION_KINDS)[number];
 
 export const recommendationKindSchema = z.enum(RECOMMENDATION_KINDS);
@@ -21,6 +28,18 @@ export const RECOMMENDATION_KIND_INFO: Record<
   BOOK: { label: 'libro', plural: 'libros', article: 'un', href: '/lectura' },
   COURSE: { label: 'curso', plural: 'cursos', article: 'un', href: '/cursos' },
   VIDEO: { label: 'video', plural: 'videos', article: 'un', href: '/videos' },
+  SERIES: {
+    label: 'serie o película',
+    plural: 'series y películas',
+    article: 'una',
+    href: '/series-y-peliculas',
+  },
+  INFLUENCER: {
+    label: 'creador de contenido',
+    plural: 'creadores de contenido',
+    article: 'un',
+    href: '/influencers',
+  },
 };
 
 export const recommendationFieldNames = [
@@ -109,6 +128,10 @@ export const SUBMIT_FIELDS: Record<RecommendationKindValue, RecommendationFieldN
   ARTICLE: ['url', 'title', 'author', 'language', 'categories', 'description', 'note'],
   BOOK: ['title', 'author', 'language', 'categories', 'url', 'isbn', 'year', 'description', 'note'],
   COURSE: ['url', 'title', 'author', 'description', 'note'],
+  // `source` says whether it's a series or a movie; `categories`, its genre.
+  SERIES: ['title', 'source', 'author', 'categories', 'year', 'url', 'description', 'note'],
+  // `url` is their main channel or profile; `categories`, what they talk about.
+  INFLUENCER: ['title', 'url', 'categories', 'language', 'description', 'note'],
 };
 
 /** What only admins edit (the rest of what the listing shows), in order. */
@@ -124,6 +147,8 @@ export const ADMIN_FIELDS: Record<RecommendationKindValue, RecommendationFieldNa
     'isMadeByCommunity',
     'acceptDonations',
   ],
+  SERIES: ['imageUrl'],
+  INFLUENCER: ['imageUrl'],
 };
 
 /** What a member can't leave empty when recommending. */
@@ -132,6 +157,8 @@ export const REQUIRED_TO_SUBMIT: Record<RecommendationKindValue, RecommendationF
   ARTICLE: ['url', 'title', 'author'],
   BOOK: ['title', 'author'],
   COURSE: ['url', 'title', 'author'],
+  SERIES: ['title', 'source'],
+  INFLUENCER: ['title', 'url'],
 };
 
 const FIELD_LABELS: Record<RecommendationFieldName, string> = {
@@ -168,6 +195,19 @@ const KIND_LABELS: Partial<
   },
   COURSE: { title: 'nombre', author: 'lo dicta', url: 'web del curso', imageUrl: 'logo' },
   ARTICLE: { imageUrl: 'avatar del autor' },
+  SERIES: {
+    source: '¿serie o película?',
+    author: 'dirección o creadores',
+    categories: 'género',
+    url: 'link (trailer, IMDb)',
+    imageUrl: 'póster',
+  },
+  INFLUENCER: {
+    title: 'nombre',
+    url: 'link a su canal o perfil',
+    categories: 'de qué habla',
+    imageUrl: 'foto',
+  },
 };
 
 export const fieldLabel = (kind: RecommendationKindValue, field: RecommendationFieldName) =>
@@ -342,7 +382,7 @@ export const parseRecommendation = (
       coauthors: list(values.coauthors, /\s*,\s*/),
       source,
       categories: list(values.categories, /\s*,\s*/),
-      language: kind === 'COURSE' ? null : values.language,
+      language: kind === 'COURSE' || kind === 'SERIES' ? null : values.language,
       publishedAt,
       year: values.year ? Number(values.year) : null,
       imageUrl: values.imageUrl || null,
@@ -386,9 +426,16 @@ export const missingToPublish = (
     need('source', item.source);
     need('publishedAt', item.publishedAt);
     need('duration', item.durationSeconds);
+  } else if (kind === 'INFLUENCER') {
+    need('url', item.url);
+    need('description', item.description);
   } else {
     need('author', item.author);
     need('description', item.description);
+  }
+  if (kind === 'SERIES') {
+    need('source', item.source);
+    need('categories', item.categories.length);
   }
   if (kind === 'ARTICLE') {
     need('url', item.url);
@@ -456,3 +503,6 @@ export const slugify = (title: string) =>
     .replace(/^-+|-+$/g, '')
     .slice(0, 60)
     .replace(/-+$/, '') || 'recomendacion';
+
+/** Whether a SERIES recommendation is a series (otherwise a movie), from what was typed. */
+export const isSeries = (source: string | null) => /serie/i.test(source ?? '');
