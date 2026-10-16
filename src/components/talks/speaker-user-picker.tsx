@@ -100,6 +100,8 @@ export function SpeakerUserPicker({ value, onSelect }: Props) {
             <p className="truncate text-xs text-muted-foreground">{selected.email}</p>
           </div>
           <Button
+            aria-label="Quitar persona elegida"
+            title="Quitar persona elegida"
             type="button"
             variant="ghost"
             size="icon"

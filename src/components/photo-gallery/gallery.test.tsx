@@ -161,7 +161,7 @@ describe('Gallery', () => {
     await userEvent.click(screen.getAllByRole('button', { name: 'Compartir' })[3]);
 
     expect(screen.getByRole('dialog')).toHaveTextContent('"Asado"');
-    expect(screen.getByRole('textbox', { name: '' })).toHaveValue(
+    expect(screen.getByRole('textbox', { name: 'Enlace para compartir' })).toHaveValue(
       `${window.location.origin}/galeria/d`,
     );
     await userEvent.click(screen.getByRole('button', { name: 'cerrar();' }));

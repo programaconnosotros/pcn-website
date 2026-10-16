@@ -214,6 +214,8 @@ export function FileUpload({
           </div>
           {!isUploading && (
             <Button
+              aria-label="Quitar imagen"
+              title="Quitar imagen"
               type="button"
               variant="destructive"
               size="icon"

@@ -135,7 +135,13 @@ export function ProposalStatusActions({ proposalId, currentStatus, speakerName, 
 
       <AlertDialog open={deleteOpen} onOpenChange={setDeleteOpen}>
         <AlertDialogTrigger asChild>
-          <Button size="sm" variant="ghost" disabled={isPending}>
+          <Button
+            aria-label="Eliminar propuesta"
+            title="Eliminar propuesta"
+            size="sm"
+            variant="ghost"
+            disabled={isPending}
+          >
             <Trash2 className="h-3 w-3" />
           </Button>
         </AlertDialogTrigger>

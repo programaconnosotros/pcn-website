@@ -44,7 +44,7 @@ describe('RegistrationsDataTable', () => {
     const bruno = screen.getByRole('row', { name: /Bruno/ });
     expect(bruno).toHaveTextContent('Profesional');
     expect(bruno).toHaveTextContent('Activa');
-    expect(within(bruno).getByRole('button', { name: '' })).toBeInTheDocument();
+    expect(within(bruno).getByRole('button', { name: 'Eliminar inscripción' })).toBeInTheDocument();
     expect(screen.getByRole('row', { name: /Ada/ })).toHaveTextContent('Estudiante');
     const carla = screen.getByRole('row', { name: /Carla/ });
     expect(carla).toHaveTextContent('Sin información adicional');

@@ -51,6 +51,7 @@ export function ShareDialog({ isOpen, onClose, url, title }: ShareDialogProps) {
               ref={inputRef}
               value={url}
               readOnly
+              aria-label="Enlace para compartir"
               className="flex-1 font-mono text-xs text-pcnGreen"
               onClick={handleSelectAll}
             />

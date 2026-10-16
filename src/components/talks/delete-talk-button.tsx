@@ -43,7 +43,13 @@ export function DeleteTalkButton({ talkId, talkTitle }: Props) {
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger asChild>
-        <Button size="sm" variant="ghost" disabled={isPending}>
+        <Button
+          aria-label="Eliminar charla"
+          title="Eliminar charla"
+          size="sm"
+          variant="ghost"
+          disabled={isPending}
+        >
           <Trash2 className="h-3 w-3" />
         </Button>
       </AlertDialogTrigger>

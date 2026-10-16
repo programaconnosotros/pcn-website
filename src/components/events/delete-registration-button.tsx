@@ -59,6 +59,8 @@ export function DeleteRegistrationButton({
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger asChild>
         <Button
+          aria-label="Eliminar inscripción"
+          title="Eliminar inscripción"
           variant="ghost"
           size="icon"
           className="h-8 w-8 text-destructive hover:text-destructive"

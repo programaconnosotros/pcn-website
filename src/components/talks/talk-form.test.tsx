@@ -296,7 +296,7 @@ describe('TalkForm', () => {
     );
 
     // Remove the second speaker (each speaker can be removed while there are two)
-    await userEvent.click(screen.getAllByRole('button', { name: '' }).at(-1)!);
+    await userEvent.click(screen.getAllByRole('button', { name: 'Quitar orador' }).at(-1)!);
     expect(screen.queryByDisplayValue('Bruno Díaz')).not.toBeInTheDocument();
 
     await userEvent.click(screen.getByRole('button', { name: 'actualizarCharla();' }));

@@ -214,7 +214,13 @@ export const TalkCell = ({
         {isAdmin && (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon" className="relative z-10 -mt-1 -mr-1 h-6 w-6">
+              <Button
+                aria-label="Opciones de la charla"
+                title="Opciones de la charla"
+                variant="ghost"
+                size="icon"
+                className="relative z-10 -mt-1 -mr-1 h-6 w-6"
+              >
                 <MoreVertical className="h-3.5 w-3.5" />
               </Button>
             </DropdownMenuTrigger>

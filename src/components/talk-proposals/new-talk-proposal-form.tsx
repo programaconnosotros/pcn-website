@@ -68,6 +68,8 @@ function SpeakerFields({
         <h3 className="text-sm font-medium">Orador {index + 1}</h3>
         {canRemove && (
           <Button
+            aria-label="Quitar orador"
+            title="Quitar orador"
             type="button"
             variant="ghost"
             size="sm"

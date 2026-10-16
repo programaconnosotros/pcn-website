@@ -293,7 +293,13 @@ export function ProjectForm({ project, currentUser, onSuccess, onCancel }: Props
                     }
                   }}
                 />
-                <Button type="button" variant="outline" onClick={addTech}>
+                <Button
+                  aria-label="Agregar tecnología"
+                  title="Agregar tecnología"
+                  type="button"
+                  variant="outline"
+                  onClick={addTech}
+                >
                   <Plus className="h-4 w-4" />
                 </Button>
               </div>
