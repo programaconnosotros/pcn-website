@@ -23,6 +23,7 @@ import { actionErrorMessage } from '@/lib/rate-limit-messages';
 import { toggleCommentLike } from '@/actions/comments/toggle-comment-like';
 import { DeleteCommentDialog } from './delete-comment-dialog';
 import { LikeButton } from './like-button';
+import { ReportButton } from '@/components/moderation/report-button';
 
 const commentSchema = z.object({
   content: z
@@ -228,6 +229,12 @@ export const CommentSection = ({
                   Eliminar
                 </Button>
               )}
+              <ReportButton
+                contentType="advice_comment"
+                contentId={comment.id}
+                hidden={comment.authorId === session.user.id}
+                className="ml-auto"
+              />
             </div>
           )}
         </div>

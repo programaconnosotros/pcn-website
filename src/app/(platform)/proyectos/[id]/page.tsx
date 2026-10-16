@@ -17,6 +17,7 @@ import { optimizedOgImage } from '@/lib/og-image';
 import { fetchProject, type ProjectDetail } from '@/lib/projects';
 import { MISSING_TAB_TITLE, tabTitle } from '@/lib/tab-title';
 import { cn } from '@/lib/utils';
+import { ReportButton } from '@/components/moderation/report-button';
 
 type Props = { params: Promise<{ id: string }> };
 
@@ -119,15 +120,22 @@ export default async function ProjectPage(props: Props) {
         <PageTitle
           path={[{ label: 'proyectos', href: '/proyectos' }, { label: project.title }]}
           action={
-            <a
-              href={project.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-1 rounded-sm border border-pcnGreen-600 bg-pcnGreen/10 px-2 py-1 font-mono text-xs text-pcnGreen transition-colors hover:bg-pcnGreen/20"
-            >
-              ./run
-              <ArrowUpRight className="size-3" />
-            </a>
+            <div className="flex items-center gap-3">
+              <ReportButton
+                contentType="project"
+                contentId={project.id}
+                hidden={!viewer || canEdit}
+              />
+              <a
+                href={project.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-1 rounded-sm border border-pcnGreen-600 bg-pcnGreen/10 px-2 py-1 font-mono text-xs text-pcnGreen transition-colors hover:bg-pcnGreen/20"
+              >
+                ./run
+                <ArrowUpRight className="size-3" />
+              </a>
+            </div>
           }
         />
       </StickyHeader>

@@ -10,6 +10,10 @@ import { CopyConsejoLink, ShareConsejo } from './consejo-share';
 import { consejoHash, consejoUrl } from './consejo-utils';
 import { ConsejosNavProvider, useConsejosNav } from './consejos-nav';
 
+jest.mock('@/actions/moderation/content-reports', () => ({
+  reportContent: jest.fn(),
+  reviewReports: jest.fn(),
+}));
 jest.mock('@/actions/advice/hide-extracted-consejo', () => ({
   hideExtractedConsejo: jest.fn(),
   restoreExtractedConsejo: jest.fn(),

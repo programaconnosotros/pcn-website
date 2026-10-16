@@ -28,6 +28,7 @@ import { ProfileTabSkeleton } from '@/components/profile/profile-tab-skeleton';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { EmptyState } from '@/components/empty-state';
+import { ReportButton } from '@/components/moderation/report-button';
 import { DEACTIVATED_NAME } from '@/lib/active-user';
 import { Suspense } from 'react';
 import { ProfileCountsLoader, ProfileTabContent } from './profile-tab-content';
@@ -389,6 +390,12 @@ export default async function ProfilePage(props: ProfilePageProps) {
                     </Link>
                   )}
                 </div>
+                <ReportButton
+                  contentType="user"
+                  contentId={user.id}
+                  hidden={!session || isOwnProfile || viewerIsAdmin}
+                  className="self-start"
+                />
               </div>
 
               {socialLinks.length > 0 && (

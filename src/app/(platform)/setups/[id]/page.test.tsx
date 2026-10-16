@@ -6,6 +6,10 @@ import { fetchSetup, type SetupWithAuthor } from '@/lib/setups';
 import { adminRow, renderPage, sessionRow, thrownBy } from '@/test/pages-m-z';
 import SetupPage, { generateMetadata } from './page';
 
+jest.mock('@/actions/moderation/content-reports', () => ({
+  reportContent: jest.fn(),
+  reviewReports: jest.fn(),
+}));
 jest.mock('@/actions/auth/get-current-session', () => ({ getCurrentSession: jest.fn() }));
 jest.mock('@/lib/setups', () => ({ fetchSetup: jest.fn() }));
 jest.mock('@/components/setups/setup-like-button', () => ({

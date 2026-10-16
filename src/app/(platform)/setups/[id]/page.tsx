@@ -13,6 +13,7 @@ import { fetchSetup } from '@/lib/setups';
 import { MISSING_TAB_TITLE, tabTitle } from '@/lib/tab-title';
 import { SETUP_SOFTWARE, calendarDate, dateInputValue } from '@/schemas/setup-schema';
 import { Fragment } from 'react';
+import { ReportButton } from '@/components/moderation/report-button';
 
 type Props = { params: Promise<{ id: string }> };
 
@@ -66,13 +67,16 @@ export default async function SetupPage(props: Props) {
         <PageTitle
           path={[{ label: 'setups', href: '/setups' }, { label: setup.title }]}
           action={
-            <SetupLikeButton
-              setupId={setup.id}
-              likes={setup.likes.length}
-              liked={!!viewer && setup.likes.some((like) => like.userId === viewer.id)}
-              isLoggedIn={!!viewer}
-              className="px-2 py-1 text-xs"
-            />
+            <div className="flex items-center gap-3">
+              <ReportButton contentType="setup" contentId={setup.id} hidden={!viewer || isAuthor} />
+              <SetupLikeButton
+                setupId={setup.id}
+                likes={setup.likes.length}
+                liked={!!viewer && setup.likes.some((like) => like.userId === viewer.id)}
+                isLoggedIn={!!viewer}
+                className="px-2 py-1 text-xs"
+              />
+            </div>
           }
         />
       </StickyHeader>

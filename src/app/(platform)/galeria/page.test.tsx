@@ -27,6 +27,10 @@ import EditPhotoPage from './[id]/editar/page';
 import GalleryItemPage, { generateMetadata } from './[id]/page';
 import ItemLoading from './[id]/loading';
 
+jest.mock('@/actions/moderation/content-reports', () => ({
+  reportContent: jest.fn(),
+  reviewReports: jest.fn(),
+}));
 jest.mock('@/actions/auth/get-current-session', () => ({ getCurrentSession: jest.fn() }));
 jest.mock('@/lib/gallery', () => ({
   listGalleryItems: jest.fn(),

@@ -66,6 +66,10 @@ export const dbEnums: { name: string; values: string[] }[] = [
     name: 'RecommendationStatus',
     values: ['PENDING', 'APPROVED', 'REJECTED'],
   },
+  {
+    name: 'ContentReportStatus',
+    values: ['PENDING', 'RESOLVED', 'DISMISSED'],
+  },
 ];
 
 export const dbModels: DbModel[] = [
@@ -2644,6 +2648,60 @@ export const dbModels: DbModel[] = [
     ],
     uniques: [],
   },
+  {
+    name: 'ContentReport',
+    domain: 'sistema',
+    fields: [
+      {
+        name: 'id',
+        type: 'String',
+        pk: true,
+      },
+      {
+        name: 'contentType',
+        type: 'String',
+      },
+      {
+        name: 'contentId',
+        type: 'String',
+      },
+      {
+        name: 'reason',
+        type: 'String',
+      },
+      {
+        name: 'details',
+        type: 'String',
+        optional: true,
+      },
+      {
+        name: 'status',
+        type: 'ContentReportStatus',
+      },
+      {
+        name: 'reporterId',
+        type: 'String',
+        fk: true,
+        optional: true,
+      },
+      {
+        name: 'resolvedById',
+        type: 'String',
+        fk: true,
+        optional: true,
+      },
+      {
+        name: 'resolvedAt',
+        type: 'DateTime',
+        optional: true,
+      },
+      {
+        name: 'createdAt',
+        type: 'DateTime',
+      },
+    ],
+    uniques: [['reporterId', 'contentType', 'contentId']],
+  },
 ];
 
 export const dbRelations: DbRelation[] = [
@@ -3254,5 +3312,21 @@ export const dbRelations: DbRelation[] = [
     optional: false,
     many: true,
     onDelete: 'Cascade',
+  },
+  {
+    from: 'ContentReport',
+    to: 'User',
+    label: 'reporter',
+    optional: true,
+    many: true,
+    onDelete: 'SetNull',
+  },
+  {
+    from: 'ContentReport',
+    to: 'User',
+    label: 'resolvedBy',
+    optional: true,
+    many: true,
+    onDelete: 'SetNull',
   },
 ];

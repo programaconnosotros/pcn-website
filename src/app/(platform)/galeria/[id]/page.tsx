@@ -25,6 +25,7 @@ import { formatDuration, galleryQuery, parseGalleryFilter } from '@/lib/gallery-
 import { googleMapsSearchUrl } from '@/lib/google-maps';
 import { cn } from '@/lib/utils';
 import { MISSING_TAB_TITLE, tabTitle } from '@/lib/tab-title';
+import { ReportButton } from '@/components/moderation/report-button';
 
 type Props = {
   params: Promise<{ id: string }>;
@@ -161,6 +162,12 @@ export default async function GalleryItemPage(props: Props) {
           }
           action={
             <>
+              <ReportButton
+                contentType="gallery_item"
+                contentId={photo.id}
+                hidden={!viewer || isAdmin || viewer.id === photo.uploadedBy?.id}
+                className="mr-1"
+              />
               {/* Prev/next live up here, outside the photo, so they never cover it. */}
               {(previousHref || nextHref) && (
                 <nav aria-label="Fotos" className="flex gap-1">

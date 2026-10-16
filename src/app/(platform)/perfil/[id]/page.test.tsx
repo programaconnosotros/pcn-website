@@ -21,6 +21,10 @@ import Image, { alt } from './opengraph-image';
 import ProfilePage, { generateMetadata } from './page';
 import { ProfileTabContent } from './profile-tab-content';
 
+jest.mock('@/actions/moderation/content-reports', () => ({
+  reportContent: jest.fn(),
+  reviewReports: jest.fn(),
+}));
 jest.mock('@/lib/prisma', () => ({
   __esModule: true,
   default: { user: { findUnique: jest.fn() } },

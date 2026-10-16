@@ -14,6 +14,7 @@ import { CommentSection } from './comment-section';
 import { CopyConsejoLink, ShareConsejo } from './consejo-share';
 import { consejoHash, keyCapClassName } from './consejo-utils';
 import { LikeButton } from './like-button';
+import { ReportButton } from '@/components/moderation/report-button';
 import { HideConsejoButton } from './hide-consejo-button';
 
 const Kbd = ({ children }: { children: React.ReactNode }) => (
@@ -165,6 +166,13 @@ export function ConsejoPanel({ consejo, comments, session, variant, nav }: Conse
               <ConsejoAuthorChip author={consejo.author} />
               <span className="ml-auto flex shrink-0 items-center gap-1">
                 <LikeButton adviceId={consejo.id} likes={consejo.likes} session={session} />
+                {/* The ones extracted from the conversations aren't anyone's post on the site. */}
+                <ReportButton
+                  contentType="advice"
+                  contentId={consejo.id}
+                  hidden={!session || isAuthor || !!consejo.source}
+                  className="px-1.5"
+                />
                 {canEditOrDelete && (
                   <AdviceOptions
                     adviceId={consejo.id}

@@ -8,6 +8,10 @@ import { toggleCommentLike } from '@/actions/comments/toggle-comment-like';
 import { buildSession } from '@/test/platform';
 import { CommentSection } from './comment-section';
 
+jest.mock('@/actions/moderation/content-reports', () => ({
+  reportContent: jest.fn(),
+  reviewReports: jest.fn(),
+}));
 jest.mock('@/actions/comments/create-comment', () => ({ createComment: jest.fn() }));
 jest.mock('@/actions/comments/delete-comment', () => ({ deleteComment: jest.fn() }));
 jest.mock('@/actions/comments/edit-comment', () => ({ editComment: jest.fn() }));

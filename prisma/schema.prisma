@@ -110,6 +110,8 @@ model User {
   forumComments          ForumComment[]
   forumPostLikes         ForumPostLike[]
   forumCommentLikes      ForumCommentLike[]
+  contentReports         ContentReport[]      @relation("ContentReporter")
+  resolvedReports        ContentReport[]      @relation("ContentReportResolver")
   /// Optional two-factor sign-in (TOTP). The secret is set while setting it up and kept once
   /// confirmed; `twoFactorEnabledAt` says it's on. Recovery codes are stored as SHA-256 hashes.
   twoFactorSecret        String?
@@ -1223,4 +1225,38 @@ model WorkPlace {
 
   @@index([authorId])
   @@index([city])
+}
+
+// ─── Moderación ───────────────────────────────────────────────────────────────
+
+enum ContentReportStatus {
+  PENDING
+  RESOLVED
+  DISMISSED
+}
+
+/// A member flagging something on the site for the admins to look at (src/lib/content-reports.ts
+/// lists what can be reported). No foreign key to the content: it can be of several tables, and
+/// the report outlives it when an admin deletes it.
+model ContentReport {
+  id          String              @id @default(cuid())
+  /// forum_post, forum_comment, advice, advice_comment, setup, gallery_item, project, user.
+  contentType String
+  contentId   String
+  /// spam, ofensivo, acoso, falso u otro.
+  reason      String
+  details     String?
+  status      ContentReportStatus @default(PENDING)
+
+  reporter     User?     @relation("ContentReporter", fields: [reporterId], references: [id], onDelete: SetNull)
+  reporterId   String?
+  resolvedBy   User?     @relation("ContentReportResolver", fields: [resolvedById], references: [id], onDelete: SetNull)
+  resolvedById String?
+  resolvedAt   DateTime?
+
+  createdAt DateTime @default(now())
+
+  @@unique([reporterId, contentType, contentId])
+  @@index([status, createdAt])
+  @@index([contentType, contentId])
 }

@@ -23,6 +23,10 @@ import { ForumThreadActions } from './forum-thread-actions';
 const push = jest.fn();
 const refresh = jest.fn();
 const back = jest.fn();
+jest.mock('@/actions/moderation/content-reports', () => ({
+  reportContent: jest.fn(),
+  reviewReports: jest.fn(),
+}));
 jest.mock('next/navigation', () => ({ useRouter: () => ({ push, refresh, back }) }));
 jest.mock('sonner', () => ({ toast: { success: jest.fn(), error: jest.fn() } }));
 jest.mock('@/actions/forum/posts', () => ({

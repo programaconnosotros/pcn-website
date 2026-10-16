@@ -11,6 +11,7 @@ import {
   toggleForumCommentLike,
 } from '@/actions/forum/engagement';
 import { LikeButton } from '@/components/advice/like-button';
+import { ReportButton } from '@/components/moderation/report-button';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { timeAgo, type ForumCommentNode } from '@/lib/forum-utils';
@@ -148,6 +149,11 @@ function Comment({
                 responder
               </button>
             )}
+            <ReportButton
+              contentType="forum_comment"
+              contentId={comment.id}
+              hidden={!viewer || viewer.id === comment.authorId}
+            />
             {canDelete && (
               <button
                 type="button"

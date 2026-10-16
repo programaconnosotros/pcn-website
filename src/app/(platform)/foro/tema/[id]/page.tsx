@@ -5,6 +5,7 @@ import { Lock, Pin } from 'lucide-react';
 import { getCurrentSession } from '@/actions/auth/get-current-session';
 import { toggleForumPostLike } from '@/actions/forum/engagement';
 import { LikeButton } from '@/components/advice/like-button';
+import { ReportButton } from '@/components/moderation/report-button';
 import { ForumComments } from '@/components/forum/forum-comments';
 import { ForumThreadActions } from '@/components/forum/forum-thread-actions';
 import { PageTitle } from '@/components/ui/page-title';
@@ -97,6 +98,12 @@ export default async function ForumThreadPage(props: { params: Promise<{ id: str
               likes={post.likes}
               session={session}
               toggle={toggleForumPostLike}
+            />
+            <ReportButton
+              contentType="forum_post"
+              contentId={post.id}
+              hidden={!session || session.user.id === post.authorId}
+              className="ml-auto"
             />
             <ForumThreadActions
               postId={post.id}

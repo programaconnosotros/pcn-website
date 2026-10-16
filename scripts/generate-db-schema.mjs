@@ -39,7 +39,7 @@ const DOMAINS = {
   galeria: ['GalleryItem', 'GalleryItemTag'],
   proyectos: ['Project', 'ProjectMember', 'ProjectMedia', 'ArticleAuthor'],
   auth: ['Session', 'PasswordResetToken', 'EmailVerificationToken', 'TwoFactorChallenge'],
-  sistema: ['PageVisit', 'ErrorLog', 'AppLog', 'SystemAlert', 'JobOffers'],
+  sistema: ['PageVisit', 'ErrorLog', 'AppLog', 'SystemAlert', 'ContentReport', 'JobOffers'],
 };
 
 const domainOf = Object.fromEntries(

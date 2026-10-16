@@ -46,7 +46,10 @@ const AREAS = [
   [/^src\/actions\/notifications\//, 'notificaciones'],
   [/^src\/lib\/(search\/|people-search)/, 'busqueda'],
   [/^src\/actions\/users\/get-user-summary/, 'perfil'],
-  [/^src\/actions\/(users|logs|errors|analytics|identity-links|sponsors|system-alerts)\//, 'admin'],
+  [
+    /^src\/actions\/(users|logs|errors|analytics|identity-links|sponsors|system-alerts|moderation)\//,
+    'admin',
+  ],
   [/^src\/(components\/system-alerts|lib\/system-alerts)/, 'admin'],
   [/^src\/actions\/upload\//, 'plataforma'],
   [

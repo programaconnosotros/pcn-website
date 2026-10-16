@@ -43,6 +43,7 @@ import {
   Users,
   Wrench,
   type LucideIcon,
+  Flag,
 } from 'lucide-react';
 import { Youtube } from '@/components/icons/brand-icons';
 
@@ -387,6 +388,15 @@ export const OS_PROGRAMS: OsProgram[] = [
     url: '/monitoreo',
     icon: AlertTriangle,
     color: 'from-amber-400 to-red-600',
+    group: 'Administración',
+    adminOnly: true,
+  },
+  {
+    id: 'moderacion',
+    name: 'Moderación',
+    url: '/admin/moderacion',
+    icon: Flag,
+    color: 'from-amber-300 to-red-700',
     group: 'Administración',
     adminOnly: true,
   },

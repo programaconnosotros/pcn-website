@@ -9,6 +9,10 @@ import ForumThreadPage, { generateMetadata as threadMetadata } from './tema/[id]
 import EditForumPostPage from './tema/[id]/editar/page';
 import Loading from './loading';
 
+jest.mock('@/actions/moderation/content-reports', () => ({
+  reportContent: jest.fn(),
+  reviewReports: jest.fn(),
+}));
 jest.mock('@/actions/auth/get-current-session', () => ({ getCurrentSession: jest.fn() }));
 jest.mock('@/lib/forum', () => ({
   listForumCategories: jest.fn(),

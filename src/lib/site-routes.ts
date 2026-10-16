@@ -8,6 +8,7 @@ export const SITE_ROUTES = [
   '/admin',
   '/admin/recomendaciones',
   '/admin/sponsors',
+  '/admin/moderacion',
   '/agents',
   '/analiticas',
   '/anuncios',
