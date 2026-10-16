@@ -1,5 +1,4 @@
 import { render, screen } from '@testing-library/react';
-import EventDetails from './event-details';
 import { EventOptionLabel } from './event-option-label';
 import { EventSection } from './event-section';
 
@@ -19,15 +18,6 @@ describe('EventSection', () => {
     render(<EventSection title="fotos">x</EventSection>);
 
     expect(screen.getByRole('heading')).toHaveTextContent(/^\/\/ fotos$/);
-  });
-});
-
-describe('EventDetails', () => {
-  it('shows the description', () => {
-    render(<EventDetails description="Una juntada" />);
-
-    expect(screen.getByRole('heading', { name: 'Detalles del evento' })).toBeInTheDocument();
-    expect(screen.getByText('Una juntada')).toBeInTheDocument();
   });
 });
 

@@ -1,11 +1,5 @@
-import { render, screen, within } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { AchievementsSection } from './achievements-section';
-import { ActiveMembersCard } from './active-members-card';
-import ASZSoftwareLogo from './asz-software-logo';
-import BoweryLogo from './bowery-logo';
-import { CommunityGrowthCard } from './community-growth-card';
-import { CoursesCard } from './courses-card';
-import { DiscordCard } from './discord-card';
 import { FaqSection } from './faq-section';
 import { FeatureBento } from './feature-bento';
 import { HomeFooter } from './home-footer';
@@ -14,12 +8,9 @@ import { InterviewsSection } from './interviews-section';
 import { JoinSection } from './join-section';
 import { LatestChangesSection } from './latest-changes-section';
 import { LatestConversationsSection } from './latest-conversations-section';
-import { MainSponsorCard } from './main-sponsor-card';
-import { MotivationalQuotes } from './motivational-quotes';
 import { MusicSection } from './music-section';
 import { PartnersMarquee } from './partners-marquee';
 import { PartnersSection } from './partners-section';
-import { PodcastCard } from './podcast-card';
 import { RecommendedWatchSection } from './recommended-watch-section';
 import { Reveal } from './reveal';
 import { Eyebrow, SectionHeader } from './section-header';
@@ -29,12 +20,6 @@ import { TestimonialsSection } from './testimonials-section';
 
 jest.mock('@/actions/sponsors/track-sponsor-click', () => ({ trackSponsorClick: jest.fn() }));
 
-jest.mock('typewriter-effect', () => ({
-  __esModule: true,
-  default: ({ options }: { options: { strings: string[] } }) => (
-    <span data-testid="typewriter">{options.strings.length}</span>
-  ),
-}));
 jest.mock('@/components/music/music-grid', () => ({
   MusicGrid: ({ sets }: { sets: unknown[] }) => <p>{sets.length} radios</p>,
 }));
@@ -256,11 +241,6 @@ describe('static home sections', () => {
     expect(screen.getByText('contenido')).toHaveClass('reveal', 'x');
   });
 
-  it('MotivationalQuotes feeds every quote to the typewriter', () => {
-    render(<MotivationalQuotes />);
-    expect(screen.getByTestId('typewriter')).toHaveTextContent('6');
-  });
-
   it('MusicSection and RecommendedWatchSection pass their content down', async () => {
     render(
       <>
@@ -272,48 +252,12 @@ describe('static home sections', () => {
     expect(screen.getAllByText('4 videos')).toHaveLength(2);
   });
 
-  it('StatCard-based cards link to their pages', () => {
-    render(
-      <>
-        <ActiveMembersCard />
-        <CoursesCard />
-        <CommunityGrowthCard />
-      </>,
-    );
-    expect(screen.getByRole('link', { name: /Miembros activos/ })).toHaveAttribute(
-      'href',
-      '/members',
-    );
-    expect(screen.getByRole('link', { name: /Cursos/ })).toHaveAttribute('href', '/cursos');
-    expect(screen.getByRole('link', { name: /Crecimiento/ })).toHaveAttribute('href', '/growth');
-  });
-
   it.each([
     ['AchievementsSection', AchievementsSection, 'Ver logros'],
     ['FaqSection', FaqSection, 'Ver todas las preguntas'],
     ['JoinSection', JoinSection, /verRepositorio/],
-    ['DiscordCard', DiscordCard, /abrirDiscord/],
   ])('%s renders its call to action', (_name, Section, name) => {
     render(<Section />);
     expect(screen.getByRole('link', { name })).toBeInTheDocument();
-  });
-
-  it('sponsor cards render', () => {
-    render(
-      <>
-        <MainSponsorCard />
-        <PodcastCard />
-      </>,
-    );
-    expect(screen.getByRole('img', { name: 'ASZ Studio' })).toBeInTheDocument();
-    expect(screen.getByRole('img', { name: 'Bowery' })).toBeInTheDocument();
-    expect(screen.getByText('Próximamente.')).toBeInTheDocument();
-    const standalone = render(
-      <>
-        <ASZSoftwareLogo />
-        <BoweryLogo />
-      </>,
-    );
-    expect(within(standalone.container).getByText('ASZ Software')).toBeInTheDocument();
   });
 });

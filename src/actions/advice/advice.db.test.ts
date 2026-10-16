@@ -3,8 +3,6 @@ import { createAdvice } from '@/actions/advice/create-advice';
 import { editAdvice } from '@/actions/advice/edit-advice';
 import { deleteAdvice } from '@/actions/advice/delete-advice';
 import { toggleLike } from '@/actions/advice/like-advice';
-import { getBestAdvice } from '@/actions/advice/get-best-advice';
-import { getRandomAdvice } from '@/actions/advice/get-random-advice';
 import { actAs } from '@/test/db/fixtures';
 import { expiredModel, makeAdvice, quickUser, uid } from '@/test/db/actions-fixtures';
 
@@ -263,41 +261,5 @@ describe('toggleLike', () => {
 
     await expect(toggleLike('no-existe')).rejects.toThrow();
     expect(await prisma.like.count({ where: { userId: fan.id } })).toBe(0);
-  });
-});
-
-describe('getBestAdvice', () => {
-  it('returns the three most liked advice, most liked first', async () => {
-    const author = await quickUser();
-    const likers = await Promise.all(Array.from({ length: 30 }, () => quickUser()));
-    // Más likes que cualquier otro consejo de esta corrida, así ocupan el podio
-    const counts = [28, 30, 29, 27];
-    const made = [];
-    for (const count of counts) {
-      const advice = await makeAdvice(author.id);
-      await prisma.like.createMany({
-        data: likers.slice(0, count).map((user) => ({ userId: user.id, adviceId: advice.id })),
-      });
-      made.push(advice);
-    }
-
-    const best = await getBestAdvice();
-
-    expect(best.map((advice) => advice.id)).toEqual([made[1].id, made[2].id, made[0].id]);
-    expect(best.map((advice) => advice.likes.length)).toEqual([30, 29, 28]);
-    expect(best[0].author).toEqual({ id: author.id, name: author.name, image: null });
-  });
-});
-
-describe('getRandomAdvice', () => {
-  it('returns an existing advice with its public author', async () => {
-    const author = await quickUser();
-    await makeAdvice(author.id);
-
-    const advice = await getRandomAdvice();
-
-    expect(advice).not.toBeNull();
-    expect(await prisma.advice.findUnique({ where: { id: advice!.id } })).not.toBeNull();
-    expect(Object.keys(advice!.author).sort()).toEqual(['id', 'image', 'name']);
   });
 });

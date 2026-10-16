@@ -411,14 +411,6 @@ enum RegistrationType {
 
 ### Visualización
 
-#### `EventCard`
-
-- **Ruta**: `src/components/events/event-card.tsx`
-- **Descripción**: Tarjeta para mostrar un evento en una lista
-- **Características**:
-  - Muestra imagen, nombre, fecha y descripción
-  - Descripción truncada con `line-clamp-3`
-
 #### `EventPhotos`
 
 - **Ruta**: `src/components/events/event-photos.tsx`

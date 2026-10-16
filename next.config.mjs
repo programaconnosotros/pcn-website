@@ -23,7 +23,6 @@ const nextConfig = {
   turbopack: {
     root: import.meta.dirname,
   },
-  serverExternalPackages: ['jsdom'],
   experimental: {
     // Reuse a visited page for 5 minutes instead of asking the server again on every visit, so
     // going back to a tab (the phone tab bar, the profile or interview tabs) is instant, like a

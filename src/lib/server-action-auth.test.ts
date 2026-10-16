@@ -34,7 +34,6 @@ const AUTH_HELPERS = new Set([
  * Son lecturas de lo que ya es público o formularios de quien todavía no tiene sesión.
  */
 const PUBLIC_ACTIONS: Record<string, string> = {
-  'actions/advice/get-best-advice.ts#getBestAdvice': 'consejos publicados, en /consejos',
   'actions/analytics/track-page-visit.ts#trackPageVisit':
     'se llama sin login desde cada página; solo rutas del sitio (isSitePath) y rate limit',
   'actions/announcements/get-announcements.ts#fetchAnnouncements': 'solo anuncios publicados',
@@ -57,8 +56,6 @@ const PUBLIC_ACTIONS: Record<string, string> = {
   'actions/auth/sign-up.ts#signUp': 'es el registro',
   'actions/auth/verify-email-code.ts#verifyEmailCode': 'sin sesión; límite de intentos por código',
   'actions/auth/verify-reset-code.ts#verifyResetCode': 'sin sesión; límite de intentos por código',
-  'actions/events/check-event-capacity.ts#checkEventCapacity':
-    'cupo de un evento, visible en su página',
   'actions/events/fetch-event.ts#fetchEvent': 'página pública del evento, sin inscriptos',
   'actions/events/fetch-events.ts#fetchEvents': 'listado público de eventos',
   'actions/events/fetch-home-events.ts#fetchHomeEvents': 'eventos de la home',

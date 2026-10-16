@@ -3,7 +3,6 @@ import { sendEmail } from '@/lib/email';
 import { registerEvent } from '@/actions/events/register-event';
 import { cancelRegistration } from '@/actions/events/cancel-registration';
 import { deleteRegistration } from '@/actions/events/delete-registration';
-import { checkEventCapacity } from '@/actions/events/check-event-capacity';
 import { getEventRegistrations, getEventWaitlist } from '@/actions/events/get-event-registrations';
 import { updateEvent } from '@/actions/events/update-event';
 import { getWaitlistPosition } from '@/lib/event-waitlist';
@@ -225,40 +224,6 @@ describe('registerEvent', () => {
 
     await expect(register(event.id)).rejects.toThrow();
     expect(await activeRegistrations(event.id)).toBe(0);
-  });
-});
-
-describe('checkEventCapacity', () => {
-  it('counts only active registrations against the capacity', async () => {
-    const event = await createTestEvent({ capacity: 2 });
-    const [a, b] = await createUsers(2);
-    await registerInOrder(event.id, [a.id, b.id]);
-    expect(await checkEventCapacity(event.id)).toMatchObject({ available: false, current: 2 });
-
-    await actAs(a.id);
-    await cancelRegistration({ eventId: event.id });
-    // La baja promovió a nadie (no había lista de espera): queda un lugar
-    expect(await checkEventCapacity(event.id)).toMatchObject({
-      available: true,
-      current: 1,
-      capacity: 2,
-      message: 'Quedan 1 lugares disponibles.',
-    });
-  });
-
-  it('reports events without capacity as available and hides deleted ones', async () => {
-    const open = await createTestEvent();
-    const deleted = await createTestEvent({ deletedAt: new Date(), capacity: 5 });
-
-    expect(await checkEventCapacity(open.id)).toEqual({
-      available: true,
-      current: 0,
-      capacity: null,
-    });
-    expect(await checkEventCapacity(deleted.id)).toEqual({
-      available: false,
-      message: 'Evento no encontrado',
-    });
   });
 });
 

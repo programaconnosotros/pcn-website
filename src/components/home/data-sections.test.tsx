@@ -1,10 +1,8 @@
 import { render, screen } from '@testing-library/react';
-import { AdviceCountCard } from './advice-count-card';
 import { AmbassadorsSection } from './ambassadors-section';
 import { LatestArticlesSection } from './latest-articles';
 import { LatestPhotosSection } from './latest-photos-section';
 import { LatestTalksSection } from './latest-talks-section';
-import { TalksCard } from './talks-card';
 
 jest.mock('@/lib/prisma', () => ({
   __esModule: true,
@@ -75,19 +73,6 @@ const { listLatestGalleryItems } = jest.requireMock('@/lib/gallery');
 const { fetchPublicTalks } = jest.requireMock('@/actions/talks/fetch-public-talks');
 
 describe('home sections with data', () => {
-  it('AdviceCountCard and TalksCard link to their pages', async () => {
-    mockPrisma.advice.count.mockResolvedValue(12);
-    mockPrisma.talk.count.mockResolvedValue(30);
-    render(
-      <>
-        {await AdviceCountCard()}
-        {await TalksCard()}
-      </>,
-    );
-    expect(screen.getByRole('link', { name: /Consejos/ })).toHaveAttribute('href', '/consejos');
-    expect(screen.getByRole('link', { name: /Charlas/ })).toHaveAttribute('href', '/charlas');
-  });
-
   it('AmbassadorsSection lists ambassadors who are not suspended, with initials and profile links', async () => {
     mockPrisma.user.findMany.mockResolvedValue([
       { id: 'u1', name: 'ada lovelace byron', image: null },

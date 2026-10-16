@@ -33,7 +33,6 @@ import {
   SelectValue,
 } from './select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './tabs';
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from './accordion';
 import {
   Table,
   TableBody,
@@ -45,21 +44,12 @@ import {
   TableRow,
   TableTag,
 } from './table';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from './card';
 import { Badge } from './badge';
 import { Button } from './button';
 import { Separator } from './separator';
 import { Skeleton } from './skeleton';
-import { ScrollArea, ScrollBar } from './scroll-area';
-import { Heading1 } from './heading-1';
 import { Heading2 } from './heading-2';
-import { Heading3 } from './heading-3';
-import { GlowingText } from './glowing-text';
-import { LeadText } from './lead-text';
-import { UnorderedList } from './bullet-point';
-import { Paragraph } from './paragraph';
 import { RuledCell, RuledGrid } from './ruled-grid';
-import { ContentCard } from './content-card';
 import { MarkToggle } from './mark-toggle';
 import { PageTitle } from './page-title';
 import { Toaster } from './sonner';
@@ -259,24 +249,6 @@ describe('Tabs', () => {
   });
 });
 
-describe('Accordion', () => {
-  it('expands an item', async () => {
-    render(
-      <Accordion type="single" collapsible>
-        <AccordionItem value="q">
-          <AccordionTrigger>¿Qué es PCN?</AccordionTrigger>
-          <AccordionContent>Una comunidad</AccordionContent>
-        </AccordionItem>
-      </Accordion>,
-    );
-    const trigger = screen.getByRole('button', { name: '¿Qué es PCN?' });
-    expect(trigger).toHaveAttribute('aria-expanded', 'false');
-    await userEvent.click(trigger);
-    expect(trigger).toHaveAttribute('aria-expanded', 'true');
-    expect(screen.getByText('Una comunidad')).toBeInTheDocument();
-  });
-});
-
 describe('Table', () => {
   it('renders every part and tag tone', () => {
     render(
@@ -341,77 +313,6 @@ describe('Button', () => {
     );
     expect(screen.getByRole('button', { name: 'enviar' })).toBeDisabled();
     expect(screen.getByRole('link', { name: 'ir' })).toHaveClass('text-pcnGreen');
-  });
-});
-
-describe('small building blocks', () => {
-  it('render their content', () => {
-    render(
-      <>
-        <Card>
-          <CardHeader>
-            <CardTitle>tarjeta</CardTitle>
-            <CardDescription>desc</CardDescription>
-          </CardHeader>
-          <CardContent>cuerpo</CardContent>
-          <CardFooter>pie</CardFooter>
-        </Card>
-        <Badge variant="destructive">error</Badge>
-        <Badge>ok</Badge>
-        <Separator />
-        <Separator orientation="vertical" decorative={false} />
-        <Skeleton data-testid="skeleton" />
-        <ScrollArea className="h-10">
-          <p>scroll</p>
-          <ScrollBar orientation="horizontal" />
-        </ScrollArea>
-        <Heading1 variant="gradient">h1</Heading1>
-        <Heading2>h2</Heading2>
-        <Heading3 variant="gradient">h3</Heading3>
-        <GlowingText>brillo</GlowingText>
-        <LeadText>lead</LeadText>
-        <UnorderedList items={['a', 'b']} />
-        <Paragraph className="x">párrafo</Paragraph>
-        <RuledGrid>
-          <RuledCell>celda</RuledCell>
-        </RuledGrid>
-        <Label htmlFor="campo">etiqueta</Label>
-        <input id="campo" />
-      </>,
-    );
-    expect(screen.getByText('tarjeta')).toBeInTheDocument();
-    expect(screen.getByText('error')).toHaveClass('text-red-400');
-    expect(screen.getAllByRole('separator')).toHaveLength(1);
-    expect(screen.getByTestId('skeleton')).toHaveClass('animate-pulse');
-    expect(screen.getByText('scroll')).toBeInTheDocument();
-    expect(screen.getByRole('heading', { level: 1, name: 'h1' })).toHaveClass('text-glow');
-    expect(screen.getByRole('heading', { level: 2, name: 'h2' })).toBeInTheDocument();
-    expect(screen.getByRole('heading', { level: 3, name: 'h3' })).toHaveClass('text-glow');
-    expect(screen.getAllByText('brillo')).toHaveLength(2);
-    expect(screen.getAllByRole('listitem')).toHaveLength(2);
-    expect(screen.getByText('párrafo')).toHaveClass('x');
-    expect(screen.getByText('celda')).toHaveClass('border-b');
-    expect(screen.getByRole('textbox', { name: 'etiqueta' })).toBeInTheDocument();
-    expect(menuContentClassName).toContain('menu-surface');
-  });
-
-  it('ContentCard shows the author only when given', () => {
-    const { rerender } = render(
-      <ContentCard
-        title="Artículo"
-        description="resumen"
-        image="/a.png"
-        author="Ana"
-        timeToRead="5 min"
-        authorImage="/ana.png"
-      />,
-    );
-    expect(screen.getByRole('img', { name: 'Avatar de Ana' })).toBeInTheDocument();
-    expect(screen.getByText('5 min')).toBeInTheDocument();
-    expect(screen.getByRole('heading', { name: 'Artículo' })).toBeInTheDocument();
-    rerender(<ContentCard description="solo" image="/a.png" />);
-    expect(screen.queryByRole('img')).toBeNull();
-    expect(screen.queryByRole('heading')).toBeNull();
   });
 });
 
@@ -495,5 +396,32 @@ describe('Toaster', () => {
     useTheme.mockReturnValue({ theme: 'dark' });
     rerender(<Toaster />);
     expect(screen.getByTestId('toaster')).toHaveAttribute('data-theme', 'dark');
+  });
+});
+
+describe('primitives', () => {
+  it('render their content', () => {
+    render(
+      <>
+        <Badge variant="destructive">error</Badge>
+        <Badge>ok</Badge>
+        <Separator />
+        <Separator orientation="vertical" decorative={false} />
+        <Skeleton data-testid="skeleton" />
+        <Heading2>h2</Heading2>
+        <RuledGrid>
+          <RuledCell>celda</RuledCell>
+        </RuledGrid>
+        <Label htmlFor="campo">etiqueta</Label>
+        <input id="campo" />
+      </>,
+    );
+    expect(screen.getByText('error')).toHaveClass('text-red-400');
+    expect(screen.getAllByRole('separator')).toHaveLength(1);
+    expect(screen.getByTestId('skeleton')).toHaveClass('animate-pulse');
+    expect(screen.getByRole('heading', { level: 2, name: 'h2' })).toBeInTheDocument();
+    expect(screen.getByText('celda')).toHaveClass('border-b');
+    expect(screen.getByRole('textbox', { name: 'etiqueta' })).toBeInTheDocument();
+    expect(menuContentClassName).toContain('menu-surface');
   });
 });

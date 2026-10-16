@@ -9,7 +9,6 @@ import { setUserRole } from '@/actions/users/set-user-role';
 import { PersonLink } from '@/components/people/person-link';
 import { renderInPlatform } from '@/test/platform';
 import { DataTable } from './data-table';
-import UserCard from './user-card';
 import { UserFlagToggle } from './user-flag-toggle';
 import { columns } from './users-columns';
 
@@ -246,38 +245,7 @@ describe('UserFlagToggle', () => {
   });
 });
 
-describe('UserCard and PersonLink', () => {
-  it('shows a member with facts, languages and links', () => {
-    render(
-      <UserCard
-        calcMembershipTime="1 año"
-        user={{
-          ...users[0],
-          xAccountUrl: 'https://x.com/ana',
-        }}
-      />,
-    );
-
-    expect(screen.getByRole('link', { name: 'Ana Gómez' })).toHaveAttribute('href', '/perfil/u1');
-    expect(screen.getByText('Dev')).toBeInTheDocument();
-    expect(screen.getByText('Argentina · PCN · Sistemas')).toBeInTheDocument();
-    expect(screen.getByText(/TypeScript · Raro/)).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: 'x↗' })).toHaveAttribute('href', 'https://x.com/ana');
-    expect(screen.getByText('AG')).toBeInTheDocument();
-  });
-
-  it('shows a bare member', () => {
-    render(
-      <UserCard
-        calcMembershipTime=""
-        user={{ ...users[1], studyPlace: 'UNC', enterprise: null }}
-      />,
-    );
-
-    expect(screen.getByText('UNC')).toBeInTheDocument();
-    expect(screen.queryByRole('link', { name: /↗/ })).not.toBeInTheDocument();
-  });
-
+describe('PersonLink', () => {
   it('links a person to their profile', () => {
     render(<PersonLink person={{ id: 'p1', name: 'carla', image: null }} />);
 

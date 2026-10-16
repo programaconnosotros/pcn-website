@@ -2,7 +2,6 @@ import { render, screen } from '@testing-library/react';
 import { GitHubContributions } from './github-contributions';
 import { LanguageChip } from './language-chip';
 import { LanguageCoinsContainer } from './language-coins-container';
-import { LanguagePieChart } from './language-pie-chart';
 import { ProfileTabSkeleton } from './profile-tab-skeleton';
 import { getGitHubTotalContributions } from '@/lib/github-contributions';
 
@@ -48,44 +47,6 @@ describe('LanguageCoinsContainer', () => {
       />,
     );
     expect(screen.getByText('Python')).toBeInTheDocument();
-  });
-});
-
-describe('LanguagePieChart', () => {
-  it('says there is no data', () => {
-    render(<LanguagePieChart data={[]} />);
-
-    expect(screen.getByText('sin datos para mostrar')).toBeInTheDocument();
-  });
-
-  it('draws a full circle for a single language', () => {
-    const { container } = render(
-      <LanguagePieChart data={[{ name: 'TS', value: 100, color: '#00f' }]} />,
-    );
-
-    expect(container.querySelector('circle')).toHaveAttribute('fill', '#00f');
-    expect(container.querySelector('title')).toHaveTextContent('TS: 100%');
-    expect(container.querySelector('text')).toHaveTextContent('TS');
-  });
-
-  it('draws a slice per language with its legend, redrawing on change', () => {
-    const { container, rerender } = render(
-      <LanguagePieChart
-        data={[
-          { name: 'TS', value: 70, color: '#00f' },
-          { name: 'Py', value: 30, color: '#ff0' },
-        ]}
-      />,
-    );
-    expect(container.querySelectorAll('path')).toHaveLength(2);
-    expect(Array.from(container.querySelectorAll('title')).map((t) => t.textContent)).toEqual([
-      'TS: 70%',
-      'Py: 30%',
-    ]);
-
-    rerender(<LanguagePieChart data={[{ name: 'Go', value: 100, color: '#0ff' }]} />);
-    expect(container.querySelectorAll('path')).toHaveLength(0);
-    expect(container.querySelectorAll('text')).toHaveLength(1);
   });
 });
 
