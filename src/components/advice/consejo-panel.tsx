@@ -198,7 +198,13 @@ export function ConsejoPanel({ consejo, comments, session, variant, nav }: Conse
           </div>
 
           <div className="-mx-5 border-t border-dashed border-pcnGreen-200 sm:-mx-6 [&>div]:border-r-0 [&>div]:border-b-0">
-            <CommentSection adviceId={consejo.id} comments={comments} session={session} />
+            <CommentSection
+              adviceId={consejo.id}
+              comments={comments}
+              session={session}
+              // Extracted consejos weren't published by the member they're attributed to.
+              consejoAuthorId={consejo.source ? undefined : (consejo.author.id ?? undefined)}
+            />
           </div>
         </div>
       </div>

@@ -33,6 +33,8 @@ type CommentSectionProps = {
   adviceId: string;
   comments: (Comment & { author: Author; replies: (Comment & { author: Author })[] })[];
   session: SessionWithUser | null;
+  /** Who published the consejo, if a member did: they can delete any comment on it. */
+  consejoAuthorId?: string;
 };
 
 /** A comment that changed after it was posted (Prisma bumps updatedAt only on edits). */
@@ -94,12 +96,19 @@ const EditCommentForm = ({
   );
 };
 
-export const CommentSection = ({ adviceId, comments, session }: CommentSectionProps) => {
+export const CommentSection = ({
+  adviceId,
+  comments,
+  session,
+  consejoAuthorId,
+}: CommentSectionProps) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [replyingTo, setReplyingTo] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [editingId, setEditingId] = useState<string | null>(null);
   const isAdmin = session?.user?.role === 'ADMIN';
+  // Quien publicó el consejo modera sus comentarios, igual que un admin.
+  const canModerate = isAdmin || (!!consejoAuthorId && consejoAuthorId === session?.user?.id);
   // De cada respuesta, el comentario que abre su hilo
   const threadOf = new Map(
     comments.flatMap((comment) => comment.replies.map((reply) => [reply.id, comment.id] as const)),
@@ -196,7 +205,7 @@ export const CommentSection = ({ adviceId, comments, session }: CommentSectionPr
                   Editar
                 </Button>
               )}
-              {(comment.authorId === session.user.id || isAdmin) && (
+              {(comment.authorId === session.user.id || canModerate) && (
                 <Button
                   variant="ghost"
                   size="sm"

@@ -6,7 +6,10 @@ import { cookies } from 'next/headers';
 import { z } from 'zod';
 import { findSession } from '@/lib/session';
 
-/** Deletes a comment on a consejo, with its replies. Only its author or an admin can. */
+/**
+ * Deletes a comment on a consejo, with its replies. Only its author, whoever published the consejo
+ * or an admin can.
+ */
 export const deleteComment = async (commentId: string) => {
   const id = z.string().min(1).parse(commentId);
 
@@ -20,12 +23,21 @@ export const deleteComment = async (commentId: string) => {
 
   const comment = await prisma.comment.findUnique({
     where: { id },
-    select: { authorId: true, adviceId: true, extractedId: true },
+    select: {
+      authorId: true,
+      adviceId: true,
+      extractedId: true,
+      advice: { select: { authorId: true } },
+    },
   });
 
   if (!comment) throw new Error('Comentario no encontrado');
 
-  if (comment.authorId !== session.userId && session.user.role !== 'ADMIN') {
+  const canDelete =
+    comment.authorId === session.userId ||
+    comment.advice?.authorId === session.userId ||
+    session.user.role === 'ADMIN';
+  if (!canDelete) {
     throw new Error('No tenés permisos para eliminar este comentario');
   }
 

@@ -160,6 +160,19 @@ describe('CommentSection', () => {
     expect(screen.getAllByRole('button', { name: 'Eliminar' })).toHaveLength(2);
   });
 
+  it('lets whoever published the consejo delete every comment on it', () => {
+    render(
+      <CommentSection
+        adviceId="a1"
+        comments={comments}
+        session={buildSession({ id: 'consejo-author' })}
+        consejoAuthorId="consejo-author"
+      />,
+    );
+    expect(screen.getAllByRole('button', { name: 'Eliminar' })).toHaveLength(2);
+    expect(screen.queryByRole('button', { name: 'Editar' })).not.toBeInTheDocument();
+  });
+
   it('deletes a comment after confirming, warning that its replies go too', async () => {
     (deleteComment as jest.Mock).mockResolvedValue(undefined);
     const user = userEvent.setup();

@@ -35,12 +35,37 @@ describe('deleteComment', () => {
       authorId: 'other',
       adviceId: 'advice-1',
       extractedId: null,
+      advice: { authorId: 'consejo-author' },
     } as any);
 
     await expect(deleteComment('comment-1')).rejects.toThrow(
       'No tenés permisos para eliminar este comentario',
     );
     expect(prismaMock.comment.delete).not.toHaveBeenCalled();
+  });
+
+  it('lets whoever published the consejo delete any comment on it', async () => {
+    mockCookies({ sessionId: 'session-1' });
+    prismaMock.session.findUnique.mockResolvedValue(session());
+    prismaMock.comment.findUnique.mockResolvedValue({
+      authorId: 'other',
+      adviceId: 'advice-1',
+      extractedId: null,
+      advice: { authorId: 'user-1' },
+    } as any);
+
+    await deleteComment('comment-1');
+
+    expect(prismaMock.comment.findUnique).toHaveBeenCalledWith({
+      where: { id: 'comment-1' },
+      select: {
+        authorId: true,
+        adviceId: true,
+        extractedId: true,
+        advice: { select: { authorId: true } },
+      },
+    });
+    expect(prismaMock.comment.delete).toHaveBeenCalledWith({ where: { id: 'comment-1' } });
   });
 
   it('lets the author delete their comment and revalidates the consejo', async () => {
