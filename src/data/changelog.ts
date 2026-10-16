@@ -22,6 +22,15 @@ export interface ChangelogEntry {
 export const changelog: ChangelogEntry[] = [
   {
     date: '2026-10-15',
+    area: 'lugares',
+    title: 'Lugares para laburar',
+    description:
+      '/lugares junta los cafés, coworks y bibliotecas copados para trabajar que recomienda la comunidad: qué tal el wifi, si hay mesas con enchufes, si se puede tener llamadas y qué tal la comida, con foto opcional y el link al mapa. Con sesión iniciada podés sumar los tuyos.',
+    authors: ['agustin-sanc'],
+    href: '/lugares',
+  },
+  {
+    date: '2026-10-15',
     area: 'admin',
     title: 'Clics en los sponsors',
     description:

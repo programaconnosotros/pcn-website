@@ -2478,6 +2478,81 @@ export const dbModels: DbModel[] = [
     ],
     uniques: [['kind', 'slug']],
   },
+  {
+    name: 'WorkPlace',
+    domain: 'comunidad',
+    fields: [
+      {
+        name: 'id',
+        type: 'String',
+        pk: true,
+      },
+      {
+        name: 'name',
+        type: 'String',
+      },
+      {
+        name: 'city',
+        type: 'String',
+      },
+      {
+        name: 'address',
+        type: 'String',
+        optional: true,
+      },
+      {
+        name: 'googleMapsUrl',
+        type: 'String',
+        optional: true,
+      },
+      {
+        name: 'wifi',
+        type: 'Int',
+      },
+      {
+        name: 'plugs',
+        type: 'Int',
+      },
+      {
+        name: 'calls',
+        type: 'Int',
+      },
+      {
+        name: 'foodQuality',
+        type: 'Int',
+        optional: true,
+      },
+      {
+        name: 'foodVariety',
+        type: 'Int',
+        optional: true,
+      },
+      {
+        name: 'notes',
+        type: 'String',
+        optional: true,
+      },
+      {
+        name: 'photoUrl',
+        type: 'String',
+        optional: true,
+      },
+      {
+        name: 'authorId',
+        type: 'String',
+        fk: true,
+      },
+      {
+        name: 'createdAt',
+        type: 'DateTime',
+      },
+      {
+        name: 'updatedAt',
+        type: 'DateTime',
+      },
+    ],
+    uniques: [],
+  },
 ];
 
 export const dbRelations: DbRelation[] = [
@@ -3048,5 +3123,13 @@ export const dbRelations: DbRelation[] = [
     optional: true,
     many: true,
     onDelete: 'SetNull',
+  },
+  {
+    from: 'WorkPlace',
+    to: 'User',
+    label: 'author',
+    optional: false,
+    many: true,
+    onDelete: 'Cascade',
   },
 ];

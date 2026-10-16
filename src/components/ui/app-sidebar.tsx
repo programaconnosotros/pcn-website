@@ -3,6 +3,7 @@
 import {
   Activity,
   ChartPie,
+  Coffee,
   MousePointerClick,
   Gauge,
   Link2,
@@ -116,6 +117,7 @@ const comunidadItems: NavItem[] = [
   { title: 'Logros', url: '/logros', icon: Trophy },
   { title: 'Galería', url: '/galeria', icon: Image },
   { title: 'Setups', url: '/setups', icon: MonitorSmartphone },
+  { title: 'Lugares', url: '/lugares', icon: Coffee },
   { title: 'Partners', url: '/partners', icon: Handshake },
   { title: 'Changelog', url: '/changelog', icon: History },
   { title: 'Métricas', url: '/metricas', icon: Activity },

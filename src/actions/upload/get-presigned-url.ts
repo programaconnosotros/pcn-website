@@ -6,7 +6,7 @@ import { enforceRateLimit } from '@/lib/rate-limit';
 import { ALLOWED_IMAGE_TYPES, IMAGE_TYPE_ERROR } from '@/lib/image-types';
 import { findSession } from '@/lib/session';
 
-const USER_UPLOAD_FOLDERS = ['profiles', 'project-logos'];
+const USER_UPLOAD_FOLDERS = ['profiles', 'project-logos', 'work-places'];
 
 type GetPresignedUrlParams = {
   contentType: string;

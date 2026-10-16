@@ -73,6 +73,7 @@ model User {
   talkProposalSpeakers TalkProposalSpeaker[] @relation("UserTalkProposalSpeakers")
   pageVisits           PageVisit[]
   sponsorClicks        SponsorClick[]
+  workPlaces           WorkPlace[]
   testimonials         Testimonial[]
   notifications        Notification[]
   errorLogs            ErrorLog[]
@@ -1143,4 +1144,36 @@ model Recommendation {
   @@index([kind, status])
   @@index([status, createdAt])
   @@index([submittedById])
+}
+
+// ─── Lugares para laburar ─────────────────────────────────────────────────────
+// Cafés, coworks y bibliotecas que la comunidad recomienda para trabajar, en /lugares. Los carga
+// cualquier miembro; lo editan quien lo cargó y los admins. Los puntajes van de 1 a 5; los de la
+// comida quedan vacíos si el lugar no tiene.
+
+model WorkPlace {
+  id            String  @id @default(cuid())
+  name          String
+  city          String
+  address       String?
+  googleMapsUrl String?
+  wifi          Int
+  // Si hay varias mesas con enchufes.
+  plugs         Int
+  // Qué tan silencioso es como para tener llamadas (5 = ideal).
+  calls         Int
+  foodQuality   Int?
+  foodVariety   Int?
+  notes         String?
+  // Foto opcional, subida al bucket (carpeta work-places/).
+  photoUrl      String?
+  authorId      String
+
+  author User @relation(fields: [authorId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([authorId])
+  @@index([city])
 }

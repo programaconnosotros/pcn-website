@@ -18,6 +18,7 @@ const DOMAINS = {
     'IdentityLink',
     'Notification',
     'Setup',
+    'WorkPlace',
     'SetupLike',
     'Recommendation',
   ],

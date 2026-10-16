@@ -1,5 +1,6 @@
 import {
   Activity,
+  Coffee,
   MousePointerClick,
   ChartPie,
   AlertTriangle,
@@ -290,6 +291,14 @@ export const OS_PROGRAMS: OsProgram[] = [
     url: '/setups',
     icon: MonitorSmartphone,
     color: 'from-sky-300 to-indigo-600',
+    group: 'Comunidad',
+  },
+  {
+    id: 'lugares',
+    name: 'Lugares',
+    url: '/lugares',
+    icon: Coffee,
+    color: 'from-amber-300 to-orange-700',
     group: 'Comunidad',
   },
   {

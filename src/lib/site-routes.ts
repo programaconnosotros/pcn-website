@@ -59,6 +59,7 @@ export const SITE_ROUTES = [
   '/influencers',
   '/lectura',
   '/logros',
+  '/lugares',
   '/metricas',
   '/miembros',
   '/monitoreo',
