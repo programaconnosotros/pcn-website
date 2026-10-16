@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react';
 import { toast } from 'sonner';
 import { updateEvent } from '@/actions/events/update-event';
 import type { EventFormData } from '@/schemas/event-schema';
-import { EditEventForm } from './edit-event-form';
+import { EditEventForm, editEventNotice } from './edit-event-form';
 
 jest.mock('@/actions/events/update-event', () => ({ updateEvent: jest.fn() }));
 jest.mock('@/actions/errors/log-error', () => ({ logError: jest.fn(), logClientError: jest.fn() }));
@@ -73,5 +73,40 @@ describe('EditEventForm', () => {
     await submit(values);
 
     expect(toast.error).toHaveBeenCalledWith('Sin permisos', { id: 'toast-1' });
+  });
+});
+
+describe('editEventNotice', () => {
+  const upcoming = {
+    name: 'Meetup',
+    date: '2099-11-01T19:00',
+    endDate: '',
+    isOnline: false,
+    city: 'Rosario',
+    placeName: 'Bar',
+    address: '',
+  } as EventFormData;
+
+  it('warns the people signed up when the date or the place of an upcoming event changes', () => {
+    expect(editEventNotice(upcoming, { ...upcoming, date: '2099-11-02T19:00' })).toBe(
+      'Cambiaste la fecha: al guardar se le manda una notificación en la app y un email a todos los inscriptos al evento.',
+    );
+    expect(editEventNotice(upcoming, { ...upcoming, isOnline: true })).toMatch(
+      /^Cambiaste el lugar/,
+    );
+    expect(
+      editEventNotice(upcoming, { ...upcoming, endDate: '2099-11-01T22:00', city: 'Salta' }),
+    ).toMatch(/^Cambiaste la fecha y el lugar/);
+  });
+
+  it('says nothing for other changes or an event moved to the past', () => {
+    expect(editEventNotice(upcoming, { ...upcoming, name: 'Otro' })).toBeNull();
+    expect(editEventNotice(upcoming, { ...upcoming, address: undefined })).toBeNull();
+    expect(editEventNotice(upcoming, { ...upcoming, date: '2020-01-01T19:00' })).toBeNull();
+  });
+
+  it('is what the form checks before saving', () => {
+    render(<EditEventForm eventId="e1" defaultValues={{ ...base, date: '', endDate: '' }} />);
+    expect(received).toHaveProperty('notificationNotice');
   });
 });

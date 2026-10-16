@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { toast } from 'sonner';
 import { createEvent } from '@/actions/events/create-event';
 import type { EventFormData } from '@/schemas/event-schema';
-import { NewEventForm } from './new-event-form';
+import { NewEventForm, newEventNotice } from './new-event-form';
 
 jest.mock('@/actions/events/create-event', () => ({ createEvent: jest.fn() }));
 jest.mock('@/actions/errors/log-error', () => ({ logError: jest.fn(), logClientError: jest.fn() }));
@@ -72,5 +72,15 @@ describe('NewEventForm', () => {
     expect(toast.error).toHaveBeenCalledWith('Ocurrió un error al crear el evento', {
       id: 'toast-1',
     });
+  });
+});
+
+describe('newEventNotice', () => {
+  it('warns that a future event notifies everyone, and says nothing about a past one', () => {
+    const future = new Date(Date.now() + 86_400_000).toISOString();
+    expect(newEventNotice({ date: future } as EventFormData)).toMatch(
+      /notificación en la app y un email a todos los usuarios/,
+    );
+    expect(newEventNotice({ date: '2020-01-01T19:00' } as EventFormData)).toBeNull();
   });
 });

@@ -45,6 +45,16 @@ import { partners } from '@/data/partners';
 import { FlyerDesignersField } from '@/components/events/flyer-designers-field';
 import { DateInput } from '@/components/ui/date-input';
 import { FillFromFlyersButton } from '@/components/events/fill-from-flyers-button';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 
 type EventFormProps = {
   defaultValues?: Partial<EventFormData>;
@@ -53,6 +63,11 @@ type EventFormProps = {
   cancelHref?: string;
   // Botón para completar el evento con IA a partir de los flyers (solo admins: son quienes suben flyers).
   flyerAgent?: boolean;
+  /**
+   * Who saving these values will notify, in the app and by email, if anyone: the form asks to
+   * confirm before sending, so nobody mails the whole community by accident.
+   */
+  notificationNotice?: (_values: EventFormData) => string | null;
 };
 
 export function EventForm({
@@ -61,6 +76,7 @@ export function EventForm({
   submitLabel = 'guardarEvento();',
   cancelHref = '/eventos',
   flyerAgent = false,
+  notificationNotice,
 }: EventFormProps) {
   const form = useForm<EventFormData>({
     resolver: zodResolver(eventSchema),
@@ -100,7 +116,18 @@ export function EventForm({
 
   const toUtcIso = (local: string) => (local ? new Date(local).toISOString() : '');
 
+  const [pending, setPending] = useState<{ values: EventFormData; notice: string } | null>(null);
+
   const handleSubmit = async (values: EventFormData) => {
+    const notice = notificationNotice?.(values);
+    if (notice) {
+      setPending({ values, notice });
+      return;
+    }
+    await submit(values);
+  };
+
+  const submit = async (values: EventFormData) => {
     setIsSubmitting(true);
     try {
       await onSubmit({
@@ -713,6 +740,27 @@ export function EventForm({
           </div>
         </form>
       </Form>
+
+      <AlertDialog open={!!pending} onOpenChange={(open) => !open && setPending(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Esto le avisa a la comunidad</AlertDialogTitle>
+            <AlertDialogDescription>{pending?.notice}</AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>volver</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => {
+                const values = pending?.values;
+                setPending(null);
+                if (values) void submit(values);
+              }}
+            >
+              {submitLabel.replace(/\(\);$/, '')} y avisar
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

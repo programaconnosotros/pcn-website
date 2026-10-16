@@ -59,6 +59,30 @@ describe('EventForm', () => {
     expect(onSubmit).not.toHaveBeenCalled();
   });
 
+  it('asks to confirm before saving values that notify the community', async () => {
+    const onSubmit = jest.fn().mockResolvedValue(undefined);
+    const notice = jest.fn(() => 'Se le avisa a todos.');
+    render(<EventForm onSubmit={onSubmit} submitLabel="crear();" notificationNotice={notice} />);
+
+    await fillBasics();
+    type(screen.getByLabelText('Ciudad'), 'Córdoba');
+    type(screen.getByLabelText('Nombre del lugar'), 'Bar XYZ');
+    type(screen.getByLabelText('Dirección'), 'Av. Siempre Viva 742');
+    await userEvent.click(screen.getByRole('button', { name: 'crear();' }));
+
+    expect(await screen.findByRole('alertdialog')).toHaveTextContent('Se le avisa a todos.');
+    expect(notice).toHaveBeenCalledWith(expect.objectContaining({ date: '2026-11-01T19:00' }));
+    await userEvent.click(screen.getByRole('button', { name: 'volver' }));
+    expect(onSubmit).not.toHaveBeenCalled();
+
+    await userEvent.click(screen.getByRole('button', { name: 'crear();' }));
+    await userEvent.click(await screen.findByRole('button', { name: 'crear y avisar' }));
+    await waitFor(() => expect(onSubmit).toHaveBeenCalledTimes(1));
+    expect(onSubmit.mock.calls[0][0]).toMatchObject({
+      date: new Date('2026-11-01T19:00').toISOString(),
+    });
+  });
+
   it('submits an in-person event with dates converted to UTC ISO and sponsors', async () => {
     const onSubmit = jest.fn().mockResolvedValue(undefined);
     render(<EventForm onSubmit={onSubmit} submitLabel="crear();" />);

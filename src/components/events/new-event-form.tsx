@@ -7,6 +7,12 @@ import { isRedirectError } from '@/lib/error-handler';
 import { toast } from 'sonner';
 import { actionErrorMessage } from '@/lib/rate-limit-messages';
 
+/** A future event is announced to every member as soon as it's created (see createEvent). */
+export const newEventNotice = (values: EventFormData) =>
+  new Date(values.date) > new Date()
+    ? 'Al crear este evento se le manda una notificación en la app y un email a todos los usuarios de la comunidad.'
+    : null;
+
 export function NewEventForm({ flyerAgent = false }: { flyerAgent?: boolean }) {
   const onSubmit = async (values: EventFormData) => {
     const toastId = toast.loading('Creando evento...');
@@ -32,6 +38,7 @@ export function NewEventForm({ flyerAgent = false }: { flyerAgent?: boolean }) {
       submitLabel="crearEvento();"
       cancelHref="/eventos"
       flyerAgent={flyerAgent}
+      notificationNotice={newEventNotice}
     />
   );
 }

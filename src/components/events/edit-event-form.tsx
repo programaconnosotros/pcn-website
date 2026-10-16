@@ -21,6 +21,24 @@ const formatDateForInput = (iso: string): string => {
   return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
 };
 
+/**
+ * Moving an upcoming event in time or place tells everyone signed up for it (see updateEvent).
+ * Both sides are the form's local values.
+ */
+export const editEventNotice = (before: EventFormData, after: EventFormData) => {
+  const same = (a: unknown, b: unknown) => String(a || '') === String(b || '');
+  const when = !same(before.date, after.date) || !same(before.endDate, after.endDate);
+  const where =
+    !same(before.isOnline, after.isOnline) ||
+    !same(before.placeName, after.placeName) ||
+    !same(before.address, after.address) ||
+    !same(before.city, after.city);
+  if (!(when || where) || !(new Date(after.date) > new Date())) return null;
+
+  const what = when && where ? 'la fecha y el lugar' : when ? 'la fecha' : 'el lugar';
+  return `Cambiaste ${what}: al guardar se le manda una notificación en la app y un email a todos los inscriptos al evento.`;
+};
+
 export function EditEventForm({ eventId, defaultValues, flyerAgent = false }: EditEventFormProps) {
   const [formDefaults, setFormDefaults] = useState<EventFormData | null>(null);
 
@@ -60,6 +78,7 @@ export function EditEventForm({ eventId, defaultValues, flyerAgent = false }: Ed
       submitLabel="guardarCambios();"
       cancelHref={`/eventos/${eventId}`}
       flyerAgent={flyerAgent}
+      notificationNotice={(values) => editEventNotice(formDefaults, values)}
     />
   );
 }
