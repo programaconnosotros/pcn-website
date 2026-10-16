@@ -121,3 +121,50 @@ export const sendEmail = async ({
     throw new Error('Error al enviar el email. Por favor, contactá al administrador.');
   }
 };
+
+/** Resend acepta hasta 100 emails por llamada a su API de lotes. */
+const RESEND_BATCH_SIZE = 100;
+
+/**
+ * Envía muchos emails de una (un aviso a todos los usuarios o a los inscriptos de un evento):
+ * en producción por la API de lotes de Resend, de a 100, así no se choca con su límite de
+ * pedidos por segundo. Nunca lanza: devuelve cuántos no se pudieron mandar.
+ */
+export const sendEmails = async (
+  messages: { to: string; subject: string; html: string }[],
+): Promise<number> => {
+  let failed = 0;
+  const apiKey = process.env.RESEND_API_KEY;
+
+  if (apiKey && process.env.EMAIL_TRANSPORT !== 'json') {
+    const resend = new Resend(apiKey);
+    const from = formatSender(getSender());
+    for (let i = 0; i < messages.length; i += RESEND_BATCH_SIZE) {
+      const chunk = messages.slice(i, i + RESEND_BATCH_SIZE);
+      try {
+        const { error } = await resend.batch.send(chunk.map((message) => ({ from, ...message })));
+        if (error) throw new Error(error.message);
+      } catch (error) {
+        failed += chunk.length;
+        console.error(
+          'Failed to send email batch:',
+          error instanceof Error ? error.message : 'Unknown error',
+        );
+      }
+    }
+    return failed;
+  }
+
+  for (const message of messages) {
+    try {
+      await getEmailTransporter().sendMail({ from: getSender(), ...message });
+    } catch (error) {
+      failed++;
+      console.error(
+        'Failed to send email:',
+        error instanceof Error ? error.message : 'Unknown error',
+      );
+    }
+  }
+  return failed;
+};

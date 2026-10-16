@@ -9,6 +9,7 @@ import {
   getEmailTransporter,
   getSender,
   sendEmail,
+  sendEmails,
 } from './email';
 
 jest.mock('nodemailer');
@@ -16,6 +17,7 @@ jest.mock('resend', () => ({ Resend: jest.fn() }));
 
 const sendMail = jest.fn();
 const resendSend = jest.fn();
+const resendBatchSend = jest.fn();
 const ORIGINAL_ENV = process.env;
 const message = { to: 'user@example.com', subject: 'Hola', html: '<p>hola</p>' };
 
@@ -27,7 +29,11 @@ beforeEach(() => {
   sendMail.mockReset().mockResolvedValue({});
   resendSend.mockReset().mockResolvedValue({ data: { id: 'email-1' }, error: null });
   (nodemailer.createTransport as jest.Mock).mockReturnValue({ sendMail });
-  (Resend as unknown as jest.Mock).mockImplementation(() => ({ emails: { send: resendSend } }));
+  resendBatchSend.mockReset().mockResolvedValue({ data: { data: [] }, error: null });
+  (Resend as unknown as jest.Mock).mockImplementation(() => ({
+    emails: { send: resendSend },
+    batch: { send: resendBatchSend },
+  }));
 });
 
 afterAll(() => {
@@ -130,6 +136,38 @@ describe('sendEmail without Resend (local MailHog)', () => {
 
     await expect(sendEmail(message)).rejects.toThrow('Error al enviar el email');
     expect(consoleError).toHaveBeenCalledWith('Failed to send email:', 'Unknown error');
+  });
+});
+
+describe('sendEmails', () => {
+  const many = (count: number) =>
+    Array.from({ length: count }, (_, i) => ({ ...message, to: `user${i}@example.com` }));
+
+  it('sends through the Resend batch API, 100 at a time, counting the failed batches', async () => {
+    process.env.RESEND_API_KEY = 're_test';
+    resendBatchSend
+      .mockResolvedValueOnce({ data: { data: [] }, error: null })
+      .mockResolvedValueOnce({ data: null, error: { message: 'rate limited' } })
+      .mockRejectedValueOnce('boom');
+
+    expect(await sendEmails(many(250))).toBe(150);
+
+    expect(resendBatchSend).toHaveBeenCalledTimes(3);
+    expect(resendBatchSend.mock.calls[0][0]).toHaveLength(100);
+    expect(resendBatchSend.mock.calls[0][0][0]).toEqual({
+      from: 'programaConNosotros <no-reply@programaconnosotros.com>',
+      ...message,
+      to: 'user0@example.com',
+    });
+    expect(resendBatchSend.mock.calls[2][0]).toHaveLength(50);
+  });
+
+  it('sends one by one through the local SMTP host, never throwing', async () => {
+    sendMail.mockResolvedValueOnce({}).mockRejectedValueOnce(new Error('550'));
+
+    expect(await sendEmails(many(2))).toBe(1);
+    expect(Resend).not.toHaveBeenCalled();
+    expect(sendMail).toHaveBeenCalledTimes(2);
   });
 });
 

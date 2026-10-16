@@ -3,7 +3,15 @@ import { redirect } from 'next/navigation';
 import { prismaMock } from '@/test/prisma';
 import { mockCookies } from '@/test/cookies';
 import type { EventFormData } from '@/schemas/event-schema';
+import { sendEmails } from '@/lib/email';
 import { createEvent } from './create-event';
+
+jest.mock('@/lib/email', () => ({ sendEmails: jest.fn(async () => 0) }));
+// react-email's render needs ESM dynamic imports, which Jest doesn't run: plain static markup.
+jest.mock('@react-email/render', () => ({
+  render: async (element: React.ReactElement) =>
+    require('react-dom/server').renderToStaticMarkup(element),
+}));
 
 // Minimal valid data for an in-person event.
 // shortcut must be a string at input time (transforms to undefined when empty).
@@ -242,5 +250,41 @@ describe('createEvent dates and sponsors', () => {
     prismaMock.notification.createMany.mockClear();
     await expect(createEvent(validEventData)).rejects.toThrow('NEXT_REDIRECT');
     expect(prismaMock.notification.createMany).not.toHaveBeenCalled();
+  });
+
+  it('emails every other verified user about a future event, and nobody about a past one', async () => {
+    mockCookies({ sessionId: 'session-admin' });
+    prismaMock.session.findUnique.mockResolvedValue(adminSession as any);
+    prismaMock.event.create.mockResolvedValue({
+      id: 'event-5',
+      name: 'Meetup',
+      isOnline: false,
+      placeName: 'GCBA HQ',
+      address: 'Diagonal Norte 1234',
+      city: 'Buenos Aires',
+    } as any);
+    prismaMock.user.findMany.mockResolvedValue([
+      { name: 'Ana López', email: 'ana@example.com' },
+      { name: 'Beto <b>', email: 'beto@example.com' },
+    ] as any);
+    const date = new Date(Date.now() + 7 * 86_400_000).toISOString();
+
+    await expect(createEvent({ ...validEventData, date })).rejects.toThrow('NEXT_REDIRECT');
+
+    expect(prismaMock.user.findMany).toHaveBeenCalledWith({
+      where: { suspendedAt: null, emailVerified: true, id: { not: adminUser.id } },
+      select: { name: true, email: true },
+    });
+    const messages = jest.mocked(sendEmails).mock.calls[0][0];
+    expect(messages.map((message) => message.to)).toEqual(['ana@example.com', 'beto@example.com']);
+    expect(messages[0].subject).toBe('Nuevo evento: Meetup');
+    expect(messages[0].html).toContain('Ana');
+    expect(messages[0].html).toContain('GCBA HQ, Diagonal Norte 1234, Buenos Aires');
+    expect(messages[1].html).toContain('Beto');
+    expect(messages[1].html).not.toContain('<b>');
+
+    jest.mocked(sendEmails).mockClear();
+    await expect(createEvent(validEventData)).rejects.toThrow('NEXT_REDIRECT');
+    expect(sendEmails).not.toHaveBeenCalled();
   });
 });

@@ -9,6 +9,9 @@ import { canCreateEvents } from '@/lib/event-permissions';
 import { enforceRateLimit } from '@/lib/rate-limit';
 import { findSession } from '@/lib/session';
 import { notifyEveryone } from '@/actions/notifications/notify-users';
+import { emailUsers } from '@/actions/notifications/email-users';
+import { EventNoticeEmail } from '@/components/events/event-notice-email';
+import { formatEventWhen, formatEventWhere } from '@/lib/event-notices';
 
 /**
  * Designers of the event's flyer, deduplicated, with only user ids that exist (a stale id is
@@ -109,6 +112,32 @@ export const createEvent = async (data: EventFormData) => {
       },
       session.user.id,
     );
+
+    // Y por email a todos los que verificaron su dirección: en una sola tanda, de a lotes.
+    try {
+      const users = await prisma.user.findMany({
+        where: { suspendedAt: null, emailVerified: true, id: { not: session.user.id } },
+        select: { name: true, email: true },
+      });
+      await emailUsers(users, `Nuevo evento: ${event.name}`, (firstName) =>
+        EventNoticeEmail({
+          userName: firstName,
+          eventName: event.name,
+          eventId: event.id,
+          path: 'eventos/nuevo',
+          title: 'Nuevo evento',
+          preview: `Se publicó ${event.name}`,
+          command: 'pcn eventos --nuevo',
+          intro: 'Se publicó un nuevo evento en la comunidad. Anotate desde su página.',
+          rows: [
+            { label: 'fecha', value: formatEventWhen(date) },
+            { label: 'lugar', value: formatEventWhere(event) },
+          ],
+        }),
+      );
+    } catch (error) {
+      console.error('Error emailing everyone about a new event:', error);
+    }
   }
 
   revalidatePath('/eventos');
