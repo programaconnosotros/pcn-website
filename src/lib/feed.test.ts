@@ -41,6 +41,7 @@ const emptySources = () => {
   prismaMock.announcement.findMany.mockResolvedValue([]);
   prismaMock.testimonial.findMany.mockResolvedValue([]);
   prismaMock.workPlace.findMany.mockResolvedValue([]);
+  prismaMock.jobOffers.findMany.mockResolvedValue([]);
   prismaMock.user.findMany.mockResolvedValue([]);
 };
 
@@ -411,8 +412,24 @@ describe('fetchFeed', () => {
       },
     ] as never);
 
+    prismaMock.jobOffers.findMany.mockResolvedValue([
+      {
+        id: 'j1',
+        title: 'Frontend developer',
+        company: 'Acme',
+        location: 'Remoto',
+        description: 'React y TypeScript',
+        createdAt: day,
+      },
+    ] as never);
+
     const feed = await fetchFeed();
     const byKind = Object.fromEntries(feed.map((item) => [item.kind, item]));
+    expect(byKind.empleo).toMatchObject({
+      title: 'Frontend developer en Acme',
+      meta: 'Remoto',
+      href: '/empleos?q=Frontend%20developer',
+    });
     expect(byKind.foro).toMatchObject({
       title: 'Monorepos',
       meta: 'Ana',

@@ -979,6 +979,26 @@ export const dbModels: DbModel[] = [
         type: 'String',
       },
       {
+        name: 'modality',
+        type: 'String',
+      },
+      {
+        name: 'seniority',
+        type: 'String',
+        optional: true,
+      },
+      {
+        name: 'applyUrl',
+        type: 'String',
+        optional: true,
+      },
+      {
+        name: 'authorId',
+        type: 'String',
+        fk: true,
+        optional: true,
+      },
+      {
         name: 'createdAt',
         type: 'DateTime',
       },
@@ -2904,6 +2924,14 @@ export const dbRelations: DbRelation[] = [
     optional: true,
     many: true,
     onDelete: 'Cascade',
+  },
+  {
+    from: 'JobOffers',
+    to: 'User',
+    label: 'author',
+    optional: true,
+    many: true,
+    onDelete: 'SetNull',
   },
   {
     from: 'Announcement',

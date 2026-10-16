@@ -62,6 +62,7 @@ export const SITE_ROUTES = [
   '/lectura',
   '/logros',
   '/lugares',
+  '/empleos',
   '/metricas',
   '/miembros',
   '/monitoreo',

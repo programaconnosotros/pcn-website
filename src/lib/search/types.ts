@@ -21,7 +21,8 @@ export type SearchResultType =
   | 'changelog'
   | 'anuncio'
   | 'lugar'
-  | 'guia';
+  | 'guia'
+  | 'empleo';
 
 export interface SearchResult {
   type: SearchResultType;
@@ -45,6 +46,7 @@ export const SEARCH_GROUPS: { type: SearchResultType; label: string }[] = [
   { type: 'consejo', label: 'consejos' },
   { type: 'foro', label: 'foro' },
   { type: 'anuncio', label: 'anuncios' },
+  { type: 'empleo', label: 'empleos' },
   { type: 'historia', label: 'historia' },
   { type: 'charla', label: 'charlas' },
   { type: 'curso', label: 'cursos' },

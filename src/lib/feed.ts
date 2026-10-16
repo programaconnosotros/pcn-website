@@ -11,6 +11,7 @@ import { getCollaborationStats } from '@/lib/github-stats';
 import { getIdentityMap } from '@/lib/identity-links';
 import { pullSummary } from '@/lib/pull-kinds';
 import { ACTIVE_USER } from '@/lib/active-user';
+import { listOpenJobOffers } from '@/lib/job-offers';
 import { excerpt } from '@/actions/notifications/excerpt';
 
 export type FeedKind =
@@ -27,6 +28,7 @@ export type FeedKind =
   | 'anuncio'
   | 'testimonio'
   | 'lugar'
+  | 'empleo'
   | 'miembros';
 
 export interface FeedItem {
@@ -378,6 +380,20 @@ const workPlaceItems = async (): Promise<FeedItem[]> => {
   }));
 };
 
+const jobOfferItems = async (): Promise<FeedItem[]> => {
+  const offers = await listOpenJobOffers();
+  return offers.slice(0, PER_SOURCE).map((offer) => ({
+    id: `empleo-${offer.id}`,
+    kind: 'empleo',
+    day: toFeedDay(offer.createdAt),
+    sortKey: offer.createdAt.toISOString(),
+    title: `${offer.title} en ${offer.company}`,
+    meta: offer.location,
+    description: excerpt(offer.description, 160),
+    href: `/empleos?q=${encodeURIComponent(offer.title)}`,
+  }));
+};
+
 /** New members, one entry per day: who joins is news, a row per person would flood the feed. */
 const memberItems = async (): Promise<FeedItem[]> => {
   const users = await prisma.user.findMany({
@@ -430,6 +446,7 @@ const buildFeed = cached(
       announcementItems(),
       testimonialItems(),
       workPlaceItems(),
+      jobOfferItems(),
       memberItems(),
     ]);
     return sources
@@ -454,6 +471,7 @@ const buildFeed = cached(
       'Announcement',
       'Testimonial',
       'WorkPlace',
+      'JobOffers',
     ],
   },
 );

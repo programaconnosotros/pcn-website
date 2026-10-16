@@ -44,6 +44,7 @@ const STATIC_ROUTES = [
   '/galeria',
   '/setups',
   '/lugares',
+  '/empleos',
   '/foro',
   '/partners',
   '/changelog',

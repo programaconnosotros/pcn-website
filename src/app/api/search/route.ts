@@ -14,6 +14,7 @@ import { listHiddenConsejoIds } from '@/lib/hidden-consejos';
 import { SEARCH_GROUPS, type SearchResponse } from '@/lib/search/types';
 import { visibleGalleryItem } from '@/lib/gallery';
 import { ACTIVE_USER } from '@/lib/active-user';
+import { listOpenJobOffers } from '@/lib/job-offers';
 
 const MAX_QUERY_LENGTH = 100;
 const DB_CANDIDATES = 20;
@@ -36,6 +37,7 @@ const loadSearchCorpus = cached(
       forumComments,
       announcements,
       workPlaces,
+      jobOffers,
     ] = await Promise.all([
       prisma.event.findMany({
         where: { deletedAt: null },
@@ -125,6 +127,8 @@ const loadSearchCorpus = cached(
         orderBy: { createdAt: 'desc' },
         select: { id: true, name: true, city: true, address: true, notes: true },
       }),
+      // The open offers of /empleos, the same ones the page lists.
+      listOpenJobOffers(),
     ]);
     return {
       events,
@@ -139,6 +143,7 @@ const loadSearchCorpus = cached(
       forumComments,
       announcements,
       workPlaces,
+      jobOffers,
     };
   },
   {
@@ -157,6 +162,7 @@ const loadSearchCorpus = cached(
       'ForumComment',
       'Announcement',
       'WorkPlace',
+      'JobOffers',
     ],
   },
 );
@@ -228,6 +234,11 @@ const loadDatabaseEntries = async (query: string) => {
     .slice(0, DB_CANDIDATES);
   const workPlaces = corpus.workPlaces
     .filter((place) => contains(place.name, place.city, place.address, place.notes))
+    .slice(0, DB_CANDIDATES);
+  const jobOffers = corpus.jobOffers
+    .filter((offer) =>
+      contains(offer.title, offer.company, offer.location, offer.description, ...offer.tags),
+    )
     .slice(0, DB_CANDIDATES);
   const testimonials = corpus.testimonials
     .filter((testimonial) => contains(testimonial.body, testimonial.user.name))
@@ -355,6 +366,18 @@ const loadDatabaseEntries = async (query: string) => {
           href: `/lugares?q=${encodeURIComponent(place.name)}`,
         },
         place.notes,
+      ),
+    ),
+    ...jobOffers.map((offer) =>
+      toEntry(
+        {
+          type: 'empleo',
+          title: offer.title,
+          subtitle: [offer.company, offer.location].join(' · '),
+          href: `/empleos?q=${encodeURIComponent(offer.title)}`,
+        },
+        offer.description,
+        offer.tags.join(' '),
       ),
     ),
     ...testimonials.map((testimonial) =>

@@ -111,6 +111,7 @@ model User {
   forumPostLikes         ForumPostLike[]
   forumCommentLikes      ForumCommentLike[]
   contentReports         ContentReport[]      @relation("ContentReporter")
+  jobOffers              JobOffers[]          @relation("UserJobOffers")
   resolvedReports        ContentReport[]      @relation("ContentReportResolver")
   /// Optional two-factor sign-in (TOTP). The secret is set while setting it up and kept once
   /// confirmed; `twoFactorEnabledAt` says it's on. Recovery codes are stored as SHA-256 hashes.
@@ -461,18 +462,34 @@ model Like {
   @@index([extractedId])
 }
 
+/// Ofertas de trabajo de /empleos, publicadas por miembros de la comunidad. Las filas viejas sin
+/// autor (de antes de la bolsa) no se muestran.
 model JobOffers {
   id          String   @id @default(cuid())
   title       String
   description String
   company     String
-  available   Boolean
+  /// Abierta: se muestra en /empleos. Quien la publicó la cierra cuando se cubre.
+  available   Boolean  @default(true)
   tags        String[]
   location    String
+  /// Jornada: full-time, part-time, freelance o pasantia.
   type        String
+  /// remoto, hibrido o presencial.
+  modality    String   @default("remoto")
+  /// trainee, junior, semi-senior, senior o lead; vacío si no aplica.
+  seniority   String?
+  /// Dónde postularse: un link https o un email.
+  applyUrl    String?
+
+  author   User?   @relation("UserJobOffers", fields: [authorId], references: [id], onDelete: SetNull)
+  authorId String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([available, createdAt])
+  @@index([authorId])
 }
 
 model Announcement {

@@ -26,7 +26,7 @@ const AREAS = [
   [/^src\/components\/photo-gallery\//, 'galeria'],
   [/^src\/app\/api\/galeria\//, 'galeria'],
   [/^src\/actions\/(update-profile|badges|setups)/, 'perfil'],
-  [/^src\/actions\/work-places\//, 'plataforma'],
+  [/^src\/actions\/(work-places|job-offers)\//, 'plataforma'],
   [/^src\/lib\/(achievements|github-contributions)/, 'perfil'],
   [/^src\/actions\/(advice|comments)\//, 'consejos'],
   [/^src\/lib\/consejos/, 'consejos'],
@@ -173,6 +173,10 @@ const FOLDER_AREAS = {
   visitas: 'admin',
   'work-places': 'plataforma',
   lugares: 'plataforma',
+  'job-offers': 'plataforma',
+  empleos: 'plataforma',
+  moderation: 'admin',
+  moderacion: 'admin',
 };
 
 const layerOf = (file) => {

@@ -124,6 +124,7 @@ const mockCorpus = () => {
   prismaMock.forumComment.findMany.mockResolvedValue([]);
   prismaMock.announcement.findMany.mockResolvedValue([]);
   prismaMock.workPlace.findMany.mockResolvedValue([]);
+  prismaMock.jobOffers.findMany.mockResolvedValue([]);
 };
 
 describe('GET /api/search', () => {
@@ -265,6 +266,17 @@ describe('GET /api/search', () => {
       { id: 'w1', name: 'Café Programación', city: 'Córdoba', address: null, notes: 'Buen wifi' },
     ] as any);
 
+    prismaMock.jobOffers.findMany.mockResolvedValue([
+      {
+        id: 'j1',
+        title: 'Dev de programación funcional',
+        company: 'Acme',
+        location: 'Remoto',
+        description: 'Elixir',
+        tags: ['Elixir'],
+      },
+    ] as any);
+
     const { body } = await search('practica programacion');
     expect(body.results).toContainEqual(
       expect.objectContaining({ type: 'foro', href: '/foro/tema/f9' }),
@@ -283,6 +295,9 @@ describe('GET /api/search', () => {
     );
     expect(replies.results).toContainEqual(
       expect.objectContaining({ type: 'lugar', title: 'Café Programación', subtitle: 'Córdoba' }),
+    );
+    expect(replies.results).toContainEqual(
+      expect.objectContaining({ type: 'empleo', subtitle: 'Acme · Remoto' }),
     );
     expect(prismaMock.announcement.findMany).toHaveBeenCalledWith(
       expect.objectContaining({ where: { published: true } }),

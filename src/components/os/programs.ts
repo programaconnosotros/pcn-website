@@ -295,6 +295,14 @@ export const OS_PROGRAMS: OsProgram[] = [
     group: 'Comunidad',
   },
   {
+    id: 'empleos',
+    name: 'Empleos',
+    url: '/empleos',
+    icon: BriefcaseBusiness,
+    color: 'from-cyan-300 to-blue-700',
+    group: 'Comunidad',
+  },
+  {
     id: 'lugares',
     name: 'Lugares',
     url: '/lugares',

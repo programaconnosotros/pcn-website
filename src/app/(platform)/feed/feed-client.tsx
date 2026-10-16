@@ -47,6 +47,7 @@ const KINDS: Record<FeedKind, { label: string; tag: string; className: string }>
     className: 'border-yellow-300/50 text-yellow-200',
   },
   lugar: { label: 'lugares', tag: 'lugar', className: 'border-teal-400/50 text-teal-300' },
+  empleo: { label: 'empleos', tag: 'empleo', className: 'border-blue-400/50 text-blue-300' },
   miembros: {
     label: 'miembros',
     tag: 'bienvenida',
