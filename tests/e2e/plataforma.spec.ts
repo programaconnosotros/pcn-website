@@ -289,7 +289,7 @@ test.describe('infrastructure endpoints', () => {
   test('TC-PLT-007 Health check, robots y sitemap', async ({ request }) => {
     const up = await request.get('/up');
     expect(up.status()).toBe(200);
-    expect(await up.json()).toEqual({ status: 'OK' });
+    expect(await up.json()).toEqual({ status: 'OK', database: 'OK' });
 
     const robots = await (await request.get('/robots.txt')).text();
     for (const path of ['/api/', '/iniciar-sesion', '/perfil', '/monitoreo', '/eventos/nuevo']) {
