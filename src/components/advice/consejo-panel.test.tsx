@@ -18,6 +18,7 @@ jest.mock('@/actions/advice/like-advice', () => ({ toggleLike: jest.fn() }));
 jest.mock('@actions/advice/delete-advice', () => ({ deleteAdvice: jest.fn() }));
 jest.mock('@/actions/advice/edit-advice', () => ({ editAdvice: jest.fn() }));
 jest.mock('@/actions/comments/create-comment', () => ({ createComment: jest.fn() }));
+jest.mock('@/actions/comments/delete-comment', () => ({ deleteComment: jest.fn() }));
 jest.mock('sonner', () => require('@/test/platform').mockSonner());
 
 const SetIds = ({ ids }: { ids: string[] }) => {

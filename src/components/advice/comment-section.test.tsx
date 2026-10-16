@@ -1,11 +1,13 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent, { type UserEvent } from '@testing-library/user-event';
 import { toast } from 'sonner';
 import { createComment } from '@/actions/comments/create-comment';
+import { deleteComment } from '@/actions/comments/delete-comment';
 import { buildSession } from '@/test/platform';
 import { CommentSection } from './comment-section';
 
 jest.mock('@/actions/comments/create-comment', () => ({ createComment: jest.fn() }));
+jest.mock('@/actions/comments/delete-comment', () => ({ deleteComment: jest.fn() }));
 jest.mock('sonner', () => require('@/test/platform').mockSonner());
 
 type Comments = Parameters<typeof CommentSection>[0]['comments'];
@@ -137,5 +139,41 @@ describe('CommentSection', () => {
     await user.click(screen.getByRole('button', { name: 'enviarRespuesta();' }));
 
     expect(await screen.findAllByText('El comentario no puede estar vacío')).not.toHaveLength(0);
+  });
+
+  it('offers to delete only your own comments, unless you are an admin', () => {
+    const { unmount } = render(
+      <CommentSection adviceId="a1" comments={comments} session={buildSession({ id: 'u-r1' })} />,
+    );
+    expect(screen.getAllByRole('button', { name: 'Eliminar' })).toHaveLength(1);
+    unmount();
+
+    render(
+      <CommentSection
+        adviceId="a1"
+        comments={comments}
+        session={buildSession({ role: 'ADMIN' })}
+      />,
+    );
+    expect(screen.getAllByRole('button', { name: 'Eliminar' })).toHaveLength(2);
+  });
+
+  it('deletes a comment after confirming, warning that its replies go too', async () => {
+    (deleteComment as jest.Mock).mockResolvedValue(undefined);
+    const user = userEvent.setup();
+    render(
+      <CommentSection adviceId="a1" comments={comments} session={buildSession({ id: 'u-c1' })} />,
+    );
+
+    await user.click(screen.getByRole('button', { name: 'Eliminar' }));
+    expect(
+      screen.getByText(/Las respuestas al comentario también se eliminan/),
+    ).toBeInTheDocument();
+    await user.click(
+      within(screen.getByRole('alertdialog')).getByRole('button', { name: 'Eliminar' }),
+    );
+
+    expect(deleteComment).toHaveBeenCalledWith('c1');
+    await waitFor(() => expect(screen.queryByRole('alertdialog')).not.toBeInTheDocument());
   });
 });

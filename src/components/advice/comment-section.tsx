@@ -17,6 +17,7 @@ import { Avatar, AvatarImage, AvatarFallback } from '../ui/avatar';
 import Link from 'next/link';
 import { Comment } from '@/generated/prisma/browser';
 import { actionErrorMessage } from '@/lib/rate-limit-messages';
+import { DeleteCommentDialog } from './delete-comment-dialog';
 
 const commentSchema = z.object({
   content: z
@@ -36,6 +37,8 @@ type CommentSectionProps = {
 export const CommentSection = ({ adviceId, comments, session }: CommentSectionProps) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [replyingTo, setReplyingTo] = useState<string | null>(null);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
+  const isAdmin = session?.user?.role === 'ADMIN';
   // De cada respuesta, el comentario que abre su hilo
   const threadOf = new Map(
     comments.flatMap((comment) => comment.replies.map((reply) => [reply.id, comment.id] as const)),
@@ -104,14 +107,26 @@ export const CommentSection = ({ adviceId, comments, session }: CommentSectionPr
           <p className="text-sm">{comment.content}</p>
 
           {session && (
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setReplyingTo(comment.id)}
-              className="h-auto p-0 text-xs text-muted-foreground hover:text-foreground"
-            >
-              Responder
-            </Button>
+            <div className="flex gap-3">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setReplyingTo(comment.id)}
+                className="h-auto p-0 text-xs text-muted-foreground hover:text-foreground"
+              >
+                Responder
+              </Button>
+              {(comment.authorId === session.user.id || isAdmin) && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setDeletingId(comment.id)}
+                  className="h-auto p-0 text-xs text-muted-foreground hover:text-destructive"
+                >
+                  Eliminar
+                </Button>
+              )}
+            </div>
           )}
         </div>
       </div>
@@ -191,6 +206,12 @@ export const CommentSection = ({ adviceId, comments, session }: CommentSectionPr
           <Comment comment={comment} />
         </div>
       ))}
+
+      <DeleteCommentDialog
+        commentId={deletingId}
+        hasReplies={!!comments.find((comment) => comment.id === deletingId)?.replies.length}
+        onClose={() => setDeletingId(null)}
+      />
     </div>
   );
 };

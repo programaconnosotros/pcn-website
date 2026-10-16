@@ -21,6 +21,15 @@ export interface ChangelogEntry {
 
 export const changelog: ChangelogEntry[] = [
   {
+    date: '2026-10-15',
+    area: 'consejos',
+    title: 'Eliminá tus comentarios',
+    description:
+      'Podés eliminar los comentarios que dejaste en un consejo (si abrían un hilo, se van con sus respuestas). Los admins pueden eliminar cualquiera.',
+    authors: ['agustin-sanc'],
+    href: '/consejos',
+  },
+  {
     date: '2026-10-13',
     area: 'perfil',
     title: 'Timeline en el perfil',
