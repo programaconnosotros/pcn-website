@@ -9,6 +9,90 @@ import { canEditEvent } from '@/lib/event-permissions';
 import { enforceRateLimit } from '@/lib/rate-limit';
 import { findSession } from '@/lib/session';
 import { fillFromWaitlist } from '@/lib/event-waitlist';
+import { notifyUsers } from '@/actions/notifications/notify-users';
+import { emailUsers } from '@/actions/notifications/email-users';
+import { EventNoticeEmail } from '@/components/events/event-notice-email';
+import { formatEventWhen, formatEventWhere } from '@/lib/event-notices';
+
+type EventPlace = {
+  isOnline: boolean;
+  placeName?: string | null;
+  address?: string | null;
+  city?: string | null;
+};
+
+/** Whether the change moves the event in time or place: what the people signed up must know. */
+const changedWhenOrWhere = (
+  before: EventPlace & { date: Date; endDate: Date | null },
+  after: EventPlace & { date: Date; endDate: Date | null },
+) => ({
+  when:
+    before.date.getTime() !== after.date.getTime() ||
+    (before.endDate?.getTime() ?? null) !== (after.endDate?.getTime() ?? null),
+  where:
+    before.isOnline !== after.isOnline ||
+    (['placeName', 'address', 'city'] as const).some(
+      (field) => (before[field] ?? null) !== (after[field] ?? null),
+    ),
+});
+
+/**
+ * Tells everyone signed up for the event, in the app and by email, its new date or place.
+ * Never throws: the edit is already saved.
+ */
+const notifyWhenOrWhereChange = async (
+  event: EventPlace & { id: string; name: string; date: Date },
+  changed: { when: boolean; where: boolean },
+  editorId: string,
+) => {
+  try {
+    const registrations = await prisma.eventRegistration.findMany({
+      where: { eventId: event.id, cancelledAt: null, userId: { not: editorId } },
+      select: { user: { select: { id: true, name: true, email: true } } },
+    });
+    const users = registrations.map((registration) => registration.user);
+    if (users.length === 0) return;
+
+    const when = formatEventWhen(event.date);
+    const where = formatEventWhere(event);
+    const what =
+      changed.when && changed.where
+        ? 'la fecha y el lugar'
+        : changed.when
+          ? 'la fecha'
+          : 'el lugar';
+
+    await notifyUsers(
+      users.map((user) => user.id),
+      {
+        type: 'event_updated',
+        title: `Cambió ${what} de ${event.name}`,
+        message: `Ahora es el ${when}, ${where === 'online' ? 'online' : `en ${where}`}.`,
+        href: `/eventos/${event.id}`,
+        metadata: { eventId: event.id },
+      },
+      editorId,
+    );
+    await emailUsers(users, `${event.name}: cambió ${what}`, (firstName) =>
+      EventNoticeEmail({
+        userName: firstName,
+        eventName: event.name,
+        eventId: event.id,
+        path: 'eventos/cambios',
+        title: `Cambió ${what}`,
+        preview: `${event.name}: cambió ${what}`,
+        command: 'pcn eventos cambios',
+        intro: `Cambió ${what} de un evento al que te anotaste. Así queda:`,
+        rows: [
+          { label: 'fecha', value: when, tone: changed.when ? 'amber' : undefined },
+          { label: 'lugar', value: where, tone: changed.where ? 'amber' : undefined },
+        ],
+      }),
+    );
+  } catch (error) {
+    console.error('Error notifying an event change:', error);
+  }
+};
 
 /**
  * Designers of the event's flyer, deduplicated, with only user ids that exist (a stale id is
@@ -107,6 +191,20 @@ export const updateEvent = async (id: string, data: EventFormData) => {
       },
     }),
   ]);
+
+  // Una edición de un evento que todavía no pasó avisa a los inscriptos si cambió cuándo o dónde.
+  const after = {
+    isOnline: eventData.isOnline,
+    placeName: eventData.placeName ?? null,
+    address: eventData.address ?? null,
+    city: eventData.city ?? null,
+    date,
+    endDate,
+  };
+  const changed = changedWhenOrWhere(existingEvent, after);
+  if ((changed.when || changed.where) && date > new Date()) {
+    await notifyWhenOrWhereChange({ ...after, id, name: eventData.name }, changed, session.user.id);
+  }
 
   // Si el cambio liberó lugares (más cupo o ya no está marcado como lleno), pasan a quienes esperan
   await fillFromWaitlist(id);

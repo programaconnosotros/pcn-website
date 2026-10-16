@@ -4,7 +4,15 @@ import { prismaMock } from '@/test/prisma';
 import { mockCookies } from '@/test/cookies';
 import type { EventFormData } from '@/schemas/event-schema';
 import { fillFromWaitlist } from '@/lib/event-waitlist';
+import { sendEmails } from '@/lib/email';
 import { updateEvent } from './update-event';
+
+jest.mock('@/lib/email', () => ({ sendEmails: jest.fn(async () => 0) }));
+// react-email's render needs ESM dynamic imports, which Jest doesn't run: plain static markup.
+jest.mock('@react-email/render', () => ({
+  render: async (element: React.ReactElement) =>
+    require('react-dom/server').renderToStaticMarkup(element),
+}));
 
 jest.mock('@/lib/event-waitlist', () => ({
   fillFromWaitlist: jest.fn().mockResolvedValue([]),
@@ -59,6 +67,12 @@ const existingEvent = {
   id: 'event-1',
   name: 'Old Name',
   deletedAt: null,
+  date: new Date(validEventData.date),
+  endDate: null,
+  isOnline: false,
+  city: 'Buenos Aires',
+  placeName: 'GCBA HQ',
+  address: 'Diagonal Norte 1234',
 };
 
 const ambassadorSession = {
@@ -220,5 +234,81 @@ describe('updateEvent dates and sponsors', () => {
       { name: 'Sin web', website: null, logo: null },
     ]);
     expect(prismaMock.sponsor.deleteMany).toHaveBeenCalledWith({ where: { eventId: 'event-1' } });
+  });
+});
+
+describe('updateEvent date and place notices', () => {
+  const future = new Date(Date.now() + 7 * 86_400_000);
+  const upcoming = { ...existingEvent, date: future, organizers: [] };
+  const input = { ...validEventData, date: future.toISOString() };
+
+  beforeEach(() => {
+    mockCookies({ sessionId: 'session-admin' });
+    prismaMock.session.findUnique.mockResolvedValue(adminSession as any);
+    prismaMock.eventRegistration.findMany.mockResolvedValue([
+      { user: { id: 'ana', name: 'Ana López', email: 'ana@example.com' } },
+    ] as any);
+  });
+
+  it('tells everyone signed up, in the app and by email, when the place changes', async () => {
+    prismaMock.event.findUnique.mockResolvedValue(upcoming as any);
+
+    await expect(updateEvent('event-1', { ...input, placeName: 'Aula 204' })).rejects.toThrow(
+      'NEXT_REDIRECT',
+    );
+
+    expect(prismaMock.eventRegistration.findMany).toHaveBeenCalledWith({
+      where: { eventId: 'event-1', cancelledAt: null, userId: { not: adminUser.id } },
+      select: { user: { select: { id: true, name: true, email: true } } },
+    });
+    expect(prismaMock.notification.createMany).toHaveBeenCalledWith({
+      data: [
+        expect.objectContaining({
+          type: 'event_updated',
+          userId: 'ana',
+          title: 'Cambió el lugar de Tech Talk Buenos Aires',
+          message: expect.stringContaining('en Aula 204, Diagonal Norte 1234, Buenos Aires'),
+        }),
+      ],
+    });
+    const [message] = jest.mocked(sendEmails).mock.calls[0][0];
+    expect(message).toMatchObject({
+      to: 'ana@example.com',
+      subject: 'Tech Talk Buenos Aires: cambió el lugar',
+    });
+    expect(message.html).toContain('Ana');
+  });
+
+  it('names both when the date and the place change', async () => {
+    prismaMock.event.findUnique.mockResolvedValue(upcoming as any);
+    const later = new Date(future.getTime() + 3_600_000).toISOString();
+
+    await expect(updateEvent('event-1', { ...input, date: later, isOnline: true })).rejects.toThrow(
+      'NEXT_REDIRECT',
+    );
+
+    expect(prismaMock.notification.createMany).toHaveBeenCalledWith({
+      data: [
+        expect.objectContaining({
+          title: 'Cambió la fecha y el lugar de Tech Talk Buenos Aires',
+          message: expect.stringMatching(/, online\.$/),
+        }),
+      ],
+    });
+  });
+
+  it('says nothing when neither the date nor the place changes, or the event already passed', async () => {
+    prismaMock.event.findUnique.mockResolvedValue(upcoming as any);
+    await expect(updateEvent('event-1', { ...input, name: 'Otro nombre' })).rejects.toThrow(
+      'NEXT_REDIRECT',
+    );
+
+    prismaMock.event.findUnique.mockResolvedValue(existingEvent as any);
+    await expect(
+      updateEvent('event-1', { ...validEventData, date: '2020-01-01T18:00:00.000Z' }),
+    ).rejects.toThrow('NEXT_REDIRECT');
+
+    expect(prismaMock.eventRegistration.findMany).not.toHaveBeenCalled();
+    expect(sendEmails).not.toHaveBeenCalled();
   });
 });
