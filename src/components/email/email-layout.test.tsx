@@ -38,8 +38,14 @@ describe('EmailLayout', () => {
     );
     expect(container.textContent).not.toContain('●');
     for (const glyph of ['×', '□', '−']) {
-      expect(screen.getByText(glyph)).toHaveStyle({ display: 'inline-block', width: '12px' });
+      expect(screen.getByText(glyph)).toHaveStyle({
+        display: 'inline-block',
+        width: '14px',
+        border: '1px solid #0a5a49',
+      });
     }
+    // No macOS traffic-light colors anywhere in the window.
+    expect(container.innerHTML).not.toMatch(/#ff5f57|#febc2e|#28c840/i);
   });
 
   it('omits the preview block when there is no preview', () => {

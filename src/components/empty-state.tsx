@@ -1,4 +1,5 @@
 import { Button } from '@/components/ui/button';
+import { WindowControls } from '@/components/ui/window-controls';
 import { cn } from '@/lib/utils';
 import { RefreshCw } from 'lucide-react';
 import type { ReactNode } from 'react';
@@ -43,11 +44,7 @@ export function EmptyState({
       )}
     >
       <header className="flex items-center gap-2 border-b border-pcnGreen-200 bg-pcnGreen-50 px-3 py-1.5 text-[10px] text-pcnGreen-600">
-        <span aria-hidden className="flex gap-1">
-          <span className="size-2 rounded-full bg-pcnGreen-300" />
-          <span className="size-2 rounded-full bg-pcnGreen-200" />
-          <span className="size-2 rounded-full bg-pcnGreen-100" />
-        </span>
+        <WindowControls size="sm" />
         <span className="truncate">pcn@sin-fronteras: ~</span>
         <span className="ml-auto shrink-0 text-pcnGreen-500">exit 0</span>
       </header>

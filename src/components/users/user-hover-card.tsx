@@ -17,6 +17,7 @@ import { getUserSummary, type UserSummary } from '@/actions/users/get-user-summa
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Skeleton } from '@/components/ui/skeleton';
 import { cn } from '@/lib/utils';
+import { WindowControls } from '@/components/ui/window-controls';
 
 /** What the trigger already knows about the user, shown while the full summary loads. */
 export type HoverCardUser = { id: string; name: string; image: string | null };
@@ -269,11 +270,7 @@ function UserSummaryCard({ user, state }: { user: HoverCardUser; state: SummaryS
     <>
       {/* Title bar: the "command" that printed this card. */}
       <div className="flex items-center gap-2 border-b border-pcnGreen-200 bg-pcnGreen/[0.06] px-2.5 py-1.5 text-[10px]">
-        <span aria-hidden className="flex gap-1">
-          <span className="size-1.5 rounded-full bg-red-400/70" />
-          <span className="size-1.5 rounded-full bg-yellow-400/70" />
-          <span className="size-1.5 rounded-full bg-pcnGreen/80" />
-        </span>
+        <WindowControls size="sm" />
         <span className="min-w-0 truncate text-muted-foreground">
           <span className="text-pcnGreen-600">$ </span>
           finger <span className="text-foreground">@{handle}</span>

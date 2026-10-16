@@ -13,7 +13,6 @@ export const emailColors = {
   green: '#04f4be',
   greenDim: '#03a07d',
   amber: '#f5c451',
-  red: '#ff5f57',
 } as const;
 
 export const emailMono = "'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace";
@@ -25,18 +24,20 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotro
 // Close, maximize and minimize, in the order PCN OS draws them.
 const WINDOW_BUTTONS = ['×', '□', '−'];
 
+// Like PCN OS's window keys (os-window.tsx) on an unfocused window: a green-outlined square with
+// its glyph. Email clients can't cut the corners, so they stay square.
 const windowButtonStyle = {
   display: 'inline-block',
-  width: '12px',
-  height: '12px',
+  width: '14px',
+  height: '14px',
   marginRight: '4px',
-  border: `1px solid ${emailColors.greenDim}`,
-  backgroundColor: '#062b23',
-  color: emailColors.green,
+  border: '1px solid #0a5a49',
+  backgroundColor: 'transparent',
+  color: emailColors.greenDim,
   fontFamily: emailMono,
-  fontSize: '9px',
+  fontSize: '10px',
   fontWeight: 700,
-  lineHeight: '12px',
+  lineHeight: '14px',
   textAlign: 'center' as const,
 };
 
@@ -328,7 +329,7 @@ export const EmailLayout = ({
             <table role="presentation" width="100%" cellPadding={0} cellSpacing={0}>
               <tbody>
                 <tr>
-                  <td width="56" aria-hidden="true" style={{ whiteSpace: 'nowrap' }}>
+                  <td width="62" aria-hidden="true" style={{ whiteSpace: 'nowrap' }}>
                     {/* PCN OS window controls: square LEDs with their glyph, not macOS dots. */}
                     {WINDOW_BUTTONS.map((glyph) => (
                       <span key={glyph} style={windowButtonStyle}>
