@@ -48,6 +48,7 @@ jest.mock('@/components/home/latest-conversations-section', () => ({
 jest.mock('@/components/home/latest-talks-section', () => ({ LatestTalksSection: mockStub() }));
 jest.mock('@/components/home/latest-photos-section', () => ({ LatestPhotosSection: mockStub() }));
 jest.mock('@/components/home/ambassadors-section', () => ({ AmbassadorsSection: mockStub() }));
+jest.mock('@/components/home/contributors-section', () => ({ ContributorsSection: mockStub() }));
 jest.mock('@/components/home/latest-changes-section', () => ({ LatestChangesSection: mockStub() }));
 jest.mock('@/components/home/latest-articles', () => ({ LatestArticlesSection: mockStub() }));
 jest.mock('@/components/home/interviews-section', () => ({ InterviewsSection: mockStub() }));
@@ -140,6 +141,7 @@ describe('Home page', () => {
       'latestPhotosSection',
       'latestArticlesSection',
       'ambassadorsSection',
+      'contributorsSection',
       'testimonialsSection',
     ]) {
       expect(props[key].props.fallback).toBeTruthy();

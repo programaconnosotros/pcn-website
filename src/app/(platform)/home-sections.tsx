@@ -25,6 +25,7 @@ interface HomeSectionsProps {
   latestArticlesSection: ReactNode;
   interviewsSection: ReactNode;
   ambassadorsSection: ReactNode;
+  contributorsSection: ReactNode;
   storyCardsSection: ReactNode;
 }
 
@@ -40,6 +41,7 @@ const HomeSections = ({
   latestArticlesSection,
   interviewsSection,
   ambassadorsSection,
+  contributorsSection,
   storyCardsSection,
 }: HomeSectionsProps) => (
   // Break out of the SidebarInset horizontal padding so sections can go full-bleed.
@@ -83,6 +85,8 @@ const HomeSections = ({
       <Reveal>
         <SocialLinks />
       </Reveal>
+
+      <Reveal>{contributorsSection}</Reveal>
 
       <Reveal>{latestChangesSection}</Reveal>
 

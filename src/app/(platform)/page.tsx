@@ -10,6 +10,7 @@ import { LatestConversationsSection } from '@/components/home/latest-conversatio
 import { LatestTalksSection } from '@/components/home/latest-talks-section';
 import { LatestPhotosSection } from '@/components/home/latest-photos-section';
 import { AmbassadorsSection } from '@/components/home/ambassadors-section';
+import { ContributorsSection } from '@/components/home/contributors-section';
 import { LatestChangesSection } from '@/components/home/latest-changes-section';
 import { LatestArticlesSection } from '@/components/home/latest-articles';
 import { InterviewsSection } from '@/components/home/interviews-section';
@@ -143,6 +144,19 @@ const Home = async () => {
           }
         >
           <AmbassadorsSection />
+        </Suspense>
+      }
+      contributorsSection={
+        <Suspense
+          fallback={
+            <HomeSectionSkeleton
+              cells={6}
+              gridClassName="grid-cols-1 md:grid-cols-2 xl:grid-cols-3"
+              cellClassName="h-14"
+            />
+          }
+        >
+          <ContributorsSection />
         </Suspense>
       }
       testimonialsSection={

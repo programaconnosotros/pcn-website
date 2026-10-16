@@ -22,6 +22,15 @@ export interface ChangelogEntry {
 export const changelog: ChangelogEntry[] = [
   {
     date: '2026-10-15',
+    area: 'inicio',
+    title: 'Los colaboradores de la web, en el inicio',
+    description:
+      'El inicio tiene una sección que reconoce a todas las personas que colaboraron en el desarrollo de la web, con su rol y un link a su perfil de PCN.',
+    authors: ['agustin-sanc'],
+    href: '/#colaboradores',
+  },
+  {
+    date: '2026-10-15',
     area: 'estadísticas',
     title: 'Estadísticas de la comunidad',
     description:

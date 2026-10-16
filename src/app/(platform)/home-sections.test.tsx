@@ -45,6 +45,7 @@ const props = {
   latestArticlesSection: section('artículos'),
   interviewsSection: section('entrevistas'),
   ambassadorsSection: section('embajadores'),
+  contributorsSection: section('colaboradores'),
   storyCardsSection: section('historias'),
 };
 
@@ -73,6 +74,7 @@ describe('HomeSections', () => {
       'historias',
       'testimonios',
       'redes',
+      'colaboradores',
       'cambios',
       'faq',
       'embajadores',
