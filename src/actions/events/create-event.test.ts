@@ -233,7 +233,7 @@ describe('createEvent dates and sponsors', () => {
     await expect(createEvent({ ...validEventData, date })).rejects.toThrow('NEXT_REDIRECT');
 
     expect(prismaMock.user.findMany).toHaveBeenCalledWith({
-      where: { suspendedAt: null },
+      where: { suspendedAt: null, deactivatedAt: null },
       select: { id: true },
     });
     expect(prismaMock.notification.createMany).toHaveBeenCalledWith({
@@ -272,7 +272,12 @@ describe('createEvent dates and sponsors', () => {
     await expect(createEvent({ ...validEventData, date })).rejects.toThrow('NEXT_REDIRECT');
 
     expect(prismaMock.user.findMany).toHaveBeenCalledWith({
-      where: { suspendedAt: null, emailVerified: true, id: { not: adminUser.id } },
+      where: {
+        suspendedAt: null,
+        deactivatedAt: null,
+        emailVerified: true,
+        id: { not: adminUser.id },
+      },
       select: { name: true, email: true },
     });
     const messages = jest.mocked(sendEmails).mock.calls[0][0];

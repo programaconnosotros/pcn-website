@@ -5,6 +5,7 @@ import prisma from '@/lib/prisma';
 import { canManageSomeEvent } from '@/lib/event-access';
 import { findSession } from '@/lib/session';
 import { searchPeople } from '@/lib/people-search';
+import { ACTIVE_USER } from '@/lib/active-user';
 
 export type SpeakerUserOption = {
   id: string;
@@ -50,7 +51,7 @@ export async function searchUsersForSpeaker(q: string, limit = 20): Promise<Spea
   const trimmed = String(q ?? '').trim();
   if (!trimmed) {
     return prisma.user.findMany({
-      where: { suspendedAt: null },
+      where: ACTIVE_USER,
       select: speakerSelect,
       orderBy: { name: 'asc' },
       take: limit,
@@ -58,7 +59,7 @@ export async function searchUsersForSpeaker(q: string, limit = 20): Promise<Spea
   }
 
   const users = await prisma.user.findMany({
-    where: { suspendedAt: null },
+    where: ACTIVE_USER,
     select: {
       ...speakerSelect,
       slogan: true,

@@ -3,6 +3,7 @@ import { z } from 'zod';
 import prisma from '@/lib/prisma';
 import { AGENT_MODEL, bucketImagesForModel } from '@/lib/agents';
 import { searchPeople } from '@/lib/people-search';
+import { ACTIVE_USER } from '@/lib/active-user';
 
 // Agente que arma una charla a partir de su foto: busca el evento, la propuesta y los oradores en
 // la base y devuelve los datos para crearla. Sus tools solo leen; quien crea la charla es la
@@ -151,6 +152,7 @@ const searchUsers = tool({
   inputSchema: z.object({ query: z.string().min(2).max(100) }),
   execute: async ({ query }) => {
     const users = await prisma.user.findMany({
+      where: ACTIVE_USER,
       select: {
         id: true,
         name: true,

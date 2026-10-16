@@ -35,6 +35,9 @@ model User {
   isCofounder          Boolean               @default(false)
   // Cuenta suspendida por un admin: no puede iniciar sesión y sus sesiones dejan de valer.
   suspendedAt          DateTime?
+  // Cuenta desactivada por la propia persona (soft delete): la fila queda para que lo que publicó
+  // siga en pie, pero anonimizada, sin sesiones y sin las relaciones donde estaba etiquetada.
+  deactivatedAt        DateTime?
   image                String?
   countryOfOrigin      String?
   province             String? // Provincia (opcional)

@@ -12,6 +12,7 @@ import { getAllCourses, getArticles, getVideos } from '@/lib/recommendations';
 import { listHiddenConsejoIds } from '@/lib/hidden-consejos';
 import { SEARCH_GROUPS, type SearchResponse } from '@/lib/search/types';
 import { visibleGalleryItem } from '@/lib/gallery';
+import { ACTIVE_USER } from '@/lib/active-user';
 
 const MAX_QUERY_LENGTH = 100;
 const DB_CANDIDATES = 20;
@@ -48,7 +49,7 @@ const loadSearchCorpus = cached(
         }),
         // Only what a public profile shows: never emails or phones. Suspended accounts stay out.
         prisma.user.findMany({
-          where: { suspendedAt: null },
+          where: ACTIVE_USER,
           orderBy: { createdAt: 'asc' },
           select: {
             id: true,

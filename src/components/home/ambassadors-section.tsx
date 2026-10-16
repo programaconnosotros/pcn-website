@@ -8,6 +8,7 @@ import { GeistMono } from 'geist/font/mono';
 import { CalendarPlus, Lightbulb, MessageSquare, Users } from 'lucide-react';
 import Link from 'next/link';
 import { SectionHeader } from './section-header';
+import { ACTIVE_USER } from '@/lib/active-user';
 
 const CONTACT_URL = 'https://wa.me/5493815777562';
 
@@ -30,7 +31,7 @@ const listAmbassadors = cached(
   () =>
     prisma.user.findMany({
       // A suspended account doesn't represent the community anymore.
-      where: { isAmbassador: true, suspendedAt: null },
+      where: { isAmbassador: true, ...ACTIVE_USER },
       select: { id: true, name: true, image: true },
       orderBy: { name: 'asc' },
     }),

@@ -118,6 +118,11 @@ export const dbModels: DbModel[] = [
         optional: true,
       },
       {
+        name: 'deactivatedAt',
+        type: 'DateTime',
+        optional: true,
+      },
+      {
         name: 'image',
         type: 'String',
         optional: true,

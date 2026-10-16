@@ -3,6 +3,7 @@ import { cache } from 'react';
 import { cookies } from 'next/headers';
 import type { Session, User } from '@/generated/prisma/client';
 import prisma from '@/lib/prisma';
+import { ACTIVE_USER } from '@/lib/active-user';
 
 /** El usuario logueado tal como lo devuelve la sesión: todo menos el hash de la contraseña. */
 export type SessionUser = Omit<User, 'password' | 'twoFactorSecret' | 'twoFactorRecoveryCodes'>;
@@ -32,7 +33,7 @@ export const findSession = cache((token: string) =>
     where: {
       id: hashSessionToken(token),
       expires: { gt: new Date() },
-      user: { suspendedAt: null },
+      user: ACTIVE_USER,
     },
     include: { user: true },
   }),

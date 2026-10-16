@@ -2,6 +2,7 @@
 
 import prisma from '@/lib/prisma';
 import { cached } from '@/lib/cache';
+import { ACTIVE_USER } from '@/lib/active-user';
 
 // Public directory of the community: only what a public profile already shows, never contact
 // data, and never suspended accounts. Counts drive the "dieron charlas", "organizaron eventos" and "construyeron proyectos" lists.
@@ -11,7 +12,7 @@ const listCommunityMembers = cached(
   'community-members',
   async () => {
     const users = await prisma.user.findMany({
-      where: { suspendedAt: null },
+      where: ACTIVE_USER,
       select: {
         id: true,
         name: true,

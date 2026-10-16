@@ -45,7 +45,7 @@ describe('notifyEveryone', () => {
     await notifyEveryone(notification, 'actor');
 
     expect(prismaMock.user.findMany).toHaveBeenCalledWith({
-      where: { suspendedAt: null },
+      where: { suspendedAt: null, deactivatedAt: null },
       select: { id: true },
     });
     expect(prismaMock.notification.createMany).toHaveBeenCalledWith({

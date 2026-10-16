@@ -1,6 +1,7 @@
 import prisma from '@/lib/prisma';
 import { cached } from '@/lib/cache';
 import { specialties } from '@/components/especialidades/specialties';
+import { ACTIVE_USER } from '@/lib/active-user';
 
 export interface Specialist {
   id: string;
@@ -66,7 +67,7 @@ export const getSpecialists = cached(
   'specialists',
   async (): Promise<Record<string, Specialist[]>> => {
     const users = await prisma.user.findMany({
-      where: { suspendedAt: null },
+      where: ACTIVE_USER,
       select: { id: true, name: true, image: true, specialties: true, jobTitle: true },
       orderBy: { name: 'asc' },
     });

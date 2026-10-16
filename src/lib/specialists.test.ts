@@ -44,7 +44,7 @@ describe('getSpecialists', () => {
     await getSpecialists();
 
     expect(prismaMock.user.findMany).toHaveBeenCalledWith(
-      expect.objectContaining({ where: { suspendedAt: null } }),
+      expect.objectContaining({ where: { suspendedAt: null, deactivatedAt: null } }),
     );
   });
 });

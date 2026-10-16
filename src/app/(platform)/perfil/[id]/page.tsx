@@ -27,6 +27,8 @@ import {
 import { ProfileTabSkeleton } from '@/components/profile/profile-tab-skeleton';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import { EmptyState } from '@/components/empty-state';
+import { DEACTIVATED_NAME } from '@/lib/active-user';
 import { Suspense } from 'react';
 import { ProfileCountsLoader, ProfileTabContent } from './profile-tab-content';
 import type { Metadata } from 'next';
@@ -45,6 +47,14 @@ export async function generateMetadata(props: {
     return {
       title: { absolute: MISSING_TAB_TITLE },
       description: 'El perfil que buscas no existe.',
+    };
+  }
+
+  if (user.deactivatedAt) {
+    return {
+      title: tabTitle.cat('perfil', DEACTIVATED_NAME),
+      description: 'Esta cuenta fue desactivada.',
+      robots: { index: false },
     };
   }
 
@@ -105,6 +115,7 @@ const findProfileUser = cached(
         name: true,
         email: true,
         image: true,
+        deactivatedAt: true,
         phoneNumber: true,
         isAmbassador: true,
         isCofounder: true,
@@ -154,6 +165,7 @@ async function getUser(id: string) {
     id: user.id,
     name: user.name,
     email: user.email,
+    deactivatedAt: user.deactivatedAt,
     image: user.image,
     isAmbassador: user.isAmbassador,
     isCofounder: user.isCofounder,
@@ -195,6 +207,29 @@ export default async function ProfilePage(props: ProfilePageProps) {
     getCurrentSession(),
     getUserAchievementMetrics(params.id),
   ]);
+
+  // What the account published still links here: say it's gone instead of a broken page.
+  if (user.deactivatedAt) {
+    return (
+      <div className="mt-4 px-4 md:px-10">
+        <StickyHeader className="md:-mx-10 md:px-10">
+          <PageTitle path={[{ label: 'miembros', href: '/miembros' }, { label: 'desactivada' }]} />
+        </StickyHeader>
+        <EmptyState
+          command={`finger ${user.id}`}
+          output="finger: cuenta desactivada"
+          title="Esta cuenta fue desactivada"
+          description="La persona dejó la comunidad. Lo que publicó sigue en pie, pero su perfil ya no está disponible."
+          action={
+            <Link href="/miembros" className="text-pcnGreen hover:underline">
+              cd ~/miembros
+            </Link>
+          }
+        />
+      </div>
+    );
+  }
+
   const achievements = earnedAchievements(achievementMetrics);
 
   const userLanguages = user.languages

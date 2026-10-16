@@ -12,6 +12,7 @@ import { notifyEveryone } from '@/actions/notifications/notify-users';
 import { emailUsers } from '@/actions/notifications/email-users';
 import { EventNoticeEmail } from '@/components/events/event-notice-email';
 import { formatEventWhen, formatEventWhere } from '@/lib/event-notices';
+import { ACTIVE_USER } from '@/lib/active-user';
 
 /**
  * Designers of the event's flyer, deduplicated, with only user ids that exist (a stale id is
@@ -116,7 +117,7 @@ export const createEvent = async (data: EventFormData) => {
     // Y por email a todos los que verificaron su dirección: en una sola tanda, de a lotes.
     try {
       const users = await prisma.user.findMany({
-        where: { suspendedAt: null, emailVerified: true, id: { not: session.user.id } },
+        where: { ...ACTIVE_USER, emailVerified: true, id: { not: session.user.id } },
         select: { name: true, email: true },
       });
       await emailUsers(users, `Nuevo evento: ${event.name}`, (firstName) =>

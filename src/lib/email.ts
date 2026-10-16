@@ -3,6 +3,7 @@ import nodemailer from 'nodemailer';
 import { Resend } from 'resend';
 import { EMAIL_UNAVAILABLE_MESSAGE } from '@/lib/email-unavailable';
 import { reportEmailQuotaExceeded } from '@/lib/system-alerts';
+import { isDeactivatedEmail } from '@/lib/active-user';
 
 // Constantes de configuración
 export const RATE_LIMIT_SECONDS = 60; // 1 minuto entre envíos
@@ -109,6 +110,8 @@ export const sendEmail = async ({
   subject: string;
   html: string;
 }) => {
+  // A deactivated account's placeholder address can't receive anything.
+  if (isDeactivatedEmail(to)) return;
   try {
     const apiKey = process.env.RESEND_API_KEY;
     // Producción: la API de Resend. Desarrollo y e2e: MailHog o nada (getEmailTransporter).
@@ -166,8 +169,9 @@ const withTimeout = <T>(promise: Promise<T>, ms: number) => {
  * editar un evento, un anuncio) sigue igual.
  */
 export const sendEmails = async (
-  messages: { to: string; subject: string; html: string }[],
+  allMessages: { to: string; subject: string; html: string }[],
 ): Promise<number> => {
+  const messages = allMessages.filter((message) => !isDeactivatedEmail(message.to));
   let failed = 0;
   const apiKey = process.env.RESEND_API_KEY;
 

@@ -1,6 +1,7 @@
 import prisma, { typedNameOf } from '@/lib/prisma';
 import { ProfileForm } from '@components/profile/profile-form';
 import { TwoFactorSettings } from '@/components/auth/two-factor-settings';
+import { DeactivateAccount } from '@/components/profile/deactivate-account';
 import { PageTitle } from '@/components/ui/page-title';
 import { StickyHeader } from '@/components/ui/sticky-header';
 import { cookies } from 'next/headers';
@@ -64,11 +65,20 @@ const Profile = async () => {
 
         <ProfileForm user={user} typedName={await typedNameOf(user.id)} languages={userLanguages} />
 
-        <div className="mt-8 mb-14 border border-pcnGreen-200 p-4">
-          <TwoFactorSettings
-            enabledAt={user.twoFactorEnabledAt?.toISOString() ?? null}
-            recoveryCodesLeft={twoFactor?.twoFactorRecoveryCodes?.length ?? 0}
-          />
+        <div className="mt-8 mb-14 flex flex-col gap-6">
+          <div className="border border-pcnGreen-200 p-4">
+            <TwoFactorSettings
+              enabledAt={user.twoFactorEnabledAt?.toISOString() ?? null}
+              recoveryCodesLeft={twoFactor?.twoFactorRecoveryCodes?.length ?? 0}
+            />
+          </div>
+
+          {/* An admin has to hand over the role first; the action refuses it too. */}
+          {user.role !== 'ADMIN' && (
+            <div className="border border-dashed border-red-500/40 p-4">
+              <DeactivateAccount />
+            </div>
+          )}
         </div>
       </div>
     </>

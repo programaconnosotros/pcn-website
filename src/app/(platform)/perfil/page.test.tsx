@@ -9,6 +9,7 @@ import Profile, { metadata } from './page';
 
 jest.mock('next/headers', () => ({ cookies: jest.fn(), headers: jest.fn() }));
 jest.mock('@/lib/session', () => ({ findSession: jest.fn() }));
+jest.mock('@/actions/users/deactivate-account', () => ({ deactivateAccount: jest.fn() }));
 jest.mock('@/lib/prisma', () => ({
   __esModule: true,
   default: { user: { findUnique: jest.fn() } },
@@ -82,6 +83,23 @@ describe('/perfil', () => {
       typedName: 'ana pérez',
       languages: [{ languageId: 'ts', color: '#3178c6', logo: '/ts.svg' }],
     });
+    expect(screen.getByRole('button', { name: /desactivarCuenta/ })).toBeInTheDocument();
+  });
+
+  it('leaves the deactivation out for admins, who hand over the role first', async () => {
+    mockCookies({ sessionId: 'token' });
+    jest.mocked(findSession).mockResolvedValue(sessionRow());
+    findUser.mockResolvedValue({
+      id: 'user-1',
+      email: 'admin@example.com',
+      role: 'ADMIN',
+      languages: [],
+      positions: [],
+    });
+
+    await renderPage(Profile());
+
+    expect(screen.queryByRole('button', { name: /desactivarCuenta/ })).not.toBeInTheDocument();
   });
 
   it('shows only placeholders while loading', () => {

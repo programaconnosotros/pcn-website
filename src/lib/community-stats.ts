@@ -7,6 +7,7 @@ import { cached } from '@/lib/cache';
 import { programmingLanguages } from '@/types/programming-language';
 import { specialties } from '@/components/especialidades/specialties';
 import { IDES, OPERATING_SYSTEMS } from '@/lib/tech-stack';
+import { ACTIVE_USER } from '@/lib/active-user';
 
 export type StatItem = { label: string; value: number };
 
@@ -99,7 +100,7 @@ export const getCommunityStats = cached(
   async () =>
     communityStats(
       await prisma.user.findMany({
-        where: { suspendedAt: null },
+        where: ACTIVE_USER,
         select: {
           countryOfOrigin: true,
           province: true,

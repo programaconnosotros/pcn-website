@@ -91,7 +91,7 @@ describe('fetchNotifications', () => {
       where: {
         id: hashSessionToken('session-admin'),
         expires: { gt: expect.any(Date) },
-        user: { suspendedAt: null },
+        user: { suspendedAt: null, deactivatedAt: null },
       },
       include: { user: true },
     });

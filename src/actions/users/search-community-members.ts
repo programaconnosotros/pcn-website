@@ -4,6 +4,7 @@ import prisma from '@/lib/prisma';
 import { cached } from '@/lib/cache';
 import { requireSessionUser } from '@/actions/projects/get-session-user';
 import { searchPeople } from '@/lib/people-search';
+import { ACTIVE_USER } from '@/lib/active-user';
 
 export type CommunityMemberOption = {
   id: string;
@@ -19,7 +20,7 @@ const listSearchablePeople = cached(
   'searchable-people',
   (withEmail: boolean) =>
     prisma.user.findMany({
-      where: { suspendedAt: null },
+      where: ACTIVE_USER,
       select: {
         id: true,
         name: true,

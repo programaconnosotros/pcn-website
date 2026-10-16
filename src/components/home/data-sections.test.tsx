@@ -96,7 +96,9 @@ describe('home sections with data', () => {
     render(await AmbassadorsSection());
 
     expect(mockPrisma.user.findMany).toHaveBeenCalledWith(
-      expect.objectContaining({ where: { isAmbassador: true, suspendedAt: null } }),
+      expect.objectContaining({
+        where: { isAmbassador: true, suspendedAt: null, deactivatedAt: null },
+      }),
     );
     expect(screen.getByRole('link', { name: /ada lovelace byron/ })).toHaveAttribute(
       'href',

@@ -20,6 +20,7 @@ import prisma from '@/lib/prisma';
 import { cached } from '@/lib/cache';
 import { cn } from '@/lib/utils';
 import { tabTitle } from '@/lib/tab-title';
+import { ACTIVE_USER } from '@/lib/active-user';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
 
@@ -222,10 +223,10 @@ const getLogrosData = cached(
   async () => {
     const [metrics, members, roleHolders, customBadges] = await Promise.all([
       getAchievementMetrics(),
-      prisma.user.count(),
+      prisma.user.count({ where: ACTIVE_USER }),
       prisma.user.findMany({
         // A suspended account doesn't represent the community anymore.
-        where: { OR: [{ isCofounder: true }, { isAmbassador: true }], suspendedAt: null },
+        where: { OR: [{ isCofounder: true }, { isAmbassador: true }], ...ACTIVE_USER },
         select: { id: true, name: true, image: true, isCofounder: true, isAmbassador: true },
       }),
       prisma.badge.findMany({
@@ -237,7 +238,7 @@ const getLogrosData = cached(
     ]);
     // Everyone who earned at least one achievement, to put a face on each holder.
     const users = await prisma.user.findMany({
-      where: { id: { in: [...metrics.keys()] } },
+      where: { id: { in: [...metrics.keys()] }, ...ACTIVE_USER },
       select: { id: true, name: true, image: true },
     });
     return { metrics: [...metrics.entries()], members, roleHolders, customBadges, users };

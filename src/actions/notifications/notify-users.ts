@@ -2,6 +2,7 @@
 // from the browser to notify other users.
 
 import prisma from '@/lib/prisma';
+import { ACTIVE_USER } from '@/lib/active-user';
 
 type UserNotification = {
   type: string;
@@ -45,7 +46,7 @@ export const notifyUsers = async (
 export const notifyEveryone = async (data: UserNotification, actorId?: string) => {
   try {
     const users = await prisma.user.findMany({
-      where: { suspendedAt: null },
+      where: ACTIVE_USER,
       select: { id: true },
     });
     await notifyUsers(

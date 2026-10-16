@@ -5,6 +5,7 @@
 import { notifyUsers } from '@/actions/notifications/notify-users';
 import { cached } from '@/lib/cache';
 import prisma from '@/lib/prisma';
+import { ACTIVE_USER } from '@/lib/active-user';
 
 export const EMAIL_QUOTA_ALERT = 'email_quota';
 
@@ -22,7 +23,7 @@ export const reportEmailQuotaExceeded = async (detail: string) => {
 
     await prisma.systemAlert.create({ data: { kind: EMAIL_QUOTA_ALERT, detail } });
     const admins = await prisma.user.findMany({
-      where: { role: 'ADMIN', suspendedAt: null },
+      where: { role: 'ADMIN', ...ACTIVE_USER },
       select: { id: true },
     });
     await notifyUsers(

@@ -28,7 +28,7 @@ describe('findSession', () => {
       where: {
         id: hashSessionToken('token-1'),
         expires: { gt: expect.any(Date) },
-        user: { suspendedAt: null },
+        user: { suspendedAt: null, deactivatedAt: null },
       },
       include: { user: true },
     });

@@ -120,7 +120,7 @@ describe('searchUsersForSpeaker', () => {
     await searchUsersForSpeaker('');
 
     expect(prismaMock.user.findMany).toHaveBeenCalledWith({
-      where: { suspendedAt: null },
+      where: { suspendedAt: null, deactivatedAt: null },
       select: speakerSelect,
       orderBy: { name: 'asc' },
       take: 20,

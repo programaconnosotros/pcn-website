@@ -16,7 +16,7 @@ describe('reportEmailQuotaExceeded', () => {
       data: { kind: 'email_quota', detail: 'Monthly quota reached' },
     });
     expect(prismaMock.user.findMany).toHaveBeenCalledWith({
-      where: { role: 'ADMIN', suspendedAt: null },
+      where: { role: 'ADMIN', suspendedAt: null, deactivatedAt: null },
       select: { id: true },
     });
     const { data } = prismaMock.notification.createMany.mock.calls[0][0] as {

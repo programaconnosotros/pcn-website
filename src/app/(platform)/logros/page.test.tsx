@@ -110,7 +110,11 @@ describe('/logros', () => {
 
     expect(prisma.user.findMany).toHaveBeenCalledWith(
       expect.objectContaining({
-        where: { OR: [{ isCofounder: true }, { isAmbassador: true }], suspendedAt: null },
+        where: {
+          OR: [{ isCofounder: true }, { isAmbassador: true }],
+          suspendedAt: null,
+          deactivatedAt: null,
+        },
       }),
     );
   });

@@ -56,7 +56,7 @@ describe('getCurrentSession', () => {
       where: {
         id: hashSessionToken('session-1'),
         expires: { gt: expect.any(Date) },
-        user: { suspendedAt: null },
+        user: { suspendedAt: null, deactivatedAt: null },
       },
       include: { user: true },
     });
