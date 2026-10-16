@@ -70,8 +70,10 @@ describe('ProfileForm', () => {
       'aria-pressed',
       'true',
     );
-    // name and stack, of photo, name, country, slogan and stack
-    expect(screen.getByText('40%')).toBeInTheDocument();
+    // name, country (Argentina until they pick one) and stack, of photo, name, country, slogan
+    // and stack
+    expect(screen.getByText('60%')).toBeInTheDocument();
+    expect(screen.getByRole('combobox', { name: 'país' })).toHaveTextContent('Argentina');
     expect(screen.getByText('todo guardado')).toBeInTheDocument();
     expect(screen.getByText('Dev')).toBeInTheDocument();
     expect(screen.getByText('github↗')).toBeInTheDocument();

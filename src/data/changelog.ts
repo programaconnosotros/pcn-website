@@ -22,6 +22,15 @@ export interface ChangelogEntry {
 export const changelog: ChangelogEntry[] = [
   {
     date: '2026-10-15',
+    area: 'perfil',
+    title: 'El país es obligatorio',
+    description:
+      'Al crear la cuenta y al editar el perfil el país de origen es obligatorio, y arranca con Argentina elegida.',
+    authors: ['agustin-sanc'],
+    href: '/perfil',
+  },
+  {
+    date: '2026-10-15',
     area: 'consejos',
     title: 'Editá y eliminá tus comentarios',
     description:

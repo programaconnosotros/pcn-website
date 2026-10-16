@@ -46,7 +46,11 @@ export const profileSchema = z.object({
     })
     .optional()
     .nullable(),
-  countryOfOrigin: optionalText(100),
+  countryOfOrigin: z
+    .string()
+    .trim()
+    .min(1, { message: 'El país es requerido' })
+    .max(100, { message: 'Máximo 100 caracteres' }),
   province: optionalText(100),
   xAccountUrl: optionalUrl,
   linkedinUrl: optionalUrl,

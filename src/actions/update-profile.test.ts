@@ -9,7 +9,7 @@ const validProfileData: ProfileFormData = {
   email: 'test@example.com',
   phoneNumber: null,
   image: null,
-  countryOfOrigin: null,
+  countryOfOrigin: 'Argentina',
   province: null,
   xAccountUrl: null,
   linkedinUrl: null,
@@ -193,6 +193,7 @@ describe('updateProfile', () => {
     ],
     ['a huge slogan', { slogan: 'x'.repeat(501) }, 'Máximo 500 caracteres'],
     ['a huge name', { name: 'x'.repeat(101) }, 'Máximo 100 caracteres'],
+    ['a profile without a country', { countryOfOrigin: '' }, 'El país es requerido'],
   ])('rejects %s', async (_case, override, message) => {
     mockCookies({ sessionId: 'session-1' });
     prismaMock.session.findUnique.mockResolvedValue(baseSession as any);

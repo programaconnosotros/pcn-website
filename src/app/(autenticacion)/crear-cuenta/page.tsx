@@ -29,33 +29,9 @@ import { toast } from 'sonner';
 import * as z from 'zod';
 import { safeRedirectPath } from '@/lib/safe-redirect';
 import { actionErrorMessage } from '@/lib/rate-limit-messages';
+import { COUNTRIES, DEFAULT_COUNTRY } from '@/lib/countries';
 
 const formSchema = signUpSchema;
-
-// Lista de países (puedes expandirla)
-const COUNTRIES = [
-  'Argentina',
-  'Bolivia',
-  'Brasil',
-  'Chile',
-  'Colombia',
-  'Costa Rica',
-  'Cuba',
-  'Ecuador',
-  'El Salvador',
-  'España',
-  'Guatemala',
-  'Honduras',
-  'México',
-  'Nicaragua',
-  'Panamá',
-  'Paraguay',
-  'Perú',
-  'República Dominicana',
-  'Uruguay',
-  'Venezuela',
-  'Otro',
-];
 
 function SignUpContent() {
   const router = useRouter();
@@ -72,7 +48,7 @@ function SignUpContent() {
       password: '',
       confirmPassword: '',
       phoneNumber: '',
-      country: '',
+      country: DEFAULT_COUNTRY,
       province: undefined,
       profession: '',
       enterprise: '',

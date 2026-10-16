@@ -38,31 +38,7 @@ import { FormSection } from '@/components/ui/form-section';
 import { specialtyGroups } from '@/components/especialidades/specialties';
 import { actionErrorMessage } from '@/lib/rate-limit-messages';
 import { displayName } from '@/lib/people-names';
-
-// Lista de países
-const COUNTRIES = [
-  'Argentina',
-  'Bolivia',
-  'Brasil',
-  'Chile',
-  'Colombia',
-  'Costa Rica',
-  'Cuba',
-  'Ecuador',
-  'El Salvador',
-  'España',
-  'Guatemala',
-  'Honduras',
-  'México',
-  'Nicaragua',
-  'Panamá',
-  'Paraguay',
-  'Perú',
-  'República Dominicana',
-  'Uruguay',
-  'Venezuela',
-  'Otro',
-];
+import { COUNTRIES, DEFAULT_COUNTRY } from '@/lib/countries';
 
 const SLOGAN_MAX = 160;
 const BAR_WIDTH = 20;
@@ -136,7 +112,8 @@ export const ProfileForm = ({
       email: user.email ?? '',
       phoneNumber: user.phoneNumber ?? '',
       image: user.image ?? '',
-      countryOfOrigin: user.countryOfOrigin ?? '',
+      // Obligatorio: quien todavía no lo cargó arranca con Argentina elegida.
+      countryOfOrigin: user.countryOfOrigin || DEFAULT_COUNTRY,
       province: user.province ?? '',
       xAccountUrl: user.xAccountUrl ?? '',
       linkedinUrl: user.linkedinUrl ?? '',

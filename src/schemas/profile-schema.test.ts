@@ -4,6 +4,7 @@ import { profileSchema } from './profile-schema';
 const profile = {
   name: 'Ana Pérez',
   email: 'ana@example.com',
+  countryOfOrigin: 'Argentina',
   positions: [],
   programmingLanguages: [],
 };
@@ -14,6 +15,11 @@ const messages = (input: unknown) =>
 describe('profileSchema', () => {
   it('accepts a minimal profile', () => {
     expect(profileSchema.safeParse(profile).success).toBe(true);
+  });
+
+  it('requires the country of origin', () => {
+    expect(messages({ ...profile, countryOfOrigin: '  ' })).toEqual(['El país es requerido']);
+    expect(messages({ ...profile, countryOfOrigin: undefined })).not.toHaveLength(0);
   });
 
   it('takes every specialty at once, without repeats, and rejects unknown ones', () => {

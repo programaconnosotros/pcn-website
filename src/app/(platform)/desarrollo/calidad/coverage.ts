@@ -18,7 +18,7 @@ export const coverage: { total: CoverageMetrics; groups: CoverageGroup[] } = {
     {
       folder: 'src/lib',
       detail: 'lógica compartida, seguridad, cache, S3',
-      files: 96,
+      files: 97,
       lines: 97.8,
       statements: 96.6,
       functions: 95.2,
@@ -64,10 +64,10 @@ export const coverage: { total: CoverageMetrics; groups: CoverageGroup[] } = {
       folder: 'src/app',
       detail: 'páginas, layouts y route handlers',
       files: 332,
-      lines: 98.1,
-      statements: 96.8,
+      lines: 98,
+      statements: 96.7,
       functions: 96.8,
-      branches: 92.7,
+      branches: 92.5,
     },
   ],
 };

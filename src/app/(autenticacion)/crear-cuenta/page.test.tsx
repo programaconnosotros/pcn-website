@@ -38,9 +38,8 @@ const fillRequired = async (
   await fill(user, 'Correo electrónico', 'ana@example.com');
   await fill(user, 'Contraseña', 'supersecreta');
   await fill(user, 'Confirmar contraseña', confirm);
-  await pick(user, 'País', country);
-  // Choosing Argentina validates the province right away
-  if (country === 'Argentina') await screen.findByText(PROVINCE_ERROR);
+  // Argentina is already chosen
+  if (country !== 'Argentina') await pick(user, 'País', country);
 };
 
 const submit = (user: UserEvent) => user.click(screen.getByRole('button', { name: /crearCuenta/ }));
@@ -96,10 +95,20 @@ describe('SignUpPage', () => {
     expect(signUpMock).not.toHaveBeenCalled();
   });
 
+  it('starts with Argentina chosen, so it asks for the province', () => {
+    render(<SignUpPage />);
+
+    expect(screen.getByRole('combobox', { name: 'País' })).toHaveTextContent('Argentina');
+    expect(screen.getByRole('combobox', { name: 'Provincia' })).toBeInTheDocument();
+  });
+
   it('requires a province for Argentina and clears it when switching country', async () => {
     const user = userEvent.setup();
     render(<SignUpPage />);
     await fillRequired(user, { country: 'Argentina' });
+    await submit(user);
+    expect(await screen.findByText(PROVINCE_ERROR)).toBeInTheDocument();
+    expect(signUpMock).not.toHaveBeenCalled();
 
     await pick(user, 'Provincia', 'Córdoba');
     expect(screen.queryByText(PROVINCE_ERROR)).not.toBeInTheDocument();
