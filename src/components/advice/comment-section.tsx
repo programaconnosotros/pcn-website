@@ -8,6 +8,8 @@ import { User } from '@/generated/prisma/browser';
 import type { SessionWithUser } from '@/lib/session';
 
 type Author = Pick<User, 'id' | 'name' | 'image'>;
+/** Who liked a comment. */
+type Likes = { likes?: { userId: string }[] };
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
@@ -18,7 +20,9 @@ import { Avatar, AvatarImage, AvatarFallback } from '../ui/avatar';
 import Link from 'next/link';
 import { Comment } from '@/generated/prisma/browser';
 import { actionErrorMessage } from '@/lib/rate-limit-messages';
+import { toggleCommentLike } from '@/actions/comments/toggle-comment-like';
 import { DeleteCommentDialog } from './delete-comment-dialog';
+import { LikeButton } from './like-button';
 
 const commentSchema = z.object({
   content: z
@@ -31,7 +35,8 @@ type CommentFormData = z.infer<typeof commentSchema>;
 
 type CommentSectionProps = {
   adviceId: string;
-  comments: (Comment & { author: Author; replies: (Comment & { author: Author })[] })[];
+  comments: (Comment &
+    Likes & { author: Author; replies: (Comment & Likes & { author: Author })[] })[];
   session: SessionWithUser | null;
   /** Who published the consejo, if a member did: they can delete any comment on it. */
   consejoAuthorId?: string;
@@ -152,10 +157,11 @@ export const CommentSection = ({
   const Comment = ({
     comment,
   }: {
-    comment: Comment & {
-      author: Author;
-      replies?: (Comment & { author: Author; replies?: any[] })[];
-    };
+    comment: Comment &
+      Likes & {
+        author: Author;
+        replies?: (Comment & Likes & { author: Author; replies?: any[] })[];
+      };
   }) => (
     <div className="space-y-3">
       <div className="flex items-start gap-2">
@@ -173,6 +179,13 @@ export const CommentSection = ({
               {formatDate(comment.createdAt)}
               {wasEdited(comment) && ' (editado)'}
             </span>
+            <LikeButton
+              adviceId={comment.id}
+              likes={comment.likes ?? []}
+              session={session}
+              toggle={toggleCommentLike}
+              className="ml-auto"
+            />
           </div>
 
           {editingId === comment.id ? (

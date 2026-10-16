@@ -437,6 +437,32 @@ export const dbModels: DbModel[] = [
     uniques: [],
   },
   {
+    name: 'CommentLike',
+    domain: 'consejos',
+    fields: [
+      {
+        name: 'id',
+        type: 'String',
+        pk: true,
+      },
+      {
+        name: 'userId',
+        type: 'String',
+        fk: true,
+      },
+      {
+        name: 'commentId',
+        type: 'String',
+        fk: true,
+      },
+      {
+        name: 'createdAt',
+        type: 'DateTime',
+      },
+    ],
+    uniques: [['userId', 'commentId']],
+  },
+  {
     name: 'UserLanguage',
     domain: 'comunidad',
     fields: [
@@ -2617,6 +2643,22 @@ export const dbRelations: DbRelation[] = [
     to: 'Comment',
     label: 'parentComment',
     optional: true,
+    many: true,
+    onDelete: 'Cascade',
+  },
+  {
+    from: 'CommentLike',
+    to: 'User',
+    label: 'user',
+    optional: false,
+    many: true,
+    onDelete: 'Cascade',
+  },
+  {
+    from: 'CommentLike',
+    to: 'Comment',
+    label: 'comment',
+    optional: false,
     many: true,
     onDelete: 'Cascade',
   },

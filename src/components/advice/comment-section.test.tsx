@@ -4,12 +4,15 @@ import { toast } from 'sonner';
 import { createComment } from '@/actions/comments/create-comment';
 import { deleteComment } from '@/actions/comments/delete-comment';
 import { editComment } from '@/actions/comments/edit-comment';
+import { toggleCommentLike } from '@/actions/comments/toggle-comment-like';
 import { buildSession } from '@/test/platform';
 import { CommentSection } from './comment-section';
 
 jest.mock('@/actions/comments/create-comment', () => ({ createComment: jest.fn() }));
 jest.mock('@/actions/comments/delete-comment', () => ({ deleteComment: jest.fn() }));
 jest.mock('@/actions/comments/edit-comment', () => ({ editComment: jest.fn() }));
+jest.mock('@/actions/comments/toggle-comment-like', () => ({ toggleCommentLike: jest.fn() }));
+jest.mock('@/actions/advice/like-advice', () => ({ toggleLike: jest.fn() }));
 jest.mock('sonner', () => require('@/test/platform').mockSonner());
 
 type Comments = Parameters<typeof CommentSection>[0]['comments'];
@@ -51,6 +54,27 @@ describe('CommentSection', () => {
       '/iniciar-sesion',
     );
     expect(screen.queryByRole('button', { name: 'Responder' })).not.toBeInTheDocument();
+  });
+
+  it('likes a comment, showing who already liked each one', async () => {
+    jest.mocked(toggleCommentLike).mockResolvedValue({ liked: true });
+    const liked = [
+      {
+        ...comment('c1', 'Muy bueno', 'Bruno'),
+        likes: [{ userId: 'u-x' }, { userId: 'u-y' }],
+        replies: [{ ...comment('r1', 'Coincido', 'Carla'), likes: [] }],
+      },
+    ] as unknown as Comments;
+    const user = userEvent.setup();
+    render(<CommentSection adviceId="a1" comments={liked} session={buildSession({ id: 'me' })} />);
+
+    const [onComment, onReply] = screen.getAllByRole('button', { name: /Me gusta/ });
+    expect(onComment).toHaveTextContent('2');
+    expect(onReply).toHaveTextContent('0');
+
+    await user.click(onReply);
+
+    expect(toggleCommentLike).toHaveBeenCalledWith('r1');
   });
 
   it('publishes a comment', async () => {

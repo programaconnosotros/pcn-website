@@ -66,6 +66,7 @@ model User {
   stackItems           UserStackItem[]
   comments             Comment[]
   likes                Like[]
+  commentLikes         CommentLike[]
   eventRegistrations   EventRegistration[]
   eventWaitlistEntries EventWaitlistEntry[]
   talkProposals        TalkProposal[]
@@ -201,9 +202,10 @@ model Comment {
   adviceId    String?
   extractedId String?
 
-  parentComment   Comment?  @relation("CommentToComment", fields: [parentCommentId], references: [id], onDelete: Cascade)
+  parentComment   Comment?      @relation("CommentToComment", fields: [parentCommentId], references: [id], onDelete: Cascade)
   parentCommentId String?
-  replies         Comment[] @relation("CommentToComment")
+  replies         Comment[]     @relation("CommentToComment")
+  likes           CommentLike[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -212,6 +214,19 @@ model Comment {
   @@index([extractedId])
   @@index([authorId])
   @@index([parentCommentId])
+}
+
+/// A member liking a comment (or reply) on a consejo, once each.
+model CommentLike {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  commentId String
+  comment   Comment  @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([userId, commentId])
+  @@index([commentId])
 }
 
 model UserLanguage {

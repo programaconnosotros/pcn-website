@@ -7,7 +7,7 @@ import { fromAdvice, fromExtracted, type ExtractedActivity } from '@/lib/consejo
 
 const authorSelect = { select: { id: true, name: true, image: true } } as const;
 
-const ADVICE_MODELS = ['Advice', 'User', 'Like', 'Comment'] as const;
+const ADVICE_MODELS = ['Advice', 'User', 'Like', 'Comment', 'CommentLike'] as const;
 
 /** Every published consejo, newest first, with its likes and comment count. Cached. */
 export const listAdvice = cached(
@@ -51,17 +51,24 @@ export const listExtractedActivity = cached(
   { models: ['Like', 'Comment'] },
 );
 
+// Who liked each comment: the count, and whether you did.
+const likesSelect = { select: { userId: true } } as const;
+
 const commentsInclude = {
   where: { parentCommentId: null },
   orderBy: { createdAt: 'desc' },
-  include: { author: authorSelect, replies: { include: { author: authorSelect } } },
+  include: {
+    author: authorSelect,
+    likes: likesSelect,
+    replies: { include: { author: authorSelect, likes: likesSelect } },
+  },
 } as const;
 
 const findExtractedComments = cached(
   'extracted-consejo-comments',
   (extractedId: string) =>
     prisma.comment.findMany({ ...commentsInclude, where: { extractedId, parentCommentId: null } }),
-  { models: ['Comment', 'User'] },
+  { models: ['Comment', 'User', 'CommentLike'] },
 );
 
 const findAdvice = cached(
