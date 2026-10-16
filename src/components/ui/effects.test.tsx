@@ -1,5 +1,4 @@
 import { act, render, screen } from '@testing-library/react';
-import { initParticlesEngine } from '@tsparticles/react';
 import { loadSlim } from '@tsparticles/slim';
 import { SparklesCore } from './sparkles';
 import { Vortex } from './vortex';
@@ -9,9 +8,21 @@ import { TextGenerateEffect } from './text-generate-effect';
 import { Timeline } from './timeline';
 
 jest.mock('@tsparticles/slim', () => ({ loadSlim: jest.fn() }));
+// The provider runs `init` with the engine, as tsParticles does, and says when it's done.
+let mockLoaded = false;
 jest.mock('@tsparticles/react', () => ({
   __esModule: true,
-  initParticlesEngine: jest.fn(),
+  ParticlesProvider: ({
+    init,
+    children,
+  }: {
+    init: (_engine: unknown) => Promise<void>;
+    children: React.ReactNode;
+  }) => {
+    init('engine');
+    return children;
+  },
+  useParticlesProvider: () => ({ loaded: mockLoaded }),
   default: ({
     id,
     options,
@@ -35,25 +46,30 @@ jest.mock('@tsparticles/react', () => ({
 }));
 
 describe('SparklesCore', () => {
-  it('starts the particle engine and renders the particles with the given options', async () => {
-    (initParticlesEngine as jest.Mock).mockImplementation(async (load) => load('engine'));
-    jest.spyOn(console, 'log').mockImplementation(() => {});
-    render(<SparklesCore id="chispas" background="#000" particleDensity={50} />);
-    const particles = await screen.findByTestId('particles');
+  it('loads the slim bundle and waits for the engine before drawing', () => {
+    mockLoaded = false;
+    render(<SparklesCore />);
+
     expect(loadSlim).toHaveBeenCalledWith('engine');
+    expect(screen.queryByTestId('particles')).not.toBeInTheDocument();
+  });
+
+  it('renders the particles with the given options and fades them in once drawn', () => {
+    mockLoaded = true;
+    render(<SparklesCore id="chispas" background="#000" particleDensity={50} />);
+    const particles = screen.getByTestId('particles');
+
     expect(particles).toHaveAttribute('id', 'chispas');
     expect(particles).toHaveAttribute('data-background', '#000');
     expect(particles).toHaveAttribute('data-count', '50');
-
     act(() => particles.click());
-    expect(console.log).toHaveBeenCalledTimes(1);
-    (console.log as jest.Mock).mockRestore();
   });
 
-  it('uses defaults and a generated id', async () => {
-    (initParticlesEngine as jest.Mock).mockResolvedValue(undefined);
+  it('uses defaults and a generated id', () => {
+    mockLoaded = true;
     render(<SparklesCore />);
-    const particles = await screen.findByTestId('particles');
+    const particles = screen.getByTestId('particles');
+
     expect(particles.id).not.toBe('');
     expect(particles).toHaveAttribute('data-background', '#0d47a1');
     expect(particles).toHaveAttribute('data-count', '120');
