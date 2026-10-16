@@ -70,7 +70,7 @@ export const sendVerificationCode = async (
   try {
     await sendEmail({
       to: user.email,
-      subject: 'Verificá tu correo electrónico - Programa Con Nosotros',
+      subject: 'Verificá tu correo electrónico - programaConNosotros',
       html: emailHtml,
     });
   } catch (error) {

@@ -1405,7 +1405,7 @@ if (error) throw new Error(\`Resend: \${error.message}\`);`,
 const emailHtml = await render(EmailVerificationEmail({ userName: user.name, code }));
 await sendEmail({
   to: user.email,
-  subject: 'Verificá tu correo electrónico - Programa Con Nosotros',
+  subject: 'Verificá tu correo electrónico - programaConNosotros',
   html: emailHtml,
 });`,
           },

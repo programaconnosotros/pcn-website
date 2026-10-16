@@ -1,5 +1,13 @@
 # PCN Website
 
+## Community name
+
+The community is **programaConNosotros**: one word, lowercase `p`, capital `C` and `N`. Never
+"Programa Con Nosotros", "Programa con nosotros" or "ProgramaConNosotros" — not in the UI, email
+subjects or bodies, metadata, notifications, data files or docs. Lowercase `programaconnosotros` is
+only for domains, handles and repo names. `src/lib/community-name.test.ts` fails on any other
+spelling.
+
 ## Development
 
 - Package manager: pnpm

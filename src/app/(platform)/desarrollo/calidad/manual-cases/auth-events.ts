@@ -72,7 +72,7 @@ export const authCases = defineManualCases('auth', [
       'Tocar crearCuenta();',
     ],
     expected:
-      'Toast "Usuario creado exitosamente! 🥳", redirección a /verificar-email?email=… y llega a MailHog el email "Verificá tu correo electrónico - Programa Con Nosotros".',
+      'Toast "Usuario creado exitosamente! 🥳", redirección a /verificar-email?email=… y llega a MailHog el email "Verificá tu correo electrónico - programaConNosotros".',
   },
   {
     title: 'Validaciones del registro',

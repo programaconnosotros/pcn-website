@@ -28,6 +28,7 @@ const AREAS = [
   [/^src\/actions\/(update-profile|badges|setups)/, 'perfil'],
   [/^src\/actions\/(work-places|job-offers)\//, 'plataforma'],
   [/^src\/lib\/(achievements|github-contributions)/, 'perfil'],
+  [/^src\/lib\/community-name/, 'plataforma'],
   [/^src\/actions\/(advice|comments)\//, 'consejos'],
   [/^src\/lib\/consejos/, 'consejos'],
   [/^src\/actions\/forum\//, 'foro'],
