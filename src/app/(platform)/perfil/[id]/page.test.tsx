@@ -155,6 +155,7 @@ describe('/perfil/[id]', () => {
     expect(screen.getByText('Tucumán, Argentina')).toBeInTheDocument();
     expect(screen.queryByText('ana@example.com')).not.toBeInTheDocument();
     expect(screen.queryByText('+5491100000000')).not.toBeInTheDocument();
+    expect(screen.queryByRole('link', { name: /WhatsApp/ })).not.toBeInTheDocument();
     expect(screen.queryByText(/trabajo/)).not.toBeInTheDocument();
     expect(screen.queryByText(/estudios/)).not.toBeInTheDocument();
     expect(screen.getByText('No hay lenguajes registrados')).toBeInTheDocument();
@@ -182,6 +183,14 @@ describe('/perfil/[id]', () => {
       'href',
       'tel:+5491100000000',
     );
+    expect(
+      screen.getByRole('link', { name: 'Chatear por WhatsApp con Ana López' }),
+    ).toHaveAttribute(
+      'href',
+      `https://wa.me/5491100000000?text=${encodeURIComponent(
+        'Hola Ana, te escribo desde programaConNosotros.',
+      )}`,
+    );
   });
 
   it('skips missing contact data and an empty location', async () => {
@@ -193,6 +202,7 @@ describe('/perfil/[id]', () => {
     await renderPage(page());
 
     expect(screen.queryByText('teléfono')).not.toBeInTheDocument();
+    expect(screen.queryByRole('link', { name: /WhatsApp/ })).not.toBeInTheDocument();
     expect(screen.queryByText('ubicación')).not.toBeInTheDocument();
     expect(screen.getByText('email')).toBeInTheDocument();
   });
@@ -214,6 +224,7 @@ describe('/perfil/[id]', () => {
     await renderPage(page());
 
     expect(screen.getByRole('link', { name: /editar perfil/ })).toHaveAttribute('href', '/perfil');
+    expect(screen.queryByRole('link', { name: /WhatsApp/ })).not.toBeInTheDocument();
   });
 
   it('links admins back to /usuarios and lets them manage badges', async () => {

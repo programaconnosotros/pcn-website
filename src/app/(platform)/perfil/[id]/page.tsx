@@ -16,7 +16,7 @@ import { PageTitle } from '@/components/ui/page-title';
 import { StickyHeader } from '@/components/ui/sticky-header';
 import prisma from '@/lib/prisma';
 import { cached } from '@/lib/cache';
-import { Pencil } from 'lucide-react';
+import { MessageCircle, Pencil } from 'lucide-react';
 import { Github, Instagram, Linkedin, Twitch, Youtube } from '@/components/icons/brand-icons';
 import { isProfileTab, type ProfileTab } from '@/components/profile/profile-tabs';
 import {
@@ -306,6 +306,16 @@ export default async function ProfilePage(props: ProfilePageProps) {
 
   const firstName = user.name?.split(' ')[0] ?? 'Este usuario';
 
+  // wa.me abre la app de WhatsApp (o WhatsApp Web) con el chat listo; solo para miembros
+  // logueados, como el resto del contacto, y nunca en el perfil propio.
+  const whatsappNumber = user.phoneNumber?.replace(/\D/g, '') ?? '';
+  const whatsappHref =
+    session && !isOwnProfile && whatsappNumber.length >= 8
+      ? `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
+          `Hola ${firstName}, te escribo desde programaConNosotros.`,
+        )}`
+      : null;
+
   return (
     <>
       <div className="flex flex-1 flex-col p-4 pt-0">
@@ -366,6 +376,19 @@ export default async function ProfilePage(props: ProfilePageProps) {
                     </a>
                   ))}
                 </nav>
+              )}
+
+              {whatsappHref && (
+                <a
+                  href={whatsappHref}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`Chatear por WhatsApp con ${user.name}`}
+                  className="flex group items-center justify-center gap-2 py-2.5 font-mono text-xs text-pcnGreen-600 transition-colors hover:bg-pcnGreen/[0.04] hover:text-pcnGreen hover:shadow-[inset_0_-2px_0_#04f4be]"
+                >
+                  <MessageCircle className="size-4 shrink-0 transition-[filter] group-hover:drop-shadow-[0_0_4px_rgba(4,244,190,0.8)]" />
+                  chatear por whatsapp
+                </a>
               )}
 
               {/* Live from GitHub on every visit: streams in when ready, never holds the page. */}
