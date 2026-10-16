@@ -125,10 +125,29 @@ export const sendEmail = async ({
 /** Resend acepta hasta 100 emails por llamada a su API de lotes. */
 const RESEND_BATCH_SIZE = 100;
 
+/** Cuánto se espera a Resend por cada lote antes de darlo por perdido. */
+export const RESEND_BATCH_TIMEOUT_MS = 10_000;
+
+/** Errores de Resend que no se arreglan reintentando con el lote siguiente: el plan no da más. */
+const QUOTA_ERRORS = new Set(['daily_quota_exceeded', 'monthly_quota_exceeded']);
+
+class QuotaExceededError extends Error {}
+
+/** La promesa, o un error si no termina a tiempo: un Resend colgado no frena a quien guarda. */
+const withTimeout = <T>(promise: Promise<T>, ms: number) => {
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  const timeout = new Promise<never>((_, reject) => {
+    timer = setTimeout(() => reject(new Error(`timeout after ${ms}ms`)), ms);
+  });
+  return Promise.race([promise, timeout]).finally(() => clearTimeout(timer));
+};
+
 /**
  * Envía muchos emails de una (un aviso a todos los usuarios o a los inscriptos de un evento):
  * en producción por la API de lotes de Resend, de a 100, así no se choca con su límite de
- * pedidos por segundo. Nunca lanza: devuelve cuántos no se pudieron mandar.
+ * pedidos por segundo. Nunca lanza: si el plan se queda sin cuota no manda el resto, si Resend no
+ * responde deja ese lote, y devuelve cuántos no se pudieron mandar. Lo que lo llamó (crear o
+ * editar un evento, un anuncio) sigue igual.
  */
 export const sendEmails = async (
   messages: { to: string; subject: string; html: string }[],
@@ -142,14 +161,19 @@ export const sendEmails = async (
     for (let i = 0; i < messages.length; i += RESEND_BATCH_SIZE) {
       const chunk = messages.slice(i, i + RESEND_BATCH_SIZE);
       try {
-        const { error } = await resend.batch.send(chunk.map((message) => ({ from, ...message })));
+        const { error } = await withTimeout(
+          resend.batch.send(chunk.map((message) => ({ from, ...message }))),
+          RESEND_BATCH_TIMEOUT_MS,
+        );
+        if (error && QUOTA_ERRORS.has(error.name)) throw new QuotaExceededError(error.message);
         if (error) throw new Error(error.message);
       } catch (error) {
-        failed += chunk.length;
         console.error(
           'Failed to send email batch:',
           error instanceof Error ? error.message : 'Unknown error',
         );
+        if (error instanceof QuotaExceededError) return failed + messages.length - i;
+        failed += chunk.length;
       }
     }
     return failed;

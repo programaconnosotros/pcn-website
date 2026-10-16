@@ -10,6 +10,7 @@ import {
   getSender,
   sendEmail,
   sendEmails,
+  RESEND_BATCH_TIMEOUT_MS,
 } from './email';
 
 jest.mock('nodemailer');
@@ -160,6 +161,37 @@ describe('sendEmails', () => {
       to: 'user0@example.com',
     });
     expect(resendBatchSend.mock.calls[2][0]).toHaveLength(50);
+  });
+
+  it('stops sending when the Resend plan runs out of quota', async () => {
+    process.env.RESEND_API_KEY = 're_test';
+    resendBatchSend
+      .mockResolvedValueOnce({ data: { data: [] }, error: null })
+      .mockResolvedValueOnce({
+        data: null,
+        error: { name: 'daily_quota_exceeded', message: 'quota', statusCode: 429 },
+      });
+
+    expect(await sendEmails(many(350))).toBe(250);
+    expect(resendBatchSend).toHaveBeenCalledTimes(2);
+  });
+
+  it('gives up on a batch Resend does not answer in time and goes on', async () => {
+    jest.useFakeTimers();
+    try {
+      process.env.RESEND_API_KEY = 're_test';
+      resendBatchSend
+        .mockReturnValueOnce(new Promise(() => {}))
+        .mockResolvedValueOnce({ data: { data: [] }, error: null });
+
+      const sending = sendEmails(many(150));
+      await jest.advanceTimersByTimeAsync(RESEND_BATCH_TIMEOUT_MS);
+
+      expect(await sending).toBe(100);
+      expect(resendBatchSend).toHaveBeenCalledTimes(2);
+    } finally {
+      jest.useRealTimers();
+    }
   });
 
   it('sends one by one through the local SMTP host, never throwing', async () => {

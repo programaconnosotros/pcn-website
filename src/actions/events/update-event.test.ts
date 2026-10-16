@@ -279,6 +279,19 @@ describe('updateEvent date and place notices', () => {
     expect(message.html).toContain('Ana');
   });
 
+  it('still saves the edit and notifies in the app when the emails cannot go out', async () => {
+    prismaMock.event.findUnique.mockResolvedValue(upcoming as any);
+    jest.mocked(sendEmails).mockRejectedValueOnce(new Error('Resend: daily_quota_exceeded'));
+
+    await expect(updateEvent('event-1', { ...input, placeName: 'Aula 204' })).rejects.toThrow(
+      'NEXT_REDIRECT',
+    );
+
+    expect(prismaMock.$transaction).toHaveBeenCalled();
+    expect(prismaMock.notification.createMany).toHaveBeenCalled();
+    expect(redirect).toHaveBeenCalledWith('/eventos/event-1');
+  });
+
   it('names both when the date and the place change', async () => {
     prismaMock.event.findUnique.mockResolvedValue(upcoming as any);
     const later = new Date(future.getTime() + 3_600_000).toISOString();

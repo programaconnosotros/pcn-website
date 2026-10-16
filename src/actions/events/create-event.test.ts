@@ -287,4 +287,21 @@ describe('createEvent dates and sponsors', () => {
     await expect(createEvent(validEventData)).rejects.toThrow('NEXT_REDIRECT');
     expect(sendEmails).not.toHaveBeenCalled();
   });
+
+  it('still creates the event and notifies in the app when the emails cannot go out', async () => {
+    mockCookies({ sessionId: 'session-admin' });
+    prismaMock.session.findUnique.mockResolvedValue(adminSession as any);
+    prismaMock.event.create.mockResolvedValue({ id: 'event-5', name: 'Meetup' } as any);
+    prismaMock.user.findMany.mockResolvedValue([
+      { id: 'u2', name: 'Ana', email: 'ana@example.com' },
+    ] as any);
+    jest.mocked(sendEmails).mockRejectedValueOnce(new Error('Resend: daily_quota_exceeded'));
+    const date = new Date(Date.now() + 7 * 86_400_000).toISOString();
+
+    await expect(createEvent({ ...validEventData, date })).rejects.toThrow('NEXT_REDIRECT');
+
+    expect(sendEmails).toHaveBeenCalled();
+    expect(prismaMock.notification.createMany).toHaveBeenCalled();
+    expect(redirect).toHaveBeenCalledWith('/eventos/event-5');
+  });
 });

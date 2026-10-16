@@ -94,6 +94,15 @@ describe('createEventAnnouncement', () => {
     expect(revalidatePath).toHaveBeenCalledWith('/eventos/e1');
   });
 
+  it('still publishes the announcement and notifies in the app when the emails cannot go out', async () => {
+    loginAs({ id: 'org-1', role: 'REGULAR' });
+    prismaMock.event.findUnique.mockResolvedValue(event(['org-1']));
+    jest.mocked(sendEmails).mockRejectedValueOnce(new Error('Resend: daily_quota_exceeded'));
+
+    await expect(createEventAnnouncement(input)).resolves.toEqual({ id: 'a1', notified: 2 });
+    expect(prismaMock.notification.createMany).toHaveBeenCalled();
+  });
+
   it('validates the announcement and rejects deleted events', async () => {
     loginAs({ id: 'admin', role: 'ADMIN' });
 
