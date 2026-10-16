@@ -22,6 +22,96 @@ export interface ChangelogEntry {
 export const changelog: ChangelogEntry[] = [
   {
     date: '2026-10-16',
+    area: 'empleos',
+    title: 'Bolsa de trabajo',
+    description:
+      '/empleos junta las búsquedas laborales que comparte la comunidad: puesto, empresa, modalidad, jornada, seniority y tecnologías, con un botón para postularte. Con sesión iniciada podés publicar la de tu empresa y cerrarla cuando se cubra.',
+    authors: ['agustin-sanc'],
+    href: '/empleos',
+  },
+  {
+    date: '2026-10-16',
+    area: 'foro',
+    title: 'Avisos y me gusta en el foro',
+    description:
+      'Te avisamos cuando responden o le dan me gusta a tu tema, y cuando responden tu comentario. Las respuestas ahora también se pueden marcar con me gusta, y cada aviso te lleva directo a la respuesta.',
+    authors: ['agustin-sanc'],
+    href: '/foro',
+  },
+  {
+    date: '2026-10-16',
+    area: 'comunidad',
+    title: 'Reportar contenido',
+    description:
+      'Si ves algo que no debería estar (spam, algo ofensivo o un ataque a alguien) en el foro, un consejo, un comentario, una foto, un setup, un proyecto o un perfil, tocá reportar: lo revisa el equipo de admins y nunca lo ve quien lo publicó.',
+    authors: ['agustin-sanc'],
+    href: '/foro',
+  },
+  {
+    date: '2026-10-16',
+    area: 'admin',
+    title: 'Cola de moderación',
+    description:
+      '/admin/moderacion muestra los reportes de la comunidad agrupados por contenido, para resolverlos o descartarlos, y cuántas fotos, recomendaciones y propuestas de charlas esperan revisión.',
+    authors: ['agustin-sanc'],
+    href: '/admin/moderacion',
+    audience: 'admins',
+  },
+  {
+    date: '2026-10-16',
+    area: 'perfil',
+    title: 'Desactivar tu cuenta',
+    description:
+      'Desde tu perfil podés desactivar tu cuenta. Lo que publicaste sigue en la comunidad sin tu nombre ni tus datos, las fotos y proyectos donde estabas etiquetado siguen ahí sin tu vínculo, y tu email queda libre para volver cuando quieras.',
+    authors: ['agustin-sanc'],
+    href: '/perfil',
+  },
+  {
+    date: '2026-10-16',
+    area: 'comunidad',
+    title: 'Bienvenida para quien recién llega',
+    description:
+      'Al crear tu cuenta te recibe /bienvenida con los primeros pasos (foto, presentación, stack, un evento, un tema en el foro y un consejo), que se tildan solos a medida que los hacés. También llega un email de bienvenida.',
+    authors: ['agustin-sanc'],
+    href: '/bienvenida',
+  },
+  {
+    date: '2026-10-16',
+    area: 'recomendaciones',
+    title: 'Recomendá series, películas y creadores de contenido',
+    description:
+      'Las listas de /series-y-peliculas e /influencers ahora también se arman entre todos: recomendá las tuyas y, cuando un admin las aprueba, aparecen junto a las de siempre.',
+    authors: ['agustin-sanc'],
+    href: '/series-y-peliculas',
+  },
+  {
+    date: '2026-10-16',
+    area: 'búsqueda',
+    title: 'Un buscador que ignora las tildes',
+    description:
+      'Buscar "programacion" ahora encuentra "Programación", y las palabras pueden ir en cualquier orden. Además encuentra respuestas del foro, anuncios, lugares, ofertas de trabajo y cada sección de las guías de entrevistas.',
+    authors: ['agustin-sanc'],
+  },
+  {
+    date: '2026-10-16',
+    area: 'feed',
+    title: 'Más novedades en el feed',
+    description:
+      'El /feed suma los temas nuevos del foro, los consejos, los anuncios, los testimonios, los lugares, las ofertas de trabajo y quiénes se sumaron a la comunidad cada día.',
+    authors: ['agustin-sanc'],
+    href: '/feed',
+  },
+  {
+    date: '2026-10-16',
+    area: 'notificaciones',
+    title: 'Avisos de insignias, proyectos y testimonios',
+    description:
+      'Te avisamos cuando ganás una insignia, cuando te suman al equipo de un proyecto y cuando destacan tu testimonio en la home.',
+    authors: ['agustin-sanc'],
+    href: '/notificaciones',
+  },
+  {
+    date: '2026-10-16',
     area: 'seguridad',
     title: 'Captcha contra bots al iniciar sesión',
     description:
