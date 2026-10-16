@@ -2,6 +2,7 @@ import { Marquee } from '@/components/magicui/marquee';
 import { partners } from '@/data/partners';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
+import { SponsorLink } from '@/components/sponsors/sponsor-link';
 import { partnerLogoHoverClassName } from './partner-logo-styles';
 import { Eyebrow } from './section-header';
 
@@ -21,11 +22,11 @@ export const PartnersMarquee = () => (
       <div className="w-full mask-[linear-gradient(to_right,transparent,black_12%,black_88%,transparent)]">
         <Marquee pauseOnHover className="p-0 [--duration:45s] [--gap:3.5rem]">
           {partners.map((partner) => (
-            <Link
+            <SponsorLink
               key={partner.name}
               href={partner.url}
-              target="_blank"
-              rel="noopener noreferrer"
+              sponsor={{ name: partner.name }}
+              source="inicio"
               title={partner.name}
               className={cn(
                 'flex h-16 shrink-0 items-center justify-center',
@@ -43,7 +44,7 @@ export const PartnersMarquee = () => (
                   partner.monochromeOnDark && 'brightness-0 invert',
                 )}
               />
-            </Link>
+            </SponsorLink>
           ))}
         </Marquee>
       </div>

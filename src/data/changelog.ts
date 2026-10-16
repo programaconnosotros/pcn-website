@@ -22,6 +22,16 @@ export interface ChangelogEntry {
 export const changelog: ChangelogEntry[] = [
   {
     date: '2026-10-15',
+    area: 'admin',
+    title: 'Clics en los sponsors',
+    description:
+      'Cada clic en el logo o la card de un sponsor (los partners del inicio, /partners y el feed, y los sponsors de cada evento) se cuenta, y /admin/sponsors muestra cuántos recibió cada uno, en total y en los últimos 30 días, y desde dónde.',
+    authors: ['agustin-sanc'],
+    href: '/admin/sponsors',
+    audience: 'admins',
+  },
+  {
+    date: '2026-10-15',
     area: 'eventos',
     title: 'Anuncios de los organizadores',
     description:

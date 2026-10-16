@@ -2,10 +2,13 @@ import { render, screen } from '@testing-library/react';
 import { partners } from '@/data/partners';
 import { EventSponsors } from './event-sponsors';
 
+jest.mock('@/actions/sponsors/track-sponsor-click', () => ({ trackSponsorClick: jest.fn() }));
+
 describe('EventSponsors', () => {
   it('shows each sponsor logo linked to its site, or its name without a logo', () => {
     render(
       <EventSponsors
+        eventId="e1"
         sponsors={[
           { id: 's1', name: 'Acme', website: 'https://acme.dev', logo: '/acme.webp' },
           { id: 's2', name: 'Kiosco', website: null, logo: null },
@@ -27,6 +30,7 @@ describe('EventSponsors', () => {
     if (!dark) return;
     render(
       <EventSponsors
+        eventId="e1"
         sponsors={[{ id: 's1', name: dark.name, website: dark.url, logo: dark.logo }]}
       />,
     );

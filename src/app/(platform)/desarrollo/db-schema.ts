@@ -1198,6 +1198,42 @@ export const dbModels: DbModel[] = [
     uniques: [],
   },
   {
+    name: 'SponsorClick',
+    domain: 'eventos',
+    fields: [
+      {
+        name: 'id',
+        type: 'String',
+        pk: true,
+      },
+      {
+        name: 'name',
+        type: 'String',
+      },
+      {
+        name: 'eventId',
+        type: 'String',
+        fk: true,
+        optional: true,
+      },
+      {
+        name: 'source',
+        type: 'String',
+      },
+      {
+        name: 'userId',
+        type: 'String',
+        fk: true,
+        optional: true,
+      },
+      {
+        name: 'createdAt',
+        type: 'DateTime',
+      },
+    ],
+    uniques: [],
+  },
+  {
     name: 'PageVisit',
     domain: 'sistema',
     fields: [
@@ -2716,6 +2752,22 @@ export const dbRelations: DbRelation[] = [
     optional: false,
     many: true,
     onDelete: 'Cascade',
+  },
+  {
+    from: 'SponsorClick',
+    to: 'Event',
+    label: 'event',
+    optional: true,
+    many: true,
+    onDelete: 'Cascade',
+  },
+  {
+    from: 'SponsorClick',
+    to: 'User',
+    label: 'user',
+    optional: true,
+    many: true,
+    onDelete: 'SetNull',
   },
   {
     from: 'PageVisit',

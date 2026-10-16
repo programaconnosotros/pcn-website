@@ -1,5 +1,6 @@
 import {
   Activity,
+  MousePointerClick,
   ChartPie,
   AlertTriangle,
   Bell,
@@ -386,6 +387,15 @@ export const OS_PROGRAMS: OsProgram[] = [
     url: '/admin/recomendaciones',
     icon: ThumbsUp,
     color: 'from-lime-300 to-emerald-700',
+    group: 'Administración',
+    adminOnly: true,
+  },
+  {
+    id: 'admin-sponsors',
+    name: 'Clics en sponsors',
+    url: '/admin/sponsors',
+    icon: MousePointerClick,
+    color: 'from-sky-300 to-indigo-700',
     group: 'Administración',
     adminOnly: true,
   },

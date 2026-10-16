@@ -27,6 +27,8 @@ import { SocialIcon } from './social-icon';
 import { SocialLinks, socialNetworks } from './social-links';
 import { TestimonialsSection } from './testimonials-section';
 
+jest.mock('@/actions/sponsors/track-sponsor-click', () => ({ trackSponsorClick: jest.fn() }));
+
 jest.mock('typewriter-effect', () => ({
   __esModule: true,
   default: ({ options }: { options: { strings: string[] } }) => (

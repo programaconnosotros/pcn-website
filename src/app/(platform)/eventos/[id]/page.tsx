@@ -397,7 +397,7 @@ const EventDetailPage: React.FC<{ params: Promise<{ id: string }> }> = async (pr
             {/* Sponsors: right after what the event is about, with their logos. */}
             {event.sponsors && event.sponsors.length > 0 && (
               <Section title="sponsors">
-                <EventSponsors sponsors={event.sponsors} />
+                <EventSponsors eventId={event.id} sponsors={event.sponsors} />
               </Section>
             )}
 

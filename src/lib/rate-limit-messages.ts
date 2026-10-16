@@ -53,6 +53,8 @@ const MESSAGES: Record<RateLimitName, (_wait: string) => string> = {
   log: (wait) => `Demasiados registros seguidos. Probá de nuevo en ${wait}.`,
   // Nunca llega a la UI: las visitas se descartan en silencio al pasar el límite.
   pageVisit: (wait) => `Demasiadas visitas seguidas: probá de nuevo en ${wait}.`,
+  // Tampoco llega a la UI: los clics en sponsors pasado el límite no se cuentan, y el link abre igual.
+  sponsorClick: (wait) => `Demasiados clics seguidos: probá de nuevo en ${wait}.`,
   galleryUpload: (wait) =>
     `Subiste muchas fotos en la última hora. Para que los admins puedan revisarlas hay un límite: vas a poder subir más en ${wait}.`,
   recommendation: (wait) =>

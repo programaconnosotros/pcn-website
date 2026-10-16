@@ -97,6 +97,6 @@ describe('AppSidebar', () => {
     unmount();
 
     renderSidebar({ user: admin });
-    expect(screen.getByText('Administración:6')).toBeInTheDocument();
+    expect(screen.getByText('Administración:7')).toBeInTheDocument();
   });
 });

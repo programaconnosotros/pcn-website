@@ -298,7 +298,7 @@ export async function PastEventMemory({
 
             {event.sponsors.length > 0 && (
               <EventSection title="con el apoyo de">
-                <EventSponsors sponsors={event.sponsors} compact />
+                <EventSponsors eventId={event.id} sponsors={event.sponsors} compact />
               </EventSection>
             )}
           </div>

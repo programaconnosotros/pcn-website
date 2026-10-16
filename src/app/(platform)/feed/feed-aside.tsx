@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { SponsorLink } from '@/components/sponsors/sponsor-link';
 import { ArrowUpRight, CalendarDays, Megaphone } from 'lucide-react';
 import { fetchAnnouncements } from '@/actions/announcements/get-announcements';
 import { fetchUpcomingEvents } from '@/actions/events/fetch-upcoming-events';
@@ -99,10 +100,10 @@ export async function FeedAside() {
         <ul className="grid grid-cols-2 divide-x divide-y divide-pcnGreen-200 border-t-0">
           {partners.slice(0, PARTNERS).map((partner) => (
             <li key={partner.name}>
-              <a
+              <SponsorLink
                 href={partner.url}
-                target="_blank"
-                rel="noopener noreferrer"
+                sponsor={{ name: partner.name }}
+                source="feed"
                 title={partner.name}
                 className="flex h-16 group items-center justify-center px-2"
               >
@@ -117,7 +118,7 @@ export async function FeedAside() {
                     partner.monochromeOnDark && 'brightness-0 invert',
                   )}
                 />
-              </a>
+              </SponsorLink>
             </li>
           ))}
         </ul>

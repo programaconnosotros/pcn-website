@@ -2,6 +2,7 @@ import { ArrowUpRight } from 'lucide-react';
 import { RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
 import { partners } from '@/data/partners';
 import { cn } from '@/lib/utils';
+import { SponsorLink } from '@/components/sponsors/sponsor-link';
 
 export interface EventSponsor {
   id: string;
@@ -14,7 +15,7 @@ export interface EventSponsor {
 const invertOnDark = (logo: string) =>
   partners.some((partner) => partner.logo === logo && partner.monochromeOnDark);
 
-const SponsorTile = ({ sponsor }: { sponsor: EventSponsor }) => {
+const SponsorTile = ({ sponsor, eventId }: { sponsor: EventSponsor; eventId: string }) => {
   const content = (
     <>
       <div
@@ -53,9 +54,14 @@ const SponsorTile = ({ sponsor }: { sponsor: EventSponsor }) => {
   );
 
   return sponsor.website ? (
-    <a href={sponsor.website} target="_blank" rel="noopener noreferrer" className={className}>
+    <SponsorLink
+      href={sponsor.website}
+      sponsor={{ name: sponsor.name, eventId }}
+      source="evento"
+      className={className}
+    >
       {content}
-    </a>
+    </SponsorLink>
   ) : (
     <div className={className}>{content}</div>
   );
@@ -66,9 +72,12 @@ const SponsorTile = ({ sponsor }: { sponsor: EventSponsor }) => {
  * event possible, so they get a proper spot instead of a line of links.
  */
 export function EventSponsors({
+  eventId,
   sponsors,
   compact = false,
 }: {
+  /** The event, so clicks on its sponsors count for it. */
+  eventId: string;
   sponsors: EventSponsor[];
   /** In a narrow column (the memorial's side panel): two per row at every width. */
   compact?: boolean;
@@ -86,7 +95,7 @@ export function EventSponsors({
         )}
       >
         {sponsors.map((sponsor) => (
-          <SponsorTile key={sponsor.id} sponsor={sponsor} />
+          <SponsorTile key={sponsor.id} sponsor={sponsor} eventId={eventId} />
         ))}
       </RuledGrid>
     </div>

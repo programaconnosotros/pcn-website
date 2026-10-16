@@ -31,6 +31,8 @@ export const RATE_LIMITS = {
   recommendation: { limit: 10, windowSeconds: 60 * 60 },
   // Each run of an AI agent (talk from its photo, event from its flyers) is a paid model call.
   aiAgent: { limit: 30, windowSeconds: 60 * 60 },
+  // Clicks on a sponsor's logo, counted for the admins (src/actions/sponsors).
+  sponsorClick: { limit: 60, windowSeconds: 10 * 60 },
 } satisfies Record<string, RateLimitRule>;
 
 export type RateLimitName = keyof typeof RATE_LIMITS;

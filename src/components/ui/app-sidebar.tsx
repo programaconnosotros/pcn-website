@@ -3,6 +3,7 @@
 import {
   Activity,
   ChartPie,
+  MousePointerClick,
   Gauge,
   Link2,
   AlertTriangle,
@@ -137,6 +138,7 @@ const adminItems: NavItem[] = [
   { title: 'Visitas', url: '/visitas', icon: Eye },
   { title: 'Monitoreo', url: '/monitoreo', icon: AlertTriangle },
   { title: 'Vínculos', url: '/vinculos', icon: Link2 },
+  { title: 'Sponsors', url: '/admin/sponsors', icon: MousePointerClick },
 ];
 
 export const secondaryItems = [

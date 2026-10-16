@@ -72,6 +72,7 @@ model User {
   speakerTalks         TalkSpeaker[]         @relation("UserTalkSpeakers")
   talkProposalSpeakers TalkProposalSpeaker[] @relation("UserTalkProposalSpeakers")
   pageVisits           PageVisit[]
+  sponsorClicks        SponsorClick[]
   testimonials         Testimonial[]
   notifications        Notification[]
   errorLogs            ErrorLog[]
@@ -265,6 +266,7 @@ model Event {
   registrations   EventRegistration[]
   waitlistEntries EventWaitlistEntry[]
   sponsors        Sponsor[]
+  sponsorClicks   SponsorClick[]
   flyerDesigners  EventFlyerDesigner[]
   broadcasts      EventBroadcast[]
   announcements   Announcement[]
@@ -561,6 +563,27 @@ model Sponsor {
   event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
 
   @@index([eventId])
+}
+
+// Un clic en el logo o la card de un sponsor, para que los admins sepan cuánto tráfico le manda
+// el sitio a cada uno: un partner del sitio (sin evento, su nombre en src/data/partners.ts) o un
+// sponsor de un evento. Va por nombre y evento, no por la fila de Sponsor, que se recrea cada vez
+// que se edita el evento.
+model SponsorClick {
+  id        String   @id @default(cuid())
+  name      String
+  eventId   String?
+  // Dónde estaba el logo: "inicio", "partners", "feed" o "evento".
+  source    String
+  userId    String?
+  createdAt DateTime @default(now())
+
+  event Event? @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  user  User?  @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([name])
+  @@index([eventId])
+  @@index([createdAt])
 }
 
 model PageVisit {

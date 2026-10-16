@@ -3,6 +3,8 @@ import { fetchAnnouncements } from '@/actions/announcements/get-announcements';
 import { fetchUpcomingEvents } from '@/actions/events/fetch-upcoming-events';
 import { FeedAside } from './feed-aside';
 
+jest.mock('@/actions/sponsors/track-sponsor-click', () => ({ trackSponsorClick: jest.fn() }));
+
 jest.mock('@/actions/announcements/get-announcements', () => ({ fetchAnnouncements: jest.fn() }));
 jest.mock('@/actions/events/fetch-upcoming-events', () => ({ fetchUpcomingEvents: jest.fn() }));
 

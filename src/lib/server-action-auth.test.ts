@@ -38,6 +38,8 @@ const PUBLIC_ACTIONS: Record<string, string> = {
   'actions/analytics/track-page-visit.ts#trackPageVisit':
     'se llama sin login desde cada página; solo rutas del sitio (isSitePath) y rate limit',
   'actions/announcements/get-announcements.ts#fetchAnnouncements': 'solo anuncios publicados',
+  'actions/sponsors/track-sponsor-click.ts#trackSponsorClick':
+    'se llama sin login al clickear un sponsor; solo sponsors que existen y rate limit',
   'actions/announcements/get-event-announcements.ts#getEventAnnouncements':
     'anuncios publicados de un evento',
   'actions/announcements/get-events-for-select.ts#getEventsForSelect':

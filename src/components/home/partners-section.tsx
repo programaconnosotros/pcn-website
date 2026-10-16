@@ -1,7 +1,7 @@
 'use client';
 
 import type { CSSProperties } from 'react';
-import Link from 'next/link';
+import { SponsorLink } from '@/components/sponsors/sponsor-link';
 import { Heading2 } from '../ui/heading-2';
 import { RuledGrid, ruledCellClassName } from '../ui/ruled-grid';
 import { Handshake, MapPin } from 'lucide-react';
@@ -23,10 +23,10 @@ interface PartnersSectionProps {
 }
 
 const PartnerCell = ({ partner }: { partner: Partner }) => (
-  <Link
+  <SponsorLink
     href={partner.url}
-    target="_blank"
-    rel="noopener noreferrer"
+    sponsor={{ name: partner.name }}
+    source="partners"
     className={cn(ruledCellClassName, 'flex group flex-col items-center gap-2 p-4 text-center')}
   >
     <div
@@ -65,7 +65,7 @@ const PartnerCell = ({ partner }: { partner: Partner }) => (
       <MapPin className="h-3 w-3 shrink-0" />
       {partner.location}
     </p>
-  </Link>
+  </SponsorLink>
 );
 
 export const PartnersSection = ({ showHeading = true }: PartnersSectionProps) => {

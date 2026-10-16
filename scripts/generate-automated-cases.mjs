@@ -44,7 +44,7 @@ const AREAS = [
   [/^src\/actions\/notifications\//, 'notificaciones'],
   [/^src\/lib\/(search\/|people-search)/, 'busqueda'],
   [/^src\/actions\/users\/get-user-summary/, 'perfil'],
-  [/^src\/actions\/(users|logs|errors|analytics|identity-links)\//, 'admin'],
+  [/^src\/actions\/(users|logs|errors|analytics|identity-links|sponsors)\//, 'admin'],
   [/^src\/actions\/upload\//, 'plataforma'],
   [
     /^src\/lib\/(rate-limit|client-ip|email|s3|changelog|rss|cache|prisma-models|database-url)/,

@@ -31,6 +31,7 @@ const DOMAINS = {
     'EventFlyerDesigner',
     'EventBroadcast',
     'Sponsor',
+    'SponsorClick',
     'Announcement',
   ],
   charlas: ['TalkProposal', 'TalkProposalSpeaker', 'Talk', 'TalkSpeaker'],

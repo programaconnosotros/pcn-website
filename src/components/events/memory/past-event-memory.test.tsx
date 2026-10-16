@@ -7,6 +7,8 @@ import { SidebarProvider } from '@/components/ui/sidebar';
 import { buildEvent } from '@/test/events';
 import { PastEventMemory } from './past-event-memory';
 
+jest.mock('@/actions/sponsors/track-sponsor-click', () => ({ trackSponsorClick: jest.fn() }));
+
 jest.mock('@/actions/talks/fetch-public-talks', () => ({ fetchPublicTalks: jest.fn() }));
 jest.mock('@/actions/events/set-event-cover-photo', () => ({ setEventCoverPhoto: jest.fn() }));
 jest.mock('@/actions/events/set-event-cover-framing', () => ({ setEventCoverFraming: jest.fn() }));
