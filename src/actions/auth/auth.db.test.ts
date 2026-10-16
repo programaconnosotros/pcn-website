@@ -304,7 +304,8 @@ describe('signOut and getCurrentSession', () => {
     await actAs(user.id);
     const token = await sessionCookie();
 
-    await expect(signOut()).rejects.toThrow('NEXT_REDIRECT:/iniciar-sesion');
+    // It resolves (no redirect): the client navigates, so the toast doesn't show an error.
+    await expect(signOut()).resolves.toEqual({ success: true });
 
     expect(await prisma.session.findUnique({ where: { id: hashSessionToken(token!) } })).toBeNull();
     expect(await prisma.session.count({ where: { userId: user.id } })).toBe(1);
@@ -372,10 +373,17 @@ describe('verifyEmailCode', () => {
   it('verifies the email, spends the code and signs the user in', async () => {
     const { user, token } = await pendingUser();
 
-    await expect(verifyEmailCode(user.email, '424242')).resolves.toEqual({ success: true });
+    await expect(verifyEmailCode(user.email, '424242')).resolves.toEqual({
+      success: true,
+      isNewMember: true,
+    });
 
     expect((await prisma.user.findUniqueOrThrow({ where: { id: user.id } })).emailVerified).toBe(
       true,
+    );
+    // The first verification is the sign-up: the welcome lands in the inbox.
+    expect(await prisma.notification.count({ where: { userId: user.id, type: 'welcome' } })).toBe(
+      1,
     );
     const spent = await prisma.emailVerificationToken.findUniqueOrThrow({
       where: { id: token.id },
@@ -460,7 +468,7 @@ describe('verifyEmailCode', () => {
     });
 
     await expect(verifyEmailCode(user.email, '424242')).rejects.toThrow();
-    await expect(verifyEmailCode(user.email, '999999')).resolves.toEqual({ success: true });
+    await expect(verifyEmailCode(user.email, '999999')).resolves.toMatchObject({ success: true });
   });
 });
 
