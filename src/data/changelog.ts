@@ -21,6 +21,15 @@ export interface ChangelogEntry {
 
 export const changelog: ChangelogEntry[] = [
   {
+    date: '2026-10-16',
+    area: 'seguridad',
+    title: 'Captcha contra bots al iniciar sesión',
+    description:
+      'Iniciar sesión, crear una cuenta y recuperar la contraseña tienen un captcha que se resuelve solo en tu navegador: no hay que elegir semáforos, solo esperar un segundo a que diga verificado. Frena a los bots que prueban contraseñas o crean cuentas en masa.',
+    authors: ['agustin-sanc'],
+    href: '/iniciar-sesion',
+  },
+  {
     date: '2026-10-15',
     area: 'lugares',
     title: 'Lugares para laburar',

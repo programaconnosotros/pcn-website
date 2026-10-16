@@ -23,6 +23,7 @@ import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import * as z from 'zod';
+import { CAPTCHA_FAILED_MESSAGE, useCaptcha } from '@/components/auth/captcha-field';
 
 // Schemas para cada paso
 const emailSchema = z.object({
@@ -88,15 +89,21 @@ export default function ResetPasswordPage() {
     defaultValues: { password: '', confirmPassword: '' },
   });
 
+  const captcha = useCaptcha();
+
   const onEmailSubmit = async (values: z.infer<typeof emailSchema>) => {
     setIsLoading(true);
     try {
-      const result = await requestPasswordReset(values.email);
+      const result = await requestPasswordReset(values.email, captcha.payload ?? undefined);
+      // Each captcha works once: resending the code needs a new one.
+      captcha.renew();
       if (!result.success) {
         toast.error(
           result.error === 'RATE_LIMIT'
             ? rateLimitMessage('sendCode', result.waitSeconds)
-            : 'No pudimos enviar el código. Intentá de nuevo en unos minutos.',
+            : result.error === 'CAPTCHA_FAILED'
+              ? CAPTCHA_FAILED_MESSAGE
+              : 'No pudimos enviar el código. Intentá de nuevo en unos minutos.',
         );
         return;
       }
@@ -105,6 +112,7 @@ export default function ResetPasswordPage() {
       setResendCooldown(result.waitSeconds);
       toast.success('Código enviado. Revisá tu correo electrónico.');
     } catch {
+      captcha.renew();
       toast.error('Error al enviar el código. Intentá de nuevo.');
     } finally {
       setIsLoading(false);
@@ -166,7 +174,8 @@ export default function ResetPasswordPage() {
 
     setIsResending(true);
     try {
-      const result = await requestPasswordReset(email);
+      const result = await requestPasswordReset(email, captcha.payload ?? undefined);
+      captcha.renew();
       if (result.success) {
         setResendCooldown(result.waitSeconds);
         codeForm.reset({ code: '' });
@@ -174,10 +183,13 @@ export default function ResetPasswordPage() {
       } else if (result.error === 'RATE_LIMIT') {
         setResendCooldown(result.waitSeconds);
         toast.error(rateLimitMessage('sendCode', result.waitSeconds));
+      } else if (result.error === 'CAPTCHA_FAILED') {
+        toast.error(CAPTCHA_FAILED_MESSAGE);
       } else {
         toast.error('No pudimos reenviar el código. Intentá de nuevo en unos minutos.');
       }
     } catch {
+      captcha.renew();
       toast.error('Error al reenviar el código.');
     } finally {
       setIsResending(false);
@@ -247,7 +259,15 @@ export default function ResetPasswordPage() {
               )}
             />
 
-            <Button type="submit" className="w-full" loading={isLoading} loadingText="enviando...">
+            {captcha.field}
+
+            <Button
+              type="submit"
+              className="w-full"
+              disabled={!captcha.payload}
+              loading={isLoading}
+              loadingText="enviando..."
+            >
               enviarCodigo();
               <Mail className="ml-2 h-4 w-4" />
             </Button>
@@ -294,6 +314,9 @@ export default function ResetPasswordPage() {
               <ShieldCheck className="ml-2 h-4 w-4" />
             </Button>
 
+            {/* Reenviar el código también pide el captcha */}
+            {resendCooldown === 0 && captcha.field}
+
             <div className="flex flex-wrap justify-between gap-2 font-mono text-xs">
               <button
                 type="button"
@@ -305,7 +328,7 @@ export default function ResetPasswordPage() {
               <button
                 type="button"
                 onClick={resendCode}
-                disabled={isResending || resendCooldown > 0}
+                disabled={isResending || resendCooldown > 0 || !captcha.payload}
                 className="text-muted-foreground hover:text-pcnGreen disabled:cursor-not-allowed disabled:opacity-50"
               >
                 {isResending

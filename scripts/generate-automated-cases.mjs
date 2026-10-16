@@ -14,7 +14,8 @@ const OUT = 'src/app/(platform)/desarrollo/calidad/automated-cases.ts';
 // matches nothing makes the script fail, so it has to be added here.
 const AREAS = [
   [/^src\/actions\/auth\//, 'auth'],
-  [/^src\/lib\/(password|session|verification-codes|safe-redirect)\./, 'auth'],
+  [/^src\/lib\/(password|session|verification-codes|safe-redirect|captcha)\./, 'auth'],
+  [/^src\/app\/api\/captcha\//, 'auth'],
   [/^src\/actions\/(events|announcements)\//, 'eventos'],
   [/^src\/lib\/(event-|ics|google-calendar)/, 'eventos'],
   [/^src\/schemas\/event-schema/, 'eventos'],

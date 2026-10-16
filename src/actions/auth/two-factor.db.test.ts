@@ -10,6 +10,9 @@ import {
   verifyTwoFactorSignIn,
 } from './two-factor';
 
+// The captcha has its own round-trip test (src/lib/captcha.test.ts).
+jest.mock('@/lib/captcha', () => ({ verifyCaptcha: jest.fn(async () => true) }));
+
 // Two-factor sign-in against Postgres: turning it on, signing in with the app's code or a
 // recovery code, codes that can't be replayed, and turning it off.
 

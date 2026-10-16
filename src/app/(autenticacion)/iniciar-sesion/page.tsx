@@ -22,6 +22,7 @@ import { toast } from 'sonner';
 import * as z from 'zod';
 import { safeRedirectPath } from '@/lib/safe-redirect';
 import { actionErrorMessage } from '@/lib/rate-limit-messages';
+import { CAPTCHA_FAILED_MESSAGE, useCaptcha } from '@/components/auth/captcha-field';
 
 const formSchema = z.object({
   email: z.string().email('Correo electrónico inválido'),
@@ -38,6 +39,7 @@ function SignInContent() {
   // The password was right and the account has two-factor on: ask for the code.
   const [needsCode, setNeedsCode] = useState(false);
   const [code, setCode] = useState('');
+  const captcha = useCaptcha();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -59,7 +61,13 @@ function SignInContent() {
     }
 
     try {
-      const result = await signIn({ ...values, redirectTo: finalRedirect });
+      const result = await signIn({
+        ...values,
+        redirectTo: finalRedirect,
+        captcha: captcha.payload ?? undefined,
+      });
+      // Each captcha works once: the next attempt gets a new one.
+      captcha.renew();
 
       if (result.success) {
         toast.success('Hola! 👋');
@@ -93,6 +101,12 @@ function SignInContent() {
         return;
       }
 
+      if (result.error === 'CAPTCHA_FAILED') {
+        toast.error(CAPTCHA_FAILED_MESSAGE);
+        setIsLoading(false);
+        return;
+      }
+
       // Error de credenciales
       if (result.error === 'INVALID_CREDENTIALS') {
         toast.error('Credenciales incorrectas.');
@@ -104,6 +118,7 @@ function SignInContent() {
       toast.error('No pudimos iniciar la sesión.');
       setIsLoading(false);
     } catch (error) {
+      captcha.renew();
       toast.error(
         actionErrorMessage(error, 'Ocurrió un error inesperado. Por favor, intentá nuevamente.'),
       );
@@ -237,10 +252,13 @@ function SignInContent() {
             )}
           />
 
+          {captcha.field}
+
           <Button
             type="submit"
             size="lg"
             className="w-full"
+            disabled={!captcha.payload}
             loading={isLoading}
             loadingText="ingresando..."
           >

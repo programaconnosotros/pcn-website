@@ -14,6 +14,9 @@ jest.mock('@/components/auth/reset-password-email', () => ({
 }));
 
 import * as emailLib from '@/lib/email';
+import { verifyCaptcha } from '@/lib/captcha';
+
+jest.mock('@/lib/captcha', () => ({ verifyCaptcha: jest.fn(async () => true) }));
 const emailLibMock = emailLib as jest.Mocked<typeof emailLib>;
 
 const baseUser = { id: 'user-1', name: 'Test User', email: 'test@example.com' };
@@ -24,6 +27,16 @@ describe('requestPasswordReset', () => {
     resetRateLimits();
     (getRateLimitWait as jest.Mock).mockResolvedValue(0);
     emailLibMock.sendEmail.mockResolvedValue(undefined);
+  });
+
+  it('sends nothing to anyone without a solved captcha', async () => {
+    jest.mocked(verifyCaptcha).mockResolvedValueOnce(false);
+
+    const result = await requestPasswordReset('test@example.com', 'payload');
+
+    expect(result).toEqual({ success: false, error: 'CAPTCHA_FAILED' });
+    expect(verifyCaptcha).toHaveBeenCalledWith('payload');
+    expect(prismaMock.user.findUnique).not.toHaveBeenCalled();
   });
 
   it('answers exactly like a sent code when the email has no account', async () => {

@@ -25,19 +25,19 @@ octubre de 2026, con una auditoría de todas las server actions y route handlers
 
 ## Resumen
 
-| Categoría                | Defensa principal                                                    | Test que la sostiene                                                      |
-| ------------------------ | -------------------------------------------------------------------- | ------------------------------------------------------------------------- |
-| A01 Control de acceso    | Chequeo de sesión/permisos en cada server action, sobre la fila real | `src/lib/server-action-auth.test.ts`                                      |
-| A02 Configuración        | Headers de seguridad, CSP con nonce, HSTS                            | `src/lib/csp.test.ts`, `src/proxy.test.ts`                                |
-| A03 Cadena de suministro | Lockfile, overrides de pnpm, Dependabot                              | `pnpm audit`                                                              |
-| A04 Criptografía         | bcrypt costo 12, tokens de 256 bits hasheados, TLS                   | `src/lib/password.test.ts`, `src/lib/session.test.ts`                     |
-| A05 Inyección SQL        | Solo Prisma y `$queryRaw` como template tag                          | `src/lib/sql-safety.test.ts`, `src/test/sql-injection.db.test.ts`, ESLint |
-| A05 XSS                  | Escape de React + CSP que bloquea scripts sin nonce                  | `src/lib/csp.test.ts`                                                     |
-| A06 Diseño inseguro      | Rate limits, SSRF bloqueado en el socket, límites de tamaño          | `src/lib/rate-limit.test.ts`, `src/lib/safe-fetch.test.ts`                |
-| A07 Autenticación        | Sesiones revocables, mensajes y tiempos que no revelan cuentas       | `src/actions/auth/*.test.ts`                                              |
-| A08 Integridad           | Validación con zod de todo input, uploads firmados con condiciones   | `src/actions/update-profile.test.ts`, tests de cada action                |
-| A09 Logging y alertas    | `ErrorLog`/`AppLog` + notificaciones a admins                        | `src/lib/security-alerts.test.ts`                                         |
-| A10 Condiciones anómalas | Errores genéricos en producción, fallos que cierran                  | `src/lib/rate-limit-messages.test.ts`, tests de actions                   |
+| Categoría                | Defensa principal                                                       | Test que la sostiene                                                      |
+| ------------------------ | ----------------------------------------------------------------------- | ------------------------------------------------------------------------- |
+| A01 Control de acceso    | Chequeo de sesión/permisos en cada server action, sobre la fila real    | `src/lib/server-action-auth.test.ts`                                      |
+| A02 Configuración        | Headers de seguridad, CSP con nonce, HSTS                               | `src/lib/csp.test.ts`, `src/proxy.test.ts`                                |
+| A03 Cadena de suministro | Lockfile, overrides de pnpm, Dependabot                                 | `pnpm audit`                                                              |
+| A04 Criptografía         | bcrypt costo 12, tokens de 256 bits hasheados, TLS                      | `src/lib/password.test.ts`, `src/lib/session.test.ts`                     |
+| A05 Inyección SQL        | Solo Prisma y `$queryRaw` como template tag                             | `src/lib/sql-safety.test.ts`, `src/test/sql-injection.db.test.ts`, ESLint |
+| A05 XSS                  | Escape de React + CSP que bloquea scripts sin nonce                     | `src/lib/csp.test.ts`                                                     |
+| A06 Diseño inseguro      | Rate limits, SSRF bloqueado en el socket, límites de tamaño             | `src/lib/rate-limit.test.ts`, `src/lib/safe-fetch.test.ts`                |
+| A07 Autenticación        | Sesiones revocables, mensajes y tiempos que no revelan cuentas, captcha | `src/actions/auth/*.test.ts`, `src/lib/captcha.test.ts`                   |
+| A08 Integridad           | Validación con zod de todo input, uploads firmados con condiciones      | `src/actions/update-profile.test.ts`, tests de cada action                |
+| A09 Logging y alertas    | `ErrorLog`/`AppLog` + notificaciones a admins                           | `src/lib/security-alerts.test.ts`                                         |
+| A10 Condiciones anómalas | Errores genéricos en producción, fallos que cierran                     | `src/lib/rate-limit-messages.test.ts`, tests de actions                   |
 
 ---
 
@@ -200,6 +200,12 @@ elige de una allowlist de fragmentos fijos con `Prisma.sql`, nunca desde el inpu
 - Recuperar contraseña responde igual exista o no la cuenta, y la espera para pedir otro código
   también es la misma.
 - El email no se cambia desde el perfil, porque quedaría marcado como verificado sin prueba.
+- **Captcha** en el login, el registro y recuperar contraseña (`src/lib/captcha.ts`): ALTCHA, una
+  prueba de trabajo que resuelve el navegador solo al abrir el formulario, sin terceros ni cookies
+  de rastreo. Cada intento automatizado le cuesta CPU al bot, además del rate limit. Los desafíos
+  salen de `GET /api/captcha` firmados con HMAC (clave derivada de `TWO_FACTOR_ENCRYPTION_KEY`,
+  separada por dominio), vencen a los 10 minutos y cada uno sirve una sola vez. Las actions lo
+  verifican antes de mirar la contraseña o mandar un mail.
 - **Verificación en dos pasos opcional** (`/perfil`): códigos TOTP de una app de autenticación
   (`src/lib/totp.ts`, RFC 6238 con `node:crypto`) y 10 códigos de recuperación de un solo uso,
   guardados como hash. Con la contraseña correcta el login solo abre un intento de 10 minutos en

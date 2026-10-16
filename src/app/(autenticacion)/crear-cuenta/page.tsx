@@ -29,6 +29,7 @@ import { toast } from 'sonner';
 import * as z from 'zod';
 import { safeRedirectPath } from '@/lib/safe-redirect';
 import { actionErrorMessage } from '@/lib/rate-limit-messages';
+import { CAPTCHA_FAILED_MESSAGE, useCaptcha } from '@/components/auth/captcha-field';
 import { COUNTRIES, DEFAULT_COUNTRY } from '@/lib/countries';
 
 const formSchema = signUpSchema;
@@ -59,6 +60,7 @@ function SignUpContent() {
   });
 
   const watchCountry = form.watch('country');
+  const captcha = useCaptcha();
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     setIsSubmitting(true);
@@ -70,7 +72,13 @@ function SignUpContent() {
         finalRedirect = `${redirectTo}${separator}autoRegister=true`;
       }
 
-      const result = await signUp({ ...values, redirectTo: finalRedirect });
+      const result = await signUp({
+        ...values,
+        redirectTo: finalRedirect,
+        captcha: captcha.payload ?? undefined,
+      });
+      // Each captcha works once: the next attempt gets a new one.
+      if (!result.success) captcha.renew();
 
       if (result.success) {
         toast.success('Usuario creado exitosamente! 🥳');
@@ -88,10 +96,13 @@ function SignUpContent() {
       // Manejar errores específicos
       if (result.error === 'EMAIL_ALREADY_EXISTS') {
         toast.error('Ya hay un usuario con ese correo electrónico.');
+      } else if (result.error === 'CAPTCHA_FAILED') {
+        toast.error(CAPTCHA_FAILED_MESSAGE);
       } else {
         toast.error('Error al crear el usuario. Por favor, intentá nuevamente.');
       }
     } catch (error) {
+      captcha.renew();
       setIsSubmitting(false);
       toast.error(
         actionErrorMessage(error, 'Ocurrió un error inesperado. Por favor, intentá nuevamente.'),
@@ -366,10 +377,13 @@ function SignUpContent() {
             />
           </AuthSection>
 
+          {captcha.field}
+
           <Button
             type="submit"
             size="lg"
             className="w-full"
+            disabled={!captcha.payload}
             loading={isSubmitting}
             loadingText="creando cuenta..."
           >

@@ -93,6 +93,8 @@ export const signUpSchema = signUpSchemaBase.refine(
 export const signUpActionSchema = signUpSchemaBaseObject
   .extend({
     redirectTo: z.string().optional(),
+    // What the captcha widget submits (src/lib/captcha.ts).
+    captcha: z.string().max(10_000).optional(),
   })
   .refine(
     (data) => {

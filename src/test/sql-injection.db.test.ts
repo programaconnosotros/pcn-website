@@ -12,6 +12,9 @@ import { getProductMetrics } from '@/lib/product-metrics';
 import { parseMetricsRange } from '@/lib/metrics-range';
 import { actAs, createUser } from '@/test/db/fixtures';
 
+// The captcha has its own round-trip test (src/lib/captcha.test.ts).
+jest.mock('@/lib/captcha', () => ({ verifyCaptcha: jest.fn(async () => true) }));
+
 // SQL injection contra Postgres real: cada formulario recibe los payloads clásicos y se comprueba
 // que (1) nadie entra ni ve datos que no le tocan, (2) lo que se guarda vuelve idéntico, como texto,
 // (3) ninguna query se cortó ni se demoró por el payload y (4) las tablas siguen intactas.
@@ -119,7 +122,8 @@ describe.each(PAYLOADS)('SQL injection with %p', (payload) => {
     ).resolves.toMatchObject({
       success: true,
     });
-    expect(await prisma.passwordResetToken.count()).toBe(0);
+    // Only this account's codes: other test files leave theirs in the shared database.
+    expect(await prisma.passwordResetToken.count({ where: { email: victim.email } })).toBe(0);
   });
 
   it('stores an advice and a comment exactly as typed', async () => {

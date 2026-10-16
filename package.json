@@ -77,6 +77,8 @@
     "@tsparticles/slim": "^3.5.0",
     "@types/jsdom": "^28.0.3",
     "ai": "^7.0.133",
+    "altcha": "3.2.4",
+    "altcha-lib": "2.5.0",
     "bcryptjs": "^3.0.3",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",

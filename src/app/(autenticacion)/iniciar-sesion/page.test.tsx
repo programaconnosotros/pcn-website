@@ -8,6 +8,13 @@ import { mockRouter, setLocation } from '@/test/dom';
 import { verifyTwoFactorSignIn } from '@/actions/auth/two-factor';
 import SignInPage from './page';
 
+let mockCaptchaPayload: string | null = 'captcha-ok';
+const mockRenewCaptcha = jest.fn();
+jest.mock('@/components/auth/captcha-field', () => ({
+  CAPTCHA_FAILED_MESSAGE: 'captcha fallido',
+  useCaptcha: () => ({ payload: mockCaptchaPayload, renew: mockRenewCaptcha, field: null }),
+}));
+
 jest.mock('@/actions/auth/sign-in', () => ({ signIn: jest.fn() }));
 jest.mock('@/actions/auth/two-factor', () => ({ verifyTwoFactorSignIn: jest.fn() }));
 jest.mock('@/components/os/os-env', () => ({ notifyOsSessionChange: jest.fn() }));
@@ -56,6 +63,7 @@ describe('SignInPage', () => {
       email: 'ana@example.com',
       password: 'secreta',
       redirectTo: '',
+      captcha: 'captcha-ok',
     });
     expect(toast.success).toHaveBeenCalled();
     expect(notifyOsSessionChange).toHaveBeenCalled();
@@ -128,6 +136,24 @@ describe('SignInPage', () => {
         `/verificar-email?email=${encodeURIComponent('ana@example.com')}`,
       ),
     );
+  });
+
+  it('waits for the captcha before letting anyone sign in', () => {
+    mockCaptchaPayload = null;
+    render(<SignInPage />);
+
+    expect(screen.getByRole('button', { name: /ingresar/ })).toBeDisabled();
+    mockCaptchaPayload = 'captcha-ok';
+  });
+
+  it('reports a rejected captcha and gets a new one', async () => {
+    signInMock.mockResolvedValue({ success: false, error: 'CAPTCHA_FAILED' } as never);
+    render(<SignInPage />);
+
+    await fillAndSubmit();
+
+    await waitFor(() => expect(toast.error).toHaveBeenCalledWith('captcha fallido'));
+    expect(mockRenewCaptcha).toHaveBeenCalled();
   });
 
   it('reports invalid credentials', async () => {

@@ -8,6 +8,7 @@ import { enforceRateLimit } from '@/lib/rate-limit';
 import { createSession } from '@/lib/session';
 import { safeRedirectPath } from '@/lib/safe-redirect';
 import { createTwoFactorChallenge } from '@/lib/two-factor';
+import { verifyCaptcha } from '@/lib/captcha';
 
 const formSchema = z.object({
   email: z.string().email({
@@ -15,12 +16,15 @@ const formSchema = z.object({
   }),
   password: z.string().min(1, 'Ingresá tu contraseña.').max(200),
   redirectTo: z.string().optional(),
+  // What the captcha widget submits (src/lib/captcha.ts).
+  captcha: z.string().max(10_000).optional(),
 });
 
 export const signIn = async (
   data: z.infer<typeof formSchema>,
 ): Promise<
   | { success: true; redirectTo: string }
+  | { success: false; error: 'CAPTCHA_FAILED' }
   | { success: false; error: 'INVALID_CREDENTIALS' }
   | { success: false; error: 'ACCOUNT_SUSPENDED' }
   | { success: false; error: 'EMAIL_NOT_VERIFIED'; email: string }
@@ -31,6 +35,11 @@ export const signIn = async (
   try {
     const validatedData = formSchema.parse(data);
     const { email, password } = validatedData;
+
+    // Before looking at the password: a bot that can't solve it never gets to try one.
+    if (!(await verifyCaptcha(validatedData.captcha))) {
+      return { success: false, error: 'CAPTCHA_FAILED' };
+    }
 
     const user = await prisma.user.findUnique({
       where: { email },

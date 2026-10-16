@@ -18,6 +18,9 @@ import { completePasswordReset } from '@/actions/auth/complete-password-reset';
 import { actAs, createUser } from '@/test/db/fixtures';
 import { quickUser, sessionCookie, uid } from '@/test/db/actions-fixtures';
 
+// The captcha has its own round-trip test (src/lib/captcha.test.ts).
+jest.mock('@/lib/captcha', () => ({ verifyCaptcha: jest.fn(async () => true) }));
+
 // Registro, login, verificación de email y reseteo de contraseña contra Postgres real: qué filas
 // de usuario, sesión y token quedan después de cada paso.
 

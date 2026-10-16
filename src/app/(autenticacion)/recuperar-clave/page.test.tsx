@@ -6,6 +6,11 @@ import { verifyResetCode } from '@/actions/auth/verify-reset-code';
 import { completePasswordReset } from '@/actions/auth/complete-password-reset';
 import ResetPasswordPage from './page';
 
+jest.mock('@/components/auth/captcha-field', () => ({
+  CAPTCHA_FAILED_MESSAGE: 'captcha fallido',
+  useCaptcha: () => ({ payload: 'captcha-ok', renew: jest.fn(), field: null }),
+}));
+
 jest.mock('@/actions/auth/request-password-reset', () => ({ requestPasswordReset: jest.fn() }));
 jest.mock('@/actions/auth/verify-reset-code', () => ({ verifyResetCode: jest.fn() }));
 jest.mock('@/actions/auth/complete-password-reset', () => ({ completePasswordReset: jest.fn() }));
@@ -83,7 +88,7 @@ describe('ResetPasswordPage', () => {
     completeMock.mockResolvedValue({ success: true });
     await toPasswordStep(user);
 
-    expect(requestMock).toHaveBeenCalledWith('ana@example.com');
+    expect(requestMock).toHaveBeenCalledWith('ana@example.com', 'captcha-ok');
     expect(verifyMock).toHaveBeenCalledWith('ana@example.com', '123456');
 
     await sendPassword(user);

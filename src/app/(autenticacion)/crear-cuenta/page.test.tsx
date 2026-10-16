@@ -6,6 +6,11 @@ import { rateLimitDigest } from '@/lib/rate-limit-messages';
 import { mockRouter, setLocation } from '@/test/dom';
 import SignUpPage from './page';
 
+jest.mock('@/components/auth/captcha-field', () => ({
+  CAPTCHA_FAILED_MESSAGE: 'captcha fallido',
+  useCaptcha: () => ({ payload: 'captcha-ok', renew: jest.fn(), field: null }),
+}));
+
 jest.mock('@/actions/auth/sign-up', () => ({ signUp: jest.fn() }));
 jest.mock('sonner', () => ({ toast: { success: jest.fn(), error: jest.fn() } }));
 jest.mock('@/components/ui/file-upload-public', () => ({

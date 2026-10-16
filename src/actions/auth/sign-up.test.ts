@@ -14,6 +14,9 @@ jest.mock('@/components/auth/verification-email', () => ({
 }));
 
 import * as emailLib from '@/lib/email';
+import { verifyCaptcha } from '@/lib/captcha';
+
+jest.mock('@/lib/captcha', () => ({ verifyCaptcha: jest.fn(async () => true) }));
 const emailLibMock = emailLib as jest.Mocked<typeof emailLib>;
 
 const input = {
@@ -35,6 +38,16 @@ const mockCreate = () => {
 describe('signUp', () => {
   beforeEach(() => {
     emailLibMock.sendEmail.mockResolvedValue(undefined as never);
+  });
+
+  it('rejects a failed captcha before creating anything', async () => {
+    jest.mocked(verifyCaptcha).mockResolvedValueOnce(false);
+
+    const result = await signUp({ ...input, captcha: 'payload' } as never);
+
+    expect(result).toEqual({ success: false, error: 'CAPTCHA_FAILED' });
+    expect(verifyCaptcha).toHaveBeenCalledWith('payload');
+    expect(prismaMock.user.create).not.toHaveBeenCalled();
   });
 
   it('creates an unverified user, stores a code, emails it and returns the verify URL', async () => {

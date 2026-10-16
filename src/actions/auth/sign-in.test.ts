@@ -4,6 +4,9 @@ import { mockCookies } from '@/test/cookies';
 import { DUMMY_PASSWORD_HASH } from '@/lib/password';
 import { createTwoFactorChallenge } from '@/lib/two-factor';
 import { signIn } from './sign-in';
+import { verifyCaptcha } from '@/lib/captcha';
+
+jest.mock('@/lib/captcha', () => ({ verifyCaptcha: jest.fn(async () => true) }));
 
 jest.mock('bcryptjs');
 jest.mock('@/lib/two-factor', () => ({ createTwoFactorChallenge: jest.fn() }));
@@ -37,6 +40,16 @@ const baseUser = {
 const validInput = { email: 'test@example.com', password: 'pass1234' };
 
 describe('signIn', () => {
+  it('rejects a failed captcha before looking at the password', async () => {
+    jest.mocked(verifyCaptcha).mockResolvedValueOnce(false);
+
+    const result = await signIn({ ...validInput, captcha: 'payload' });
+
+    expect(result).toEqual({ success: false, error: 'CAPTCHA_FAILED' });
+    expect(verifyCaptcha).toHaveBeenCalledWith('payload');
+    expect(prismaMock.user.findUnique).not.toHaveBeenCalled();
+  });
+
   it('opens the second step instead of a session when two-factor is on', async () => {
     mockCookies();
     prismaMock.user.findUnique.mockResolvedValue({

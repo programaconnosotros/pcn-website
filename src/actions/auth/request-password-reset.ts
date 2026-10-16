@@ -10,17 +10,26 @@ import {
 } from '@/lib/email';
 import { render } from '@react-email/render';
 import { consumeRateLimit, getRateLimitWait } from '@/lib/rate-limit';
+import { verifyCaptcha } from '@/lib/captcha';
 
 // Los errores esperados se devuelven, no se lanzan: en producción Next no le pasa al navegador
 // el mensaje de un error lanzado por una server action.
 export type RequestPasswordResetResult =
   | { success: true; waitSeconds: number }
   | { success: false; error: 'RATE_LIMIT'; waitSeconds: number }
+  | { success: false; error: 'CAPTCHA_FAILED' }
   | { success: false; error: 'SEND_FAILED' };
 
-export const requestPasswordReset = async (email: string): Promise<RequestPasswordResetResult> => {
+export const requestPasswordReset = async (
+  email: string,
+  /** What the captcha widget submits (src/lib/captcha.ts). */
+  captcha?: string,
+): Promise<RequestPasswordResetResult> => {
   const ipWait = await getRateLimitWait('sendCode');
   if (ipWait > 0) return { success: false, error: 'RATE_LIMIT', waitSeconds: ipWait };
+
+  // Antes de gastar el límite por email: sin captcha no se le manda nada a nadie.
+  if (!(await verifyCaptcha(captcha))) return { success: false, error: 'CAPTCHA_FAILED' };
 
   // Un código por minuto por email, exista o no la cuenta: así la espera tampoco revela qué
   // emails están registrados.

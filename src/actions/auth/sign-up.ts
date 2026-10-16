@@ -9,11 +9,13 @@ import { generateVerificationCode, getCodeExpirationDate, sendEmail } from '@/li
 import { hashPassword } from '@/lib/password';
 import { enforceRateLimit } from '@/lib/rate-limit';
 import { safeRedirectPath } from '@/lib/safe-redirect';
+import { verifyCaptcha } from '@/lib/captcha';
 
 export const signUp = async (
   data: z.infer<typeof signUpActionSchema>,
 ): Promise<
   | { success: true; redirectUrl: string }
+  | { success: false; error: 'CAPTCHA_FAILED' }
   | { success: false; error: 'EMAIL_ALREADY_EXISTS' }
   | { success: false; error: 'UNKNOWN_ERROR' }
 > => {
@@ -29,8 +31,11 @@ export const signUp = async (
     studyPlace,
     image,
     phoneNumber,
+    captcha,
     ...cleanedData
   } = signUpActionSchema.parse(data);
+
+  if (!(await verifyCaptcha(captcha))) return { success: false, error: 'CAPTCHA_FAILED' };
 
   try {
     // Verificar si el email ya existe antes de intentar crear
