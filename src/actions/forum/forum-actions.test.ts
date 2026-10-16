@@ -3,15 +3,22 @@ import { revalidatePath } from 'next/cache';
 import { getCurrentSession } from '@/actions/auth/get-current-session';
 import { enforceRateLimit } from '@/lib/rate-limit';
 import { createForumPost, deleteForumPost, moderateForumPost, updateForumPost } from './posts';
-import { createForumComment, deleteForumComment, toggleForumPostLike } from './engagement';
+import {
+  createForumComment,
+  deleteForumComment,
+  toggleForumCommentLike,
+  toggleForumPostLike,
+} from './engagement';
+import { notifyUsers } from '@/actions/notifications/notify-users';
 
 jest.mock('@/actions/auth/get-current-session', () => ({ getCurrentSession: jest.fn() }));
 jest.mock('@/lib/rate-limit', () => ({ enforceRateLimit: jest.fn() }));
+jest.mock('@/actions/notifications/notify-users', () => ({ notifyUsers: jest.fn() }));
 
 const as = (user: { id: string; role?: string } | null) =>
   jest
     .mocked(getCurrentSession)
-    .mockResolvedValue(user ? ({ user: { role: 'USER', ...user } } as never) : null);
+    .mockResolvedValue(user ? ({ user: { role: 'USER', name: 'Ana', ...user } } as never) : null);
 
 const input = {
   title: 'Un tema de prueba',
@@ -87,14 +94,106 @@ describe('forum engagement', () => {
   it('toggles a like', async () => {
     as({ id: 'u1' });
     prismaMock.forumPostLike.findUnique.mockResolvedValue(null);
+    prismaMock.forumPost.findUnique.mockResolvedValue({
+      authorId: 'u2',
+      title: 'Monorepos',
+    } as never);
     await expect(toggleForumPostLike('p1')).resolves.toEqual({ liked: true });
     expect(prismaMock.forumPostLike.create).toHaveBeenCalledWith({
       data: { userId: 'u1', postId: 'p1' },
     });
+    expect(notifyUsers).toHaveBeenCalledWith(
+      ['u2'],
+      expect.objectContaining({
+        type: 'forum_post_liked',
+        message: 'A Ana le gustó tu tema "Monorepos".',
+        href: '/foro/tema/p1',
+      }),
+      'u1',
+    );
 
+    jest.mocked(notifyUsers).mockClear();
     prismaMock.forumPostLike.findUnique.mockResolvedValue({ id: 'l1' } as never);
     await expect(toggleForumPostLike('p1')).resolves.toEqual({ liked: false });
     expect(prismaMock.forumPostLike.delete).toHaveBeenCalledWith({ where: { id: 'l1' } });
+    expect(notifyUsers).not.toHaveBeenCalled();
+  });
+
+  it('toggles a like on a reply and tells its author', async () => {
+    as({ id: 'u1' });
+    prismaMock.forumComment.findUnique.mockResolvedValue({
+      authorId: 'u2',
+      content: 'Usá workspaces',
+      postId: 'p1',
+    } as never);
+    prismaMock.forumCommentLike.findUnique.mockResolvedValue(null);
+    await expect(toggleForumCommentLike('c1')).resolves.toEqual({ liked: true });
+    expect(prismaMock.forumCommentLike.create).toHaveBeenCalledWith({
+      data: { userId: 'u1', commentId: 'c1' },
+    });
+    expect(notifyUsers).toHaveBeenCalledWith(
+      ['u2'],
+      expect.objectContaining({
+        type: 'forum_comment_liked',
+        href: '/foro/tema/p1#comentario-c1',
+      }),
+      'u1',
+    );
+    expect(revalidatePath).toHaveBeenCalledWith('/foro/tema/p1');
+
+    prismaMock.forumCommentLike.findUnique.mockResolvedValue({ id: 'l1' } as never);
+    await expect(toggleForumCommentLike('c1')).resolves.toEqual({ liked: false });
+    expect(prismaMock.forumCommentLike.delete).toHaveBeenCalledWith({
+      where: { userId_commentId: { userId: 'u1', commentId: 'c1' } },
+    });
+
+    prismaMock.forumComment.findUnique.mockResolvedValue(null);
+    await expect(toggleForumCommentLike('nope')).rejects.toThrow('El comentario no existe');
+  });
+
+  it('tells the thread author about a reply and the comment author about an answer', async () => {
+    as({ id: 'u1' });
+    prismaMock.$transaction.mockResolvedValue([{ id: 'c2' }, {}] as never);
+    prismaMock.forumPost.findUnique.mockResolvedValue({
+      isLocked: false,
+      authorId: 'owner',
+      title: 'Monorepos',
+    } as never);
+
+    await createForumComment('p1', { content: 'Sumo algo', parentCommentId: null });
+    expect(notifyUsers).toHaveBeenCalledTimes(1);
+    expect(notifyUsers).toHaveBeenCalledWith(
+      ['owner'],
+      expect.objectContaining({
+        type: 'forum_post_replied',
+        href: '/foro/tema/p1#comentario-c2',
+      }),
+      'u1',
+    );
+
+    jest.mocked(notifyUsers).mockClear();
+    prismaMock.forumComment.findUnique.mockResolvedValue({
+      postId: 'p1',
+      authorId: 'u3',
+      content: 'Usá workspaces',
+    } as never);
+    await createForumComment('p1', { content: 'Gracias', parentCommentId: 'c1' });
+    expect(jest.mocked(notifyUsers).mock.calls.map(([to, data]) => [to, data.type])).toEqual([
+      [['u3'], 'forum_comment_replied'],
+      [['owner'], 'forum_post_replied'],
+    ]);
+
+    // The thread's author answering on their own thread's comment hears it once, as a reply.
+    jest.mocked(notifyUsers).mockClear();
+    prismaMock.forumComment.findUnique.mockResolvedValue({
+      postId: 'p1',
+      authorId: 'owner',
+      content: 'Mi comentario',
+    } as never);
+    await createForumComment('p1', { content: 'Gracias', parentCommentId: 'c1' });
+    expect(jest.mocked(notifyUsers).mock.calls.map(([to, data]) => [to, data.type])).toEqual([
+      [['owner'], 'forum_comment_replied'],
+    ]);
   });
 
   it('replies and bumps the thread, but not on locked threads or across threads', async () => {
@@ -154,5 +253,6 @@ describe('forum engagement', () => {
     as(null);
     await expect(toggleForumPostLike('p1')).rejects.toThrow('Debes estar autenticado');
     await expect(deleteForumComment('c1')).rejects.toThrow('Debes estar autenticado');
+    await expect(toggleForumCommentLike('c1')).rejects.toThrow('Debes estar autenticado');
   });
 });

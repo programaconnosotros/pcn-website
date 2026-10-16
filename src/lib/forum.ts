@@ -9,6 +9,7 @@ const FORUM_MODELS = [
   'ForumPost',
   'ForumComment',
   'ForumPostLike',
+  'ForumCommentLike',
   'User',
 ] as const;
 
@@ -62,7 +63,7 @@ export const getForumPost = cached(
         likes: { select: { userId: true } },
         comments: {
           orderBy: { createdAt: 'asc' },
-          include: { author: authorSelect },
+          include: { author: authorSelect, likes: { select: { userId: true } } },
         },
       },
     }),

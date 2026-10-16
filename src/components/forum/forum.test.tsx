@@ -1,7 +1,11 @@
 import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { toast } from 'sonner';
-import { createForumComment, deleteForumComment } from '@/actions/forum/engagement';
+import {
+  createForumComment,
+  deleteForumComment,
+  toggleForumCommentLike,
+} from '@/actions/forum/engagement';
 import {
   createForumPost,
   deleteForumPost,
@@ -27,9 +31,11 @@ jest.mock('@/actions/forum/posts', () => ({
   deleteForumPost: jest.fn(),
   moderateForumPost: jest.fn(),
 }));
+jest.mock('@/actions/advice/like-advice', () => ({ toggleLike: jest.fn() }));
 jest.mock('@/actions/forum/engagement', () => ({
   createForumComment: jest.fn(async () => ({ id: 'c' })),
   deleteForumComment: jest.fn(),
+  toggleForumCommentLike: jest.fn(),
 }));
 
 const author = { id: 'u1', name: 'Ana', image: null };
@@ -172,6 +178,7 @@ describe('ForumThreadActions', () => {
 });
 
 describe('ForumComments', () => {
+  const viewerSession = { user: { id: 'u1', name: 'Ana' } } as never;
   const node = (id: string, authorId: string, replies: ForumCommentNode[] = []) =>
     ({
       id,
@@ -182,6 +189,7 @@ describe('ForumComments', () => {
       createdAt: new Date(),
       updatedAt: new Date(),
       author: { id: authorId, name: `@${authorId}`, image: null },
+      likes: [{ userId: 'u3' }],
       replies,
     }) as ForumCommentNode;
 
@@ -193,6 +201,7 @@ describe('ForumComments', () => {
         comments={[node('c1', 'u2', [node('c2', 'u1')])]}
         total={2}
         viewer={{ id: 'u1', isAdmin: false }}
+        session={viewerSession}
         isLocked={false}
       />,
     );
@@ -226,6 +235,26 @@ describe('ForumComments', () => {
     await waitFor(() => expect(deleteForumComment).toHaveBeenCalledWith('c2'));
   });
 
+  it('likes a reply and links each one by its anchor', async () => {
+    const user = userEvent.setup();
+    const { container } = render(
+      <ForumComments
+        postId="p1"
+        comments={[node('c1', 'u2')]}
+        total={1}
+        viewer={{ id: 'u1', isAdmin: false }}
+        session={viewerSession}
+        isLocked={false}
+      />,
+    );
+
+    expect(container.querySelector('#comentario-c1')).toHaveTextContent('respuesta c1');
+    const like = screen.getByRole('button', { name: /Me gusta/ });
+    expect(like).toHaveTextContent('1');
+    await user.click(like);
+    await waitFor(() => expect(toggleForumCommentLike).toHaveBeenCalledWith('c1'));
+  });
+
   it('closes replies on locked threads and asks visitors to sign in', () => {
     const { rerender } = render(
       <ForumComments
@@ -233,13 +262,23 @@ describe('ForumComments', () => {
         comments={[node('c1', 'u2')]}
         total={1}
         viewer={{ id: 'u1', isAdmin: false }}
+        session={viewerSession}
         isLocked
       />,
     );
     expect(screen.getByText(/está cerrado/)).toBeInTheDocument();
     expect(screen.queryByRole('button', { name: /^responder$/ })).not.toBeInTheDocument();
 
-    rerender(<ForumComments postId="p1" comments={[]} total={0} viewer={null} isLocked={false} />);
+    rerender(
+      <ForumComments
+        postId="p1"
+        comments={[]}
+        total={0}
+        viewer={null}
+        session={null}
+        isLocked={false}
+      />,
+    );
     expect(screen.getByRole('link', { name: 'Iniciá sesión' })).toHaveAttribute(
       'href',
       '/iniciar-sesion?redirect=/foro/tema/p1',

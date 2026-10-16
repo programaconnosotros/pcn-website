@@ -106,6 +106,7 @@ model User {
   forumPosts             ForumPost[]
   forumComments          ForumComment[]
   forumPostLikes         ForumPostLike[]
+  forumCommentLikes      ForumCommentLike[]
   /// Optional two-factor sign-in (TOTP). The secret is set while setting it up and kept once
   /// confirmed; `twoFactorEnabledAt` says it's on. Recovery codes are stored as SHA-256 hashes.
   twoFactorSecret        String?
@@ -1058,9 +1059,10 @@ model ForumComment {
   post     ForumPost @relation(fields: [postId], references: [id], onDelete: Cascade)
   postId   String
 
-  parentComment   ForumComment?  @relation("ForumCommentReplies", fields: [parentCommentId], references: [id], onDelete: Cascade)
+  parentComment   ForumComment?      @relation("ForumCommentReplies", fields: [parentCommentId], references: [id], onDelete: Cascade)
   parentCommentId String?
-  replies         ForumComment[] @relation("ForumCommentReplies")
+  replies         ForumComment[]     @relation("ForumCommentReplies")
+  likes           ForumCommentLike[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -1082,6 +1084,19 @@ model ForumPostLike {
 
   @@unique([userId, postId])
   @@index([postId])
+}
+
+/// A member liking a reply in a forum thread, once each.
+model ForumCommentLike {
+  id        String       @id @default(cuid())
+  userId    String
+  user      User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  commentId String
+  comment   ForumComment @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  createdAt DateTime     @default(now())
+
+  @@unique([userId, commentId])
+  @@index([commentId])
 }
 
 /// A sign-in that passed the password and waits for the second factor. The id is the SHA-256 of

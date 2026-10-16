@@ -114,6 +114,7 @@ export default async function ForumThreadPage(props: { params: Promise<{ id: str
             comments={nestComments(post.comments)}
             total={post.comments.length}
             viewer={session ? { id: session.user.id, isAdmin } : null}
+            session={session}
             isLocked={post.isLocked}
           />
         </div>

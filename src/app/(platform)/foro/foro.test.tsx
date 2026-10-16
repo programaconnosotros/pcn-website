@@ -84,6 +84,7 @@ const post = {
       createdAt: new Date(),
       updatedAt: new Date(),
       author: { id: 'u2', name: 'Bruno', image: null },
+      likes: [],
     },
   ],
 };

@@ -2363,6 +2363,32 @@ export const dbModels: DbModel[] = [
     uniques: [['userId', 'postId']],
   },
   {
+    name: 'ForumCommentLike',
+    domain: 'foro',
+    fields: [
+      {
+        name: 'id',
+        type: 'String',
+        pk: true,
+      },
+      {
+        name: 'userId',
+        type: 'String',
+        fk: true,
+      },
+      {
+        name: 'commentId',
+        type: 'String',
+        fk: true,
+      },
+      {
+        name: 'createdAt',
+        type: 'DateTime',
+      },
+    ],
+    uniques: [['userId', 'commentId']],
+  },
+  {
     name: 'TwoFactorChallenge',
     domain: 'auth',
     fields: [
@@ -3172,6 +3198,22 @@ export const dbRelations: DbRelation[] = [
     from: 'ForumPostLike',
     to: 'ForumPost',
     label: 'post',
+    optional: false,
+    many: true,
+    onDelete: 'Cascade',
+  },
+  {
+    from: 'ForumCommentLike',
+    to: 'User',
+    label: 'user',
+    optional: false,
+    many: true,
+    onDelete: 'Cascade',
+  },
+  {
+    from: 'ForumCommentLike',
+    to: 'ForumComment',
+    label: 'comment',
     optional: false,
     many: true,
     onDelete: 'Cascade',

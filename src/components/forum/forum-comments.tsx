@@ -5,12 +5,18 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { CornerDownRight, Trash } from 'lucide-react';
 import { toast } from 'sonner';
-import { createForumComment, deleteForumComment } from '@/actions/forum/engagement';
+import {
+  createForumComment,
+  deleteForumComment,
+  toggleForumCommentLike,
+} from '@/actions/forum/engagement';
+import { LikeButton } from '@/components/advice/like-button';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { timeAgo, type ForumCommentNode } from '@/lib/forum-utils';
 import { Markdown } from '@/lib/markdown';
 import { actionErrorMessage } from '@/lib/rate-limit-messages';
+import type { SessionWithUser } from '@/lib/session';
 
 type Viewer = { id: string; isAdmin: boolean } | null;
 
@@ -86,12 +92,14 @@ function Comment({
   comment,
   postId,
   viewer,
+  session,
   canReply,
   depth,
 }: {
   comment: ForumCommentNode;
   postId: string;
   viewer: Viewer;
+  session: SessionWithUser | null;
   canReply: boolean;
   depth: number;
 }) {
@@ -112,7 +120,10 @@ function Comment({
 
   return (
     <li className="flex flex-col gap-2">
-      <article className="border-l-2 border-pcnGreen-200 pl-3">
+      <article
+        id={`comentario-${comment.id}`}
+        className="scroll-mt-20 border-l-2 border-pcnGreen-200 pl-3 target:border-pcnGreen"
+      >
         <header className="flex flex-wrap items-center gap-x-2 font-mono text-[11px] text-muted-foreground">
           <Link href={`/perfil/${comment.author.id}`} className="text-pcnGreen hover:underline">
             @{comment.author.name}
@@ -121,6 +132,12 @@ function Comment({
             {timeAgo(comment.createdAt)}
           </time>
           <span className="ml-auto flex items-center gap-3">
+            <LikeButton
+              adviceId={comment.id}
+              likes={comment.likes}
+              session={session}
+              toggle={toggleForumCommentLike}
+            />
             {canReply && viewer && (
               <button
                 type="button"
@@ -167,6 +184,7 @@ function Comment({
               comment={reply}
               postId={postId}
               viewer={viewer}
+              session={session}
               canReply={canReply}
               depth={depth + 1}
             />
@@ -183,12 +201,15 @@ export function ForumComments({
   comments,
   total,
   viewer,
+  session,
   isLocked,
 }: {
   postId: string;
   comments: ForumCommentNode[];
   total: number;
   viewer: Viewer;
+  /** For the like buttons, which only need to know who is looking. */
+  session: SessionWithUser | null;
   isLocked: boolean;
 }) {
   return (
@@ -208,6 +229,7 @@ export function ForumComments({
               comment={comment}
               postId={postId}
               viewer={viewer}
+              session={session}
               canReply={!isLocked}
               depth={1}
             />
