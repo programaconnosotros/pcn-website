@@ -2,6 +2,7 @@
 
 import {
   Activity,
+  ChartPie,
   Gauge,
   Link2,
   AlertTriangle,
@@ -117,6 +118,7 @@ const comunidadItems: NavItem[] = [
   { title: 'Partners', url: '/partners', icon: Handshake },
   { title: 'Changelog', url: '/changelog', icon: History },
   { title: 'Métricas', url: '/metricas', icon: Activity },
+  { title: 'Estadísticas', url: '/estadisticas', icon: ChartPie },
   { title: 'Redes', icon: Share2, items: socialNetworks },
 ];
 

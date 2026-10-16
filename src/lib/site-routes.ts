@@ -41,6 +41,7 @@ export const SITE_ROUTES = [
   '/eventos/[id]/proponer-charla',
   '/eventos/[id]/propuestas-de-charlas',
   '/eventos/nuevo',
+  '/estadisticas',
   '/feed',
   '/foro',
   '/foro/categoria/[slug]',

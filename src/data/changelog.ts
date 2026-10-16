@@ -22,6 +22,15 @@ export interface ChangelogEntry {
 export const changelog: ChangelogEntry[] = [
   {
     date: '2026-10-15',
+    area: 'estadísticas',
+    title: 'Estadísticas de la comunidad',
+    description:
+      '/estadisticas muestra quiénes somos según lo que cada miembro cargó en su perfil: los lenguajes, sistemas operativos e IDEs más usados, cuántos usan Linux, las especialidades, de qué países y provincias somos y cuántos se sumaron cada año.',
+    authors: ['agustin-sanc'],
+    href: '/estadisticas',
+  },
+  {
+    date: '2026-10-15',
     area: 'perfil',
     title: 'Tu stack de software y hardware',
     description:

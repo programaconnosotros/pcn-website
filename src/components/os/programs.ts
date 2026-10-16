@@ -1,5 +1,6 @@
 import {
   Activity,
+  ChartPie,
   AlertTriangle,
   Bell,
   BriefcaseBusiness,
@@ -314,6 +315,14 @@ export const OS_PROGRAMS: OsProgram[] = [
     url: '/metricas',
     icon: Activity,
     color: 'from-pcnGreen to-teal-800',
+    group: 'Comunidad',
+  },
+  {
+    id: 'estadisticas',
+    name: 'Estadísticas',
+    url: '/estadisticas',
+    icon: ChartPie,
+    color: 'from-emerald-300 to-teal-700',
     group: 'Comunidad',
   },
   {

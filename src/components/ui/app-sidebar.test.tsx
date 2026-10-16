@@ -91,7 +91,7 @@ describe('AppSidebar', () => {
     expect(screen.getAllByRole('listitem').map((item) => item.textContent)).toEqual([
       'Actividades:8',
       'Recursos:7',
-      'Comunidad:11',
+      'Comunidad:12',
     ]);
     expect(consumeOpenSidebarRequest).not.toHaveBeenCalled();
     unmount();
