@@ -1,7 +1,15 @@
 import { prismaMock } from '@/test/prisma';
 import { mockCookies } from '@/test/cookies';
 import { revalidatePath } from 'next/cache';
+import { sendEmails } from '@/lib/email';
 import { createEventAnnouncement, deleteEventAnnouncement } from './event-announcement';
+
+jest.mock('@/lib/email', () => ({ sendEmails: jest.fn(async () => 0) }));
+// react-email's render needs ESM dynamic imports, which Jest doesn't run: plain static markup.
+jest.mock('@react-email/render', () => ({
+  render: async (element: React.ReactElement) =>
+    require('react-dom/server').renderToStaticMarkup(element),
+}));
 
 type Role = 'ADMIN' | 'REGULAR';
 const loginAs = (user: { id: string; role: Role }) => {
@@ -31,10 +39,10 @@ const input = {
 describe('createEventAnnouncement', () => {
   beforeEach(() => {
     prismaMock.announcement.create.mockResolvedValue({ id: 'a1' } as any);
+    // The query already leaves out whoever publishes it.
     prismaMock.eventRegistration.findMany.mockResolvedValue([
-      { userId: 'ana' },
-      { userId: 'beto' },
-      { userId: 'org-1' },
+      { user: { id: 'ana', name: 'Ana López', email: 'ana@example.com' } },
+      { user: { id: 'beto', name: 'Beto Paz', email: 'beto@example.com' } },
     ] as any);
   });
 
@@ -67,8 +75,8 @@ describe('createEventAnnouncement', () => {
       },
     });
     expect(prismaMock.eventRegistration.findMany).toHaveBeenCalledWith({
-      where: { eventId: 'e1', cancelledAt: null },
-      select: { userId: true },
+      where: { eventId: 'e1', cancelledAt: null, userId: { not: 'org-1' } },
+      select: { user: { select: { id: true, name: true, email: true } } },
     });
     const { data } = prismaMock.notification.createMany.mock.calls[0][0] as {
       data: { userId: string; title: string; type: string; metadata: string }[];
@@ -79,6 +87,10 @@ describe('createEventAnnouncement', () => {
       title: 'Nuevo anuncio de Meetup',
     });
     expect(JSON.parse(data[0].metadata)).toMatchObject({ href: '/eventos/e1' });
+    const messages = jest.mocked(sendEmails).mock.calls[0][0];
+    expect(messages.map((message) => message.to)).toEqual(['ana@example.com', 'beto@example.com']);
+    expect(messages[0].subject).toBe('Meetup: Cambio de aula');
+    expect(messages[0].html).toContain('Nos mudamos al aula 204 del segundo piso.');
     expect(revalidatePath).toHaveBeenCalledWith('/eventos/e1');
   });
 

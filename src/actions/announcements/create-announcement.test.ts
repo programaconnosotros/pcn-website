@@ -1,7 +1,12 @@
 import { prismaMock } from '@/test/prisma';
 import { mockCookies } from '@/test/cookies';
 import { revalidatePath } from 'next/cache';
+import { notifyEventAnnouncement } from '@/actions/notifications/event-announcement-notice';
 import { createAnnouncement } from './create-announcement';
+
+jest.mock('@/actions/notifications/event-announcement-notice', () => ({
+  notifyEventAnnouncement: jest.fn(async () => 0),
+}));
 
 const adminUser = {
   id: 'user-admin',
@@ -127,5 +132,54 @@ describe('createAnnouncement', () => {
     });
     expect(revalidatePath).toHaveBeenCalledWith('/anuncios');
     expect(revalidatePath).toHaveBeenCalledWith('/eventos/event-1');
+  });
+
+  it('tells the people signed up for the event about a published announcement on it', async () => {
+    mockCookies({ sessionId: 'session-admin' });
+    prismaMock.session.findUnique.mockResolvedValue(adminSession as any);
+    const announcement = {
+      ...createdAnnouncement,
+      category: 'evento',
+      eventId: 'event-1',
+      published: true,
+    };
+    prismaMock.announcement.create.mockResolvedValue(announcement as any);
+    prismaMock.event.findFirst.mockResolvedValue({ id: 'event-1', name: 'Meetup' } as any);
+
+    await createAnnouncement({ ...validData, category: 'evento', eventId: 'event-1' });
+
+    expect(prismaMock.event.findFirst).toHaveBeenCalledWith({
+      where: { id: 'event-1', deletedAt: null },
+      select: { id: true, name: true },
+    });
+    expect(notifyEventAnnouncement).toHaveBeenCalledWith(
+      { id: 'event-1', name: 'Meetup' },
+      announcement,
+      'user-admin',
+    );
+  });
+
+  it('tells nobody about a draft, an announcement without event or a deleted event', async () => {
+    mockCookies({ sessionId: 'session-admin' });
+    prismaMock.session.findUnique.mockResolvedValue(adminSession as any);
+    prismaMock.announcement.create.mockResolvedValueOnce({
+      ...createdAnnouncement,
+      eventId: 'event-1',
+      published: false,
+    } as any);
+    await createAnnouncement({ ...validData, category: 'evento', eventId: 'event-1' });
+
+    prismaMock.announcement.create.mockResolvedValueOnce(createdAnnouncement as any);
+    await createAnnouncement(validData);
+
+    prismaMock.announcement.create.mockResolvedValueOnce({
+      ...createdAnnouncement,
+      eventId: 'event-gone',
+      published: true,
+    } as any);
+    prismaMock.event.findFirst.mockResolvedValue(null);
+    await createAnnouncement({ ...validData, category: 'evento', eventId: 'event-gone' });
+
+    expect(notifyEventAnnouncement).not.toHaveBeenCalled();
   });
 });

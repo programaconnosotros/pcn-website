@@ -93,8 +93,8 @@ export function EventAnnouncementForm({ eventId }: { eventId: string }) {
         destacar (aparece primero)
       </label>
       <p className="font-mono text-[11px] text-muted-foreground">
-        <span className="text-pcnGreen-500">$ </span>se publica acá y les llega una notificación a
-        todos los inscriptos
+        <span className="text-pcnGreen-500">$ </span>se publica acá y les llega a todos los
+        inscriptos como notificación y por email
       </p>
       <div className="flex gap-2">
         <Button type="submit" size="sm" loading={isSubmitting} loadingText="publicando...">

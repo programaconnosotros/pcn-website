@@ -5,12 +5,11 @@ import { z } from 'zod';
 import prisma from '@/lib/prisma';
 import { requireEventManager } from '@/lib/event-access';
 import { enforceRateLimit } from '@/lib/rate-limit';
-import { notifyUsers } from '@/actions/notifications/notify-users';
-import { excerpt } from '@/actions/notifications/excerpt';
+import { notifyEventAnnouncement } from '@/actions/notifications/event-announcement-notice';
 
 // Anuncios que publica quien gestiona un evento (admins, quien lo creó siendo ambassador y sus
-// organizadores) desde la página del evento: salen ahí y les llegan como notificación a todos los
-// inscriptos.
+// organizadores) desde la página del evento: salen ahí y les llegan a todos los inscriptos, como
+// notificación y por email.
 
 const eventAnnouncementSchema = z.object({
   eventId: z.string().min(1),
@@ -53,30 +52,16 @@ export async function createEventAnnouncement(input: EventAnnouncementInput) {
     },
   });
 
-  const registrations = await prisma.eventRegistration.findMany({
-    where: { eventId, cancelledAt: null },
-    select: { userId: true },
-  });
-  // Quien lo publica no se notifica a sí mismo, aunque esté inscripto.
-  const recipients = registrations
-    .map((registration) => registration.userId)
-    .filter((userId) => userId !== user.id);
-  await notifyUsers(
-    recipients,
-    {
-      type: 'event_announcement',
-      title: `Nuevo anuncio de ${event.name}`,
-      message: `${title}: ${excerpt(content)}`,
-      href: `/eventos/${eventId}`,
-      metadata: { eventId, announcementId: announcement.id },
-    },
+  const notified = await notifyEventAnnouncement(
+    { id: eventId, name: event.name },
+    { id: announcement.id, title, content },
     user.id,
   );
 
   revalidatePath(`/eventos/${eventId}`);
   revalidatePath('/anuncios');
 
-  return { id: announcement.id, notified: recipients.length };
+  return { id: announcement.id, notified };
 }
 
 export async function deleteEventAnnouncement(announcementId: string) {
