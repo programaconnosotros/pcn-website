@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { EmptyState } from '@/components/empty-state';
 import { Heart, Lock, MessageSquare, Pin } from 'lucide-react';
 import type { ForumPostSummary } from '@/lib/forum';
 import { timeAgo } from '@/lib/forum-utils';
@@ -14,9 +15,12 @@ export function ForumPostList({
 }) {
   if (posts.length === 0) {
     return (
-      <p className="self-start border border-pcnGreen-200 p-4 font-mono text-xs text-muted-foreground">
-        <span className="text-pcnGreen-500">$ ls: </span>todavía no hay temas. ¡Abrí el primero!
-      </p>
+      <EmptyState
+        command="ls ~/foro"
+        title="Todavía no hay temas"
+        description="Abrí el primero: una duda, una idea o algo que quieras discutir con la comunidad."
+        className="self-start"
+      />
     );
   }
 

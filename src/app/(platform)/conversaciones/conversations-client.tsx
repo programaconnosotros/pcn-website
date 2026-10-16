@@ -1,5 +1,6 @@
 'use client';
 
+import { EmptyState } from '@/components/empty-state';
 import { useState, useMemo, useEffect } from 'react';
 import { PageTitle } from '@/components/ui/page-title';
 import { StickyHeader } from '@/components/ui/sticky-header';
@@ -277,15 +278,12 @@ export function ConversationsClient({ profiles, events, isAdmin }: Conversations
             <div className="max-md:hidden">{overview}</div>
 
             {filtered.length === 0 ? (
-              <p className="mb-14 border border-dashed border-pcnGreen-200 py-10 text-center font-mono text-sm text-muted-foreground">
-                <span className="text-pcnGreen-500">$ </span>0 resultados
-                {searchTerm.trim() && (
-                  <>
-                    {' '}
-                    para <span className="text-pcnGreen">&quot;{searchTerm}&quot;</span>
-                  </>
-                )}
-              </p>
+              <EmptyState
+                command={`grep -i "${searchTerm.trim()}" ~/conversaciones`}
+                output="0 resultados"
+                title="Ninguna conversación coincide"
+                description="Probá con otro tema o con otra palabra."
+              />
             ) : (
               <div className="mb-14 space-y-6">
                 {grouped.map(([key, items]) => {

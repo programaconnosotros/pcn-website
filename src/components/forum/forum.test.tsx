@@ -65,7 +65,7 @@ describe('ForumPostList', () => {
     const { rerender } = render(<ForumPostList posts={[summary({})]} showCategory={false} />);
     expect(screen.queryByText(/#ayuda/)).not.toBeInTheDocument();
     rerender(<ForumPostList posts={[]} />);
-    expect(screen.getByText(/todavía no hay temas/)).toBeInTheDocument();
+    expect(screen.getByText('Todavía no hay temas')).toBeInTheDocument();
   });
 });
 

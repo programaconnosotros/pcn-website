@@ -65,9 +65,7 @@ describe('/series-y-peliculas', () => {
 
     await user.type(screen.getByRole('textbox', { name: /Buscar por título/ }), 'robot');
     expect(titles()).toEqual([]);
-    expect(
-      screen.getByText('No se encontraron títulos con los filtros seleccionados.'),
-    ).toBeInTheDocument();
+    expect(screen.getByText('Ningún título coincide con los filtros')).toBeInTheDocument();
   });
 
   it('uses the series section card for link previews', async () => {

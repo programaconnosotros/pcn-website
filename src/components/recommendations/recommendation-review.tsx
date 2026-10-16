@@ -1,5 +1,6 @@
 'use client';
 
+import { EmptyState } from '@/components/empty-state';
 import { useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { ArrowUpRight, Check, Pencil, StickyNote, TriangleAlert, X } from 'lucide-react';
@@ -142,9 +143,11 @@ export function RecommendationReview({ items }: { items: ReviewRecommendation[] 
       </div>
 
       {visible.length === 0 ? (
-        <p className="border border-dashed border-pcnGreen-200 px-3 py-6 text-center font-mono text-xs text-muted-foreground">
-          {status === 'PENDING' ? 'No hay recomendaciones para revisar.' : 'No hay nada acá.'}
-        </p>
+        <EmptyState
+          command="ls ~/recomendaciones"
+          title={status === 'PENDING' ? 'No hay recomendaciones para revisar' : 'No hay nada acá'}
+          description={status === 'PENDING' ? 'La cola está al día.' : undefined}
+        />
       ) : (
         <RuledGrid className="grid-cols-1">
           {visible.map((item) => {

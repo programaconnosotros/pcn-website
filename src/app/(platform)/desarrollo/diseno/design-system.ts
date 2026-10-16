@@ -382,11 +382,6 @@ export const voiceRules: Rule[] = [
 
 export const designDebt: Rule[] = [
   {
-    term: 'EmptyState',
-    detail:
-      'src/components/empty-state.tsx todavía usa círculos grises de la era de las cards en /herramientas y /software-recomendado. El patrón actual es la línea punteada con $ (EmptyLine).',
-  },
-  {
     term: 'Variantes de premio',
     detail:
       'gold, silver y bronze del Button son de una landing de sponsors que ya no existe y ninguna pantalla las usa: candidatas a borrarse.',
@@ -401,7 +396,7 @@ export const prChecklist: string[] = [
   '¿Los botones con relleno o borde se leen como una función (accion();)?',
   '¿Los inputs que comparten fila arrancan a la misma altura y ningún label se parte?',
   '¿El estado de carga es un skeleton con la forma real (RuledGridSkeleton, PageTitleSkeleton)?',
-  '¿El estado vacío es una línea con $ y no una ilustración?',
+  '¿El estado vacío de una página es el EmptyState de terminal (y EmptyLine dentro de una sección), no una ilustración?',
   '¿Solo se usa el verde como acento y las líneas son pcnGreen-200?',
   '¿Funciona con teclado y respeta prefers-reduced-motion?',
   '¿La PR incluye capturas (pnpm screenshot)?',

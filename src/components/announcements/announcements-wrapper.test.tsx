@@ -84,7 +84,7 @@ describe('AnnouncementsWrapper', () => {
   it('shows the empty state', () => {
     renderWrapper({ announcements: [] });
 
-    expect(screen.getByText(/Aún no se han publicado anuncios/)).toBeInTheDocument();
+    expect(screen.getByText('Todavía no hay anuncios')).toBeInTheDocument();
   });
 
   it('lets admins create an announcement', async () => {

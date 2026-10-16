@@ -1,5 +1,6 @@
 'use client';
 
+import { EmptyState } from '@/components/empty-state';
 import { useMemo, useState } from 'react';
 import Link from 'next/link';
 import { PageTitle } from '@/components/ui/page-title';
@@ -87,15 +88,12 @@ export function ChangelogClient({ entries, isAdmin }: ChangelogClientProps) {
         </StickyHeader>
 
         {filtered.length === 0 ? (
-          <p className="mb-14 border border-dashed border-pcnGreen-200 py-10 text-center font-mono text-sm text-muted-foreground">
-            <span className="text-pcnGreen-500">$ </span>0 resultados
-            {searchTerm.trim() && (
-              <>
-                {' '}
-                para <span className="text-pcnGreen">&quot;{searchTerm}&quot;</span>
-              </>
-            )}
-          </p>
+          <EmptyState
+            command={`git log --grep="${searchTerm.trim()}"`}
+            output="0 commits"
+            title="Ningún cambio coincide con la búsqueda"
+            description="Probá con otra palabra o con el nombre de una sección."
+          />
         ) : (
           <div className="mb-14 space-y-6">
             {byDay.map(([date, items]) => (

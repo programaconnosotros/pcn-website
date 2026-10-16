@@ -19,7 +19,7 @@ describe('EventsList', () => {
 
     await renderList();
 
-    expect(screen.getByText(/no hay eventos aún/)).toBeInTheDocument();
+    expect(screen.getByText('Todavía no hay eventos')).toBeInTheDocument();
   });
 
   it('splits upcoming (soonest first) from past events grouped by year, with catalog numbers', async () => {

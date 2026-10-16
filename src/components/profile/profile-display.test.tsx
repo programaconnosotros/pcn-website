@@ -40,7 +40,7 @@ describe('LanguageChip', () => {
 describe('LanguageCoinsContainer', () => {
   it('lists the languages or says there are none', () => {
     const { rerender } = render(<LanguageCoinsContainer languages={[]} />);
-    expect(screen.getByText('No hay lenguajes de programación añadidos')).toBeInTheDocument();
+    expect(screen.getByText('todavía no sumó lenguajes de programación')).toBeInTheDocument();
 
     rerender(
       <LanguageCoinsContainer
@@ -55,7 +55,7 @@ describe('LanguagePieChart', () => {
   it('says there is no data', () => {
     render(<LanguagePieChart data={[]} />);
 
-    expect(screen.getByText('No hay datos para mostrar')).toBeInTheDocument();
+    expect(screen.getByText('sin datos para mostrar')).toBeInTheDocument();
   });
 
   it('draws a full circle for a single language', () => {

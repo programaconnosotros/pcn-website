@@ -1,5 +1,6 @@
 'use client';
 
+import { EmptyState } from '@/components/empty-state';
 import {
   Select,
   SelectContent,
@@ -335,9 +336,17 @@ const SeriesYPeliculasPage = () => {
                 ))}
               </RuledGrid>
             ) : (
-              <p className="py-8 text-center font-mono text-sm text-muted-foreground">
-                No se encontraron títulos con los filtros seleccionados.
-              </p>
+              <EmptyState
+                command={`grep -i "${searchTerm}" ~/series-y-peliculas`}
+                output="0 coincidencias"
+                title="Ningún título coincide con los filtros"
+                description="Probá con otro género o con otra búsqueda."
+                showRefresh
+                onRefresh={() => {
+                  setSearchTerm('');
+                  setSelectedGenre('Todos los géneros');
+                }}
+              />
             )}
           </div>
         </div>

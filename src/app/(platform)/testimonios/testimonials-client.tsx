@@ -1,5 +1,6 @@
 'use client';
 
+import { EmptyState } from '@/components/empty-state';
 import { useState, useImperativeHandle, forwardRef, useMemo } from 'react';
 import { TestimonialCard } from '@/components/testimonials/testimonial-card';
 import { TestimonialForm } from '@/components/testimonials/testimonial-form';
@@ -88,10 +89,12 @@ export const TestimonialsClient = forwardRef<TestimonialsClientRef, Testimonials
     return (
       <>
         {sortedTestimonials.length === 0 ? (
-          <p className="border border-pcnGreen-200 p-4 font-mono text-xs text-muted-foreground">
-            <span className="text-pcnGreen-500">$ </span>
-            Aún no hay testimonios. Sé el primero en compartir tu experiencia.
-          </p>
+          <EmptyState
+            command="cat ~/testimonios/*"
+            output="cat: no such file or directory"
+            title="Todavía no hay testimonios"
+            description="Contá qué te dejó la comunidad y sé la primera persona en aparecer acá."
+          />
         ) : (
           <RuledGrid className="mb-14 grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3">
             {sortedTestimonials.map((testimonial) => (

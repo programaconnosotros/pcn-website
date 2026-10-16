@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { EmptyState } from '@/components/empty-state';
 import Link from 'next/link';
 import { Plus } from 'lucide-react';
 import { getCurrentSession } from '@/actions/auth/get-current-session';
@@ -84,10 +85,11 @@ export default async function SetupsPage(props: {
         </StickyHeader>
 
         {setups.length === 0 ? (
-          <p className="border border-pcnGreen-200 p-4 font-mono text-xs text-muted-foreground">
-            <span className="text-pcnGreen-500">$ </span>
-            Todavía nadie compartió su setup. ¡Estrenalo vos!
-          </p>
+          <EmptyState
+            command="ls ~/setups"
+            title="Todavía nadie compartió su setup"
+            description="Mostrá tu escritorio, tu teclado o tu silla gamer y estrená la sección."
+          />
         ) : (
           <RuledGrid className="mb-14 grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
             {setups.map((setup) => (

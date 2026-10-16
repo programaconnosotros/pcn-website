@@ -28,12 +28,14 @@ export function ImageCarousel({ images, className }: ImageCarouselProps) {
     return (
       <div
         className={cn(
-          'relative aspect-square w-full overflow-hidden rounded-lg bg-gray-100',
+          'relative aspect-square w-full overflow-hidden rounded-sm border border-dashed border-pcnGreen-200 bg-black/40',
           className,
         )}
       >
         <div className="flex h-full items-center justify-center">
-          <span className="text-gray-500">No hay imágenes disponibles</span>
+          <span className="font-mono text-xs text-muted-foreground">
+            <span className="text-pcnGreen-500">$ </span>sin imágenes
+          </span>
         </div>
       </div>
     );

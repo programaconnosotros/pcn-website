@@ -92,7 +92,7 @@ describe('FeedClient', () => {
   it('shows an empty feed', () => {
     renderInPlatform(<FeedClient items={[]} today="2025-03-10" />);
 
-    expect(screen.getByText('nada nuevo por acá todavía')).toBeInTheDocument();
+    expect(screen.getByText('Nada nuevo por acá todavía')).toBeInTheDocument();
   });
 
   it('announces live news in a banner that refreshes the feed', async () => {

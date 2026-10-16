@@ -93,7 +93,7 @@ describe('ConversationsClient', () => {
     expect(titles()).toHaveLength(3);
 
     await user.type(screen.getByRole('textbox', { name: 'Buscar conversaciones' }), 'nada');
-    expect(screen.getByText(/0 resultados/)).toHaveTextContent('0 resultados para "nada"');
+    expect(screen.getByText('grep -i "nada" ~/conversaciones')).toBeInTheDocument();
   });
 
   it('combines the group and participant filters', async () => {

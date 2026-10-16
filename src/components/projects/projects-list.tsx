@@ -1,5 +1,6 @@
 'use client';
 
+import { EmptyState } from '@/components/empty-state';
 import { Fragment, useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -467,23 +468,28 @@ export function ProjectsList({ projects, currentUser }: Props) {
       </div>
 
       {projects.length === 0 && (
-        <p className="border border-dashed border-pcnGreen-200 py-10 text-center font-mono text-sm text-muted-foreground">
-          <span className="text-pcnGreen-500">$ </span>todavía no hay proyectos publicados
-        </p>
+        <EmptyState
+          command="ls ~/proyectos"
+          title="Todavía no hay proyectos publicados"
+          description="Subí lo que estás construyendo y sumá a quienes trabajan con vos."
+        />
       )}
 
       {projects.length > 0 && visible.length === 0 && (
-        <p className="border border-dashed border-pcnGreen-200 py-10 text-center font-mono text-sm text-muted-foreground">
-          <span className="text-pcnGreen-500">$ </span>grep: 0 proyectos
-          {query && (
-            <>
-              {' '}
-              para <span className="text-pcnGreen">&quot;{searchQuery}&quot;</span>
-            </>
-          )}
-          {openSourceOnly && <> --open-source</>}
-          {stack && <> con --{stack.toLowerCase()}</>}
-        </p>
+        <EmptyState
+          command={[
+            'grep -i',
+            `"${query ? searchQuery : ''}"`,
+            openSourceOnly && '--open-source',
+            stack && `--${stack.toLowerCase()}`,
+            '~/proyectos',
+          ]
+            .filter(Boolean)
+            .join(' ')}
+          output="0 proyectos"
+          title="Ningún proyecto coincide con los filtros"
+          description="Probá con otra búsqueda o sacá algún filtro."
+        />
       )}
 
       <RuledGrid className="mb-14 grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3">

@@ -96,7 +96,7 @@ describe('ConsejosClient', () => {
   it('shows an empty state without consejos', () => {
     renderClient([], null);
 
-    expect(screen.getByText('No hay consejos para ver aún.')).toBeInTheDocument();
+    expect(screen.getByText('Todavía no hay consejos')).toBeInTheDocument();
   });
 
   it('searches and reports when nothing matches', async () => {
@@ -112,7 +112,7 @@ describe('ConsejosClient', () => {
     );
 
     await user.type(screen.getByRole('textbox', { name: /Buscar consejos/ }), 'zzz');
-    expect(screen.getByText(/0 resultados/)).toHaveTextContent('0 resultados para "gitzzz"');
+    expect(screen.getByText('grep -i "gitzzz" ~/consejos')).toBeInTheDocument();
   });
 
   it('filters by origin', async () => {
@@ -176,6 +176,6 @@ describe('ConsejosClient', () => {
 
     await user.click(screen.getByRole('radio', { name: 'auto' }));
 
-    expect(screen.getByText(/0 resultados/)).toHaveTextContent(/^\$ 0 resultados$/);
+    expect(screen.getByText('0 resultados')).toBeInTheDocument();
   });
 });

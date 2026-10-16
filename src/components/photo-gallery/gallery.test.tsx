@@ -102,17 +102,20 @@ describe('Gallery', () => {
     expect(screen.getByRole('link', { name: 'Ver video: Meetup' })).toBeInTheDocument();
     await userEvent.clear(search);
     await userEvent.type(search, 'zzz');
-    expect(screen.getByText(/grep: sin coincidencias para/)).toHaveTextContent('"zzz"');
+    expect(screen.getByText('grep -i "zzz" ~/galeria')).toBeInTheDocument();
   });
 
   it('shows empty states with and without filters', () => {
     const { unmount } = renderGallery({ items: [] });
-    expect(screen.getByText('Todavía no hay fotos ni videos.')).toBeInTheDocument();
+    expect(screen.getByText('Todavía no hay fotos ni videos')).toBeInTheDocument();
     unmount();
 
     renderGallery({ items: [], filter: { type: 'videos' } });
-    expect(screen.getByText(/No hay nada con estos filtros/)).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: 'ver todo' })).toHaveAttribute('href', '/galeria');
+    expect(screen.getByText('No hay nada con estos filtros')).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'cd ~/galeria --todo' })).toHaveAttribute(
+      'href',
+      '/galeria',
+    );
   });
 
   it('links uploads to the filtered event', () => {

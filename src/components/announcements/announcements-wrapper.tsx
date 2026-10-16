@@ -1,5 +1,6 @@
 'use client';
 
+import { EmptyState } from '@/components/empty-state';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Plus, Rss } from 'lucide-react';
@@ -96,10 +97,12 @@ export function AnnouncementsWrapper({
           ))}
         </RuledGrid>
       ) : (
-        <p className="border border-pcnGreen-200 p-4 font-mono text-xs text-muted-foreground">
-          <span className="text-pcnGreen-500">$ </span>
-          Aún no se han publicado anuncios en la comunidad.
-        </p>
+        <EmptyState
+          command="tail -f ~/anuncios"
+          output="(esperando el primer anuncio…)"
+          title="Todavía no hay anuncios"
+          description="Cuando la comunidad tenga novedades, van a aparecer acá."
+        />
       )}
 
       {/* Dialog para crear nuevo anuncio */}

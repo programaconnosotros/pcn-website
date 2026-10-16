@@ -1,5 +1,6 @@
 'use client';
 
+import { EmptyLine } from '@/components/profile/profile-sections';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -42,9 +43,7 @@ export function TalksList({ talks, eventId }: Props) {
       </div>
       <div className="p-3">
         {talks.length === 0 ? (
-          <p className="py-4 font-mono text-sm text-muted-foreground">
-            Aún no hay charlas para este evento.
-          </p>
+          <EmptyLine>Aún no hay charlas para este evento.</EmptyLine>
         ) : (
           <div className="rounded-md border">
             <Table>

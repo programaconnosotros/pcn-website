@@ -35,7 +35,7 @@ describe('NotificationsClient', () => {
   it('shows an empty state', () => {
     render(<NotificationsClient notifications={[]} />);
 
-    expect(screen.getByText('No tienes notificaciones')).toBeInTheDocument();
+    expect(screen.getByText('No tenés notificaciones')).toBeInTheDocument();
   });
 
   it('groups unread and read notifications with relative times', () => {

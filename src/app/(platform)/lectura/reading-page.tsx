@@ -1,5 +1,6 @@
 'use client';
 
+import { EmptyState } from '@/components/empty-state';
 import {
   Select,
   SelectContent,
@@ -267,9 +268,17 @@ export const ReadingPage = ({ articles, books, articleWriters, isAdmin }: Readin
                     ))}
                   </RuledGrid>
                 ) : (
-                  <p className="py-8 text-center font-mono text-sm text-muted-foreground">
-                    No se encontraron libros con los filtros seleccionados.
-                  </p>
+                  <EmptyState
+                    command={`grep -i "${searchTerm}" ~/lectura/libros`}
+                    output="0 coincidencias"
+                    title="Ningún libro coincide con los filtros"
+                    description="Probá con otra categoría o con otra búsqueda."
+                    showRefresh
+                    onRefresh={() => {
+                      setSearchTerm('');
+                      setSelectedCategory(ALL_BOOK_CATEGORIES);
+                    }}
+                  />
                 )}
               </TabsContent>
             </Tabs>

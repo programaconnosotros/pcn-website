@@ -1,4 +1,5 @@
 import { cache, Suspense } from 'react';
+import { EmptyState } from '@/components/empty-state';
 import { RealtimeRefresh } from '@/components/realtime/realtime-refresh';
 import { PageTitle } from '@/components/ui/page-title';
 import { StickyHeader } from '@/components/ui/sticky-header';
@@ -110,9 +111,17 @@ const EventDetailPage: React.FC<{ params: Promise<{ id: string }> }> = async (pr
         <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
           <div className="mt-4">
             <PageTitle path={[{ label: 'eventos', href: '/eventos' }, { label: '404' }]} />
-            <div className="flex flex-col items-center justify-center py-12">
-              <p className="text-lg text-muted-foreground">No se encontró el evento solicitado.</p>
-            </div>
+            <EmptyState
+              command={`cat ~/eventos/${id}`}
+              output={`cat: ~/eventos/${id}: no such file or directory`}
+              title="No encontramos este evento"
+              description="Puede que se haya borrado o que el enlace esté mal."
+              action={
+                <Link href="/eventos" className="text-pcnGreen hover:underline">
+                  cd ~/eventos
+                </Link>
+              }
+            />
           </div>
         </div>
       </>

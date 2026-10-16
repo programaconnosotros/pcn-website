@@ -96,7 +96,7 @@ describe('ProjectsList', () => {
   it('shows an empty state without projects', () => {
     renderInPlatform(<ProjectsList projects={[]} currentUser={null} />);
 
-    expect(screen.getByText('todavía no hay proyectos publicados')).toBeInTheDocument();
+    expect(screen.getByText('Todavía no hay proyectos publicados')).toBeInTheDocument();
     expect(screen.getByText('en producción o en camino')).toBeInTheDocument();
   });
 
@@ -115,7 +115,7 @@ describe('ProjectsList', () => {
 
     await user.clear(search);
     await user.paste('nada que ver');
-    expect(screen.getByText(/grep: 0 proyectos/)).toHaveTextContent('para "nada que ver"');
+    expect(screen.getByText('grep -i "nada que ver" ~/proyectos')).toBeInTheDocument();
   });
 
   it('filters by open-source and stack flags, also from the tags', async () => {
@@ -125,7 +125,7 @@ describe('ProjectsList', () => {
     await user.click(screen.getByRole('button', { name: /--go/ }));
     expect(titles()).toEqual(['Bot de WhatsApp']);
     await user.click(screen.getByRole('button', { name: /--open-source/ }));
-    expect(screen.getByText(/grep: 0 proyectos/)).toHaveTextContent('--open-source con --go');
+    expect(screen.getByText('grep -i "" --open-source --go ~/proyectos')).toBeInTheDocument();
 
     await user.click(screen.getByRole('button', { name: /--go/ }));
     expect(titles()).toEqual(['PCN Dashboard']);

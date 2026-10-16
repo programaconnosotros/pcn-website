@@ -118,6 +118,6 @@ describe('ImageCarousel', () => {
 
   it('says when there are no images', () => {
     render(<ImageCarousel images={[]} />);
-    expect(screen.getByText('No hay imágenes disponibles')).toBeInTheDocument();
+    expect(screen.getByText('sin imágenes')).toBeInTheDocument();
   });
 });

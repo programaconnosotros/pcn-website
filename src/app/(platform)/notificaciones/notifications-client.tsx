@@ -1,7 +1,8 @@
 'use client';
 
+import { EmptyState } from '@/components/empty-state';
 import { Button } from '@/components/ui/button';
-import { ArrowUpRight, Bell, Check, CheckCheck } from 'lucide-react';
+import { ArrowUpRight, Check, CheckCheck } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { markNotificationAsRead } from '@/actions/notifications/mark-as-read';
 import { markAllNotificationsAsRead } from '@/actions/notifications/mark-all-as-read';
@@ -128,10 +129,12 @@ export function NotificationsClient({ notifications }: NotificationsClientProps)
 
   if (notifications.length === 0) {
     return (
-      <p className="flex items-center gap-2 border border-pcnGreen-200 p-4 font-mono text-xs text-muted-foreground">
-        <Bell className="h-3.5 w-3.5 text-pcnGreen-500" />
-        No tienes notificaciones
-      </p>
+      <EmptyState
+        command="tail -f ~/notificaciones"
+        output="(bandeja vacía)"
+        title="No tenés notificaciones"
+        description="Cuando alguien te responda, te etiquete o se publique algo que te interese, te avisamos acá."
+      />
     );
   }
 

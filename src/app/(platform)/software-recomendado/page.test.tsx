@@ -66,8 +66,8 @@ describe('/software-recomendado', () => {
     await renderPage(<SoftwareRecommendationsPage />);
 
     await user.type(screen.getByRole('textbox', { name: /Buscar software/ }), 'cobol');
-    expect(screen.getByText('No se encontró software útil')).toBeInTheDocument();
-    expect(names()).toEqual(['No se encontró software útil']);
+    expect(screen.getByText('No encontramos software con esa búsqueda')).toBeInTheDocument();
+    expect(names()).toEqual(['No encontramos software con esa búsqueda']);
 
     await user.click(screen.getByRole('button', { name: /limpiarFiltros/ }));
     expect(names()).toHaveLength(7);

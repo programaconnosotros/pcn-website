@@ -43,7 +43,7 @@ describe('SoftwareRecommendationsPage', () => {
 
     await user.clear(search);
     await user.type(search, 'zzz-nada');
-    expect(screen.getByText('No se encontraron resultados')).toBeInTheDocument();
+    expect(screen.getByText('No encontramos herramientas con esa búsqueda')).toBeInTheDocument();
     await user.click(screen.getByRole('button', { name: /limpiarFiltros/ }));
     expect(search).toHaveValue('');
     expect(cards().length).toBeGreaterThan(1);

@@ -150,7 +150,7 @@ describe('generateMetadata', () => {
 describe('EventDetailPage', () => {
   it('tells the visitor when the event does not exist', async () => {
     await renderPage(null);
-    expect(screen.getByText('No se encontró el evento solicitado.')).toBeInTheDocument();
+    expect(screen.getByText('No encontramos este evento')).toBeInTheDocument();
   });
 
   it('shows an event that already ended as its memory', async () => {

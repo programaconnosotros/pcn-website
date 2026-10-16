@@ -1,4 +1,5 @@
 import React from 'react';
+import { EmptyState } from '@/components/empty-state';
 import { fetchEvents } from '@/actions/events/fetch-events';
 import { RuledGrid } from '@/components/ui/ruled-grid';
 import { EventExhibit } from './event-exhibit';
@@ -38,9 +39,11 @@ export const EventsList: React.FC = async () => {
 
   if (events.length === 0) {
     return (
-      <p className="border border-pcnGreen-200 p-4 font-mono text-sm text-muted-foreground">
-        <span className="text-pcnGreen-500">$ </span>no hay eventos aún.
-      </p>
+      <EmptyState
+        command="ls ~/eventos"
+        title="Todavía no hay eventos"
+        description="Cuando se anuncie la próxima juntada, la vas a ver acá."
+      />
     );
   }
 

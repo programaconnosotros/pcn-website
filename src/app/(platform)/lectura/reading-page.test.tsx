@@ -189,9 +189,7 @@ describe('ReadingPage', () => {
 
     await user.click(search());
     await user.paste('zzzz');
-    expect(
-      screen.getByText('No se encontraron libros con los filtros seleccionados.'),
-    ).toBeInTheDocument();
+    expect(screen.getByText('Ningún libro coincide con los filtros')).toBeInTheDocument();
   });
 
   it('finds books by author and resets the category when switching tabs', async () => {

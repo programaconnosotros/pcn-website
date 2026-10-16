@@ -81,12 +81,12 @@ describe('ChangelogClient', () => {
     expect(titles()).toEqual(['Inscripciones']);
 
     await user.type(search, 'zzz');
-    expect(screen.getByText(/0 resultados/)).toHaveTextContent('0 resultados para "eventoszzz"');
+    expect(screen.getByText('git log --grep="eventoszzz"')).toBeInTheDocument();
   });
 
   it('shows 0 results when there are no entries', () => {
     renderInPlatform(<ChangelogClient entries={[]} isAdmin={false} />);
 
-    expect(screen.getByText(/0 resultados/)).toHaveTextContent(/^\$ 0 resultados$/);
+    expect(screen.getByText('0 commits')).toBeInTheDocument();
   });
 });

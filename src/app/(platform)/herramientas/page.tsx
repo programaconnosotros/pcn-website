@@ -152,8 +152,11 @@ function RecommendationsList({ header, recommendations }: RecommendationsListPro
             </RuledGrid>
           ) : (
             <EmptyState
-              title="No se encontraron resultados"
-              description="No pudimos encontrar nada que coincida con tus criterios de búsqueda. Intenta ajustar los filtros o buscar con otros términos."
+              command={`grep -i "${searchTerm}" ~/herramientas`}
+              output="0 coincidencias"
+              title="No encontramos herramientas con esa búsqueda"
+              description="Probá con otro nombre o con otra categoría."
+              showRefresh
               onRefresh={() => setSearchTerm('')}
             />
           )}

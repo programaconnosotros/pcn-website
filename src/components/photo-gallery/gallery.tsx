@@ -1,5 +1,6 @@
 'use client';
 
+import { EmptyState } from '@/components/empty-state';
 import { PageTitle } from '@/components/ui/page-title';
 import { StickyHeader } from '@/components/ui/sticky-header';
 import { CollapsibleFilters } from '@/components/ui/collapsible-filters';
@@ -251,23 +252,31 @@ export function Gallery({
       </StickyHeader>
 
       {items.length === 0 ? (
-        <p className="border border-dashed border-pcnGreen-200 py-10 text-center font-mono text-sm text-muted-foreground">
-          {isFiltered(filter) ? (
-            <>
-              No hay nada con estos filtros.{' '}
+        <EmptyState
+          command="ls ~/galeria"
+          title={
+            isFiltered(filter) ? 'No hay nada con estos filtros' : 'Todavía no hay fotos ni videos'
+          }
+          description={
+            isFiltered(filter)
+              ? 'Probá con otro evento, año o persona.'
+              : 'Subí las fotos de los eventos para que queden en la memoria de la comunidad.'
+          }
+          action={
+            isFiltered(filter) && (
               <Link href="/galeria" className="text-pcnGreen hover:underline">
-                ver todo
+                cd ~/galeria --todo
               </Link>
-            </>
-          ) : (
-            'Todavía no hay fotos ni videos.'
-          )}
-        </p>
+            )
+          }
+        />
       ) : filteredItems.length === 0 ? (
-        <p className="border border-dashed border-pcnGreen-200 py-10 text-center font-mono text-sm text-muted-foreground">
-          grep: sin coincidencias para{' '}
-          <span className="text-pcnGreen">&quot;{searchQuery}&quot;</span>
-        </p>
+        <EmptyState
+          command={`grep -i "${searchQuery}" ~/galeria`}
+          output="0 coincidencias"
+          title="Ninguna foto coincide con la búsqueda"
+          description="Probá con el nombre de un evento, un lugar o una persona."
+        />
       ) : (
         <div className="mb-14">
           {/* Big enough to see the photos: one per row on phones, up to three on large screens. */}

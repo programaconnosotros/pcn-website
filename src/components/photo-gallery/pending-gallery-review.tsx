@@ -1,5 +1,6 @@
 'use client';
 
+import { EmptyState } from '@/components/empty-state';
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -41,12 +42,16 @@ export function PendingGalleryReview({ items }: { items: PendingGalleryItem[] })
 
   if (!items.length) {
     return (
-      <p className="mb-14 border border-dashed border-pcnGreen-200 px-3 py-6 text-center font-mono text-xs text-muted-foreground">
-        No hay fotos para revisar.{' '}
-        <Link href="/galeria" className="text-pcnGreen hover:underline">
-          volver a la galería
-        </Link>
-      </p>
+      <EmptyState
+        command="ls ~/galeria/pendientes"
+        title="No hay fotos para revisar"
+        description="La cola está al día."
+        action={
+          <Link href="/galeria" className="text-pcnGreen hover:underline">
+            cd ~/galeria
+          </Link>
+        }
+      />
     );
   }
 

@@ -1,4 +1,5 @@
 import { PageTitle } from '@/components/ui/page-title';
+import { EmptyLine } from '@/components/profile/profile-sections';
 import { StickyHeader } from '@/components/ui/sticky-header';
 import { getEventManager } from '@/lib/event-access';
 import { redirect } from 'next/navigation';
@@ -78,9 +79,7 @@ const TalkProposalsPage = async (props: { params: Promise<{ id: string }> }) => 
             </h2>
             <div className="p-3">
               {proposals.length === 0 ? (
-                <p className="py-4 font-mono text-sm text-muted-foreground">
-                  Aún no hay propuestas de charlas para este evento.
-                </p>
+                <EmptyLine>Aún no hay propuestas de charlas para este evento.</EmptyLine>
               ) : (
                 <div className="rounded-md border">
                   <Table>

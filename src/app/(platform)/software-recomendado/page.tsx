@@ -114,8 +114,11 @@ function RecommendationsList({ header, recommendations }: RecommendationsListPro
         </RuledGrid>
       ) : (
         <EmptyState
-          title="No se encontró software útil"
-          description="No pudimos encontrar ningún software que coincida con tus criterios de búsqueda. Intenta ajustar los filtros o buscar con otros términos."
+          command={`grep -i "${searchTerm}" ~/software-recomendado`}
+          output="0 coincidencias"
+          title="No encontramos software con esa búsqueda"
+          description="Probá con otro nombre o con otra categoría."
+          showRefresh
           onRefresh={() => setSearchTerm('')}
         />
       )}

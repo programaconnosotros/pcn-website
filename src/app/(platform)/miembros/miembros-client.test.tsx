@@ -161,13 +161,13 @@ describe('MiembrosClient', () => {
 
     await user.type(screen.getByRole('textbox', { name: 'Buscar miembros' }), 'nadie');
 
-    expect(screen.getByText(/0 resultados/)).toHaveTextContent('0 resultados para "nadie"');
+    expect(screen.getByText('grep -i "nadie" ~/miembros')).toBeInTheDocument();
   });
 
   it('shows 0 results without a query when there are no members', () => {
     renderInPlatform(<MiembrosClient members={[]} />);
 
-    expect(screen.getByText(/0 resultados/)).toHaveTextContent(/^\$ 0 resultados$/);
+    expect(screen.getByText('0 resultados')).toBeInTheDocument();
   });
 
   it('shows the community status panel, but not while searching', async () => {

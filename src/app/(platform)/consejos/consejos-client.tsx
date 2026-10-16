@@ -1,5 +1,6 @@
 'use client';
 
+import { EmptyState } from '@/components/empty-state';
 import { AdviceCard } from '@/components/advice/advice-card';
 import { consejoHash, consejoHref } from '@/components/advice/consejo-utils';
 import { useConsejosNav } from '@/components/advice/consejos-nav';
@@ -168,22 +169,20 @@ export function ConsejosClient({ consejos, session, fortuneId, addButton }: Cons
         </div>
 
         {visible.length === 0 ? (
-          <p className="mb-14 border border-dashed border-pcnGreen-200 py-10 text-center font-mono text-sm text-muted-foreground">
-            <span className="text-pcnGreen-500">$ </span>
-            {consejos.length === 0 ? (
-              'No hay consejos para ver aún.'
-            ) : (
-              <>
-                0 resultados
-                {filters.query.trim() && (
-                  <>
-                    {' '}
-                    para <span className="text-pcnGreen">&quot;{filters.query}&quot;</span>
-                  </>
-                )}
-              </>
-            )}
-          </p>
+          <EmptyState
+            command={
+              filters.query.trim()
+                ? `grep -i "${filters.query.trim()}" ~/consejos`
+                : 'ls ~/consejos'
+            }
+            output={consejos.length === 0 ? 'total 0' : '0 resultados'}
+            title={consejos.length === 0 ? 'Todavía no hay consejos' : 'Ningún consejo coincide'}
+            description={
+              consejos.length === 0
+                ? 'Compartí lo que te hubiera gustado saber cuando arrancaste.'
+                : 'Probá con otra búsqueda o sacá algún filtro.'
+            }
+          />
         ) : (
           <RuledGrid className="mb-14 grid-cols-1 md:grid-cols-2 2xl:grid-cols-3">
             {visible.map((consejo) => (

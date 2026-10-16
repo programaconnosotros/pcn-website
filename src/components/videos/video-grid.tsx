@@ -1,5 +1,6 @@
 'use client';
 
+import { EmptyState } from '@/components/empty-state';
 import { createContext, Fragment, useContext, useState } from 'react';
 import Link from 'next/link';
 import { ArrowUpRight, Eye, Play } from 'lucide-react';
@@ -259,16 +260,23 @@ export function VideoGrid({
       )}
 
       {visibleVideos.length === 0 && (
-        <p className="border border-dashed border-pcnGreen-200 py-8 text-center font-mono text-sm text-muted-foreground">
-          <span className="text-pcnGreen">404</span> ·{' '}
-          {needle
-            ? 'ningún video coincide con la búsqueda'
-            : filter === 'vistos'
-              ? 'todavía no marcaste ningún video como visto'
-              : filter === 'sin-ver'
-                ? '¡ya viste todo!'
-                : 'no hay videos en ese idioma'}
-        </p>
+        <EmptyState
+          command={needle ? `grep -i "${needle}" ~/videos` : `ls ~/videos --${filter}`}
+          output="0 videos"
+          title={
+            needle
+              ? 'Ningún video coincide con la búsqueda'
+              : filter === 'vistos'
+                ? 'Todavía no marcaste ningún video como visto'
+                : filter === 'sin-ver'
+                  ? '¡Ya viste todo!'
+                  : 'No hay videos en ese idioma'
+          }
+          description={
+            filter === 'sin-ver' && !needle ? 'Volvé cuando subamos el próximo.' : undefined
+          }
+          className="mb-0"
+        />
       )}
 
       <RuledGrid className="grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">

@@ -114,7 +114,7 @@ describe('RecommendationReview', () => {
     expect(screen.getByRole('button', { name: /despublicar/ })).toBeInTheDocument();
 
     await userEvent.click(screen.getByRole('button', { name: /--rechazadas/ }));
-    expect(screen.getByText('No hay nada acá.')).toBeInTheDocument();
+    expect(screen.getByText('No hay nada acá')).toBeInTheDocument();
 
     await userEvent.click(screen.getByRole('button', { name: /--pendientes/ }));
     await userEvent.type(screen.getByRole('textbox', { name: 'Buscar recomendaciones' }), 'martin');
@@ -166,6 +166,6 @@ describe('RecommendationReview', () => {
 
   it('says when there is nothing to review', () => {
     render(<RecommendationReview items={[]} />);
-    expect(screen.getByText('No hay recomendaciones para revisar.')).toBeInTheDocument();
+    expect(screen.getByText('No hay recomendaciones para revisar')).toBeInTheDocument();
   });
 });

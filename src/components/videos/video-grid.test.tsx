@@ -69,11 +69,11 @@ describe('VideoGrid', () => {
     expect(titles()).toEqual(['Arquitectura limpia']);
 
     await user.click(screen.getByRole('button', { name: 'en' }));
-    expect(screen.getByText(/¡ya viste todo!/)).toBeInTheDocument();
+    expect(screen.getByText('¡Ya viste todo!')).toBeInTheDocument();
     await user.click(screen.getByRole('button', { name: 'vistos' }));
     expect(titles()).toEqual(['Rust in 100 seconds']);
     await user.click(screen.getByRole('button', { name: 'es' }));
-    expect(screen.getByText(/todavía no marcaste ningún video/)).toBeInTheDocument();
+    expect(screen.getByText('Todavía no marcaste ningún video como visto')).toBeInTheDocument();
     await user.click(
       within(screen.getByRole('group', { name: 'Filtrar por estado' })).getByRole('button', {
         name: 'todos',
@@ -87,7 +87,7 @@ describe('VideoGrid', () => {
 
     await userEvent.click(screen.getByRole('button', { name: 'en' }));
 
-    expect(screen.getByText(/no hay videos en ese idioma/)).toBeInTheDocument();
+    expect(screen.getByText('No hay videos en ese idioma')).toBeInTheDocument();
   });
 
   it('searches by title, speaker, channel or year', async () => {
@@ -101,7 +101,7 @@ describe('VideoGrid', () => {
     await user.type(search, '2023');
     expect(titles()).toEqual(['Rust in 100 seconds']);
     await user.type(search, 'x');
-    expect(screen.getByText(/ningún video coincide/)).toBeInTheDocument();
+    expect(screen.getByText('Ningún video coincide con la búsqueda')).toBeInTheDocument();
   });
 
   it('plays a video in a dialog and marks it as watched', async () => {

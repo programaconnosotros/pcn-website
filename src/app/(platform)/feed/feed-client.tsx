@@ -1,5 +1,6 @@
 'use client';
 
+import { EmptyState } from '@/components/empty-state';
 import { useMemo, useState, type ReactNode } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -173,9 +174,12 @@ export function FeedClient({ items, today, aside }: FeedClientProps) {
         <div className="flex items-start gap-6">
           <div className="max-w-3xl min-w-0 flex-1">
             {byDay.length === 0 ? (
-              <p className="mb-14 border border-dashed border-pcnGreen-200 py-10 text-center font-mono text-sm text-muted-foreground">
-                <span className="text-pcnGreen-500">$ </span>nada nuevo por acá todavía
-              </p>
+              <EmptyState
+                command="tail -f ~/feed"
+                output="(sin novedades)"
+                title="Nada nuevo por acá todavía"
+                description="Eventos, fotos, proyectos y temas nuevos de la comunidad van a aparecer acá."
+              />
             ) : (
               <div className="mb-14 space-y-6 pt-4">
                 {byDay.map(([day, dayItems]) => (

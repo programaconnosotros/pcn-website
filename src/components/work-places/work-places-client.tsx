@@ -99,13 +99,16 @@ export function WorkPlacesClient({
 
       {visible.length === 0 ? (
         <EmptyState
-          showRefresh={false}
+          command={places.length === 0 ? 'ls ~/lugares' : `grep -i "${query}" ~/lugares`}
+          output={places.length === 0 ? 'total 0' : '0 coincidencias'}
           title={places.length === 0 ? 'Todavía no hay lugares' : 'No hay lugares que coincidan'}
           description={
             places.length === 0
               ? 'Sumá el café o cowork donde mejor trabajás, así lo conocen los demás.'
               : 'Probá con otro nombre o ciudad.'
           }
+          showRefresh={places.length > 0}
+          onRefresh={() => setQuery('')}
         />
       ) : (
         <RuledGrid className="grid-cols-1 md:grid-cols-2 xl:grid-cols-3">

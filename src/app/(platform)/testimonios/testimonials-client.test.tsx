@@ -40,7 +40,7 @@ describe('TestimonialsClientWrapper', () => {
   it('shows an empty state to visitors', () => {
     renderInPlatform(<TestimonialsClientWrapper testimonials={[]} />);
 
-    expect(screen.getByText(/Aún no hay testimonios/)).toBeInTheDocument();
+    expect(screen.getByText('Todavía no hay testimonios')).toBeInTheDocument();
     expect(screen.queryByRole('button', { name: /Testimonio/ })).not.toBeInTheDocument();
   });
 

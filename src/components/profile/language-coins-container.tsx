@@ -5,8 +5,8 @@ import { LanguageChip } from './language-chip';
 export function LanguageCoinsContainer({ languages }: { languages: UserProgrammingLanguage[] }) {
   if (!languages || languages.length === 0) {
     return (
-      <p className="text-sm text-muted-foreground italic">
-        No hay lenguajes de programación añadidos
+      <p className="font-mono text-xs text-muted-foreground">
+        <span className="text-pcnGreen-500">$ </span>todavía no sumó lenguajes de programación
       </p>
     );
   }

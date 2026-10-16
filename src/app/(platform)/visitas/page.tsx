@@ -1,4 +1,5 @@
 import { PageTitle } from '@/components/ui/page-title';
+import { EmptyLine } from '@/components/profile/profile-sections';
 import { StickyHeader } from '@/components/ui/sticky-header';
 import { RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
 import { cn } from '@/lib/utils';
@@ -121,9 +122,7 @@ const VisitasPage = async () => {
               <span className="text-pcnGreen-500">{'// '}</span>visitas recientes (últimas 500)
             </h2>
             {visits.length === 0 ? (
-              <p className="p-3 font-mono text-sm text-muted-foreground">
-                Aún no hay visitas registradas.
-              </p>
+              <EmptyLine>Aún no hay visitas registradas.</EmptyLine>
             ) : (
               <Table className="text-xs">
                 <TableHeader>

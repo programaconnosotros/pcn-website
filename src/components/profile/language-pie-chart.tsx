@@ -122,7 +122,9 @@ export const LanguagePieChart: React.FC<LanguagePieChartProps> = ({ data }) => {
       {data.length > 0 ? (
         <svg ref={svgRef} width="100%" height="100%" viewBox="0 0 400 300"></svg>
       ) : (
-        <div className="text-gray-500">No hay datos para mostrar</div>
+        <p className="font-mono text-xs text-muted-foreground">
+          <span className="text-pcnGreen-500">$ </span>sin datos para mostrar
+        </p>
       )}
     </div>
   );
