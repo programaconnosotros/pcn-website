@@ -34,6 +34,25 @@ describe('CaptchaField', () => {
     changeState('expired', 'payload-1');
     expect(onChange).toHaveBeenLastCalledWith(null);
   });
+
+  it('tells how it is going in a terminal line instead of the widget checkbox', async () => {
+    const onRetry = jest.fn();
+    render(<CaptchaField onChange={jest.fn()} onRetry={onRetry} />);
+    await waitFor(() => expect(widget()).toBeInTheDocument());
+    expect(widget()).toHaveAttribute('aria-hidden');
+
+    changeState('verified', 'payload-1');
+    expect(screen.getByRole('status')).toHaveTextContent('humano verificado');
+
+    changeState('error', null);
+    expect(screen.getByRole('status')).toHaveTextContent('no pudimos verificarte');
+    act(() => screen.getByRole('button', { name: 'reintentar' }).click());
+    expect(onRetry).toHaveBeenCalledTimes(1);
+
+    // An expired solution starts over on its own.
+    changeState('expired', null);
+    expect(onRetry).toHaveBeenCalledTimes(2);
+  });
 });
 
 describe('useCaptcha', () => {
