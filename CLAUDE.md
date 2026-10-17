@@ -31,6 +31,11 @@ table they read; every Prisma write expires those tables' cached reads automatic
 anything filtered by the current time. In dev, `[cache] <name> reads <Model>` means a table is
 missing from `models`.
 
+- A cached value whose result depends on the date (a range that ends today, like `/metricas`)
+  carries the day in its key; otherwise it keeps serving yesterday's range after midnight.
+- Code that signs URLs or otherwise depends on the request calls `await connection()` (from
+  `next/server`) before querying, so the build's prerender attempt never touches the database.
+
 ## Production database
 
 Production runs on a self-hosted PostgreSQL on an AWS EC2 instance. It used to be on Supabase and
@@ -50,6 +55,19 @@ In short: every server action checks the session or permissions itself (enforced
 Prisma or tagged `$queryRaw` (enforced by ESLint and `src/lib/sql-safety.test.ts`), and fetches
 user-supplied URLs only through `safeFetch`. `pnpm test:db` runs the integration suite against a
 throwaway local Postgres database.
+
+## Testing
+
+`pnpm test` (unit), `pnpm test:db` (Postgres integration) and `pnpm test:e2e` (Playwright) only run
+locally. Skills: `verify-all` runs and reads every check, `fix-e2e` triages e2e failures,
+`verify-docker` checks the images and the compose stack.
+
+- The site shows member names through `displayName` (`src/lib/people-names.ts`), which capitalizes
+  every run of more than three letters. E2E tests that create users store the name already as
+  `displayName(...)`, or a random id in it makes exact assertions fail now and then.
+- Locate what the user sees (`getByRole('main')`, a heading, `.visible()`): the news ticker and
+  some pages keep hidden copies of the same text.
+- A test that passes only on retry is a bug: run e2e with `--retries=0` before calling it green.
 
 ## Pull requests
 
