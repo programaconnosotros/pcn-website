@@ -4,9 +4,16 @@ import type { FeedItem } from '@/lib/feed';
 import { renderInPlatform } from '@/test/platform';
 import { mockRouter } from '@/test/dom';
 import { useRealtime } from '@/components/realtime/use-realtime';
+import { toast } from 'sonner';
+import { hideFeedItem, showFeedItem } from '@/actions/feed/hidden-feed-items';
 import { FeedClient } from './feed-client';
 
+jest.mock('sonner', () => require('@/test/platform').mockSonner());
 jest.mock('@/components/realtime/use-realtime', () => ({ useRealtime: jest.fn() }));
+jest.mock('@/actions/feed/hidden-feed-items', () => ({
+  hideFeedItem: jest.fn(),
+  showFeedItem: jest.fn(),
+}));
 
 const items: FeedItem[] = [
   {
@@ -107,5 +114,30 @@ describe('FeedClient', () => {
     await userEvent.click(screen.getByRole('button', { name: /hay 2 novedades/ }));
     expect(mockRouter.refresh).toHaveBeenCalled();
     expect(screen.queryByText(/novedades/)).not.toBeInTheDocument();
+  });
+
+  it('lets only admins hide an item for everyone, with an undo', async () => {
+    const { unmount } = renderInPlatform(<FeedClient items={items} today="2025-03-10" />);
+    expect(screen.queryByRole('button', { name: /Ocultar del feed/ })).not.toBeInTheDocument();
+    unmount();
+
+    renderInPlatform(<FeedClient items={items} today="2025-03-10" isAdmin />);
+    expect(screen.getAllByRole('button', { name: /Ocultar del feed/ })).toHaveLength(items.length);
+    await userEvent.click(
+      screen.getByRole('button', { name: 'Ocultar del feed: Meetup de marzo' }),
+    );
+
+    expect(hideFeedItem).toHaveBeenCalledWith({
+      itemId: '1',
+      title: 'Meetup de marzo',
+      href: '/eventos/1',
+    });
+    expect(mockRouter.refresh).toHaveBeenCalled();
+    const [message, options] = jest.mocked(toast.success).mock.lastCall!;
+    expect(message).toBe('Lo sacaste del feed');
+    await act(async () =>
+      (options as unknown as { action: { onClick: () => void } }).action.onClick(),
+    );
+    expect(showFeedItem).toHaveBeenCalledWith('1');
   });
 });

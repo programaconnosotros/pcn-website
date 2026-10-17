@@ -3,7 +3,7 @@ import { conversationHref } from '@/components/conversations/conversation-utils'
 import type { Conversation } from '@/data/whatsapp-conversations';
 import type { ChangelogEntry } from '@/data/changelog';
 import { getEventNames } from '@/lib/event-index';
-import { fetchFeed, toFeedDay } from './feed';
+import { fetchFeed, listHiddenFeedItems, toFeedDay } from './feed';
 
 const mockConversations: Conversation[] = [];
 const mockChangelog: ChangelogEntry[] = [];
@@ -43,6 +43,7 @@ const emptySources = () => {
   prismaMock.workPlace.findMany.mockResolvedValue([]);
   prismaMock.jobOffers.findMany.mockResolvedValue([]);
   prismaMock.user.findMany.mockResolvedValue([]);
+  prismaMock.hiddenFeedItem.findMany.mockResolvedValue([]);
 };
 
 beforeEach(() => {
@@ -99,6 +100,28 @@ describe('fetchFeed', () => {
 
   it('is empty when nothing happened', async () => {
     expect(await fetchFeed()).toEqual([]);
+  });
+
+  it('leaves out the items an admin hid', async () => {
+    prismaMock.event.findMany.mockResolvedValue([
+      {
+        id: 'e1',
+        name: 'Visible',
+        date: at('2026-06-10T22:00:00Z'),
+        isOnline: false,
+        createdAt: at('2026-06-01T15:00:00Z'),
+      },
+      {
+        id: 'e2',
+        name: 'Oculto',
+        date: at('2026-06-20T22:00:00Z'),
+        isOnline: false,
+        createdAt: at('2026-06-02T15:00:00Z'),
+      },
+    ] as never);
+    prismaMock.hiddenFeedItem.findMany.mockResolvedValue([{ itemId: 'evento-e2' }] as never);
+
+    expect((await fetchFeed()).map((item) => item.id)).toEqual(['evento-e1']);
   });
 
   it('announces events created on or before their date, skipping backfilled ones', async () => {
@@ -470,5 +493,15 @@ describe('fetchFeed', () => {
         description: '¡Dale la bienvenida!',
       },
     ]);
+  });
+});
+
+describe('listHiddenFeedItems', () => {
+  it('lists the hidden items newest first, with who hid them', async () => {
+    prismaMock.hiddenFeedItem.findMany.mockResolvedValue([{ itemId: 'evento-e1' }] as never);
+    expect(await listHiddenFeedItems()).toEqual([{ itemId: 'evento-e1' }]);
+    expect(prismaMock.hiddenFeedItem.findMany).toHaveBeenCalledWith(
+      expect.objectContaining({ orderBy: { createdAt: 'desc' } }),
+    );
   });
 });

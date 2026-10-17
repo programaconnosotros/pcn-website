@@ -113,6 +113,7 @@ model User {
   contentReports         ContentReport[]      @relation("ContentReporter")
   jobOffers              JobOffers[]          @relation("UserJobOffers")
   resolvedReports        ContentReport[]      @relation("ContentReportResolver")
+  hiddenFeedItems        HiddenFeedItem[]
   /// Optional two-factor sign-in (TOTP). The secret is set while setting it up and kept once
   /// confirmed; `twoFactorEnabledAt` says it's on. Recovery codes are stored as SHA-256 hashes.
   twoFactorSecret        String?
@@ -1280,4 +1281,18 @@ model ContentReport {
   @@unique([reporterId, contentType, contentId])
   @@index([status, createdAt])
   @@index([contentType, contentId])
+}
+
+/// A feed entry an admin took off /feed (and the notification center) for everyone. Keyed by the
+/// feed item's id (`evento-<id>`, `changelog-<date>-<n>`…), since items come from many tables and
+/// static data. Title and link are kept so /admin/feed can list it after it leaves the feed.
+model HiddenFeedItem {
+  itemId String @id
+  title  String
+  href   String
+
+  hiddenBy   User?   @relation(fields: [hiddenById], references: [id], onDelete: SetNull)
+  hiddenById String?
+
+  createdAt DateTime @default(now())
 }

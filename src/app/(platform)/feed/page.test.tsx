@@ -5,6 +5,7 @@ import FeedLayout, { metadata } from './layout';
 import Loading from './loading';
 import FeedPage from './page';
 
+jest.mock('@/lib/admin', () => ({ getAdminUser: jest.fn(async () => null) }));
 jest.mock('@/lib/feed', () => ({ fetchFeed: jest.fn(), toFeedDay: jest.fn() }));
 jest.mock('./feed-aside', () => ({ FeedAside: () => null }));
 jest.mock('./feed-client', () => ({ FeedClient: jest.fn(() => null) }));
@@ -24,6 +25,7 @@ describe('FeedPage', () => {
     expect(jest.mocked(FeedClient).mock.calls[0][0]).toEqual({
       items,
       today: '2026-05-01',
+      isAdmin: false,
       aside: expect.anything(),
     });
   });

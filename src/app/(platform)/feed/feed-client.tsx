@@ -12,6 +12,7 @@ import { RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
 import { TabBrackets, tabsListClassName, tabsTriggerClassName } from '@/components/ui/tab-styles';
 import type { FeedItem, FeedKind } from '@/lib/feed';
 import { cn } from '@/lib/utils';
+import { HideFeedItemButton } from './hide-feed-item-button';
 
 const KINDS: Record<FeedKind, { label: string; tag: string; className: string }> = {
   evento: { label: 'eventos', tag: 'evento', className: 'border-rose-400/50 text-rose-300' },
@@ -73,11 +74,19 @@ const dayLabel = (day: string, today: string) => {
   });
 };
 
-function FeedRow({ item }: { item: FeedItem }) {
+function FeedRow({ item, canHide }: { item: FeedItem; canHide: boolean }) {
   const kind = KINDS[item.kind];
 
-  return (
-    <Link href={item.href} className={cn(ruledCellClassName, 'flex group flex-col gap-1.5 p-3')}>
+  const link = (
+    <Link
+      href={item.href}
+      className={cn(
+        !canHide && ruledCellClassName,
+        'flex group flex-col gap-1.5 p-3',
+        // Room on the first line for the admin's hide button, outside the link.
+        canHide && 'pr-20',
+      )}
+    >
       <span className="flex items-center gap-2 font-mono text-[11px] text-muted-foreground">
         <span className={cn('border px-1 leading-4', kind.className)}>{item.tag ?? kind.tag}</span>
         {item.meta && <span className="min-w-0 truncate">{item.meta}</span>}
@@ -111,6 +120,14 @@ function FeedRow({ item }: { item: FeedItem }) {
       )}
     </Link>
   );
+
+  if (!canHide) return link;
+  return (
+    <div className={cn(ruledCellClassName, 'relative')}>
+      {link}
+      <HideFeedItemButton item={item} className="absolute top-3 right-3" />
+    </div>
+  );
 }
 
 interface FeedClientProps {
@@ -119,9 +136,11 @@ interface FeedClientProps {
   today: string;
   /** Pinned beside the feed on wide screens: the next event, announcements, partners. */
   aside?: ReactNode;
+  /** Admins get a button on each item to take it off the feed for everyone. */
+  isAdmin?: boolean;
 }
 
-export function FeedClient({ items, today, aside }: FeedClientProps) {
+export function FeedClient({ items, today, aside, isAdmin = false }: FeedClientProps) {
   const [filter, setFilter] = useState<Filter>('todo');
   const router = useRouter();
   // Live news arrive as a banner instead of moving the list while someone reads it.
@@ -216,7 +235,7 @@ export function FeedClient({ items, today, aside }: FeedClientProps) {
                     </h2>
                     <RuledGrid className="grid-cols-1">
                       {dayItems.map((item) => (
-                        <FeedRow key={item.id} item={item} />
+                        <FeedRow key={item.id} item={item} canHide={isAdmin} />
                       ))}
                     </RuledGrid>
                   </section>

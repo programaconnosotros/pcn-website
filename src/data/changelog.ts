@@ -21,6 +21,16 @@ export interface ChangelogEntry {
 
 export const changelog: ChangelogEntry[] = [
   {
+    date: '2026-10-17',
+    area: 'admin',
+    title: 'Ocultar items del feed',
+    description:
+      'Los admins ven un botón ocultar en cada item de /feed: lo saca del feed y del centro de notificaciones para todos. /admin/feed lista lo oculto para volver a mostrarlo.',
+    authors: ['agustin-sanc'],
+    href: '/admin/feed',
+    audience: 'admins',
+  },
+  {
     date: '2026-10-16',
     area: 'empleos',
     title: 'Bolsa de trabajo',

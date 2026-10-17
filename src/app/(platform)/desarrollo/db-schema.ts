@@ -39,7 +39,7 @@ export type DbDomain =
   | 'auth'
   | 'sistema';
 
-export const DB_SCHEMA_UPDATED_AT = '2026-10-16';
+export const DB_SCHEMA_UPDATED_AT = '2026-10-17';
 
 export const dbEnums: { name: string; values: string[] }[] = [
   {
@@ -2722,6 +2722,36 @@ export const dbModels: DbModel[] = [
     ],
     uniques: [['reporterId', 'contentType', 'contentId']],
   },
+  {
+    name: 'HiddenFeedItem',
+    domain: 'sistema',
+    fields: [
+      {
+        name: 'itemId',
+        type: 'String',
+        pk: true,
+      },
+      {
+        name: 'title',
+        type: 'String',
+      },
+      {
+        name: 'href',
+        type: 'String',
+      },
+      {
+        name: 'hiddenById',
+        type: 'String',
+        fk: true,
+        optional: true,
+      },
+      {
+        name: 'createdAt',
+        type: 'DateTime',
+      },
+    ],
+    uniques: [],
+  },
 ];
 
 export const dbRelations: DbRelation[] = [
@@ -3353,6 +3383,14 @@ export const dbRelations: DbRelation[] = [
     from: 'ContentReport',
     to: 'User',
     label: 'resolvedBy',
+    optional: true,
+    many: true,
+    onDelete: 'SetNull',
+  },
+  {
+    from: 'HiddenFeedItem',
+    to: 'User',
+    label: 'hiddenBy',
     optional: true,
     many: true,
     onDelete: 'SetNull',

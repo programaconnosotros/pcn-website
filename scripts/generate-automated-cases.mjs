@@ -49,7 +49,7 @@ const AREAS = [
   [/^src\/lib\/(search\/|people-search)/, 'busqueda'],
   [/^src\/actions\/users\/get-user-summary/, 'perfil'],
   [
-    /^src\/actions\/(users|logs|errors|analytics|identity-links|sponsors|system-alerts|moderation)\//,
+    /^src\/actions\/(users|logs|errors|analytics|identity-links|sponsors|system-alerts|moderation|feed)\//,
     'admin',
   ],
   [/^src\/(components\/system-alerts|lib\/system-alerts)/, 'admin'],

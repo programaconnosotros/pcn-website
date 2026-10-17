@@ -449,8 +449,14 @@ const buildFeed = cached(
       jobOfferItems(),
       memberItems(),
     ]);
+    const hidden = new Set(
+      (await prisma.hiddenFeedItem.findMany({ select: { itemId: true } })).map(
+        ({ itemId }) => itemId,
+      ),
+    );
     return sources
       .flat()
+      .filter((item) => !hidden.has(item.id))
       .sort((a, b) => b.day.localeCompare(a.day) || b.sortKey.localeCompare(a.sortKey))
       .slice(0, MAX_ITEMS);
   },
@@ -472,6 +478,7 @@ const buildFeed = cached(
       'Testimonial',
       'WorkPlace',
       'JobOffers',
+      'HiddenFeedItem',
     ],
   },
 );
@@ -486,3 +493,16 @@ export const fetchFeed = async (): Promise<FeedItem[]> =>
         }
       : item,
   );
+
+/** What the admins took off the feed, newest first, for /admin/feed. */
+export const listHiddenFeedItems = () =>
+  prisma.hiddenFeedItem.findMany({
+    orderBy: { createdAt: 'desc' },
+    select: {
+      itemId: true,
+      title: true,
+      href: true,
+      createdAt: true,
+      hiddenBy: { select: { name: true } },
+    },
+  });
