@@ -16,6 +16,7 @@ import {
 } from '@/components/ui/language-filter';
 import { useContentMarks } from '@/hooks/use-content-marks';
 import { normalizeSearchText } from '@/lib/search/search-index';
+import { fullRowsClassName } from '@/lib/full-rows';
 import { cn } from '@/lib/utils';
 import { videoSpeakers, type Video } from './videos';
 
@@ -71,6 +72,9 @@ const Byline = ({ video }: { video: Video }) => {
   );
 };
 
+// Matches the grid's `grid-cols-1 sm:grid-cols-2 lg:grid-cols-3`, for `fillRows`.
+const VIDEO_COLUMNS = { sm: 2, lg: 3 };
+
 const WATCH_FILTERS = [
   { value: 'todos', label: 'todos' },
   { value: 'sin-ver', label: 'sin ver' },
@@ -78,16 +82,6 @@ const WATCH_FILTERS = [
 ] as const;
 
 type WatchFilter = (typeof WATCH_FILTERS)[number]['value'];
-
-/**
- * Hides the videos that would leave the last row half empty at the grid's column count (two
- * columns from `sm`, three from `lg`), so a short preview always fills its rows.
- */
-export const fillRowsClassName = (index: number, total: number) =>
-  cn(
-    index >= Math.floor(total / 2) * 2 && 'sm:max-lg:hidden',
-    index >= Math.floor(total / 3) * 3 && 'lg:hidden',
-  );
 
 const VideoCell = ({
   video,
@@ -283,7 +277,9 @@ export function VideoGrid({
         {visibleVideos.map((video, index) => (
           <VideoCell
             key={video.id}
-            className={fillRows ? fillRowsClassName(index, visibleVideos.length) : undefined}
+            className={
+              fillRows ? fullRowsClassName(index, visibleVideos.length, VIDEO_COLUMNS) : undefined
+            }
             video={video}
             onPlay={() => setPlaying(video)}
             watched={watchedIds.has(video.id)}

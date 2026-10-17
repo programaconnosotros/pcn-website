@@ -228,7 +228,7 @@ describe('ProfileTabContent: resumen', () => {
       false,
     ]);
     expect(within(section('charlas')).queryByRole('link', { name: /ver todo/ })).toBeNull();
-    expect(screen.getByText('3 artículos')).toBeInTheDocument();
+    expect(screen.getByText('4 artículos')).toBeInTheDocument();
     expect(jest.mocked(ProfileArticles).mock.calls[0][0].writer).toEqual(person);
     expect(within(section('eventos organizados')).queryByRole('link')).toBeNull();
     // 7 photos: two full rows of three
@@ -299,8 +299,12 @@ describe('ProfileTabContent: resumen', () => {
     const second = talkCell('Sin evento');
     expect(second.querySelector('img')).not.toBeInTheDocument();
     expect(within(second).queryByRole('button', { name: /video/ })).not.toBeInTheDocument();
-    // One full row in the preview
-    expect(container.querySelectorAll('article')).toHaveLength(3);
+    // Four in the preview: two full rows of two, and the fourth hidden where there are three.
+    const cells = container.querySelectorAll('article');
+    expect(cells).toHaveLength(4);
+    expect(cells[2].parentElement).not.toHaveClass('lg:max-xl:hidden');
+    expect(cells[3].parentElement).toHaveClass('lg:max-xl:hidden');
+    expect(cells[3].parentElement).not.toHaveClass('sm:max-md:hidden');
   });
 });
 
@@ -381,10 +385,18 @@ describe('ProfileTabContent: one section', () => {
     expect(screen.getByText('Todavía no subiste fotos trabajando.')).toBeInTheDocument();
   });
 
-  it('setups previews three in the overview and lists them all in their tab', async () => {
+  it('links to every setup when the preview hides one to keep its rows full', async () => {
+    // Three fit in one row of three but leave one alone in two columns, hidden there.
+    mockData({ setups: 3 });
+    await renderTab('resumen');
+    expect(screen.getAllByText(/^setup: /)).toHaveLength(3);
+    expect(within(section('setups')).getByRole('link', { name: /ver todo/ })).toBeInTheDocument();
+  });
+
+  it('setups previews four in the overview and lists them all in their tab', async () => {
     mockData({ setups: 5 });
     const { unmount } = await renderTab('resumen');
-    expect(screen.getAllByText(/^setup: /)).toHaveLength(3);
+    expect(screen.getAllByText(/^setup: /)).toHaveLength(4);
     expect(within(section('setups')).getByText('(5)')).toBeInTheDocument();
     expect(within(section('setups')).getByRole('link', { name: /ver todo/ })).toHaveAttribute(
       'href',

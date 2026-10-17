@@ -4,7 +4,9 @@ import { ArrowUpRight, ChevronRight } from 'lucide-react';
 import type { Conversation } from '@/data/whatsapp-conversations';
 import { conversationHref } from '@/components/conversations/conversation-utils';
 import type { ContributorStat } from '@/lib/github-stats';
-import { RuledCell, RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
+import { FullRowsCell, RuledCell, RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
+import { fullRowsHidesSome } from '@/lib/full-rows';
+import { PAST_EVENT_COLUMNS, UPCOMING_EVENT_COLUMNS } from './profile-grid-columns';
 import { cn } from '@/lib/utils';
 import { ProfileTabLink } from './profile-tab-nav';
 import { VideoBadge } from '@/components/photo-gallery/video-badge';
@@ -168,12 +170,31 @@ const EventGroup = ({
   </div>
 );
 
+const splitEvents = (events: ProfileEvent[], now = new Date()) => ({
+  upcoming: events.filter((event) => !hasEventEnded(event, now)).reverse(),
+  past: events.filter((event) => hasEventEnded(event, now)),
+});
+
+/** Whether `OrganizedEvents` with `fillRows` hides some of these at any width. */
+export const organizedEventsHideSome = (events: ProfileEvent[]) => {
+  const { upcoming, past } = splitEvents(events);
+  return (
+    fullRowsHidesSome(upcoming.length, UPCOMING_EVENT_COLUMNS) ||
+    fullRowsHidesSome(past.length, PAST_EVENT_COLUMNS)
+  );
+};
+
 // Events the person organized, shown like on /eventos: the ones still ahead as posters, soonest
 // first, and the past ones as framed flyers in the museum, newest first.
-export const OrganizedEvents = ({ events }: { events: ProfileEvent[] }) => {
-  const now = new Date();
-  const upcoming = events.filter((event) => !hasEventEnded(event, now)).reverse();
-  const past = events.filter((event) => hasEventEnded(event, now));
+export const OrganizedEvents = ({
+  events,
+  fillRows = false,
+}: {
+  events: ProfileEvent[];
+  /** A capped preview: hide what would leave a row half empty. */
+  fillRows?: boolean;
+}) => {
+  const { upcoming, past } = splitEvents(events);
   // Labels only when there's something to tell apart.
   const labelled = upcoming.length > 0 && past.length > 0;
 
@@ -182,8 +203,15 @@ export const OrganizedEvents = ({ events }: { events: ProfileEvent[] }) => {
       {upcoming.length > 0 && (
         <EventGroup label={labelled ? 'próximos' : undefined} count={upcoming.length}>
           <RuledGrid className="grid-cols-1 sm:grid-cols-2 xl:grid-cols-3">
-            {upcoming.map((event) => (
-              <EventPoster key={event.id} event={event} />
+            {upcoming.map((event, index) => (
+              <FullRowsCell
+                key={event.id}
+                index={index}
+                count={fillRows ? upcoming.length : 0}
+                columns={UPCOMING_EVENT_COLUMNS}
+              >
+                <EventPoster event={event} />
+              </FullRowsCell>
             ))}
           </RuledGrid>
         </EventGroup>
@@ -191,8 +219,15 @@ export const OrganizedEvents = ({ events }: { events: ProfileEvent[] }) => {
       {past.length > 0 && (
         <EventGroup label={labelled ? 'realizados' : undefined} count={past.length}>
           <RuledGrid className="grid-cols-2 md:grid-cols-3">
-            {past.map((event) => (
-              <EventExhibit key={event.id} event={event} />
+            {past.map((event, index) => (
+              <FullRowsCell
+                key={event.id}
+                index={index}
+                count={fillRows ? past.length : 0}
+                columns={PAST_EVENT_COLUMNS}
+              >
+                <EventExhibit event={event} />
+              </FullRowsCell>
             ))}
           </RuledGrid>
         </EventGroup>

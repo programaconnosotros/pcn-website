@@ -1,7 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { RuledGrid } from '@/components/ui/ruled-grid';
+import { FullRowsCell, RuledGrid } from '@/components/ui/ruled-grid';
+import { ARTICLE_COLUMNS } from './profile-grid-columns';
 import { useContentMarks } from '@/hooks/use-content-marks';
 import { ArticleRow } from '@/app/(platform)/lectura/articles-panel';
 import { ArticleReaderDialog } from '@/app/(platform)/lectura/article-reader-dialog';
@@ -14,10 +15,13 @@ import type { Writer } from '@/app/(platform)/lectura/article-writers';
 export function ProfileArticles({
   articles,
   writer,
+  fillRows = false,
 }: {
   articles: { article: Article; index: number }[];
   /** The profile's owner, who wrote all of them. */
   writer: Writer;
+  /** A capped preview: hide what would leave a row half empty. */
+  fillRows?: boolean;
 }) {
   const marks = useContentMarks('article');
   const readIds = marks.ids('read');
@@ -38,19 +42,25 @@ export function ProfileArticles({
   return (
     <>
       <RuledGrid className="grid-cols-1 2xl:grid-cols-2">
-        {articles.map(({ article, index }) => (
-          <ArticleRow
+        {articles.map(({ article, index }, position) => (
+          <FullRowsCell
             key={article.id}
-            article={article}
-            index={index}
-            onOpen={() => setReaderArticle(article)}
-            read={readIds.has(article.id)}
-            onToggleRead={() => toggleRead(article.id)}
-            saved={savedIds.has(article.id)}
-            onToggleSaved={() => marks.toggle(article.id, 'saved')}
-            writers={[writer]}
-            isAdmin={false}
-          />
+            index={position}
+            count={fillRows ? articles.length : 0}
+            columns={ARTICLE_COLUMNS}
+          >
+            <ArticleRow
+              article={article}
+              index={index}
+              onOpen={() => setReaderArticle(article)}
+              read={readIds.has(article.id)}
+              onToggleRead={() => toggleRead(article.id)}
+              saved={savedIds.has(article.id)}
+              onToggleSaved={() => marks.toggle(article.id, 'saved')}
+              writers={[writer]}
+              isAdmin={false}
+            />
+          </FullRowsCell>
         ))}
       </RuledGrid>
       <ArticleReaderDialog

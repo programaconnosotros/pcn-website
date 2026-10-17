@@ -12,7 +12,7 @@ import Link from 'next/link';
 import { Fragment } from 'react';
 import { CourseRow } from '@/components/courses/course-row';
 import { RelatedArticles } from '@/components/courses/related-articles';
-import { RuledGrid } from '@/components/ui/ruled-grid';
+import { FullRowsCell, RuledGrid } from '@/components/ui/ruled-grid';
 import { rankRelated } from '@/lib/related';
 import type { Metadata } from 'next';
 import { MISSING_TAB_TITLE, tabTitle } from '@/lib/tab-title';
@@ -58,8 +58,11 @@ export async function generateMetadata(props: {
   };
 }
 
-const RELATED_COURSES = 3;
-const RELATED_ARTICLES = 3;
+// Four: two full rows of two, or one row of three with the fourth hidden (FullRowsCell).
+const RELATED_COURSES = 4;
+const RELATED_ARTICLES = 4;
+/** Matches the related courses' `grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3`. */
+const RELATED_COURSE_COLUMNS = { lg: 2, '2xl': 3 };
 
 const courseText = (course: { name: string; description: string }) =>
   `${course.name} ${course.description}`;
@@ -230,14 +233,21 @@ const Course = async (props: { params: Promise<{ courseId: string }> }) => {
             <SectionHeading label="seguí aprendiendo" command="ls ../cursos | sort -r" />
             <RuledGrid className="grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3">
               {relatedCourses.map((related, index) => (
-                <CourseRow key={related.id} course={related} index={index} />
+                <FullRowsCell
+                  key={related.id}
+                  index={index}
+                  count={relatedCourses.length}
+                  columns={RELATED_COURSE_COLUMNS}
+                >
+                  <CourseRow course={related} index={index} />
+                </FullRowsCell>
               ))}
             </RuledGrid>
           </section>
 
           <section className="mt-8 mb-14">
             <SectionHeading label="para leer" command="cat ~/lectura/articulos" />
-            <RelatedArticles articles={relatedArticles} />
+            <RelatedArticles articles={relatedArticles} fillRows />
           </section>
         </div>
       </div>

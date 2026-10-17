@@ -3,7 +3,13 @@ import type { Person } from '@/components/people/person-link';
 import Link from 'next/link';
 import { AdviceCard } from '@/components/advice/advice-card';
 import type { Consejo } from '@/lib/consejos';
-import { RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
+import { FullRowsCell, RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
+import { fullRowsHidesSome, type Columns } from '@/lib/full-rows';
+import {
+  ARTICLE_COLUMNS,
+  SETUP_COLUMNS,
+  TALK_COLUMNS,
+} from '@/components/profile/profile-grid-columns';
 import { cn } from '@/lib/utils';
 import { getAdminUser } from '@/lib/admin';
 import { ProfileArticles } from '@/components/profile/profile-articles';
@@ -17,6 +23,7 @@ import {
   ConversationRows,
   EmptyLine,
   OrganizedEvents,
+  organizedEventsHideSome,
   PhotoGrid,
   ProfileStat,
   ProjectRows,
@@ -48,14 +55,14 @@ import { Button } from '@/components/ui/button';
 import { Hourglass, Laptop } from 'lucide-react';
 
 // How many items of each section the overview shows before "ver todo".
+// The grids with 2 and 3 columns get 4: two full rows of two, and the fourth hidden in a row of
+// three (see `FullRowsCell`), never a row with an empty spot.
 const PREVIEW = 2;
-const ARTICLES_PREVIEW = 3;
+const ARTICLES_PREVIEW = 4;
 const CONVERSATIONS_PREVIEW = 4;
-const SETUPS_PREVIEW = 3;
-// One full row of talk cells.
-const TALKS_PREVIEW = 3;
-// One full row of past events' flyers.
-const EVENTS_PREVIEW = 3;
+const SETUPS_PREVIEW = 4;
+const TALKS_PREVIEW = 4;
+const EVENTS_PREVIEW = 4;
 // The photos preview is a fixed 3-column grid: it shows up to two full rows and never leaves a
 // row half empty when the person has more photos than fit.
 const PHOTOS_PREVIEW_COLUMNS = 3;
@@ -67,19 +74,34 @@ const photosPreviewCount = (total: number) =>
     ? total
     : Math.min(PHOTOS_PREVIEW, total - (total % PHOTOS_PREVIEW_COLUMNS));
 
+/** Whether a capped preview leaves something out: past the cap, or hidden to keep rows full. */
+const hasMore = (total: number, cap: number, columns: Columns) =>
+  total > cap || fullRowsHidesSome(total, columns);
+
 type Session = ComponentProps<typeof AdviceCard>['session'];
 
 type ProfileSetup = Awaited<ReturnType<typeof getProfileSetups>>[number];
 
-const SetupGrid = ({ setups, session }: { setups: ProfileSetup[]; session: Session }) => (
+const SetupGrid = ({
+  setups,
+  session,
+  fillRows = false,
+}: {
+  setups: ProfileSetup[];
+  session: Session;
+  /** A capped preview: hide what would leave a row half empty. */
+  fillRows?: boolean;
+}) => (
   <RuledGrid className="grid-cols-1 sm:grid-cols-2 xl:grid-cols-3">
-    {setups.map((setup) => (
-      <SetupTile
+    {setups.map((setup, index) => (
+      <FullRowsCell
         key={setup.id}
-        setup={setup}
-        viewerId={session?.user?.id ?? null}
-        showAuthor={false}
-      />
+        index={index}
+        count={fillRows ? setups.length : 0}
+        columns={SETUP_COLUMNS}
+      >
+        <SetupTile setup={setup} viewerId={session?.user?.id ?? null} showAuthor={false} />
+      </FullRowsCell>
     ))}
   </RuledGrid>
 );
@@ -201,9 +223,11 @@ async function OverviewTab({ userId, firstName, session, person }: TabProps) {
           <SectionHeading
             label="charlas"
             count={talks.length}
-            href={talks.length > TALKS_PREVIEW ? tabHref('charlas') : undefined}
+            href={
+              hasMore(talks.length, TALKS_PREVIEW, TALK_COLUMNS) ? tabHref('charlas') : undefined
+            }
           />
-          <ProfileTalks talks={talks.slice(0, TALKS_PREVIEW)} />
+          <ProfileTalks talks={talks.slice(0, TALKS_PREVIEW)} fillRows />
         </section>
       )}
 
@@ -212,9 +236,17 @@ async function OverviewTab({ userId, firstName, session, person }: TabProps) {
           <SectionHeading
             label="artículos"
             count={articles.length}
-            href={articles.length > ARTICLES_PREVIEW ? tabHref('articulos') : undefined}
+            href={
+              hasMore(articles.length, ARTICLES_PREVIEW, ARTICLE_COLUMNS)
+                ? tabHref('articulos')
+                : undefined
+            }
           />
-          <ProfileArticles articles={articles.slice(0, ARTICLES_PREVIEW)} writer={person} />
+          <ProfileArticles
+            articles={articles.slice(0, ARTICLES_PREVIEW)}
+            writer={person}
+            fillRows
+          />
         </section>
       )}
 
@@ -223,9 +255,14 @@ async function OverviewTab({ userId, firstName, session, person }: TabProps) {
           <SectionHeading
             label="eventos organizados"
             count={events.length}
-            href={events.length > EVENTS_PREVIEW ? tabHref('eventos') : undefined}
+            href={
+              events.length > EVENTS_PREVIEW ||
+              organizedEventsHideSome(events.slice(0, EVENTS_PREVIEW))
+                ? tabHref('eventos')
+                : undefined
+            }
           />
-          <OrganizedEvents events={events.slice(0, EVENTS_PREVIEW)} />
+          <OrganizedEvents events={events.slice(0, EVENTS_PREVIEW)} fillRows />
         </section>
       )}
 
@@ -249,9 +286,11 @@ async function OverviewTab({ userId, firstName, session, person }: TabProps) {
           <SectionHeading
             label="setups"
             count={setups.length}
-            href={setups.length > SETUPS_PREVIEW ? tabHref('setups') : undefined}
+            href={
+              hasMore(setups.length, SETUPS_PREVIEW, SETUP_COLUMNS) ? tabHref('setups') : undefined
+            }
           />
-          <SetupGrid setups={setups.slice(0, SETUPS_PREVIEW)} session={session} />
+          <SetupGrid setups={setups.slice(0, SETUPS_PREVIEW)} session={session} fillRows />
         </section>
       )}
 
