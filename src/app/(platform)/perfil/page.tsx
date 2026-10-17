@@ -2,6 +2,8 @@ import prisma, { typedNameOf } from '@/lib/prisma';
 import { ProfileForm } from '@components/profile/profile-form';
 import { TwoFactorSettings } from '@/components/auth/two-factor-settings';
 import { DeactivateAccount } from '@/components/profile/deactivate-account';
+import { PushSettings } from '@/components/notifications/push-settings';
+import { vapidPublicKey } from '@/lib/web-push';
 import { PageTitle } from '@/components/ui/page-title';
 import { StickyHeader } from '@/components/ui/sticky-header';
 import { cookies } from 'next/headers';
@@ -56,6 +58,9 @@ const Profile = async () => {
       }))
     : [];
 
+  // Null when the server has no VAPID keys: push is off and the setting doesn't show.
+  const pushKey = vapidPublicKey();
+
   return (
     <>
       <div className="mt-4 px-4 md:px-10">
@@ -72,6 +77,12 @@ const Profile = async () => {
               recoveryCodesLeft={twoFactor?.twoFactorRecoveryCodes?.length ?? 0}
             />
           </div>
+
+          {pushKey && (
+            <div className="border border-pcnGreen-200 p-4">
+              <PushSettings publicKey={pushKey} />
+            </div>
+          )}
 
           {/* An admin has to hand over the role first; the action refuses it too. */}
           {user.role !== 'ADMIN' && (

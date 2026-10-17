@@ -121,6 +121,7 @@ export async function createForumComment(postId: string, input: ForumCommentForm
       [parent.authorId],
       {
         type: 'forum_comment_replied',
+        push: true,
         title: 'Respondieron tu comentario',
         message: `${user.name} respondió tu comentario "${excerpt(parent.content)}": "${excerpt(content)}".`,
         href,
@@ -134,6 +135,7 @@ export async function createForumComment(postId: string, input: ForumCommentForm
       [post.authorId],
       {
         type: 'forum_post_replied',
+        push: true,
         title: 'Respondieron tu tema',
         message: `${user.name} respondió en "${excerpt(post.title)}": "${excerpt(content)}".`,
         href,

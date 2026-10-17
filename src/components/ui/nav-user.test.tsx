@@ -9,6 +9,10 @@ import { NavUser } from './nav-user';
 import { SidebarProvider } from './sidebar';
 
 jest.mock('@/actions/auth/sign-out', () => ({ signOut: jest.fn() }));
+jest.mock('@/lib/push-client', () => ({
+  pushSupport: () => 'unsupported',
+  turnOffPush: jest.fn(),
+}));
 jest.mock('@/components/os/os-env', () => ({ notifyOsSessionChange: jest.fn() }));
 jest.mock('sonner', () => ({ toast: { promise: jest.fn() } }));
 

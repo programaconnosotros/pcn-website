@@ -17,6 +17,10 @@ jest.mock('@/components/notifications/notification-center', () => ({
   NotificationCenter: () => null,
 }));
 jest.mock('@/actions/auth/sign-out', () => ({ signOut: jest.fn() }));
+jest.mock('@/lib/push-client', () => ({
+  pushSupport: () => 'unsupported',
+  turnOffPush: jest.fn(),
+}));
 
 const mockSearchNavigate: { current: ((_path: string) => void) | null } = { current: null };
 jest.mock('@/components/search/global-search', () => ({

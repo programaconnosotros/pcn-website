@@ -66,6 +66,11 @@ jobs:
           # AI agents (Vercel AI Gateway)
           echo "AI_GATEWAY_API_KEY=${{ secrets.AI_GATEWAY_API_KEY }}" >> $GITHUB_ENV
 
+          # Push notifications (Web Push)
+          echo "VAPID_PUBLIC_KEY=${{ secrets.VAPID_PUBLIC_KEY }}" >> $GITHUB_ENV
+          echo "VAPID_PRIVATE_KEY=${{ secrets.VAPID_PRIVATE_KEY }}" >> $GITHUB_ENV
+          echo "VAPID_SUBJECT=${{ secrets.VAPID_SUBJECT }}" >> $GITHUB_ENV
+
           # AWS
           echo "AWS_REGION=${{ secrets.AWS_REGION }}" >> $GITHUB_ENV
           echo "AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}" >> $GITHUB_ENV

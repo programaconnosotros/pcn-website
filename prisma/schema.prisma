@@ -80,6 +80,7 @@ model User {
   workPlaces           WorkPlace[]
   testimonials         Testimonial[]
   notifications        Notification[]
+  pushSubscriptions    PushSubscription[]
   errorLogs            ErrorLog[]
   resolvedErrors       ErrorLog[]            @relation("ErrorLogResolver")
   appLogs              AppLog[]
@@ -672,6 +673,23 @@ model Notification {
   @@index([read])
   @@index([createdAt])
   @@index([userId, read])
+}
+
+/// A browser where the user turned on push notifications (Web Push). One per device and browser:
+/// the endpoint identifies it. Deleted when the push service says it no longer exists.
+model PushSubscription {
+  id        String   @id @default(cuid())
+  userId    String
+  /// URL of the browser's push service for this subscription.
+  endpoint  String   @unique
+  /// Keys the payload is encrypted with (from PushSubscription.toJSON()).
+  p256dh    String
+  auth      String
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
 }
 
 model ErrorLog {

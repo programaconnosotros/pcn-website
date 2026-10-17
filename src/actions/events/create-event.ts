@@ -102,6 +102,7 @@ export const createEvent = async (data: EventFormData) => {
     await notifyEveryone(
       {
         type: 'event_created',
+        push: true,
         title: 'Nuevo evento',
         message: `Se publicó "${event.name}", el ${date.toLocaleDateString('es-AR', {
           day: 'numeric',

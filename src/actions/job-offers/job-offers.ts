@@ -4,6 +4,7 @@ import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
 import { getCurrentSession } from '@/actions/auth/get-current-session';
 import prisma from '@/lib/prisma';
+import { notifyEveryone } from '@/actions/notifications/notify-users';
 import { enforceRateLimit } from '@/lib/rate-limit';
 import { jobOfferSchema, type JobOfferInput } from '@/schemas/job-offer-schema';
 
@@ -42,10 +43,21 @@ export async function createJobOffer(input: JobOfferInput) {
   const data = parse(input);
   const offer = await prisma.jobOffers.create({
     data: { ...data, available: true, authorId: user.id },
-    select: { id: true },
+    select: { id: true, title: true, company: true },
   });
   revalidatePath('/empleos');
-  return offer;
+  await notifyEveryone(
+    {
+      type: 'job_offer_created',
+      push: true,
+      title: 'Nueva oferta de empleo',
+      message: `${offer.title} en ${offer.company}.`,
+      href: `/empleos?q=${encodeURIComponent(offer.title)}`,
+      metadata: { jobOfferId: offer.id },
+    },
+    user.id,
+  );
+  return { id: offer.id };
 }
 
 export async function updateJobOffer(id: string, input: JobOfferInput) {

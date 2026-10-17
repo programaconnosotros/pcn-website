@@ -64,6 +64,10 @@ navegador con cualquier argumento, aunque ningún formulario lo mande.
   Solo http(s), y la IP se valida **al conectar el socket**, con la misma respuesta DNS que usa la
   conexión: un dominio que primero resuelve a una IP pública y después a `169.254.169.254` (DNS
   rebinding) no pasa. Cada redirect se valida de nuevo y el body se corta a un tamaño máximo.
+  La excepción son las notificaciones push: el servidor le hace POST al `endpoint` que manda el
+  navegador, a través de la librería `web-push`. Ese endpoint solo se acepta si es HTTPS a uno de
+  los servicios de push de los navegadores (Google, Mozilla, Apple, Microsoft;
+  `src/lib/push-endpoints.ts`), al guardarlo y de nuevo al enviar.
 - Los `?redirect=` del login pasan por `safeRedirectPath` (`src/lib/safe-redirect.ts`): solo rutas
   del mismo sitio.
 - Descargas de la galería: el path se valida contra traversal (`/api/galeria/[id]/descargar`).

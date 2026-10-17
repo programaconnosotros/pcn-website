@@ -14,6 +14,8 @@
 // vista después de cerrar sesión. Por eso se saltean los pedidos que no son GET, las server
 // actions, /api, las pantallas de login y registro, las URLs firmadas y toda respuesta con Set-Cookie o
 // `Cache-Control: private/no-store`.
+//
+// También muestra las notificaciones push (src/lib/web-push.ts) y, al tocarlas, abre su página.
 
 const VERSION = 'v4';
 const PRECACHE = `pcn-precache-${VERSION}`;
@@ -210,4 +212,46 @@ self.addEventListener('fetch', (event) => {
   if (request.headers.get('rsc') === '1' || url.searchParams.has('_rsc')) {
     event.respondWith(staleWhileRevalidate(event, PAGE_CACHE, { page: true }));
   }
+});
+
+// Notificaciones push: el servidor manda { title, body, url, tag } (PushPayload en
+// src/lib/web-push.ts).
+self.addEventListener('push', (event) => {
+  let payload = {};
+  try {
+    payload = event.data ? event.data.json() : {};
+  } catch {
+    // Un payload que no es JSON igual se muestra, con el texto tal cual.
+    payload = { body: event.data ? event.data.text() : '' };
+  }
+  event.waitUntil(
+    self.registration.showNotification(payload.title || 'programaConNosotros', {
+      body: payload.body || '',
+      tag: payload.tag,
+      icon: '/pwa-icon-192.png',
+      badge: '/pwa-icon-192.png',
+      lang: 'es',
+      data: { url: payload.url || '/notificaciones' },
+    }),
+  );
+});
+
+// Al tocar una notificación: si el sitio ya está abierto, lo lleva a esa página; si no, lo abre.
+// Solo URLs del mismo sitio, aunque el payload diga otra cosa.
+self.addEventListener('notificationclick', (event) => {
+  event.notification.close();
+  const target = new URL(event.notification.data?.url || '/notificaciones', self.location.origin);
+  const url = target.origin === self.location.origin ? target.href : self.location.origin;
+
+  event.waitUntil(
+    self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then((windows) => {
+      const open = windows.find((client) => new URL(client.url).origin === self.location.origin);
+      if (!open) return self.clients.openWindow(url);
+      // navigate() solo anda en las pestañas que controla este service worker: si no, abre otra.
+      return open
+        .navigate(url)
+        .then((client) => (client || open).focus())
+        .catch(() => self.clients.openWindow(url));
+    }),
+  );
 });

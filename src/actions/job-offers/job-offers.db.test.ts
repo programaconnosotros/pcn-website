@@ -87,3 +87,25 @@ it('lets only the author or an admin edit, close and delete it', async () => {
   await deleteJobOffer(id);
   expect(await prisma.jobOffers.findUnique({ where: { id } })).toBeNull();
 });
+
+it('tells every other member about a new offer', async () => {
+  const [author, reader] = [await quickUser(), await quickUser()];
+  await actAs(author.id);
+
+  const { id } = await createJobOffer(offer({ title: 'Backend developer', company: 'Globex' }));
+
+  const notification = await prisma.notification.findFirstOrThrow({
+    where: { userId: reader.id, type: 'job_offer_created' },
+  });
+  expect(notification).toMatchObject({
+    title: 'Nueva oferta de empleo',
+    message: 'Backend developer en Globex.',
+  });
+  expect(JSON.parse(notification.metadata!)).toEqual({
+    jobOfferId: id,
+    href: '/empleos?q=Backend%20developer',
+  });
+  expect(
+    await prisma.notification.count({ where: { userId: author.id, type: 'job_offer_created' } }),
+  ).toBe(0);
+});

@@ -28,6 +28,7 @@ export const notifyEventAnnouncement = async (
       users.map((user) => user.id),
       {
         type: 'event_announcement',
+        push: true,
         title: `Nuevo anuncio de ${event.name}`,
         message: `${announcement.title}: ${excerpt(announcement.content)}`,
         href: `/eventos/${event.id}`,

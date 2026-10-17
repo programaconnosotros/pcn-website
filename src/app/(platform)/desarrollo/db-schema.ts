@@ -1406,6 +1406,40 @@ export const dbModels: DbModel[] = [
     uniques: [],
   },
   {
+    name: 'PushSubscription',
+    domain: 'comunidad',
+    fields: [
+      {
+        name: 'id',
+        type: 'String',
+        pk: true,
+      },
+      {
+        name: 'userId',
+        type: 'String',
+        fk: true,
+      },
+      {
+        name: 'endpoint',
+        type: 'String',
+        unique: true,
+      },
+      {
+        name: 'p256dh',
+        type: 'String',
+      },
+      {
+        name: 'auth',
+        type: 'String',
+      },
+      {
+        name: 'createdAt',
+        type: 'DateTime',
+      },
+    ],
+    uniques: [],
+  },
+  {
     name: 'ErrorLog',
     domain: 'sistema',
     fields: [
@@ -3088,6 +3122,14 @@ export const dbRelations: DbRelation[] = [
     to: 'User',
     label: 'user',
     optional: true,
+    many: true,
+    onDelete: 'Cascade',
+  },
+  {
+    from: 'PushSubscription',
+    to: 'User',
+    label: 'user',
+    optional: false,
     many: true,
     onDelete: 'Cascade',
   },

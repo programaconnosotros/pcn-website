@@ -66,6 +66,7 @@ const notifyWhenOrWhereChange = async (
       users.map((user) => user.id),
       {
         type: 'event_updated',
+        push: true,
         title: `Cambió ${what} de ${event.name}`,
         message: `Ahora es el ${when}, ${where === 'online' ? 'online' : `en ${where}`}.`,
         href: `/eventos/${event.id}`,

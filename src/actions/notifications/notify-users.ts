@@ -3,6 +3,7 @@
 
 import prisma from '@/lib/prisma';
 import { ACTIVE_USER } from '@/lib/active-user';
+import { sendPush } from '@/lib/web-push';
 
 type UserNotification = {
   type: string;
@@ -11,6 +12,12 @@ type UserNotification = {
   /** Where the notification takes you: the page shows a link to it. */
   href: string;
   metadata?: Record<string, unknown>;
+  /**
+   * Also sends it as a push notification to the devices where they turned push on. Only for what
+   * is worth interrupting someone for: new events, changes to an event they're going to, replies
+   * to them in the forum, new job offers. Not for likes.
+   */
+  push?: boolean;
 };
 
 /**
@@ -28,7 +35,7 @@ export const notifyUsers = async (
   ];
   if (recipients.length === 0) return;
 
-  const { href, metadata, ...notification } = data;
+  const { href, metadata, push, ...notification } = data;
   try {
     await prisma.notification.createMany({
       data: recipients.map((userId) => ({
@@ -39,6 +46,15 @@ export const notifyUsers = async (
     });
   } catch (error) {
     console.error(`Error notifying users (${data.type}):`, error);
+  }
+
+  if (push) {
+    await sendPush(recipients, {
+      title: notification.title,
+      body: notification.message,
+      url: href,
+      tag: `${notification.type}:${href}`,
+    });
   }
 };
 

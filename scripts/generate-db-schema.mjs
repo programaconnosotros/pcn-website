@@ -17,6 +17,7 @@ const DOMAINS = {
     'ContentMark',
     'IdentityLink',
     'Notification',
+    'PushSubscription',
     'Setup',
     'WorkPlace',
     'SetupLike',

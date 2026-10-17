@@ -14,6 +14,10 @@ jest.mock('@/components/notifications/notification-center', () => ({
   NotificationCenter: () => null,
 }));
 jest.mock('@/actions/auth/sign-out', () => ({ signOut: jest.fn(() => Promise.resolve()) }));
+jest.mock('@/lib/push-client', () => ({
+  pushSupport: () => 'unsupported',
+  turnOffPush: jest.fn(),
+}));
 jest.mock('sonner', () => ({ toast: { promise: jest.fn() } }));
 
 const user: OsUser = { id: 'u1', name: 'Ada Lovelace', email: 'ada@pcn.dev', image: null };
