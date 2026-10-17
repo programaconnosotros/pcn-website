@@ -1,0 +1,26 @@
+{
+  "rules": [
+    {
+      "rulePriority": 1,
+      "description": "Keep the last 10 deployed images (for kamal rollback)",
+      "selection": {
+        "tagStatus": "tagged",
+        "tagPatternList": ["*"],
+        "countType": "imageCountMoreThan",
+        "countNumber": 10
+      },
+      "action": { "type": "expire" }
+    },
+    {
+      "rulePriority": 2,
+      "description": "Remove untagged images a day after they are pushed",
+      "selection": {
+        "tagStatus": "untagged",
+        "countType": "sinceImagePushed",
+        "countUnit": "days",
+        "countNumber": 1
+      },
+      "action": { "type": "expire" }
+    }
+  ]
+}
