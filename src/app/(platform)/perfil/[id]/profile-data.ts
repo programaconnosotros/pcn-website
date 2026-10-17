@@ -443,7 +443,7 @@ export const getProfileTimeline = cache(
         id: `cambio-${entry.date}-${index}`,
         kind: 'cambio' as const,
         day: entry.date,
-        title: `Construyó “${entry.title}”`,
+        title: `Desarrolló “${entry.title}”`,
         description: entry.description,
         href: entry.href ?? '/changelog',
       })),
