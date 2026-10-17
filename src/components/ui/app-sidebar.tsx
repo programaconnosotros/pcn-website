@@ -41,6 +41,7 @@ import {
 } from 'lucide-react';
 import { Youtube } from '@/components/icons/brand-icons';
 import { useEffect } from 'react';
+import { usePathname } from 'next/navigation';
 import { GeistMono } from 'geist/font/mono';
 import Link from 'next/link';
 import { NavMain, type NavItem } from '@/components/ui/nav-main';
@@ -56,6 +57,7 @@ import {
   useSidebar,
 } from '@/components/ui/sidebar';
 import { MobileNav } from '@/components/ui/mobile-nav';
+import { useNotificationCenter } from '@/components/notifications/use-notification-center';
 import type { SessionUser } from '@/lib/session';
 import { cn } from '@/lib/utils';
 import { NavSecondary } from './nav-secondary';
@@ -68,9 +70,10 @@ import { SidebarUpcomingEvents, type UpcomingEvent } from './sidebar-upcoming-ev
 /** A row of the sidebar's footer block: no own border or rounding, a hairline below. */
 const FOOTER_ROW = 'rounded-none border-0 border-b border-pcnGreen-200';
 
-const feedItem: NavItem = { title: 'Feed', url: '/feed', icon: Rss };
+/** The feed, marked with what's new since the visitor last looked at it. */
+const feedItem = (fresh: number): NavItem => ({ title: 'Feed', url: '/feed', icon: Rss, fresh });
 
-const homeItems: NavItem[] = [{ title: 'Inicio', url: '/', icon: Home }, feedItem];
+const homeItem: NavItem = { title: 'Inicio', url: '/', icon: Home };
 
 const actividadesItems: NavItem[] = [
   { title: 'Eventos', url: '/eventos', icon: CalendarDays },
@@ -157,6 +160,15 @@ interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
 export function AppSidebar(props: AppSidebarProps) {
   const { user, upcomingEvents = [], unreadNotificationsCount = 0, ...sidebarProps } = props;
   const { isMobile, setOpen } = useSidebar();
+  const pathname = usePathname();
+  const { unseen, markFeedSeen } = useNotificationCenter();
+
+  // Looking at the feed counts as having seen what's in it, like closing the notification center.
+  const onFeed = pathname === '/feed';
+  useEffect(() => {
+    if (onFeed && unseen.length > 0) markFeedSeen();
+  }, [onFeed, unseen.length, markFeedSeen]);
+  const feed = feedItem(onFeed ? 0 : unseen.length);
 
   // Just switched from PCN OS to the classic layout: start with the navigation in view.
   useEffect(() => {
@@ -174,7 +186,7 @@ export function AppSidebar(props: AppSidebarProps) {
           {
             label: 'Comunidad',
             items: [
-              feedItem,
+              feed,
               ...(user ? [notificationsItem(unreadNotificationsCount)] : []),
               ...comunidadItems,
             ],
@@ -227,7 +239,7 @@ export function AppSidebar(props: AppSidebarProps) {
 
       <SidebarContent className="scrollbar-thin gap-0 px-1">
         <NavMain
-          items={user ? [...homeItems, notificationsItem(unreadNotificationsCount)] : homeItems}
+          items={[homeItem, feed, ...(user ? [notificationsItem(unreadNotificationsCount)] : [])]}
         />
         <SidebarUpcomingEvents events={upcomingEvents} />
         <NavMain items={actividadesItems} label="Actividades" />

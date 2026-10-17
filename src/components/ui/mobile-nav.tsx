@@ -28,7 +28,7 @@ import { Sheet, SheetClose, SheetContent, SheetTitle } from '@/components/ui/she
 import { useSidebar } from '@/components/ui/sidebar';
 import { NavUser } from '@/components/ui/nav-user';
 import { InstallAppButton } from '@/components/ui/install-app-button';
-import type { NavItem } from '@/components/ui/nav-main';
+import { FreshMarker, type NavItem } from '@/components/ui/nav-main';
 import { cn } from '@/lib/utils';
 import { openGlobalSearch } from '@/components/search/global-search';
 
@@ -63,7 +63,7 @@ const TabIndicator = () => (
   <span className="absolute inset-x-4 top-0 h-0.5 bg-pcnGreen shadow-[0_0_12px_2px_rgba(4,244,190,0.6)]" />
 );
 
-type MenuEntry = Pick<NavItem, 'title' | 'icon' | 'badge'> & {
+type MenuEntry = Pick<NavItem, 'title' | 'icon' | 'badge' | 'fresh'> & {
   url: string;
   /** Stable line number across the whole menu, also used to stagger the entrance. */
   line: number;
@@ -80,7 +80,15 @@ const flatten = (items: NavItem[]): Omit<MenuEntry, 'line'>[] =>
     item.items?.length
       ? item.items.map((sub) => ({ title: sub.title, url: sub.url, icon: item.icon }))
       : item.url
-        ? [{ title: item.title, url: item.url, icon: item.icon, badge: item.badge }]
+        ? [
+            {
+              title: item.title,
+              url: item.url,
+              icon: item.icon,
+              badge: item.badge,
+              fresh: item.fresh,
+            },
+          ]
         : [],
   );
 
@@ -192,6 +200,8 @@ const MenuRow = ({ item, active }: { item: MenuEntry; active: boolean }) => {
         <span className="ml-auto flex h-5 min-w-5 items-center justify-center rounded-sm bg-pcnGreen px-1.5 font-mono text-[10px] font-semibold text-black tabular-nums">
           {item.badge > 99 ? '99+' : item.badge}
         </span>
+      ) : item.fresh && !active ? (
+        <FreshMarker count={item.fresh} />
       ) : (
         <span className="min-w-0 flex-1 truncate text-right font-mono text-[11px] tracking-tight text-foreground/30">
           {displayPath(item.url)}

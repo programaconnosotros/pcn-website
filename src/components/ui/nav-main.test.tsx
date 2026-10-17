@@ -55,6 +55,31 @@ describe('NavMain', () => {
     expect(screen.getByRole('link', { name: 'Ninguna' })).toHaveTextContent(/^Ninguna$/);
   });
 
+  it('flags what is new since the last visit, except on the page itself', () => {
+    const feed = (fresh: number): NavItem[] => [{ title: 'Feed', url: '/feed', icon: Home, fresh }];
+    const { rerender } = render(
+      <SidebarProvider defaultOpen>
+        <NavMain items={feed(12)} />
+      </SidebarProvider>,
+    );
+    expect(screen.getByLabelText('12 novedades sin ver')).toHaveTextContent('9+ nuevos');
+
+    rerender(
+      <SidebarProvider defaultOpen>
+        <NavMain items={feed(1)} />
+      </SidebarProvider>,
+    );
+    expect(screen.getByLabelText('1 novedad sin ver')).toHaveTextContent('+1 nuevo');
+
+    setLocation('/feed');
+    rerender(
+      <SidebarProvider defaultOpen>
+        <NavMain items={feed(1)} />
+      </SidebarProvider>,
+    );
+    expect(screen.queryByLabelText(/sin ver/)).not.toBeInTheDocument();
+  });
+
   it('marks Inicio active only on the home page', () => {
     renderNav();
     expect(screen.queryByText('Actividades')).not.toBeInTheDocument();

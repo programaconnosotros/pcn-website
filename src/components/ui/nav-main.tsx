@@ -24,6 +24,8 @@ export interface NavItem {
   url?: string;
   icon: LucideIcon;
   badge?: number;
+  /** Things added since the visitor last looked (the feed's unseen headlines). */
+  fresh?: number;
   items?: {
     title: string;
     url: string;
@@ -51,6 +53,20 @@ const NavLink = ({
       {children}
     </Link>
   );
+
+/** "Something new since your last visit": a pinging dot and how many, at the end of a row. */
+export const FreshMarker = ({ count }: { count: number }) => (
+  <span
+    aria-label={`${count} ${count === 1 ? 'novedad' : 'novedades'} sin ver`}
+    className="ml-auto flex items-center gap-1.5 font-mono text-[9px] tracking-widest text-pcnGreen"
+  >
+    <span aria-hidden className="relative flex size-1.5">
+      <span className="absolute inset-0 animate-ping rounded-full bg-pcnGreen" />
+      <span className="relative size-1.5 rounded-full bg-pcnGreen shadow-[0_0_8px_rgba(4,244,190,1)]" />
+    </span>
+    {count > 9 ? '9+' : `+${count}`} {count === 1 ? 'nuevo' : 'nuevos'}
+  </span>
+);
 
 export const SidebarSectionLabel = ({ children }: { children: React.ReactNode }) => (
   <SidebarGroupLabel
@@ -111,6 +127,7 @@ export function NavMain({ items, label }: { items: NavItem[]; label?: string }) 
                     <NavLink href={item.url!} className="flex items-center gap-2.5">
                       <item.icon strokeWidth={1.75} />
                       <span>{item.title}</span>
+                      {!!item.fresh && !isActive && <FreshMarker count={item.fresh} />}
                       {isActive && !(item.badge && item.badge > 0) && (
                         // "You are here": a pulsing marker at the end of the row.
                         <span
