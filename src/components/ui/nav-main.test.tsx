@@ -51,7 +51,7 @@ describe('NavMain', () => {
     expect(isMarked('Eventos')).toBe(true);
     expect(screen.getByRole('link', { name: 'Eventos' })).toHaveClass('flex items-center gap-2.5');
     expect(screen.getByRole('link', { name: /Notificaciones/ })).toHaveTextContent('99+');
-    expect(screen.getByRole('link', { name: /Pocas/ })).toHaveTextContent('4');
+    expect(screen.getByRole('link', { name: /Pocas/ })).toHaveTextContent('04');
     expect(screen.getByRole('link', { name: 'Ninguna' })).toHaveTextContent(/^Ninguna$/);
   });
 

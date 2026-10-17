@@ -28,7 +28,7 @@ import { Sheet, SheetClose, SheetContent, SheetTitle } from '@/components/ui/she
 import { useSidebar } from '@/components/ui/sidebar';
 import { NavUser } from '@/components/ui/nav-user';
 import { InstallAppButton } from '@/components/ui/install-app-button';
-import { FreshMarker, type NavItem } from '@/components/ui/nav-main';
+import { CountBadge, FreshMarker, type NavItem } from '@/components/ui/nav-main';
 import { cn } from '@/lib/utils';
 import { openGlobalSearch } from '@/components/search/global-search';
 
@@ -197,9 +197,7 @@ const MenuRow = ({ item, active }: { item: MenuEntry; active: boolean }) => {
         <ScrambleText text={item.title} delay={delay} />
       </span>
       {item.badge ? (
-        <span className="ml-auto flex h-5 min-w-5 items-center justify-center rounded-sm bg-pcnGreen px-1.5 font-mono text-[10px] font-semibold text-black tabular-nums">
-          {item.badge > 99 ? '99+' : item.badge}
-        </span>
+        <CountBadge count={item.badge} />
       ) : item.fresh && !active ? (
         <FreshMarker count={item.fresh} />
       ) : (

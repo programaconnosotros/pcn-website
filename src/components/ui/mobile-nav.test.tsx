@@ -118,7 +118,7 @@ describe('MobileNav', () => {
     expect(eventos).toHaveAttribute('aria-current', 'page');
     expect(eventos).toHaveTextContent('▸');
     expect(within(dialog).getByRole('link', { name: /Notificaciones/ })).toHaveTextContent('99+');
-    expect(within(dialog).getByRole('link', { name: /Pocas/ })).toHaveTextContent('3');
+    expect(within(dialog).getByRole('link', { name: /Pocas/ })).toHaveTextContent('03');
     expect(within(dialog).getByRole('link', { name: /Inicio/ })).toHaveTextContent('04');
     expect(within(dialog).getByRole('link', { name: /Inicio/ })).toHaveTextContent('~/');
     const discord = within(dialog).getByRole('link', { name: /Discord/ });

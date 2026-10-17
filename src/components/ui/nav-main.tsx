@@ -68,6 +68,22 @@ export const FreshMarker = ({ count }: { count: number }) => (
   </span>
 );
 
+/**
+ * Unread count as a terminal readout: a chamfered, glowing chip with a zero-padded number, a
+ * blinking cursor and a light sweep running across it now and then.
+ */
+export const CountBadge = ({ count }: { count: number }) => (
+  <span className="ml-auto drop-shadow-[0_0_6px_rgba(4,244,190,0.55)]">
+    <span className="relative isolate flex h-5 items-center gap-0.5 overflow-hidden bg-pcnGreen pr-1.5 pl-2 font-mono text-[10px] leading-none font-bold text-black tabular-nums [clip-path:polygon(5px_0,100%_0,100%_calc(100%-5px),calc(100%-5px)_100%,0_100%,0_5px)] before:absolute before:inset-y-0 before:left-0 before:-z-10 before:w-1/3 before:animate-cta-shine before:bg-linear-to-r before:from-transparent before:via-white/70 before:to-transparent motion-reduce:before:hidden">
+      {count > 99 ? '99+' : String(count).padStart(2, '0')}
+      <span
+        aria-hidden
+        className="h-2.5 w-[3px] animate-blink bg-black/70 motion-reduce:animate-none"
+      />
+    </span>
+  </span>
+);
+
 export const SidebarSectionLabel = ({ children }: { children: React.ReactNode }) => (
   <SidebarGroupLabel
     className={cn(
@@ -139,9 +155,7 @@ export function NavMain({ items, label }: { items: NavItem[]; label?: string }) 
                         </span>
                       )}
                       {item.badge !== undefined && item.badge > 0 && (
-                        <span className="ml-auto flex h-5 min-w-5 items-center justify-center rounded-sm bg-pcnGreen px-1.5 font-mono text-[10px] font-semibold text-black tabular-nums">
-                          {item.badge > 99 ? '99+' : item.badge}
-                        </span>
+                        <CountBadge count={item.badge} />
                       )}
                     </NavLink>
                   )}
