@@ -67,3 +67,63 @@ it('leaves suspended accounts out of the people results', async () => {
 it('answers an empty query without searching', async () => {
   await expect(search('   ')).resolves.toEqual({ query: '', results: [] });
 });
+
+describe('full-text search in Postgres', () => {
+  const createPost = async (data: { title: string; content: string; authorId: string }) => {
+    const category = await prisma.forumCategory.create({
+      data: { slug: `cat-${uniqueId()}`, name: 'Categoría', description: 'x' },
+    });
+    return prisma.forumPost.create({ data: { ...data, categoryId: category.id } });
+  };
+
+  it('finds forum topics and replies by word prefix, ignoring accents and punctuation', async () => {
+    const word = `zorzal${uniqueId()}`;
+    const author = await createUser();
+    const post = await createPost({
+      title: `Programación funcional ${word}`,
+      content: 'Dudas sobre CI/CD',
+      authorId: author.id,
+    });
+    const reply = await prisma.forumComment.create({
+      data: {
+        content: `Probá Programación reactiva ${word}`,
+        postId: post.id,
+        authorId: author.id,
+      },
+    });
+
+    const hrefs = (await search(`progra ${word} cd`)).results.map((r) => r.href);
+    expect(hrefs).toEqual(expect.arrayContaining([`/foro/tema/${post.id}`]));
+
+    const replies = (await search(`reactiva ${word}`)).results.map((r) => r.href);
+    expect(replies).toContain(`/foro/tema/${post.id}#comentario-${reply.id}`);
+  });
+
+  it('tolerates a typo and finds consejos by their author', async () => {
+    const word = `zorzal${uniqueId()}`;
+    const author = await createUser({ name: `Autora ${word}` });
+    const advice = await prisma.advice.create({
+      data: { content: `Aprendé Kubernetes ${word}`, authorId: author.id },
+    });
+
+    // One letter missing from the unique word.
+    const typo = word.slice(0, 3) + word.slice(4);
+    const byTypo = (await search(`kubernetes ${typo}`)).results.map((r) => r.href);
+    expect(byTypo).toContain(`/consejos/${advice.id}`);
+
+    const byAuthor = (await search(`autora ${word}`)).results.map((r) => r.href);
+    expect(byAuthor).toEqual(
+      expect.arrayContaining([`/consejos/${advice.id}`, `/perfil/${author.id}`]),
+    );
+  });
+
+  it('does not stretch short words into typos', async () => {
+    const author = await createUser();
+    const advice = await prisma.advice.create({
+      data: { content: `Marketing digital ${uniqueId()}`, authorId: author.id },
+    });
+
+    const hrefs = (await search('git')).results.map((r) => r.href);
+    expect(hrefs).not.toContain(`/consejos/${advice.id}`);
+  });
+});

@@ -1,6 +1,13 @@
 import { NextRequest } from 'next/server';
 import { prismaMock } from '@/test/prisma';
-import { getStaticIndex, toEntry } from '@/lib/search/search-index';
+import { getStaticIndex, normalizeSearchText, toEntry } from '@/lib/search/search-index';
+import {
+  searchAdvice,
+  searchForumComments,
+  searchForumPosts,
+  searchMembers,
+  type FullTextQuery,
+} from '@/lib/search/full-text';
 import type { SearchResponse } from '@/lib/search/types';
 import { GET } from './route';
 
@@ -10,7 +17,77 @@ jest.mock('@/lib/search/search-index', () => ({
   getStaticIndex: jest.fn(),
 }));
 
+jest.mock('@/lib/search/full-text', () => ({
+  ...jest.requireActual('@/lib/search/full-text'),
+  searchAdvice: jest.fn(),
+  searchMembers: jest.fn(),
+  searchForumPosts: jest.fn(),
+  searchForumComments: jest.fn(),
+}));
+
 const mockStaticIndex = getStaticIndex as jest.Mock;
+
+// Stands in for Postgres (route.db.test.ts covers the real queries): the rows whose text has
+// every query word at the start of a word.
+const mockFullText = (rows: {
+  advice?: object[];
+  users?: object[];
+  forumPosts?: object[];
+  forumComments?: object[];
+}) => {
+  const matching =
+    (list: object[] = []) =>
+    async ({ text }: FullTextQuery) =>
+      list.filter((row) => {
+        const haystack = normalizeSearchText(JSON.stringify(row));
+        return text.split(' ').every((word) => haystack.includes(` ${word}`));
+      });
+  (searchAdvice as jest.Mock).mockImplementation(matching(rows.advice));
+  (searchMembers as jest.Mock).mockImplementation(matching(rows.users));
+  (searchForumPosts as jest.Mock).mockImplementation(matching(rows.forumPosts));
+  (searchForumComments as jest.Mock).mockImplementation(matching(rows.forumComments));
+};
+
+const advice = [
+  { id: 'a1', content: `Aprendé React ${'x'.repeat(100)}`, author: { name: 'Caro' } },
+  { id: 'a2', content: 'Usá React con TypeScript', author: { name: 'Dani' } },
+];
+const users = [
+  {
+    id: 'u1',
+    name: 'Ana React',
+    jobTitle: 'Frontend',
+    enterprise: 'Acme',
+    slogan: null,
+    career: null,
+    studyPlace: null,
+  },
+  {
+    id: 'u2',
+    name: 'Beto',
+    jobTitle: null,
+    enterprise: null,
+    slogan: 'Fan de React',
+    career: null,
+    studyPlace: null,
+  },
+];
+const forumPosts = [
+  {
+    id: 'f1',
+    title: '¿Server components en React?',
+    content: 'Dudas',
+    author: { name: 'Fede' },
+    category: { slug: 'ayuda' },
+  },
+  {
+    id: 'f2',
+    title: 'Otro tema',
+    content: 'nada que ver',
+    author: { name: 'Gabi' },
+    category: { slug: 'general' },
+  },
+];
 
 const search = async (q?: string) => {
   const url = new URL('http://localhost/api/search');
@@ -57,10 +134,6 @@ const mockCorpus = () => {
     },
     { title: 'React sin oradores', description: 'x', speakers: [] },
   ] as any);
-  prismaMock.advice.findMany.mockResolvedValue([
-    { id: 'a1', content: `Aprendé React ${'x'.repeat(100)}`, author: { name: 'Caro' } },
-    { id: 'a2', content: 'Usá React con TypeScript', author: { name: 'Dani' } },
-  ] as any);
   prismaMock.project.findMany.mockResolvedValue([
     {
       title: 'App en React',
@@ -69,26 +142,6 @@ const mockCorpus = () => {
       url: 'https://app.dev',
     },
     { title: 'Landing React', description: 'Sitio', techStack: [], url: 'https://landing.dev' },
-  ] as any);
-  prismaMock.user.findMany.mockResolvedValue([
-    {
-      id: 'u1',
-      name: 'Ana React',
-      jobTitle: 'Frontend',
-      enterprise: 'Acme',
-      slogan: null,
-      career: null,
-      studyPlace: null,
-    },
-    {
-      id: 'u2',
-      name: 'Beto',
-      jobTitle: null,
-      enterprise: null,
-      slogan: 'Fan de React',
-      career: null,
-      studyPlace: null,
-    },
   ] as any);
   prismaMock.setup.findMany.mockResolvedValue([
     { id: 's1', title: 'Escritorio', description: 'Codeo React acá', author: { name: 'Caro' } },
@@ -105,23 +158,7 @@ const mockCorpus = () => {
   prismaMock.testimonial.findMany.mockResolvedValue([
     { id: 't1', body: 'Aprendí React en PCN', user: { name: 'Eli' } },
   ] as any);
-  prismaMock.forumPost.findMany.mockResolvedValue([
-    {
-      id: 'f1',
-      title: '¿Server components en React?',
-      content: 'Dudas',
-      author: { name: 'Fede' },
-      category: { slug: 'ayuda' },
-    },
-    {
-      id: 'f2',
-      title: 'Otro tema',
-      content: 'nada que ver',
-      author: { name: 'Gabi' },
-      category: { slug: 'general' },
-    },
-  ] as any);
-  prismaMock.forumComment.findMany.mockResolvedValue([]);
+  mockFullText({ advice, users, forumPosts });
   prismaMock.announcement.findMany.mockResolvedValue([]);
   prismaMock.workPlace.findMany.mockResolvedValue([]);
   prismaMock.jobOffers.findMany.mockResolvedValue([]);
@@ -240,25 +277,55 @@ describe('GET /api/search', () => {
     expect(console.error).toHaveBeenCalledWith('search: database lookup failed', expect.any(Error));
   });
 
+  it('keeps what Postgres matched with a typo, after the exact matches', async () => {
+    mockCorpus();
+    const typo = { ...advice[1], id: 'a9', content: 'Reakt sin errores' };
+    (searchAdvice as jest.Mock).mockResolvedValue([typo, advice[1]]);
+
+    const { body } = await search('react');
+
+    expect(body.results.filter((r) => r.type === 'consejo').map((r) => r.href)).toEqual([
+      '/consejos/a2',
+      '/consejos/a9',
+    ]);
+  });
+
+  it('searches the growing tables in Postgres with the normalized query', async () => {
+    mockCorpus();
+    await search('Programación  Funcional');
+
+    const query = {
+      prefixes: 'programacion:* & funcional:*',
+      text: 'programacion funcional',
+      typos: true,
+    };
+    expect(searchAdvice).toHaveBeenCalledWith(query);
+    expect(searchMembers).toHaveBeenCalledWith(query);
+    expect(searchForumPosts).toHaveBeenCalledWith(query);
+    expect(searchForumComments).toHaveBeenCalledWith(query);
+  });
+
   it('ignores accents and word order in database content, and finds replies, news and places', async () => {
     mockCorpus();
-    prismaMock.forumPost.findMany.mockResolvedValue([
-      {
-        id: 'f9',
-        title: 'Programación funcional en la práctica',
-        content: 'Dudas',
-        author: { name: 'Fede' },
-        category: { slug: 'ayuda' },
-      },
-    ] as any);
-    prismaMock.forumComment.findMany.mockResolvedValue([
-      {
-        id: 'c1',
-        content: 'Probá programación reactiva',
-        author: { name: 'Gabi' },
-        post: { id: 'f9', title: 'Programación funcional en la práctica' },
-      },
-    ] as any);
+    mockFullText({
+      forumPosts: [
+        {
+          id: 'f9',
+          title: 'Programación funcional en la práctica',
+          content: 'Dudas',
+          author: { name: 'Fede' },
+          category: { slug: 'ayuda' },
+        },
+      ],
+      forumComments: [
+        {
+          id: 'c1',
+          content: 'Probá programación reactiva',
+          author: { name: 'Gabi' },
+          post: { id: 'f9', title: 'Programación funcional en la práctica' },
+        },
+      ],
+    });
     prismaMock.announcement.findMany.mockResolvedValue([
       { id: 'n1', title: 'Taller de programación', content: 'Inscribite', category: 'evento' },
     ] as any);

@@ -15,26 +15,30 @@ import { SEARCH_GROUPS, type SearchResponse } from '@/lib/search/types';
 import { visibleGalleryItem } from '@/lib/gallery';
 import { ACTIVE_USER } from '@/lib/active-user';
 import { listOpenJobOffers } from '@/lib/job-offers';
+import {
+  fullTextQuery,
+  searchAdvice,
+  searchForumComments,
+  searchForumPosts,
+  searchMembers,
+} from '@/lib/search/full-text';
 
 const MAX_QUERY_LENGTH = 100;
 const DB_CANDIDATES = 20;
 
-// Everything searchable in the database, cached: a few hundred short rows, so filtering them in
-// memory is cheaper than four ILIKE scans per keystroke.
+// The short, slow-growing tables, cached: a few hundred rows, so filtering them in memory is
+// cheaper than a query each per keystroke. Forum topics and replies, consejos and members keep
+// growing and are searched in Postgres (src/lib/search/full-text.ts).
 const loadSearchCorpus = cached(
   'search-corpus',
   async () => {
     const [
       events,
       talks,
-      advice,
       projects,
-      users,
       setups,
       photos,
       testimonials,
-      forumPosts,
-      forumComments,
       announcements,
       workPlaces,
       jobOffers,
@@ -55,26 +59,8 @@ const loadSearchCorpus = cached(
       prisma.talk.findMany({
         select: { title: true, description: true, speakers: { select: { speakerName: true } } },
       }),
-      prisma.advice.findMany({
-        orderBy: { createdAt: 'desc' },
-        select: { id: true, content: true, author: { select: { name: true } } },
-      }),
       prisma.project.findMany({
         select: { title: true, description: true, techStack: true, url: true },
-      }),
-      // Only what a public profile shows: never emails or phones. Suspended accounts stay out.
-      prisma.user.findMany({
-        where: ACTIVE_USER,
-        orderBy: { createdAt: 'asc' },
-        select: {
-          id: true,
-          name: true,
-          jobTitle: true,
-          enterprise: true,
-          slogan: true,
-          career: true,
-          studyPlace: true,
-        },
       }),
       prisma.setup.findMany({
         orderBy: { date: 'desc' },
@@ -97,27 +83,6 @@ const loadSearchCorpus = cached(
         orderBy: { createdAt: 'desc' },
         select: { id: true, body: true, user: { select: { name: true } } },
       }),
-      prisma.forumPost.findMany({
-        orderBy: { activeAt: 'desc' },
-        select: {
-          id: true,
-          title: true,
-          content: true,
-          author: { select: { name: true } },
-          category: { select: { slug: true } },
-        },
-      }),
-      // Replies too: the answer someone is looking for is often in one.
-      prisma.forumComment.findMany({
-        orderBy: { createdAt: 'desc' },
-        take: 2000,
-        select: {
-          id: true,
-          content: true,
-          author: { select: { name: true } },
-          post: { select: { id: true, title: true } },
-        },
-      }),
       prisma.announcement.findMany({
         where: { published: true },
         orderBy: { createdAt: 'desc' },
@@ -133,14 +98,10 @@ const loadSearchCorpus = cached(
     return {
       events,
       talks,
-      advice,
       projects,
-      users,
       setups,
       photos,
       testimonials,
-      forumPosts,
-      forumComments,
       announcements,
       workPlaces,
       jobOffers,
@@ -151,15 +112,12 @@ const loadSearchCorpus = cached(
       'Event',
       'Talk',
       'TalkSpeaker',
-      'Advice',
       'User',
       'Project',
       'Setup',
       'GalleryItem',
       'GalleryItemTag',
       'Testimonial',
-      'ForumPost',
-      'ForumComment',
       'Announcement',
       'WorkPlace',
       'JobOffers',
@@ -180,6 +138,9 @@ const loadRecommendationEntries = async () => {
 const clip = (text: string, max = 90) =>
   text.length > max ? `${text.slice(0, max - 1).trimEnd()}…` : text;
 
+/** A row Postgres matched, which ranks even when the in-memory check misses a typo. */
+const matched = (entry: IndexedEntry): IndexedEntry => ({ ...entry, matched: true });
+
 const loadDatabaseEntries = async (query: string) => {
   // The same matching as the ranking (rankEntries): every word, at the start of a word, ignoring
   // accents and case, so "programacion" finds "Programación" and word order doesn't matter.
@@ -188,7 +149,14 @@ const loadDatabaseEntries = async (query: string) => {
     const text = normalizeSearchText(texts.filter(Boolean).join(' '));
     return words.every((word) => text.includes(` ${word}`));
   };
-  const corpus = await loadSearchCorpus();
+  const fullText = fullTextQuery(query);
+  const [corpus, advice, users, forumPosts, forumComments] = await Promise.all([
+    loadSearchCorpus(),
+    fullText ? searchAdvice(fullText) : [],
+    fullText ? searchMembers(fullText) : [],
+    fullText ? searchForumPosts(fullText) : [],
+    fullText ? searchForumComments(fullText) : [],
+  ]);
   const events = corpus.events
     .filter((event) => contains(event.name, event.description))
     .slice(0, DB_CANDIDATES);
@@ -197,23 +165,8 @@ const loadDatabaseEntries = async (query: string) => {
       contains(talk.title, talk.description, ...talk.speakers.map((s) => s.speakerName)),
     )
     .slice(0, DB_CANDIDATES);
-  const advice = corpus.advice
-    .filter((advice) => contains(advice.content, advice.author.name))
-    .slice(0, DB_CANDIDATES);
   const projects = corpus.projects
     .filter((project) => contains(project.title, project.description))
-    .slice(0, DB_CANDIDATES);
-  const users = corpus.users
-    .filter((user) =>
-      contains(
-        user.name,
-        user.jobTitle,
-        user.enterprise,
-        user.slogan,
-        user.career,
-        user.studyPlace,
-      ),
-    )
     .slice(0, DB_CANDIDATES);
   const setups = corpus.setups
     .filter((setup) => contains(setup.title, setup.description, setup.author.name))
@@ -222,12 +175,6 @@ const loadDatabaseEntries = async (query: string) => {
     .filter((photo) =>
       contains(photo.description, photo.event?.name, ...photo.tags.map((tag) => tag.user.name)),
     )
-    .slice(0, DB_CANDIDATES);
-  const forumPosts = corpus.forumPosts
-    .filter((post) => contains(post.title, post.content, post.author.name))
-    .slice(0, DB_CANDIDATES);
-  const forumComments = corpus.forumComments
-    .filter((comment) => contains(comment.content, comment.author.name))
     .slice(0, DB_CANDIDATES);
   const announcements = corpus.announcements
     .filter((announcement) => contains(announcement.title, announcement.content))
@@ -273,30 +220,34 @@ const loadDatabaseEntries = async (query: string) => {
       });
     }),
     ...advice.map((advice) =>
-      toEntry(
-        {
-          type: 'consejo',
-          title: clip(advice.content),
-          subtitle: advice.author.name,
-          href: `/consejos/${advice.id}`,
-        },
-        advice.content,
+      matched(
+        toEntry(
+          {
+            type: 'consejo',
+            title: clip(advice.content),
+            subtitle: advice.author.name,
+            href: `/consejos/${advice.id}`,
+          },
+          advice.content,
+        ),
       ),
     ),
     ...users.map((user) =>
-      toEntry(
-        {
-          type: 'perfil',
-          title: user.name,
-          subtitle:
-            [user.jobTitle, user.enterprise].filter(Boolean).join(' en ') ||
-            user.slogan ||
-            undefined,
-          href: `/perfil/${user.id}`,
-        },
-        user.slogan,
-        user.career,
-        user.studyPlace,
+      matched(
+        toEntry(
+          {
+            type: 'perfil',
+            title: user.name,
+            subtitle:
+              [user.jobTitle, user.enterprise].filter(Boolean).join(' en ') ||
+              user.slogan ||
+              undefined,
+            href: `/perfil/${user.id}`,
+          },
+          user.slogan,
+          user.career,
+          user.studyPlace,
+        ),
       ),
     ),
     ...setups.map((setup) =>
@@ -325,25 +276,29 @@ const loadDatabaseEntries = async (query: string) => {
       ),
     ),
     ...forumPosts.map((post) =>
-      toEntry(
-        {
-          type: 'foro',
-          title: post.title,
-          subtitle: `#${post.category.slug} · ${post.author.name}`,
-          href: `/foro/tema/${post.id}`,
-        },
-        post.content,
+      matched(
+        toEntry(
+          {
+            type: 'foro',
+            title: post.title,
+            subtitle: `#${post.category.slug} · ${post.author.name}`,
+            href: `/foro/tema/${post.id}`,
+          },
+          post.content,
+        ),
       ),
     ),
     ...forumComments.map((comment) =>
-      toEntry(
-        {
-          type: 'foro',
-          title: clip(comment.content),
-          subtitle: `respuesta en "${clip(comment.post.title, 50)}" · ${comment.author.name}`,
-          href: `/foro/tema/${comment.post.id}#comentario-${comment.id}`,
-        },
-        comment.content,
+      matched(
+        toEntry(
+          {
+            type: 'foro',
+            title: clip(comment.content),
+            subtitle: `respuesta en "${clip(comment.post.title, 50)}" · ${comment.author.name}`,
+            href: `/foro/tema/${comment.post.id}#comentario-${comment.id}`,
+          },
+          comment.content,
+        ),
       ),
     ),
     ...announcements.map((announcement) =>

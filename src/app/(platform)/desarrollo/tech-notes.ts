@@ -336,7 +336,7 @@ export const createTestimonial = async (data: TestimonialFormData) => {
           },
         ],
         usage: [
-          'El buscador (⌘K) consulta `/api/search`, que mezcla un índice estático de las páginas con eventos, charlas, consejos y proyectos de la base.',
+          'El buscador (⌘K) consulta `/api/search`, que mezcla un índice estático de las páginas con el contenido de la base: las tablas chicas se filtran en memoria y el foro, los consejos y los miembros se buscan en Postgres con full-text search (`tsvector` y `pg_trgm`, que tolera errores de tipeo).',
           'El proxy está preparado para `/perfil`, pero hoy deja pasar todo: los permisos se verifican en cada página y cada server action.',
         ],
         examples: [

@@ -32,6 +32,8 @@ export interface IndexedEntry extends SearchResult {
   titleText: string;
   /** Normalized title plus everything else worth matching. */
   text: string;
+  /** Postgres already matched it (src/lib/search/full-text.ts), maybe despite a typo. */
+  matched?: boolean;
 }
 
 export const toEntry = (
@@ -211,10 +213,11 @@ export const getStaticIndex = () =>
 /**
  * Every query word must start a word somewhere in the entry (`git` matches `GitHub`, not
  * `digital`). Title matches rank above body matches, and a title that starts with the query
- * ranks highest. `query` is normalized, so it starts with a space. Returns 0 for no match.
+ * ranks highest. An entry Postgres matched with a typo ranks last. `query` is normalized, so it
+ * starts with a space. Returns 0 for no match.
  */
 export const scoreEntry = (entry: IndexedEntry, query: string, words: string[]) => {
-  if (!words.every((word) => entry.text.includes(` ${word}`))) return 0;
+  if (!words.every((word) => entry.text.includes(` ${word}`))) return entry.matched ? 0.5 : 0;
   if (entry.titleText.startsWith(query)) return 4;
   if (entry.titleText.includes(query)) return 3;
   if (words.every((word) => entry.titleText.includes(` ${word}`))) return 2;
@@ -240,6 +243,8 @@ export const rankEntries = (entries: IndexedEntry[], rawQuery: string, perType =
     list
       .sort((a, b) => b.score - a.score)
       .slice(0, perType)
-      .map(({ entry: { titleText: _t, text: _x, ...result } }) => result as SearchResult),
+      .map(
+        ({ entry: { titleText: _t, text: _x, matched: _m, ...result } }) => result as SearchResult,
+      ),
   );
 };
