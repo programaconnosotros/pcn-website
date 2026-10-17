@@ -7,11 +7,29 @@
       "skillPath": "skills/use-ai-sdk/SKILL.md",
       "computedHash": "d6910e7d8bb527d2823ba58b6225b304ae649c135fc7e43ec2d2152251c218db"
     },
+    "commit": {
+      "source": "eagerworks/skills",
+      "sourceType": "github",
+      "skillPath": "skills/commit/SKILL.md",
+      "computedHash": "79b73813ce0b5c20ce2a23c85f75a72b355436c63956fecee857bfd88552bd6a"
+    },
+    "create-pr": {
+      "source": "eagerworks/skills",
+      "sourceType": "github",
+      "skillPath": "skills/create-pr/SKILL.md",
+      "computedHash": "7050f625a046c11f133506b19152198d932fe1904adf00613018a6a7944eb460"
+    },
     "eve": {
       "source": "vercel/eve",
       "sourceType": "github",
       "skillPath": "skills/eve/SKILL.md",
       "computedHash": "79a1e606ecf33eed33c1f3adc1cc266de391e19aa9237ca37e4f3aa3fba6b228"
+    },
+    "pr-review": {
+      "source": "eagerworks/skills",
+      "sourceType": "github",
+      "skillPath": "skills/pr-review/SKILL.md",
+      "computedHash": "daef5efb8f2dd7136313012bdc5f53a7de4cabc50bd1d10fa99d6188cc56d113"
     }
   }
 }

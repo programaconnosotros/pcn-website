@@ -1,0 +1,23 @@
+{
+  "baseBranch": "testing",
+  "review": {
+    "extraFocus": [
+      "Every server action checks the session or permissions itself and validates its input with zod (docs/seguridad-owasp.md).",
+      "The database is reached only through Prisma or tagged $queryRaw, and user-supplied URLs are fetched only through safeFetch.",
+      "Reads that are the same for everyone go through cached() and list every table they read in models; code that signs URLs or depends on the request calls await connection() first.",
+      "The community name is spelled programaConNosotros everywhere users can see it (lowercase only in domains, handles and repo names).",
+      "Prisma types and the client come from @/generated/prisma/client (or /browser in client components), never @prisma/client."
+    ],
+    "ignorePaths": [
+      "pnpm-lock.yaml",
+      "src/generated/**",
+      "src/data/github-stats.json",
+      "src/app/(platform)/desarrollo/db-schema.ts"
+    ],
+    "documentation": {
+      "decisionRecordsPath": "docs/"
+    },
+    "language": "en"
+  },
+  "localChecks": ["pnpm lint", "pnpm format:check", "pnpm test", "pnpm build"]
+}

@@ -71,13 +71,16 @@ locally. Skills: `verify-all` runs and reads every check, `fix-e2e` triages e2e 
 
 ## Pull requests
 
+PRs go to `testing`. The `create-pr`, `pr-review` and `commit` skills (`.agents/skills`, from
+eagerworks/skills) take this repo's settings from `.eagerworks/*.json`.
+
 When opening a PR that changes any UI, include screenshots in the description:
 
 1. Start the app: `docker-compose up -d` (or `pnpm dev` with the DB running).
-2. Capture the affected routes: `pnpm screenshot /route-a /route-b`
-3. Publish and get Markdown: `pnpm screenshot:publish`
-4. Paste the printed Markdown block under a `## Screenshots` heading in the PR body.
+2. Capture the affected routes: `pnpm screenshot /route-a /route-b`. It saves PNGs to
+   `.pr-screenshots/` and prints a `## Screenshots` section for the body plus the `--attach` flags.
+3. Put that section in the body file and pass the flags to `gh pr create` or `gh pr edit`
+   (gh ≥ 2.99.0). gh uploads each image and replaces its local path in the body.
 
-Screenshots are pushed to the orphan `pr-screenshots` branch (never merged to main)
-and referenced via `raw.githubusercontent.com` URLs.
-See `scripts/pr-screenshots.mjs` and `scripts/publish-screenshots.sh`.
+Never commit screenshots. The old orphan `pr-screenshots` branch only backs PRs from before
+`--attach`; don't push new images to it.

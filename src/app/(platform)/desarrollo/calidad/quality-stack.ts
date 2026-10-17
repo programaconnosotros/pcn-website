@@ -37,9 +37,9 @@ export const qualityGates: QualityGate[] = [
   },
   {
     stage: 'pull request',
-    command: 'pnpm screenshot /ruta && pnpm screenshot:publish',
+    command: 'pnpm screenshot /ruta && gh pr create --attach …',
     checks:
-      'Cada cambio entra por una PR hacia testing que revisa otra persona. Si toca la UI, lleva capturas de las rutas afectadas tomadas con Playwright (Chromium headless) y publicadas en la branch huérfana pr-screenshots.',
+      'Cada cambio entra por una PR hacia testing que revisa otra persona. Si toca la UI, lleva capturas de las rutas afectadas tomadas con Playwright (Chromium headless) y subidas a la PR con gh --attach.',
   },
   {
     stage: 'regresión semanal',
