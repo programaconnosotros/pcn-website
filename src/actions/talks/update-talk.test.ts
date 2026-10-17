@@ -43,7 +43,7 @@ const regularSession = {
 };
 
 const TALK_ID = 'talk-1';
-const EVENT_ID = 'cTestEventId1234';
+const EVENT_ID = 'ctesteventid1234';
 
 const existingTalk = {
   id: TALK_ID,
@@ -52,6 +52,7 @@ const existingTalk = {
   description: 'Old description text here.',
   createdAt: new Date('2025-01-01'),
   updatedAt: new Date('2025-01-01'),
+  speakers: [{ userId: 'cuserold00000001' }],
 };
 
 const validData: TalkFormData = {
@@ -122,5 +123,92 @@ describe('updateTalk', () => {
 
     expect(revalidatePath).toHaveBeenCalledWith(`/eventos/${EVENT_ID}/charlas`);
     expect(revalidatePath).toHaveBeenCalledWith('/charlas');
+  });
+});
+
+describe('updateTalk edge cases', () => {
+  const organizerSession = {
+    ...regularSession,
+    user: { ...regularUser, isAmbassador: false },
+  };
+  const loginAsOrganizer = () => {
+    mockCookies({ sessionId: 'session-regular' });
+    prismaMock.session.findUnique.mockResolvedValue(organizerSession as any);
+    prismaMock.eventOrganizer.count.mockResolvedValue(1);
+  };
+
+  it('rejects invalid data with the first validation message', async () => {
+    mockCookies({ sessionId: 'session-admin' });
+    prismaMock.session.findUnique.mockResolvedValue(adminSession as any);
+
+    await expect(updateTalk(TALK_ID, { ...validData, title: '' })).rejects.toThrow();
+    expect(prismaMock.talk.findUnique).not.toHaveBeenCalled();
+  });
+
+  it('does not let an organizer move a talk to an event they do not manage', async () => {
+    loginAsOrganizer();
+    prismaMock.talk.findUnique.mockResolvedValue(existingTalk as any);
+    prismaMock.event.findUnique.mockImplementation((async ({ where }: { where: { id: string } }) =>
+      where.id === EVENT_ID
+        ? { createdById: 'someone', deletedAt: null, organizers: [{ userId: 'user-regular' }] }
+        : { createdById: 'someone', deletedAt: null, organizers: [] }) as never);
+
+    await expect(
+      updateTalk(TALK_ID, { ...validData, eventId: 'cothereventid9999' }),
+    ).rejects.toThrow('No tenés permisos');
+    expect(prismaMock.$transaction).not.toHaveBeenCalled();
+  });
+
+  it('lets an organizer edit a talk of their own event', async () => {
+    loginAsOrganizer();
+    prismaMock.talk.findUnique.mockResolvedValue(existingTalk as any);
+    prismaMock.event.findUnique.mockResolvedValue({
+      createdById: 'someone',
+      deletedAt: null,
+      organizers: [{ userId: 'user-regular' }],
+    } as any);
+    prismaMock.$transaction.mockResolvedValue([] as any);
+
+    await expect(updateTalk(TALK_ID, { ...validData, eventId: EVENT_ID })).resolves.toEqual({
+      success: true,
+    });
+  });
+
+  it('notifies only the speakers added in this edit', async () => {
+    mockCookies({ sessionId: 'session-admin' });
+    prismaMock.session.findUnique.mockResolvedValue(adminSession as any);
+    prismaMock.talk.findUnique.mockResolvedValue(existingTalk as any);
+    prismaMock.$transaction.mockResolvedValue([] as any);
+
+    await updateTalk(TALK_ID, {
+      ...validData,
+      eventId: EVENT_ID,
+      speakers: [
+        { ...validData.speakers[0], userId: 'cuserold00000001' },
+        { ...validData.speakers[0], userId: 'cusernew00000001' },
+      ],
+    });
+
+    expect(prismaMock.notification.createMany).toHaveBeenCalledWith({
+      data: [
+        expect.objectContaining({
+          type: 'talk_speaker_added',
+          userId: 'cusernew00000001',
+          metadata: expect.stringContaining(`"href":"/eventos/${EVENT_ID}/charlas"`),
+        }),
+      ],
+    });
+  });
+
+  it('does not revalidate an event page for talks without an event', async () => {
+    mockCookies({ sessionId: 'session-admin' });
+    prismaMock.session.findUnique.mockResolvedValue(adminSession as any);
+    prismaMock.talk.findUnique.mockResolvedValue({ ...existingTalk, eventId: null } as any);
+    prismaMock.$transaction.mockResolvedValue([] as any);
+
+    await updateTalk(TALK_ID, validData);
+
+    expect(revalidatePath).toHaveBeenCalledWith('/charlas');
+    expect(revalidatePath).not.toHaveBeenCalledWith(expect.stringContaining('/eventos/'));
   });
 });

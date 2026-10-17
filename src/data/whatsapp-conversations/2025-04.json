@@ -7,7 +7,13 @@
   {
     "date": "2025-04-08",
     "title": "Notebooks para data science: qué conviene comprar en Argentina",
-    "summary": "Sebastián consultó qué notebook convenía comprar para data science con presupuesto limitado en Argentina. El grupo debatió entre opciones con GPU dedicada versus procesadores Apple Silicon. Matías recomendó las MacBook con chip M por la eficiencia energética y el rendimiento en tareas de machine learning usando Metal. Otros señalaron que una notebook con GPU NVIDIA permitía usar CUDA directamente con frameworks como PyTorch. Se mencionaron modelos de Lenovo ThinkPad y Dell XPS como alternativas intermedias. La discusión concluyó que el chip M de Apple ofrecía la mejor relación rendimiento/precio en el mercado actual argentino a pesar del costo en dólares."
+    "summary": "Sebastián consultó qué notebook convenía comprar para data science con presupuesto limitado en Argentina. El grupo debatió entre opciones con GPU dedicada versus procesadores Apple Silicon. Matías recomendó las MacBook con chip M por la eficiencia energética y el rendimiento en tareas de machine learning usando Metal. Otros señalaron que una notebook con GPU NVIDIA permitía usar CUDA directamente con frameworks como PyTorch. Se mencionaron modelos de Lenovo ThinkPad y Dell XPS como alternativas intermedias. La discusión concluyó que el chip M de Apple ofrecía la mejor relación rendimiento/precio en el mercado actual argentino a pesar del costo en dólares.",
+    "links": [
+      "https://offsalenotebook.com.ar/product/asustuf506l/",
+      "https://offsalenotebook.com.ar/product/msigl-139rck-i7-9na/",
+      "https://offsalenotebook.com.ar/product/lenovo-thinkpad-t14-i7-12ava/",
+      "https://offsalenotebook.com.ar/product/asus-vivobook-15-f1605z-i7-12-gen/"
+    ]
   },
   {
     "date": "2025-04-08",
@@ -17,17 +23,20 @@
   {
     "date": "2025-04-11",
     "title": "Vercel AI SDK con Grok y Astro: integración y casos de uso",
-    "summary": "Rodrigo compartió que estaba experimentando con el Vercel AI SDK para integrar Grok de xAI en un proyecto con Astro. El grupo mostró interés por el SDK de Vercel como abstracción para trabajar con múltiples modelos de lenguaje. Agustín comentó que el SDK simplificaba mucho el streaming de respuestas y el manejo de herramientas. Se discutió la compatibilidad de Astro con islands architecture para proyectos que mezclaban contenido estático con componentes reactivos. Facundo mencionó que Grok tenía un contexto de un millón de tokens que lo hacía interesante para tareas de análisis de documentos largos."
+    "summary": "Rodrigo compartió que estaba experimentando con el Vercel AI SDK para integrar Grok de xAI en un proyecto con Astro. El grupo mostró interés por el SDK de Vercel como abstracción para trabajar con múltiples modelos de lenguaje. Agustín comentó que el SDK simplificaba mucho el streaming de respuestas y el manejo de herramientas. Se discutió la compatibilidad de Astro con islands architecture para proyectos que mezclaban contenido estático con componentes reactivos. Facundo mencionó que Grok tenía un contexto de un millón de tokens que lo hacía interesante para tareas de análisis de documentos largos.",
+    "links": ["https://sdk.vercel.ai/docs/ai-sdk-ui/chatbot"]
   },
   {
     "date": "2025-04-11",
     "title": "Cepo cambiario argentino: Argentina pasa al sistema de bandas",
-    "summary": "El grupo discutió el anuncio del gobierno argentino de reemplazar el cepo cambiario con un sistema de bandas de flotación. Varios miembros celebraron la medida como un paso hacia la normalización cambiaria. Se debatió el impacto en los salarios en dólares de quienes cobraban del exterior y los que trabajaban en empresas locales. Facundo comentó que la incertidumbre sobre el tipo de cambio seguía siendo un factor determinante para decidir entre trabajar para una empresa local o remoto para el exterior. Matías señaló que el nuevo sistema generaba dudas sobre si el dólar blue convergería con el oficial en el corto plazo."
+    "summary": "El grupo discutió el anuncio del gobierno argentino de reemplazar el cepo cambiario con un sistema de bandas de flotación. Varios miembros celebraron la medida como un paso hacia la normalización cambiaria. Se debatió el impacto en los salarios en dólares de quienes cobraban del exterior y los que trabajaban en empresas locales. Facundo comentó que la incertidumbre sobre el tipo de cambio seguía siendo un factor determinante para decidir entre trabajar para una empresa local o remoto para el exterior. Matías señaló que el nuevo sistema generaba dudas sobre si el dólar blue convergería con el oficial en el corto plazo.",
+    "links": ["https://www.bcra.gob.ar/Noticias/inicio-fase-3-programa-economico.asp"]
   },
   {
     "date": "2025-04-13",
     "title": "Recursos de Git para principiantes: canal de Exequiel y Ariel en YouTube",
-    "summary": "Exequiel compartió su canal de YouTube con tutoriales de Git orientados a principiantes. Ariel también mencionó su propio canal con contenido similar. Varios miembros del grupo felicitaron la iniciativa de crear contenido en español para la comunidad local. Se discutió qué temas eran los más confusos para quienes empezaban con Git, mencionando el manejo de branches, merge conflicts y el flujo de trabajo con pull requests. El grupo recomendó los recursos a quienes recién empezaban en el programa."
+    "summary": "Exequiel compartió su canal de YouTube con tutoriales de Git orientados a principiantes. Ariel también mencionó su propio canal con contenido similar. Varios miembros del grupo felicitaron la iniciativa de crear contenido en español para la comunidad local. Se discutió qué temas eran los más confusos para quienes empezaban con Git, mencionando el manejo de branches, merge conflicts y el flujo de trabajo con pull requests. El grupo recomendó los recursos a quienes recién empezaban en el programa.",
+    "links": ["https://www.youtube.com/watch?v=HIJL_nYCTQo"]
   },
   {
     "date": "2025-04-14",
@@ -37,7 +46,8 @@
   {
     "date": "2025-04-16",
     "title": "ChatGPT desktop app: contexto de pantalla y análisis visual",
-    "summary": "Rodrigo compartió que había descubierto que la app de escritorio de ChatGPT podía ver el contenido de la pantalla en tiempo real cuando se le daba permiso. El grupo discutió las implicaciones de privacidad de esta funcionalidad. Facundo probó la feature y contó que ChatGPT podía responder preguntas sobre lo que aparecía en la pantalla sin necesidad de hacer capturas manuales. Se comparó con Copilot de Microsoft que tenía una funcionalidad similar en Windows. Algunos vieron el potencial para asistencia en vivo durante debugging o revisión de código, mientras otros expresaron preocupaciones sobre qué datos se enviaban a los servidores."
+    "summary": "Rodrigo compartió que había descubierto que la app de escritorio de ChatGPT podía ver el contenido de la pantalla en tiempo real cuando se le daba permiso. El grupo discutió las implicaciones de privacidad de esta funcionalidad. Facundo probó la feature y contó que ChatGPT podía responder preguntas sobre lo que aparecía en la pantalla sin necesidad de hacer capturas manuales. Se comparó con Copilot de Microsoft que tenía una funcionalidad similar en Windows. Algunos vieron el potencial para asistencia en vivo durante debugging o revisión de código, mientras otros expresaron preocupaciones sobre qué datos se enviaban a los servidores.",
+    "links": ["https://help.openai.com/en/articles/10119604-work-with-apps-on-macos"]
   },
   {
     "date": "2025-04-17",
@@ -47,7 +57,8 @@
   {
     "date": "2025-04-18",
     "title": "OriginUI: librería de componentes accesibles y modernos",
-    "summary": "Agustín compartió OriginUI, una librería de componentes para React con enfoque en accesibilidad y diseño moderno. El grupo exploró los ejemplos de la librería y comparó con otras opciones como shadcn/ui, Radix UI y Headless UI. Facundo señaló que OriginUI tenía componentes que shadcn no incluía por defecto. Se discutió la tendencia de construir sobre Radix primitives para garantizar accesibilidad sin tener que implementarla desde cero. Varios miembros marcaron el recurso como favorito para futuros proyectos frontend."
+    "summary": "Agustín compartió OriginUI, una librería de componentes para React con enfoque en accesibilidad y diseño moderno. El grupo exploró los ejemplos de la librería y comparó con otras opciones como shadcn/ui, Radix UI y Headless UI. Facundo señaló que OriginUI tenía componentes que shadcn no incluía por defecto. Se discutió la tendencia de construir sobre Radix primitives para garantizar accesibilidad sin tener que implementarla desde cero. Varios miembros marcaron el recurso como favorito para futuros proyectos frontend.",
+    "links": ["https://originui.com/"]
   },
   {
     "date": "2025-04-21",
@@ -57,7 +68,8 @@
   {
     "date": "2025-04-21",
     "title": "Fede Valle lanza GinkgoDevs: agencia con sitio en Three.js",
-    "summary": "Fede Valle anunció el lanzamiento de GinkgoDevs, su agencia de desarrollo, con un sitio web construido en Three.js con efectos visuales 3D. El grupo quedó impresionado con el diseño del sitio. Se discutió la elección de Three.js para el sitio de una agencia como estrategia de diferenciación visual. Facundo preguntó sobre el proceso de construcción y el tiempo invertido. Fede explicó los desafíos de optimizar la carga del sitio con Three.js para que fuera rápido en móviles. El grupo felicitó el emprendimiento y la propuesta visual del sitio."
+    "summary": "Fede Valle anunció el lanzamiento de GinkgoDevs, su agencia de desarrollo, con un sitio web construido en Three.js con efectos visuales 3D. El grupo quedó impresionado con el diseño del sitio. Se discutió la elección de Three.js para el sitio de una agencia como estrategia de diferenciación visual. Facundo preguntó sobre el proceso de construcción y el tiempo invertido. Fede explicó los desafíos de optimizar la carga del sitio con Three.js para que fuera rápido en móviles. El grupo felicitó el emprendimiento y la propuesta visual del sitio.",
+    "links": ["https://www.ginkgodevs.com/es"]
   },
   {
     "date": "2025-04-21",
@@ -82,12 +94,14 @@
   {
     "date": "2025-04-26",
     "title": "Vibe coding: el término y la cultura de programar con IA sin entender el código",
-    "summary": "El grupo debatió el término 'vibe coding' acuñado por Andrej Karpathy, que describe la práctica de programar con IA sin entender completamente el código que se genera. Algunos miembros criticaron la tendencia como peligrosa para la profesión y para la calidad del software. Otros argumentaron que era una evolución natural de la abstracción, comparándolo con cómo los programadores modernos no necesitan escribir assembler. Facundo señaló que la distinción importante era entre usarlo como herramienta de productividad (con comprensión) versus delegar completamente sin entender nada. Se debatió si el vibe coding era apropiado solo para prototipos o también para producción."
+    "summary": "El grupo debatió el término 'vibe coding' acuñado por Andrej Karpathy, que describe la práctica de programar con IA sin entender completamente el código que se genera. Algunos miembros criticaron la tendencia como peligrosa para la profesión y para la calidad del software. Otros argumentaron que era una evolución natural de la abstracción, comparándolo con cómo los programadores modernos no necesitan escribir assembler. Facundo señaló que la distinción importante era entre usarlo como herramienta de productividad (con comprensión) versus delegar completamente sin entender nada. Se debatió si el vibe coding era apropiado solo para prototipos o también para producción.",
+    "links": ["https://x.com/karpathy/status/1886192184808149383"]
   },
   {
     "date": "2025-04-29",
     "title": "Canva Code: la herramienta no-code y el debate sobre democratización",
-    "summary": "El grupo discutió el lanzamiento de Canva Code, una herramienta que prometía generar código desde diseños de Canva sin conocimientos de programación. Varios miembros fueron críticos con la calidad del código generado y las limitaciones para proyectos reales. Facundo argumentó que estas herramientas eran útiles para prototipado rápido pero no reemplazaban el desarrollo profesional. Otros compararon con Webflow y Framer como alternativas más maduras para no-code con resultados más predecibles. Se debatió si estas herramientas competían con los desarrolladores junior o si más bien expandían el mercado al habilitar a no-técnicos a construir cosas simples."
+    "summary": "El grupo discutió el lanzamiento de Canva Code, una herramienta que prometía generar código desde diseños de Canva sin conocimientos de programación. Varios miembros fueron críticos con la calidad del código generado y las limitaciones para proyectos reales. Facundo argumentó que estas herramientas eran útiles para prototipado rápido pero no reemplazaban el desarrollo profesional. Otros compararon con Webflow y Framer como alternativas más maduras para no-code con resultados más predecibles. Se debatió si estas herramientas competían con los desarrolladores junior o si más bien expandían el mercado al habilitar a no-técnicos a construir cosas simples.",
+    "links": ["https://www.instagram.com/reel/DI-_kijx-rj/"]
   },
   {
     "date": "2025-04-30",
@@ -102,6 +116,7 @@
   {
     "date": "2025-04-30",
     "title": "Feature flags para A/B testing: implementación en backend",
-    "summary": "Agustín preguntó sobre estrategias para implementar feature flags y A/B testing en una aplicación backend. El grupo discutió opciones desde implementaciones caseras con una tabla en la base de datos hasta servicios como LaunchDarkly, PostHog y Growthbook. Facundo explicó un diseño simple donde los flags se guardaban en Redis con TTL corto para evitar queries constantes a la DB. Se discutió la importancia de poder rollback rápidamente en producción usando flags en lugar de deployments. Alguien mencionó que PostHog era open source y podía hostearse en infraestructura propia. La conversación cubrió también el targeting de flags por usuario, porcentaje de tráfico y atributos del request."
+    "summary": "Agustín preguntó sobre estrategias para implementar feature flags y A/B testing en una aplicación backend. El grupo discutió opciones desde implementaciones caseras con una tabla en la base de datos hasta servicios como LaunchDarkly, PostHog y Growthbook. Facundo explicó un diseño simple donde los flags se guardaban en Redis con TTL corto para evitar queries constantes a la DB. Se discutió la importancia de poder rollback rápidamente en producción usando flags en lugar de deployments. Alguien mencionó que PostHog era open source y podía hostearse en infraestructura propia. La conversación cubrió también el targeting de flags por usuario, porcentaje de tráfico y atributos del request.",
+    "links": ["https://www.getunleash.io/"]
   }
 ]

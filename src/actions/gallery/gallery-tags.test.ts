@@ -1,0 +1,207 @@
+import { revalidatePath } from 'next/cache';
+import { prismaMock } from '@/test/prisma';
+import { mockCookies } from '@/test/cookies';
+import {
+  bulkTagGalleryItemsUser,
+  bulkUntagGalleryItemsUser,
+  setGalleryTagPosition,
+  tagGalleryItemUser,
+  untagGalleryItemUser,
+} from './gallery-tags';
+
+const admin = { id: 'admin-1', name: 'Admin', role: 'ADMIN' as const };
+const member = { id: 'user-1', name: 'Ana', role: 'REGULAR' as const };
+
+const loginAs = (user: { id: string }) => {
+  mockCookies({ sessionId: `session-${user.id}` });
+  prismaMock.session.findUnique.mockResolvedValue({ id: 's', userId: user.id, user } as any);
+};
+
+describe('photo tags', () => {
+  beforeEach(() => {
+    prismaMock.galleryItem.findUnique.mockResolvedValue({ id: 'photo-1' } as any);
+    prismaMock.user.findUnique.mockResolvedValue({ id: 'user-2' } as any);
+    prismaMock.galleryItemTag.createMany.mockResolvedValue({ count: 1 });
+  });
+
+  it('requires a logged-in user', async () => {
+    mockCookies({});
+
+    await expect(tagGalleryItemUser('photo-1', 'user-1')).rejects.toThrow(
+      'Debes estar autenticado',
+    );
+  });
+
+  it('lets members tag themselves', async () => {
+    loginAs(member);
+    prismaMock.user.findUnique.mockResolvedValue({ id: 'user-1' } as any);
+
+    await tagGalleryItemUser('photo-1', 'user-1');
+
+    expect(prismaMock.galleryItemTag.createMany).toHaveBeenCalledWith({
+      data: [{ itemId: 'photo-1', userId: 'user-1', taggedById: 'user-1' }],
+      skipDuplicates: true,
+    });
+    expect(prismaMock.notification.createMany).not.toHaveBeenCalled();
+  });
+
+  it('does not let members tag or untag other people', async () => {
+    loginAs(member);
+
+    await expect(tagGalleryItemUser('photo-1', 'user-2')).rejects.toThrow('No autorizado');
+    await expect(untagGalleryItemUser('photo-1', 'user-2')).rejects.toThrow('No autorizado');
+    expect(prismaMock.galleryItemTag.createMany).not.toHaveBeenCalled();
+    expect(prismaMock.galleryItemTag.deleteMany).not.toHaveBeenCalled();
+  });
+
+  it('lets admins tag and untag anyone', async () => {
+    loginAs(admin);
+
+    await tagGalleryItemUser('photo-1', 'user-2');
+    await untagGalleryItemUser('photo-1', 'user-2');
+
+    expect(prismaMock.galleryItemTag.createMany).toHaveBeenCalledWith({
+      data: [{ itemId: 'photo-1', userId: 'user-2', taggedById: 'admin-1' }],
+      skipDuplicates: true,
+    });
+    expect(prismaMock.galleryItemTag.deleteMany).toHaveBeenCalledWith({
+      where: { itemId: 'photo-1', userId: 'user-2' },
+    });
+  });
+
+  it('notifies whoever an admin tags, once', async () => {
+    loginAs(admin);
+
+    await tagGalleryItemUser('photo-1', 'user-2');
+    expect(prismaMock.notification.createMany).toHaveBeenCalledWith({
+      data: [
+        expect.objectContaining({
+          type: 'gallery_tagged',
+          userId: 'user-2',
+          message: 'Admin te etiquetó en una foto de la galería.',
+          metadata: JSON.stringify({ itemId: 'photo-1', href: '/galeria/photo-1' }),
+        }),
+      ],
+    });
+
+    // Ya estaba etiquetada: no se avisa de nuevo.
+    prismaMock.notification.createMany.mockClear();
+    prismaMock.galleryItemTag.createMany.mockResolvedValue({ count: 0 });
+    await tagGalleryItemUser('photo-1', 'user-2');
+    expect(prismaMock.notification.createMany).not.toHaveBeenCalled();
+  });
+
+  it('returns the tagged person and skips re-rendering the page', async () => {
+    loginAs(admin);
+    const person = { id: 'user-2', name: 'Ada', image: null };
+    prismaMock.user.findUnique.mockResolvedValue(person as any);
+
+    await expect(tagGalleryItemUser('photo-1', 'user-2')).resolves.toEqual({ person });
+    await expect(untagGalleryItemUser('photo-1', 'user-2')).resolves.toEqual({ success: true });
+
+    expect(prismaMock.user.findUnique).toHaveBeenCalledWith({
+      where: { id: 'user-2' },
+      select: { id: true, name: true, image: true },
+    });
+    expect(revalidatePath).not.toHaveBeenCalled();
+  });
+
+  it('does not tag missing people', async () => {
+    loginAs(admin);
+    prismaMock.user.findUnique.mockResolvedValue(null);
+
+    await expect(tagGalleryItemUser('photo-1', 'ghost')).rejects.toThrow('Usuario no encontrado');
+    expect(prismaMock.galleryItemTag.createMany).not.toHaveBeenCalled();
+  });
+
+  it('does not tag on missing photos', async () => {
+    loginAs(admin);
+    prismaMock.galleryItem.findUnique.mockResolvedValue(null);
+
+    await expect(tagGalleryItemUser('ghost', 'user-2')).rejects.toThrow('Foto no encontrada');
+  });
+});
+
+describe('tag positions', () => {
+  it('lets members place themselves, and admins anyone', async () => {
+    prismaMock.galleryItemTag.updateMany.mockResolvedValue({ count: 1 });
+    loginAs(member);
+    await expect(setGalleryTagPosition('p1', 'user-1', { x: 0.2, y: 0.8 })).resolves.toEqual({
+      position: { x: 0.2, y: 0.8 },
+    });
+    expect(prismaMock.galleryItemTag.updateMany).toHaveBeenCalledWith({
+      where: { itemId: 'p1', userId: 'user-1' },
+      data: { x: 0.2, y: 0.8 },
+    });
+
+    await expect(setGalleryTagPosition('p1', 'user-2', { x: 0.2, y: 0.8 })).rejects.toThrow(
+      'No autorizado',
+    );
+
+    loginAs(admin);
+    await setGalleryTagPosition('p1', 'user-2', null);
+    expect(prismaMock.galleryItemTag.updateMany).toHaveBeenLastCalledWith({
+      where: { itemId: 'p1', userId: 'user-2' },
+      data: { x: null, y: null },
+    });
+  });
+
+  it('rejects positions off the photo and people who are not tagged', async () => {
+    loginAs(admin);
+    await expect(setGalleryTagPosition('p1', 'user-1', { x: 1.5, y: 0 })).rejects.toThrow(
+      'Posición inválida',
+    );
+    prismaMock.galleryItemTag.updateMany.mockResolvedValue({ count: 0 });
+    await expect(setGalleryTagPosition('p1', 'user-1', { x: 0.5, y: 0.5 })).rejects.toThrow(
+      'no está etiquetada',
+    );
+  });
+});
+
+describe('bulk photo tags', () => {
+  it('only lets admins tag many items at once, even themselves', async () => {
+    loginAs(member);
+
+    await expect(bulkTagGalleryItemsUser(['a'], 'user-1')).rejects.toThrow('No autorizado');
+    await expect(bulkUntagGalleryItemsUser(['a'], 'user-1')).rejects.toThrow('No autorizado');
+    expect(prismaMock.galleryItemTag.createMany).not.toHaveBeenCalled();
+  });
+
+  it('tags the person in every existing item, skipping the ones already tagged', async () => {
+    loginAs(admin);
+    prismaMock.galleryItem.findMany.mockResolvedValue([{ id: 'a' }, { id: 'b' }] as any);
+    prismaMock.user.findUnique.mockResolvedValue({ id: 'user-2' } as any);
+    prismaMock.galleryItemTag.createMany.mockResolvedValue({ count: 1 });
+
+    const result = await bulkTagGalleryItemsUser(['a', 'b', 'ghost'], 'user-2');
+
+    expect(prismaMock.galleryItemTag.createMany).toHaveBeenCalledWith({
+      data: [
+        { itemId: 'a', userId: 'user-2', taggedById: 'admin-1' },
+        { itemId: 'b', userId: 'user-2', taggedById: 'admin-1' },
+      ],
+      skipDuplicates: true,
+    });
+    expect(result).toEqual({ tagged: 1 });
+  });
+
+  it('does not tag missing people', async () => {
+    loginAs(admin);
+    prismaMock.galleryItem.findMany.mockResolvedValue([{ id: 'a' }] as any);
+    prismaMock.user.findUnique.mockResolvedValue(null);
+
+    await expect(bulkTagGalleryItemsUser(['a'], 'ghost')).rejects.toThrow('Usuario no encontrado');
+  });
+
+  it('untags the person from the selected items', async () => {
+    loginAs(admin);
+    prismaMock.galleryItemTag.deleteMany.mockResolvedValue({ count: 2 });
+
+    const result = await bulkUntagGalleryItemsUser(['a', 'b'], 'user-2');
+
+    expect(prismaMock.galleryItemTag.deleteMany).toHaveBeenCalledWith({
+      where: { itemId: { in: ['a', 'b'] }, userId: 'user-2' },
+    });
+    expect(result).toEqual({ untagged: 2 });
+  });
+});

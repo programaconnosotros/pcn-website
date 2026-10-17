@@ -3,6 +3,8 @@
 import prisma from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
+import { canManageEventById, canManageSomeEvent } from '@/lib/event-access';
+import { findSession } from '@/lib/session';
 
 export const deleteTalkProposal = async (id: string) => {
   const sessionId = (await cookies()).get('sessionId')?.value;
@@ -10,18 +12,20 @@ export const deleteTalkProposal = async (id: string) => {
     throw new Error('Debes estar autenticado');
   }
 
-  const session = await prisma.session.findUnique({
-    where: { id: sessionId },
-    include: { user: true },
-  });
+  const session = await findSession(sessionId);
 
-  if (!session || session.user.role !== 'ADMIN') {
+  // Admins y quienes gestionan eventos; el evento puntual se valida más abajo
+  if (!session || !(await canManageSomeEvent(session.user))) {
     throw new Error('No tenés permisos para realizar esta acción');
   }
 
   const proposal = await prisma.talkProposal.findUnique({ where: { id } });
   if (!proposal) {
     throw new Error('Propuesta no encontrada');
+  }
+
+  if (!(await canManageEventById(session.user, proposal.eventId))) {
+    throw new Error('No tenés permisos para realizar esta acción');
   }
 
   await prisma.talkProposal.delete({ where: { id } });

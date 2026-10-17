@@ -1,44 +1,39 @@
-'use server';
+import { PageTitle } from '@/components/ui/page-title';
+import { StickyHeader } from '@/components/ui/sticky-header';
 
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from '@/components/ui/breadcrumb';
-import { Separator } from '@/components/ui/separator';
-import { SidebarTrigger } from '@/components/ui/sidebar';
-import { Heading2 } from '@/components/ui/heading-2';
-import { ArrowLeft, Briefcase, GraduationCap, Users } from 'lucide-react';
-import Link from 'next/link';
-import { Button } from '@/components/ui/button';
-import prisma from '@/lib/prisma';
-import { cookies } from 'next/headers';
+import { getEventManager } from '@/lib/event-access';
 import { redirect } from 'next/navigation';
 import { fetchEvent } from '@/actions/events/fetch-event';
-import { getEventRegistrations } from '@/actions/events/get-event-registrations';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { getEventRegistrations, getEventWaitlist } from '@/actions/events/get-event-registrations';
+import { RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
+import { cn } from '@/lib/utils';
 import { RegistrationsDataTable } from '@/components/events/registrations-data-table';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
+import { LocalDateTime } from '@/components/ui/local-date-time';
+import type { Metadata } from 'next';
+import { tabTitle } from '@/lib/tab-title';
+import prisma from '@/lib/prisma';
+import { getBroadcastAudienceCounts } from '@/actions/events/event-broadcast';
+import { EventBroadcastForm } from '@/components/events/event-broadcast-form';
+
+// A 'use server' file can only export async functions, so the title comes from here.
+export async function generateMetadata(): Promise<Metadata> {
+  return { title: tabTitle.ls('eventos/*/inscripciones') };
+}
 
 const EventRegistrationsPage = async (props: { params: Promise<{ id: string }> }) => {
   const params = await props.params;
   const id = params.id;
 
-  // Verificar autenticación y permisos de admin
-  const sessionId = (await cookies()).get('sessionId')?.value;
-
-  if (!sessionId) {
-    redirect(`/eventos/${id}`);
-  }
-
-  const session = await prisma.session.findUnique({
-    where: { id: sessionId },
-    include: { user: true },
-  });
-
-  if (!session || session.user.role !== 'ADMIN') {
+  // Admins del sitio y quienes gestionan este evento
+  if (!(await getEventManager(id))) {
     redirect(`/eventos/${id}`);
   }
 
@@ -50,7 +45,17 @@ const EventRegistrationsPage = async (props: { params: Promise<{ id: string }> }
   }
 
   // Obtener todas las inscripciones
-  const registrations = await getEventRegistrations(id);
+  const [registrations, waitlist, broadcastCounts, broadcasts] = await Promise.all([
+    getEventRegistrations(id),
+    getEventWaitlist(id),
+    getBroadcastAudienceCounts(id),
+    prisma.eventBroadcast.findMany({
+      where: { eventId: id },
+      orderBy: { createdAt: 'desc' },
+      take: 10,
+      include: { author: { select: { name: true } } },
+    }),
+  ]);
 
   const activeRegistrations = registrations.filter((r) => r.cancelledAt === null);
   const cancelledRegistrations = registrations.filter((r) => r.cancelledAt !== null);
@@ -61,96 +66,118 @@ const EventRegistrationsPage = async (props: { params: Promise<{ id: string }> }
 
   return (
     <>
-      <header className="flex h-16 shrink-0 items-center gap-2">
-        <div className="flex items-center gap-2 px-4">
-          <SidebarTrigger />
-          <Separator orientation="vertical" className="mr-2 data-[orientation=vertical]:h-4" />
-          <Breadcrumb>
-            <BreadcrumbList>
-              <BreadcrumbItem className="hidden md:block">
-                <BreadcrumbLink href="/">Inicio</BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator className="hidden md:block" />
-              <BreadcrumbItem className="hidden md:block">
-                <BreadcrumbLink href="/eventos">Eventos</BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator className="hidden md:block" />
-              <BreadcrumbItem className="hidden md:block">
-                <BreadcrumbLink href={`/eventos/${id}`}>{event.name}</BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator className="hidden md:block" />
-              <BreadcrumbItem>
-                <BreadcrumbPage>Inscripciones</BreadcrumbPage>
-              </BreadcrumbItem>
-            </BreadcrumbList>
-          </Breadcrumb>
-        </div>
-      </header>
-      <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
+      <div className="flex flex-1 flex-col p-4 pt-0">
         <div className="mt-4">
-          <div className="mb-6 flex items-center justify-between gap-4">
-            <div className="flex items-center gap-4">
-              <Link href={`/eventos/${id}`}>
-                <Button variant="ghost" size="icon">
-                  <ArrowLeft className="h-4 w-4" />
-                </Button>
-              </Link>
-              <Heading2 className="m-0">Inscripciones - {event.name}</Heading2>
-            </div>
-          </div>
+          <StickyHeader>
+            <PageTitle
+              path={[
+                { label: 'eventos', href: '/eventos' },
+                { label: event.name, href: `/eventos/${id}` },
+                { label: 'inscripciones' },
+              ]}
+            />
+          </StickyHeader>
 
-          {/* Tarjetas resumen */}
-          <div className="mb-6 grid gap-4 sm:grid-cols-3">
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Inscripciones activas</CardTitle>
-                <Users className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <p className="text-3xl font-bold">{activeRegistrations.length}</p>
-                <p className="text-xs text-muted-foreground">
-                  {cancelledRegistrations.length} cancelada
-                  {cancelledRegistrations.length !== 1 ? 's' : ''}
+          <RuledGrid className="mb-4 grid-cols-2 sm:grid-cols-4">
+            {[
+              {
+                label: 'activas',
+                value: activeRegistrations.length,
+                hint: `${cancelledRegistrations.length} cancelada${cancelledRegistrations.length !== 1 ? 's' : ''}`,
+              },
+              {
+                label: 'estudiantes',
+                value: studentsCount,
+                hint: 'con carrera y lugar de estudio',
+              },
+              { label: 'profesionales', value: professionalsCount, hint: 'con cargo y empresa' },
+              {
+                label: 'en espera',
+                value: waitlist.length,
+                hint: event.capacity !== null ? `cupo: ${event.capacity}` : 'sin cupo',
+              },
+            ].map((stat) => (
+              <div key={stat.label} className={cn(ruledCellClassName, 'p-3 font-mono')}>
+                <p className="text-[11px] tracking-wider text-muted-foreground uppercase">
+                  <span className="text-pcnGreen-500">{'// '}</span>
+                  {stat.label}
                 </p>
-              </CardContent>
-            </Card>
+                <p className="mt-1 text-2xl font-semibold text-pcnGreen">{stat.value}</p>
+                <p className="text-[11px] text-muted-foreground/70">{stat.hint}</p>
+              </div>
+            ))}
+          </RuledGrid>
 
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Estudiantes</CardTitle>
-                <GraduationCap className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <p className="text-3xl font-bold">{studentsCount}</p>
-                <p className="text-xs text-muted-foreground">con carrera y lugar de estudio</p>
-              </CardContent>
-            </Card>
+          {waitlist.length > 0 && (
+            <section className="mb-4 border border-pcnGreen-200">
+              <h2 className="border-b border-pcnGreen-200 px-3 py-2 font-mono text-xs tracking-wider text-muted-foreground uppercase">
+                <span className="text-pcnGreen-500">{'// '}</span>
+                lista de espera · {waitlist.length}
+              </h2>
+              <p className="px-3 pt-3 text-xs text-muted-foreground">
+                Cuando se libera un lugar, se inscribe automáticamente a la primera persona de la
+                lista y le llega un email.
+              </p>
+              <div className="p-3">
+                <div className="overflow-x-auto rounded-md border">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead className="w-12">#</TableHead>
+                        <TableHead className="min-w-[200px]">Nombre</TableHead>
+                        <TableHead className="min-w-[240px]">Email</TableHead>
+                        <TableHead className="whitespace-nowrap">Se sumó</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {waitlist.map((entry) => (
+                        <TableRow key={entry.id}>
+                          <TableCell className="font-mono text-xs">{entry.position}</TableCell>
+                          <TableCell className="font-medium">{entry.name}</TableCell>
+                          <TableCell className="text-sm">{entry.email}</TableCell>
+                          <TableCell className="text-sm whitespace-nowrap">
+                            <LocalDateTime date={entry.createdAt} />
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+              </div>
+            </section>
+          )}
 
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Profesionales</CardTitle>
-                <Briefcase className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <p className="text-3xl font-bold">{professionalsCount}</p>
-                <p className="text-xs text-muted-foreground">con cargo y empresa</p>
-              </CardContent>
-            </Card>
-          </div>
+          <section className="mb-4 border border-pcnGreen-200">
+            <h2 className="border-b border-pcnGreen-200 px-3 py-2 font-mono text-xs tracking-wider text-muted-foreground uppercase">
+              <span className="text-pcnGreen-500">{'// '}</span>
+              mandar un mail a los inscriptos
+            </h2>
+            <div className="p-3">
+              <EventBroadcastForm
+                eventId={id}
+                counts={broadcastCounts}
+                history={broadcasts.map((broadcast) => ({
+                  id: broadcast.id,
+                  audience: broadcast.audience,
+                  subject: broadcast.subject,
+                  recipients: broadcast.recipients,
+                  failed: broadcast.failed,
+                  createdAt: broadcast.createdAt,
+                  author: broadcast.author?.name ?? null,
+                }))}
+              />
+            </div>
+          </section>
 
-          {/* Tabla de inscripciones */}
-          <Card className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Users className="h-5 w-5" />
-                Inscripciones ({registrations.length} total — {activeRegistrations.length} activas,{' '}
-                {cancelledRegistrations.length} canceladas)
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
+          <section className="mb-14 border border-pcnGreen-200">
+            <h2 className="border-b border-pcnGreen-200 px-3 py-2 font-mono text-xs tracking-wider text-muted-foreground uppercase">
+              <span className="text-pcnGreen-500">{'// '}</span>
+              inscripciones · {registrations.length} total
+            </h2>
+            <div className="p-3">
               <RegistrationsDataTable data={registrations} />
-            </CardContent>
-          </Card>
+            </div>
+          </section>
         </div>
       </div>
     </>

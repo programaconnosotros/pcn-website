@@ -32,18 +32,22 @@ Este es el repositorio del website de PCN. El website está construido con Next.
 
 > [!IMPORTANT]
 > Tenes que usar `pnpm` si o si en este proyecto. Si usas `npm` o `yarn`, vas a tener problemas. Por favor, asegurate de usar `pnpm` para todo lo relacionado a las dependencias del proyecto.
+>
+> Si desarrollás sin Docker necesitás **Node.js 24** (`nvm use` toma la versión de `.nvmrc`) y **pnpm 10**: la versión exacta está en `packageManager` del `package.json`, y con `corepack enable` se usa esa sola.
 
-7. Crea una nueva rama en Git para ir guardando tus cambios (la página se va refrescando automáticamente en tu browser, no hace falta que refresques manualmente).
+6. Crea una nueva rama en Git para ir guardando tus cambios (la página se va refrescando automáticamente en tu browser, no hace falta que refresques manualmente).
 
-8. Pusheá tus cambios a GitHub y crea una pull request hacia la rama `testing`, asegurate de que tenga una buena descripción explicando lo que hiciste, con capturas de pantalla o videos si incluyen cambios de UI.
+7. Pusheá tus cambios a GitHub y crea una pull request hacia la rama `testing`, asegurate de que tenga una buena descripción explicando lo que hiciste, con capturas de pantalla o videos si incluyen cambios de UI.
 
    El nombre de la pull request debe tener el siguiente formato: `[ID del ticket de Notion] - Título del ticket en Notion`.
 
-9. Si queres instalar dependencias de desarrollo, tenes que usar el siguiente comando:
+8. Si queres instalar dependencias de desarrollo, tenes que usar el siguiente comando:
 
    ```bash
    pnpm add NOMBRE_DEL_PAQUETE
    ```
+
+   pnpm 10 no corre los scripts de instalación de las dependencias salvo las que están en `pnpm.onlyBuiltDependencies` del `package.json`. Si al instalar ves `Ignored build scripts: …` y el paquete los necesita (por ejemplo, para bajar un binario), agregalo a esa lista.
 
 > [!IMPORTANT]
 > Todas las contribuciones deben ser realizadas a través de pull requests. No se aceptarán cambios directos en las ramas `main` y `testing`. Las pull requests serán revisadas y aprobadas por los administradores del repositorio, y deben solicitar merge a la rama `testing`, no `main`. Una vez aprobado el testing, se hará merge a `main`.
@@ -53,6 +57,8 @@ Este es el repositorio del website de PCN. El website está construido con Next.
 
 > [!NOTE]
 > Tenemos un channel en Discord para coordinar el desarrollo del website. Si no estás en el Discord, podes sumarte haciendo click [acá](https://discord.gg/tPZExRnbBP).
+>
+> También charlamos el desarrollo en un [grupo de WhatsApp](https://chat.whatsapp.com/LAHHq1vtgY6ApnPCyZXX4X): aunque no vayas a programar, podés sumarte a leer o a preguntar lo que quieras.
 
 ## Trabajo con la base de datos
 
@@ -78,6 +84,14 @@ Este es el repositorio del website de PCN. El website está construido con Next.
   pnpm create-migration NOMBRE_DE_LA_MIGRACION
   ```
 
+  Después regenerá el diagrama de entidades y relaciones que se muestra en [/desarrollo](https://programaconnosotros.com/desarrollo#base-de-datos), así refleja el esquema nuevo:
+
+  ```bash
+  pnpm db:diagram
+  ```
+
+  El script (`scripts/generate-db-schema.mjs`) lee el esquema de Prisma y escribe `src/app/(platform)/desarrollo/db-schema.ts` con la fecha de hoy como última actualización. Si agregaste un modelo nuevo, sumalo a la parte del sitio que le corresponde en `DOMAINS` dentro del script; si no, falla avisándote.
+
 - Si pulleaste los cambios de GitHub y hay nuevas migraciones, vas a tener que aplicarlas con el siguiente comando:
 
   ```bash
@@ -93,6 +107,18 @@ Este es el repositorio del website de PCN. El website está construido con Next.
   Luego vas a poder acceder a la URL [http://localhost:5555](http://localhost:5555) en el navegador web y vas a poder ver la base de datos.
 
   <img src="./public/prisma-studio-screenshot.webp" alt="Screenshot del Prisma Studio"/>
+
+## 📊 Estadísticas de GitHub
+
+Los números de GitHub que muestra el sitio (estadísticas de colaboración en `/desarrollo`, contribuciones en los perfiles y `/vinculos`) no se piden a la API de GitHub mientras se renderiza: salen de un snapshot versionado en `src/data/github-stats.json`. Para actualizarlo:
+
+```bash
+pnpm github:stats
+```
+
+El script (`scripts/update-github-stats.mjs`) usa `GITHUB_TOKEN` o el token del CLI `gh` si hay alguno, y funciona sin token también. Algunas estadísticas GitHub las calcula en segundo plano: si el script avisa con un `!` que alguna todavía no estaba lista, esperá un minuto y corrélo de nuevo. Después commiteá el JSON.
+
+Con Claude Code podés pedirle "actualizá las stats de GitHub": la skill `actualizar-stats-github` corre el script, revisa que los números tengan sentido y commitea el snapshot.
 
 ## 🌿 Trabajo con worktrees (Claude Code)
 
@@ -156,20 +182,31 @@ El puerto interno se asigna automáticamente — sin conflictos, sin configuraci
 
 ## 📧 Emails en desarrollo local
 
-El stack de Docker incluye [MailHog](https://github.com/mailhog/MailHog), un servidor SMTP local que captura todos los emails que envía la aplicación sin entregarlos realmente. Esto te permite probar flujos de email (registro, reseteo de contraseña, códigos de verificación) sin necesitar credenciales de Gmail.
+El stack de Docker incluye [MailHog](https://github.com/mailhog/MailHog), un servidor SMTP local que captura todos los emails que envía la aplicación sin entregarlos realmente. Esto te permite probar flujos de email (registro, reseteo de contraseña, códigos de verificación) sin mandar emails reales. En producción los emails salen por [Resend](https://resend.com/), que solo se usa si está definida `RESEND_API_KEY` (no la definas en tu `.env` local).
 
 MailHog se levanta automáticamente junto con los demás contenedores al ejecutar `docker-compose up`. Podés ver los emails capturados en:
 
 [http://localhost:18025](http://localhost:18025)
 
 > [!NOTE]
-> El puerto del servidor web de MailHog es `18025` (y no el `8025` por defecto) para evitar conflictos si ya tenés una instancia de MailHog corriendo localmente. El puerto SMTP es `11025`.
+> El puerto del servidor web de MailHog es `18025` (y no el `8025` por defecto) para evitar conflictos si ya tenés una instancia de MailHog corriendo localmente. El puerto SMTP es `11025`: si corrés `pnpm dev` fuera de Docker, usá `SMTP_HOST=localhost` y `SMTP_PORT=11025` en tu `.env`. El contenedor web siempre usa el MailHog del stack, sin importar lo que diga tu `.env`.
+
+## 🐳 Problemas comunes con Docker
+
+- **Docker Desktop no arranca** (`docker info` devuelve `Internal Server Error`): suele ser que se llenó el disco virtual de Docker (`no space left on device` en sus logs). Subí el límite en Settings → Resources o liberá espacio con `docker system prune` (o Troubleshoot → Clean / Purge data, que borra todas las imágenes y volúmenes).
+- **Errores de Turbopack en `pcn-web`** (`panicked`, `conflicting effects for the same key`, chunks que dan 404): recreá el contenedor con su `.next` y `node_modules` limpios:
+
+  ```bash
+  docker-compose up -d --force-recreate -V web
+  ```
+
+- **`docker-compose down` borra los datos de la base** (el contenedor `pcn-db` no tiene un volumen con nombre). Para frenar el stack sin perderlos usá `docker-compose stop`; si ya los perdiste, `make apply-migrations` y `pnpm populate-database` la dejan como nueva.
 
 ## 🛠️ Tech stack
 
 - [Docker](https://www.docker.com/) (contenedores)
-- [Node.js](https://nodejs.org/) (entorno de ejecución de JavaScript)
-- [pnpm](https://pnpm.io/) (gestor de paquetes)
+- [Node.js](https://nodejs.org/) 24 (entorno de ejecución de JavaScript)
+- [pnpm](https://pnpm.io/) 10 (gestor de paquetes)
 - [TypeSript](https://www.typescriptlang.org/) (lenguaje de programación)
 - [React.js](https://reactjs.org/) (librería de JavaScript para construir interfaces de usuario)
 - [Next.js](https://nextjs.org/) (framework de React.js)
@@ -193,7 +230,8 @@ La estructura de archivos del proyecto sigue las convenciones de Next.js:
 │   ├── api/             # Rutas de API
 │   ├── components/      # Componentes React reutilizables
 │   └── lib/             # Funciones y utilidades compartidas
-├── prisma/              # Configuración y migraciones de Prisma
+├── prisma/              # Schema, migraciones y seed de Prisma
+├── prisma.config.ts     # Configuración del CLI de Prisma (URL de migraciones, seed)
 ├── public/              # Archivos estáticos accesibles públicamente
 ├── .env                 # Variables de entorno (no incluido en el repositorio)
 ├── .env.example         # Plantilla para variables de entorno

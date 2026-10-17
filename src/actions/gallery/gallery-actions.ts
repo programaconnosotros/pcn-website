@@ -1,0 +1,363 @@
+'use server';
+
+import { revalidatePath } from 'next/cache';
+import prisma from '@/lib/prisma';
+import { requireAdmin } from '@/lib/admin';
+import { getCurrentSession } from '@/actions/auth/get-current-session';
+import { notifyAdmins } from '@/actions/notifications/notify-admins';
+import { enforceRateLimit } from '@/lib/rate-limit';
+import { optimizePhoto, optimizePoster } from '@/lib/photo-processing';
+import {
+  deleteObjects,
+  deleteObjectsOrLog,
+  getObjectBuffer,
+  getPresignedPost,
+  getPresignedUploadUrl,
+  headObject,
+  publicFileUrl,
+  putImmutableObject,
+} from '@/lib/s3';
+import {
+  MAX_VIDEO_BYTES,
+  galleryDetailsSchema,
+  parseGalleryItemIds,
+  photoUploadSchema,
+  videoMetadataSchema,
+  type GalleryDetailsInput,
+  type PhotoUploadInput,
+  type VideoMetadataInput,
+} from './gallery-schema';
+
+// Los originales se suben directo a S3 desde el navegador y se borran después de optimizarlos.
+const ORIGINALS_FOLDER = 'gallery/originals';
+const UPLOAD_TYPES = [
+  'image/jpeg',
+  'image/png',
+  'image/webp',
+  'image/avif',
+  'image/tiff',
+  'image/gif',
+];
+
+const VIDEO_TYPES: Record<string, string> = {
+  'video/mp4': 'mp4',
+  'video/webm': 'webm',
+  'video/quicktime': 'mov',
+};
+// `gallery/<uuid>/video.<ext>`, la key que arma getVideoUploadUrl.
+const VIDEO_KEY = /^gallery\/[0-9a-f-]{36}\/video\.(mp4|webm|mov)$/;
+
+const isOriginalKey = (key: string) =>
+  key.startsWith(`${ORIGINALS_FOLDER}/`) && !key.includes('..');
+
+const parseDetails = (input: GalleryDetailsInput) => {
+  const parsed = galleryDetailsSchema.safeParse(input);
+  if (!parsed.success) throw new Error(parsed.error.issues[0]?.message ?? 'Datos inválidos');
+  return parsed.data;
+};
+
+async function assertEventExists(eventId: string | null) {
+  if (!eventId) return;
+  const event = await prisma.event.findFirst({
+    where: { id: eventId, deletedAt: null },
+    select: { id: true },
+  });
+  if (!event) throw new Error('Evento no encontrado');
+}
+
+const revalidateItems = (photoIds: string[], eventIds: (string | null)[] = []) => {
+  revalidatePath('/galeria');
+  photoIds.forEach((photoId) => revalidatePath(`/galeria/${photoId}`));
+  new Set(eventIds).forEach((eventId) => eventId && revalidatePath(`/eventos/${eventId}`));
+};
+
+const revalidateItem = (photoId: string, eventIds: (string | null)[] = []) =>
+  revalidateItems([photoId], eventIds);
+
+// Cualquier miembro sube fotos; lo de quien no es admin queda pendiente de aprobación.
+async function requireUploader() {
+  const session = await getCurrentSession();
+  if (!session) throw new Error('Iniciá sesión para subir fotos');
+  const isAdmin = session.user.role === 'ADMIN';
+  if (!isAdmin) await enforceRateLimit('galleryUpload');
+  return { user: session.user, isAdmin };
+}
+
+// Si ya mandó otra foto hace un rato, los admins ya tienen el aviso de esa tanda.
+const NOTIFY_AFTER_MS = 30 * 60 * 1000;
+
+async function notifyPendingUpload(user: { id: string; name: string }, photoId: string) {
+  const earlier = await prisma.galleryItem.count({
+    where: {
+      uploadedById: user.id,
+      status: 'PENDING',
+      id: { not: photoId },
+      createdAt: { gte: new Date(Date.now() - NOTIFY_AFTER_MS) },
+    },
+  });
+  if (earlier) return;
+  await notifyAdmins({
+    type: 'gallery_item_pending',
+    title: 'Fotos para aprobar en la galería',
+    message: `${user.name} subió fotos a la galería. Revisalas en /galeria/pendientes.`,
+    metadata: { userId: user.id, galleryItemId: photoId },
+  });
+}
+
+/** URL firmada para subir el original de una foto a S3. Cualquier miembro con sesión. */
+export async function getPhotoUploadUrl(fileName: string, contentType: string) {
+  await requireUploader();
+  if (!UPLOAD_TYPES.includes(contentType)) {
+    throw new Error('Formato no soportado. Subí JPG, PNG, WebP, AVIF, TIFF o GIF.');
+  }
+
+  const { uploadUrl, key } = await getPresignedUploadUrl(fileName, contentType, ORIGINALS_FOLDER);
+  return { uploadUrl, key };
+}
+
+/**
+ * Formulario firmado para subir un video directo a S3 (ya optimizado en el navegador, hasta 500 MB). Devuelve la
+ * key, que después se pasa a createVideo. Solo admins.
+ */
+export async function getVideoUploadUrl(contentType: string, size: number) {
+  await requireAdmin();
+  const extension = VIDEO_TYPES[contentType];
+  if (!extension) throw new Error('Formato no soportado. Subí MP4, WebM o MOV.');
+  if (size > MAX_VIDEO_BYTES) throw new Error('El video pesa más de 500 MB.');
+
+  const key = `gallery/${crypto.randomUUID()}/video.${extension}`;
+  const { url, fields } = await getPresignedPost(key, contentType, MAX_VIDEO_BYTES);
+  return { url, fields, key };
+}
+
+/**
+ * Crea un video de la galería a partir del archivo ya subido a S3 y de un cuadro capturado en
+ * el navegador, que se convierte en su portada (webp). Solo admins.
+ */
+export async function createVideo(
+  videoKey: string,
+  posterOriginalKey: string,
+  input: GalleryDetailsInput & VideoMetadataInput,
+) {
+  const admin = await requireAdmin();
+  if (!VIDEO_KEY.test(videoKey) || !isOriginalKey(posterOriginalKey)) {
+    throw new Error('Archivo inválido');
+  }
+  const details = parseDetails(input);
+  const metadata = videoMetadataSchema.safeParse(input);
+  if (!metadata.success) throw new Error('Datos del video inválidos');
+  await assertEventExists(details.eventId);
+
+  const video = await headObject(videoKey);
+  if (!video) throw new Error('El video no se terminó de subir');
+
+  const poster = await optimizePoster(await getObjectBuffer(posterOriginalKey));
+  const posterKey = videoKey.replace(/video\.\w+$/, 'poster.webp');
+  await putImmutableObject(posterKey, poster, 'image/webp');
+  await deleteObjectsOrLog([posterOriginalKey]);
+
+  const item = await prisma.galleryItem.create({
+    data: {
+      ...details,
+      ...metadata.data,
+      kind: 'VIDEO',
+      src: publicFileUrl(videoKey),
+      thumbSrc: publicFileUrl(posterKey),
+      mimeType: video.contentType,
+      storageKeys: [videoKey, posterKey],
+      uploadedById: admin.id,
+    },
+    select: { id: true },
+  });
+
+  revalidateItem(item.id, [details.eventId]);
+  return item;
+}
+
+/**
+ * Crea una foto a partir del original ya subido: la optimiza a WebP (grande y miniatura), la
+ * guarda en S3 para servirla por CloudFront y borra el original. La de un admin se publica; la de
+ * otro miembro espera a que un admin la apruebe. En una foto trabajando aparece quien la sube.
+ */
+export async function createPhoto(
+  originalKey: string,
+  input: GalleryDetailsInput & PhotoUploadInput,
+) {
+  const { user, isAdmin } = await requireUploader();
+  if (!isOriginalKey(originalKey)) throw new Error('Archivo inválido');
+  const details = parseDetails(input);
+  const { working } = photoUploadSchema.parse({ working: input.working === true });
+  await assertEventExists(details.eventId);
+
+  const { full, thumb, width, height } = await optimizePhoto(await getObjectBuffer(originalKey));
+
+  const folder = `gallery/${crypto.randomUUID()}`;
+  const fullKey = `${folder}/full.webp`;
+  const thumbKey = `${folder}/thumb.webp`;
+  await Promise.all([
+    putImmutableObject(fullKey, full, 'image/webp'),
+    putImmutableObject(thumbKey, thumb, 'image/webp'),
+  ]);
+  await deleteObjectsOrLog([originalKey]);
+
+  const photo = await prisma.galleryItem.create({
+    data: {
+      ...details,
+      src: publicFileUrl(fullKey),
+      thumbSrc: publicFileUrl(thumbKey),
+      mimeType: 'image/webp',
+      width,
+      height,
+      storageKeys: [fullKey, thumbKey],
+      uploadedById: user.id,
+      status: isAdmin ? 'APPROVED' : 'PENDING',
+      working,
+      ...(working && { tags: { create: { userId: user.id, taggedById: user.id } } }),
+    },
+    select: { id: true, status: true },
+  });
+
+  if (photo.status === 'PENDING') {
+    await notifyPendingUpload(user, photo.id);
+  } else {
+    revalidateItem(photo.id, [details.eventId]);
+  }
+  revalidatePath(`/perfil/${user.id}`);
+  return photo;
+}
+
+/** Cambia la fecha, la descripción o el evento de una foto o video. Solo admins. */
+export async function updateGalleryItem(photoId: string, input: GalleryDetailsInput) {
+  await requireAdmin();
+  const details = parseDetails(input);
+
+  const photo = await prisma.galleryItem.findUnique({
+    where: { id: photoId },
+    select: { eventId: true },
+  });
+  if (!photo) throw new Error('Foto no encontrada');
+  await assertEventExists(details.eventId);
+
+  await prisma.galleryItem.update({ where: { id: photoId }, data: details });
+  revalidateItem(photoId, [photo.eventId, details.eventId]);
+  return { success: true };
+}
+
+/** Elimina una foto o video, sus etiquetas y sus archivos en S3. Admins, o quien la subió. */
+export async function deleteGalleryItem(photoId: string) {
+  const session = await getCurrentSession();
+  if (!session) throw new Error('No autorizado');
+
+  const photo = await prisma.galleryItem.findUnique({
+    where: { id: photoId },
+    select: {
+      eventId: true,
+      storageKeys: true,
+      uploadedById: true,
+      tags: { select: { userId: true } },
+    },
+  });
+  if (!photo) throw new Error('Foto no encontrada');
+  if (session.user.role !== 'ADMIN' && photo.uploadedById !== session.user.id) {
+    throw new Error('No autorizado');
+  }
+
+  // Primero los archivos: si S3 falla, la foto sigue en la galería y se puede reintentar.
+  await deleteObjects(photo.storageKeys);
+  await prisma.galleryItem.delete({ where: { id: photoId } });
+
+  revalidateItem(photoId, [photo.eventId]);
+  photo.tags.forEach(({ userId }) => revalidatePath(`/perfil/${userId}`));
+  return { success: true };
+}
+
+/** Pasa varias fotos y videos a un evento (o a ninguno). Solo admins. */
+export async function bulkSetGalleryItemsEvent(itemIds: string[], eventId: string | null) {
+  await requireAdmin();
+  const ids = parseGalleryItemIds(itemIds);
+  await assertEventExists(eventId);
+
+  const items = await prisma.galleryItem.findMany({
+    where: { id: { in: ids } },
+    select: { id: true, eventId: true },
+  });
+  await prisma.galleryItem.updateMany({
+    where: { id: { in: items.map((item) => item.id) } },
+    data: { eventId },
+  });
+
+  revalidateItems(
+    items.map((item) => item.id),
+    [eventId, ...items.map((item) => item.eventId)],
+  );
+  return { updated: items.length };
+}
+
+/** Elimina varias fotos y videos, sus etiquetas y sus archivos en S3. Solo admins. */
+export async function bulkDeleteGalleryItems(itemIds: string[]) {
+  await requireAdmin();
+  const ids = parseGalleryItemIds(itemIds);
+
+  const items = await prisma.galleryItem.findMany({
+    where: { id: { in: ids } },
+    select: { id: true, eventId: true, storageKeys: true, tags: { select: { userId: true } } },
+  });
+
+  // Primero los archivos: si S3 falla, las fotos siguen en la galería y se puede reintentar.
+  await deleteObjects(items.flatMap((item) => item.storageKeys));
+  await prisma.galleryItem.deleteMany({ where: { id: { in: items.map((item) => item.id) } } });
+
+  revalidateItems(
+    items.map((item) => item.id),
+    items.map((item) => item.eventId),
+  );
+  new Set(items.flatMap((item) => item.tags.map((tag) => tag.userId))).forEach((userId) =>
+    revalidatePath(`/perfil/${userId}`),
+  );
+  return { deleted: items.length };
+}
+
+/** Publica fotos que subieron los miembros. Solo admins. */
+export async function approveGalleryItems(itemIds: string[]) {
+  await requireAdmin();
+  const ids = parseGalleryItemIds(itemIds);
+
+  const items = await prisma.galleryItem.findMany({
+    where: { id: { in: ids }, status: 'PENDING' },
+    select: { id: true, eventId: true, uploadedById: true, tags: { select: { userId: true } } },
+  });
+  await prisma.galleryItem.updateMany({
+    where: { id: { in: items.map((item) => item.id) } },
+    data: { status: 'APPROVED' },
+  });
+
+  revalidateItems(
+    items.map((item) => item.id),
+    items.map((item) => item.eventId),
+  );
+  new Set(
+    items.flatMap((item) => [item.uploadedById, ...item.tags.map((tag) => tag.userId)]),
+  ).forEach((userId) => userId && revalidatePath(`/perfil/${userId}`));
+  revalidatePath('/galeria/pendientes');
+  return { approved: items.length };
+}
+
+/** Rechaza fotos que subieron los miembros: las borra con sus archivos. Solo admins. */
+export async function rejectGalleryItems(itemIds: string[]) {
+  await requireAdmin();
+  const ids = parseGalleryItemIds(itemIds);
+
+  const items = await prisma.galleryItem.findMany({
+    where: { id: { in: ids }, status: 'PENDING' },
+    select: { id: true, storageKeys: true, uploadedById: true },
+  });
+
+  await deleteObjects(items.flatMap((item) => item.storageKeys));
+  await prisma.galleryItem.deleteMany({ where: { id: { in: items.map((item) => item.id) } } });
+
+  new Set(items.map((item) => item.uploadedById)).forEach(
+    (userId) => userId && revalidatePath(`/perfil/${userId}`),
+  );
+  revalidatePath('/galeria/pendientes');
+  return { rejected: items.length };
+}

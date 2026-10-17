@@ -1,0 +1,737 @@
+[
+  {
+    "slug": "claude-code",
+    "name": "Claude Code",
+    "summary": "Pasó de ser una opción respetada pero incómoda por ir en terminal a la herramienta central del grupo, con alegría por el modo plan y los loops autónomos y quejas recurrentes por los límites de uso y las fallas de calidad.",
+    "opinions": [
+      {
+        "date": "2025-07-30",
+        "title": "Debate Cursor vs Windsurf vs Claude Code como herramientas de codeo IA",
+        "stance": "mixta",
+        "text": "Algunos lo veían como lo mejor del momento, pero dudaban por ser una herramienta de terminal más cara por token que otras."
+      },
+      {
+        "date": "2025-12-17",
+        "title": "Claude Code como alternativa a Cursor para Python",
+        "stance": "mixta",
+        "text": "Varios empezaron a considerarlo un reemplazo de Cursor, aunque los límites diarios y semanales de uso les preocupaban."
+      },
+      {
+        "date": "2026-01-26",
+        "title": "Cursor CLI vs Claude Code: comparativa de herramientas agenticas",
+        "stance": "mixta",
+        "text": "El grupo le reconoció mejor razonamiento y más solidez en refactors de bases de código grandes, pero vio a Cursor más cómodo para prototipar."
+      },
+      {
+        "date": "2026-02-15",
+        "title": "Claude Code: modo plan con Shift+Tab y estrategia Opus para planificación",
+        "stance": "positiva",
+        "text": "El grupo se entusiasmó al descubrir el modo plan y la estrategia de planificar con Opus y ejecutar con Sonnet."
+      },
+      {
+        "date": "2026-03-14",
+        "title": "Claude Max: contexto de 1 millón de tokens al mismo precio que antes",
+        "stance": "positiva",
+        "text": "La comunidad celebró el contexto de un millón de tokens sin costo extra, que permitía mantener la coherencia en proyectos grandes."
+      },
+      {
+        "date": "2026-04-24",
+        "title": "Anthropic publicó bugs en Claude Code que degradaban el modelo",
+        "stance": "negativa",
+        "text": "Varios reaccionaron con escepticismo y molestia cuando se reconoció que bugs del propio Claude Code habían degradado el modelo durante semanas."
+      },
+      {
+        "date": "2026-05-12",
+        "title": "Review de Claude Code Desktop: agentes en paralelo y worktrees",
+        "stance": "positiva",
+        "text": "Los que probaron la versión de escritorio valoraron correr agentes en paralelo sobre worktrees y un límite de uso generoso."
+      },
+      {
+        "date": "2026-06-09",
+        "title": "Comparación de Codex, Claude Code y otros entornos de trabajo con agentes",
+        "stance": "mixta",
+        "text": "El grupo se partió: algunos seguían muy conformes con Claude Code y Opus 4.8 y otros recomendaban pasarse a Codex."
+      },
+      {
+        "date": "2026-07-28",
+        "title": "Comparación de límites de uso entre Claude, Codex y Cursor",
+        "stance": "mixta",
+        "text": "Algunos contaron que la ventana de cinco horas les sobra pero el límite semanal se les queda corto cuando trabajan con muchas PRs."
+      },
+      {
+        "date": "2026-08-20",
+        "title": "Loop engineering: cómo lograr que la IA desarrolle un backlog sin supervisión paso a paso",
+        "stance": "positiva",
+        "text": "La comunidad se entusiasmó con usarlo para loops que desarrollan un backlog solo, con skills y objetivos con autoverificación."
+      }
+    ]
+  },
+  {
+    "slug": "cursor",
+    "name": "Cursor",
+    "summary": "Fue el editor de IA por defecto del grupo, perdió terreno frente a Claude Code y se recuperó con Composer como opción de mejor relación precio-calidad, hasta que los límites de uso empezaron a decepcionar.",
+    "opinions": [
+      {
+        "date": "2025-05-20",
+        "title": "Copilot open source y nueva feature: asignar GitHub issues a la IA",
+        "stance": "positiva",
+        "text": "Varios seguían prefiriendo Cursor frente a Copilot, incluso cuando este sumó la asignación de issues a la IA."
+      },
+      {
+        "date": "2025-07-08",
+        "title": "Cursor facturación inesperada: el rugpull de Max mode",
+        "stance": "negativa",
+        "text": "El grupo criticó los cobros sorpresivos del modo MAX y que el uso 'sin límite' del plan Pro tuviera letra chica."
+      },
+      {
+        "date": "2025-07-30",
+        "title": "Debate Cursor vs Windsurf vs Claude Code como herramientas de codeo IA",
+        "stance": "negativa",
+        "text": "Algunos se frustraron por un bug de las terminales del agente y empezaron a mirar alternativas."
+      },
+      {
+        "date": "2025-08-16",
+        "title": "MCP: primera experiencia integrando Linear y GitHub desde Cursor",
+        "stance": "positiva",
+        "text": "La comunidad se entusiasmó con poder crear tickets y PRs desde el chat de Cursor gracias a MCP."
+      },
+      {
+        "date": "2025-12-17",
+        "title": "Claude Code como alternativa a Cursor para Python",
+        "stance": "negativa",
+        "text": "Algunos se desencantaron con los últimos updates por lo invasivo que se volvió el manejo de agentes."
+      },
+      {
+        "date": "2025-12-27",
+        "title": "Límite de tokens de Cursor: plan 60 USD consumido en 5 días",
+        "stance": "mixta",
+        "text": "Varios notaron que un plan de 60 USD se consumía en pocos días con uso intensivo y empezaron a pensar en planes más caros."
+      },
+      {
+        "date": "2026-03-05",
+        "title": "Cursor Composer 1.5: el modelo más rápido, barato y confiable del momento",
+        "stance": "positiva",
+        "text": "El grupo elogió Composer 1.5 por su velocidad, su precio por token y su tasa de éxito."
+      },
+      {
+        "date": "2026-04-07",
+        "title": "Cursor Composer 2 se convirtió en el favorito del grupo para desarrollo",
+        "stance": "positiva",
+        "text": "Composer 2 pasó a ser el modelo favorito del día a día, con uso casi ilimitado en el plan de 20 USD."
+      },
+      {
+        "date": "2026-04-16",
+        "title": "Lanzamiento de Claude Opus 4.7 y debate Cursor vs Claude Max",
+        "stance": "positiva",
+        "text": "La comunidad coincidió en que 20 USD de Cursor rendían claramente más que 20 USD de Claude."
+      },
+      {
+        "date": "2026-05-05",
+        "title": "Debate final sobre stacks de suscripciones: Cursor + Codex como combo óptimo",
+        "stance": "positiva",
+        "text": "El consenso fue que Cursor de 20 USD para iterar rápido, combinado con Codex para tareas pesadas, era el mejor combo costo-beneficio."
+      },
+      {
+        "date": "2026-09-12",
+        "title": "Rendimiento real de los planes altos de Cursor frente a Codex",
+        "stance": "negativa",
+        "text": "Varios notaron que los planes altos ya no rinden como antes y que Cursor dejó de ser más generoso que Codex."
+      }
+    ]
+  },
+  {
+    "slug": "codex",
+    "name": "Codex",
+    "summary": "Pasó de ser una novedad más del mercado a la herramienta preferida de varios para tareas pesadas, con elogios por el modelo, el uso generoso y las funciones autónomas, y alguna vuelta atrás por funciones que se extrañaban.",
+    "opinions": [
+      {
+        "date": "2026-02-02",
+        "title": "Lanzamiento de Codex por OpenAI",
+        "stance": "mixta",
+        "text": "El grupo lo recibió con curiosidad, lo comparó con Claude Code y Cursor y concluyó que el mercado se estaba poniendo muy competitivo."
+      },
+      {
+        "date": "2026-04-23",
+        "title": "GPT 5.5 supera a Opus 4.7 y genera conversión masiva al ecosistema OpenAI",
+        "stance": "positiva",
+        "text": "Varios se pasaron a Codex con GPT 5.5 por el código limpio que generaba, incluso quienes antes descartaban a OpenAI para programar."
+      },
+      {
+        "date": "2026-04-29",
+        "title": "Comparativa Cursor vs Codex tras primeras horas de uso intensivo",
+        "stance": "positiva",
+        "text": "Los que lo probaron destacaron el uso de navegador para depurar frontend y el modo de anotaciones."
+      },
+      {
+        "date": "2026-05-22",
+        "title": "Comparativa detallada Codex vs Cursor y uso de worktrees en Codex",
+        "stance": "mixta",
+        "text": "El grupo valoró su uso generoso y su harness, pero le criticó el modo plan y la velocidad de respuesta."
+      },
+      {
+        "date": "2026-06-08",
+        "title": "Codex /goal y Computer Use para automatizar testing e investigación técnica",
+        "stance": "positiva",
+        "text": "La comunidad se asombró de poder automatizar testing manual y tareas largas con /goal y Computer Use."
+      },
+      {
+        "date": "2026-07-02",
+        "title": "Qué suscripción de IA para programar conviene según el presupuesto",
+        "stance": "positiva",
+        "text": "Se instaló la regla de que con presupuesto de más de 100 USD al mes conviene Codex."
+      },
+      {
+        "date": "2026-07-20",
+        "title": "Nuevas features vs estabilidad: el caso de Anthropic y el trade-off entre velocidad y calidad",
+        "stance": "positiva",
+        "text": "Algunos explicaron que se pasaron por calidad equivalente, límites más generosos y modelos más eficientes."
+      },
+      {
+        "date": "2026-09-02",
+        "title": "De Codex a Cursor: primeras impresiones y funciones que se extrañan",
+        "stance": "mixta",
+        "text": "Algunos volvieron a Cursor y extrañaron funciones de Codex como el control de la computadora y la captura de contexto de aplicaciones."
+      }
+    ]
+  },
+  {
+    "slug": "modelos-claude",
+    "name": "Modelos de Claude (Sonnet, Opus y Fable)",
+    "summary": "Pasaron de ser el modelo de referencia para programar, con algo de queja por el precio de Opus, a una opinión dividida con la llegada de GPT 5.5 y de los modelos nuevos que consumen la cuota demasiado rápido.",
+    "opinions": [
+      {
+        "date": "2025-09-08",
+        "title": "Claude 4.1 Opus para animación CSS compleja y búsqueda de experto",
+        "stance": "positiva",
+        "text": "El grupo vio a Opus como el único modelo que lograba algo decente en una animación CSS compleja."
+      },
+      {
+        "date": "2025-10-02",
+        "title": "Claude Sonnet 4.5 en modo thinking y vibe coding",
+        "stance": "positiva",
+        "text": "Varios celebraron rachas de resultados al primer intento con Sonnet 4.5 en modo thinking."
+      },
+      {
+        "date": "2025-12-11",
+        "title": "Comparativa de modelos AI: quién usa qué y para qué",
+        "stance": "mixta",
+        "text": "Algunos sostuvieron que Opus valía cada dólar para tareas de alto retorno, mientras otros lo veían carísimo para uso regular."
+      },
+      {
+        "date": "2026-03-08",
+        "title": "Claude Sonnet viola el SRP: debate Opus vs Sonnet para código de producción",
+        "stance": "mixta",
+        "text": "El grupo coincidió en que Opus da diseños más coherentes que Sonnet, pero es más lento y caro, por lo que conviene reservarlo para decisiones de arquitectura."
+      },
+      {
+        "date": "2026-04-23",
+        "title": "GPT 5.5 supera a Opus 4.7 y genera conversión masiva al ecosistema OpenAI",
+        "stance": "negativa",
+        "text": "Varios sintieron que GPT 5.5 había pasado a Opus 4.7 y migraron hacia OpenAI."
+      },
+      {
+        "date": "2026-05-28",
+        "title": "Opus 4.8 más agéntico y Codex \"UI-iza\" el git diff por commit",
+        "stance": "positiva",
+        "text": "La comunidad lo describió como más agéntico que su predecesor, aunque con debilidades en casos borde."
+      },
+      {
+        "date": "2026-06-05",
+        "title": "Opus 4.8 max fast: más rápido pero olvidadizo con los detalles",
+        "stance": "negativa",
+        "text": "Algunos notaron que en modo max fast se olvidaba de detalles y había que corregirlo más seguido."
+      },
+      {
+        "date": "2026-06-09",
+        "title": "Primeras impresiones de Fable, el nuevo modelo de Anthropic",
+        "stance": "mixta",
+        "text": "El grupo reconoció que Fable detecta cosas que Opus no veía, pero se quejó de que consume la cuota de uso muy rápido y cuesta el doble."
+      },
+      {
+        "date": "2026-07-29",
+        "title": "Opus 5, frameworks de SDD y por qué más contexto no siempre es mejor",
+        "stance": "mixta",
+        "text": "Algunos quedaron decepcionados con Opus 5 porque rehacía tareas y daba malas instrucciones a sus subagentes, mientras otros tuvieron buenos resultados."
+      },
+      {
+        "date": "2026-09-22",
+        "title": "Implementar frontend con IA: modelos, skills de diseño y validación con capturas",
+        "stance": "positiva",
+        "text": "Varios pusieron a Fable y a Opus 5 entre los mejores modelos para construir interfaces, siempre acompañados de skills de diseño."
+      }
+    ]
+  },
+  {
+    "slug": "modelos-openai",
+    "name": "GPT y modelos de OpenAI",
+    "summary": "Pasó de ser un modelo tibio frente a Claude a convertirse, desde GPT 5.5, en el modelo principal de varios para tareas pesadas, con confianza creciente en GPT-5.6.",
+    "opinions": [
+      {
+        "date": "2025-08-07",
+        "title": "GPT-5 lanzamiento: review detallada y comparativa de modelos",
+        "stance": "mixta",
+        "text": "El grupo lo encontró más barato y obediente que Sonnet, pero varios siguieron prefiriendo Claude para programar."
+      },
+      {
+        "date": "2025-12-11",
+        "title": "Comparativa de modelos AI: quién usa qué y para qué",
+        "stance": "mixta",
+        "text": "Se comentaba que OpenAI perdía terreno frente a Anthropic, aunque algunos seguían usando GPT 5.1 Codex para ciertas tareas."
+      },
+      {
+        "date": "2026-04-23",
+        "title": "GPT 5.5 supera a Opus 4.7 y genera conversión masiva al ecosistema OpenAI",
+        "stance": "positiva",
+        "text": "El lanzamiento de GPT 5.5 provocó una conversión masiva: varios lo adoptaron como modelo principal y elogiaron su código limpio."
+      },
+      {
+        "date": "2026-06-08",
+        "title": "Herramientas para crear videos de lanzamiento de features: Hyperframes, Remotion y Screen Studio",
+        "stance": "mixta",
+        "text": "Algunos notaron que GPT 5.5 es muy bueno replicando una estética existente pero no tanto creándola desde cero."
+      },
+      {
+        "date": "2026-06-26",
+        "title": "Anuncio de GPT-5.6 y cómo interpretar los benchmarks de modelos",
+        "stance": "mixta",
+        "text": "El grupo se interesó por el foco en eficiencia del anuncio, pero pidió leer los benchmarks con cautela."
+      },
+      {
+        "date": "2026-07-09",
+        "title": "Primeras impresiones de la nueva app unificada de Codex y ChatGPT con GPT-5.6",
+        "stance": "mixta",
+        "text": "La comunidad valoró las variantes Sol y Terra de GPT-5.6, aunque criticó mezclar usuarios comunes y avanzados en una sola app."
+      },
+      {
+        "date": "2026-07-24",
+        "title": "Más confianza en GPT-5.6 Sol y agentes aislados por tenant guardados en la base de datos",
+        "stance": "positiva",
+        "text": "Algunos dijeron que con GPT-5.6 Sol dejaron de planificar tanto y empezaron a encadenar mejoras con muy buenos resultados."
+      }
+    ]
+  },
+  {
+    "slug": "gemini",
+    "name": "Gemini",
+    "summary": "Pasó de ser la opción gratuita y de uso cotidiano a un modelo chico, barato y confiable para producción, mientras para programar el grupo lo ve por detrás de otras opciones.",
+    "opinions": [
+      {
+        "date": "2025-06-11",
+        "title": "Google AI Studio y Gemini 2.5 Pro: 1 millón de tokens gratis",
+        "stance": "positiva",
+        "text": "El grupo quedó con buena impresión de AI Studio y de poder usar Gemini 2.5 Pro con un millón de tokens gratis."
+      },
+      {
+        "date": "2025-08-07",
+        "title": "GPT-5 lanzamiento: review detallada y comparativa de modelos",
+        "stance": "positiva",
+        "text": "Algunos lo preferían para el día a día, por Deep Research y por la generación de imágenes y video."
+      },
+      {
+        "date": "2025-12-11",
+        "title": "Comparativa de modelos AI: quién usa qué y para qué",
+        "stance": "positiva",
+        "text": "Varios sumaron Gemini 3 Pro y sus versiones Flash a su combinación habitual de modelos."
+      },
+      {
+        "date": "2026-07-20",
+        "title": "OCR de documentos, facturas y fotos de comprobantes: LLMs multimodales vs librerías tradicionales",
+        "stance": "positiva",
+        "text": "Algunos lo usan en producción para leer comprobantes con Flash Lite y destacan su costo mínimo y su confiabilidad."
+      },
+      {
+        "date": "2026-08-19",
+        "title": "Lanzamiento de la landing v3 de Macch: proceso de diseño y chat con IA en el hero",
+        "stance": "positiva",
+        "text": "La comunidad lo eligió como modelo barato y rápido para el chat integrado en una landing."
+      },
+      {
+        "date": "2026-09-21",
+        "title": "Qué suscripción de IA para programar conviene con 100 USD: Claude, Cursor o alternativas",
+        "stance": "mixta",
+        "text": "Varios mencionaron Antigravity con Gemini como opción económica y con buena cuota, aunque más lenta."
+      },
+      {
+        "date": "2026-09-22",
+        "title": "Implementar frontend con IA: modelos, skills de diseño y validación con capturas",
+        "stance": "mixta",
+        "text": "Algunos contaron que da buenos resultados en frontend pero tiende a romper código."
+      }
+    ]
+  },
+  {
+    "slug": "grok",
+    "name": "Grok",
+    "summary": "Pasó de ser un modelo desconocido a una de las opciones más elogiadas por su velocidad en Cursor, con dudas posteriores sobre cuánto rinden las cuotas.",
+    "opinions": [
+      {
+        "date": "2026-07-13",
+        "title": "La velocidad de los modelos como factor clave y Grok 4.5 como alternativa en Cursor",
+        "stance": "positiva",
+        "text": "El grupo vio a Grok 4.5 como una alternativa más rápida que Composer y casi al nivel de Opus 4.8."
+      },
+      {
+        "date": "2026-08-14",
+        "title": "Una landing de hackathon con Grok 4.6 y la skill Impeccable",
+        "stance": "positiva",
+        "text": "Algunos quedaron muy conformes con las interfaces que logra Grok 4.6 usando skills de diseño."
+      },
+      {
+        "date": "2026-09-01",
+        "title": "Combinar Fable, Grok y Composer según costo y velocidad",
+        "stance": "mixta",
+        "text": "Varios lo recomendaron para backend por su velocidad, aunque su fecha de corte de conocimiento es antigua."
+      },
+      {
+        "date": "2026-09-04",
+        "title": "Grok Bot: primeras impresiones, comparación con Hermes y manejo de credenciales",
+        "stance": "positiva",
+        "text": "La comunidad lo vio muy prometedor por su experiencia de uso, aunque algunos prefieren el control de Hermes."
+      },
+      {
+        "date": "2026-09-12",
+        "title": "Rendimiento real de los planes altos de Cursor frente a Codex",
+        "stance": "negativa",
+        "text": "Algunos notaron que Grok 4.6 se come rápido la cuota mensual de los planes altos de Cursor."
+      },
+      {
+        "date": "2026-09-22",
+        "title": "Implementar frontend con IA: modelos, skills de diseño y validación con capturas",
+        "stance": "positiva",
+        "text": "Varios lo incluyeron entre sus mejores opciones para interfaces cuando se usa con skills."
+      }
+    ]
+  },
+  {
+    "slug": "hermes-agent",
+    "name": "Hermes Agent",
+    "summary": "Pasó de ser una alternativa a OpenClaw que impulsaban unos pocos a un agente personal autoalojado muy usado en la comunidad, con entusiasmo por su flexibilidad y cautela con tareas irreversibles.",
+    "opinions": [
+      {
+        "date": "2026-04-26",
+        "title": "Debate sobre uso de Hermes como alternativa a openclaw para agentes autónomos",
+        "stance": "positiva",
+        "text": "Algunos impulsaron reemplazar OpenClaw por Hermes por su mejor arquitectura y bajo consumo de recursos, y varios empezaron a probarlo."
+      },
+      {
+        "date": "2026-06-05",
+        "title": "Finanzas personales con enfoque pro-agéntico usando Hermes",
+        "stance": "positiva",
+        "text": "Varios lo adoptaron para proyectos personales serios, como registrar finanzas sin estructura previa."
+      },
+      {
+        "date": "2026-06-10",
+        "title": "Casos de uso, configuración y proveedores de modelos para Hermes Agent",
+        "stance": "positiva",
+        "text": "La comunidad compartió casos de uso diarios, como grabar clases, clasificar correos y recibir recordatorios."
+      },
+      {
+        "date": "2026-06-17",
+        "title": "Skill open source para facturar en ARCA desde Hermes y manejo de errores en operaciones irreversibles",
+        "stance": "mixta",
+        "text": "El grupo celebró las skills de Hermes, pero discutió cómo evitar errores en operaciones irreversibles como facturar."
+      },
+      {
+        "date": "2026-08-20",
+        "title": "Hermes Agent y la capa gratuita de Nous Research para tareas agénticas",
+        "stance": "positiva",
+        "text": "Algunos lo usan para casi todo y destacaron que su capa gratuita permite correr agentes sin costo."
+      },
+      {
+        "date": "2026-09-04",
+        "title": "Grok Bot: primeras impresiones, comparación con Hermes y manejo de credenciales",
+        "stance": "mixta",
+        "text": "Frente a Grok Bot, algunos siguieron prefiriendo Hermes porque da más control."
+      }
+    ]
+  },
+  {
+    "slug": "mcp",
+    "name": "MCP (Model Context Protocol)",
+    "summary": "Pasó de la euforia por conectar herramientas desde el editor a un uso más maduro, con curiosidad por las novedades y escepticismo sobre los ahorros prometidos.",
+    "opinions": [
+      {
+        "date": "2025-08-16",
+        "title": "MCP: primera experiencia integrando Linear y GitHub desde Cursor",
+        "stance": "positiva",
+        "text": "El grupo reaccionó con euforia al poder crear tickets y PRs desde un solo chat."
+      },
+      {
+        "date": "2026-01-08",
+        "title": "Context7 MCP: documentación actualizada para modelos de IA",
+        "stance": "positiva",
+        "text": "Varios valoraron tener documentación siempre actualizada disponible para los modelos."
+      },
+      {
+        "date": "2026-01-23",
+        "title": "Plugin MCP de diseño frontend para Claude Code",
+        "stance": "mixta",
+        "text": "La comunidad dudó de si leer diseños de Figma con MCP era realmente útil o generaba código que después había que rehacer."
+      },
+      {
+        "date": "2026-03-16",
+        "title": "Curso de certificación MCP de Anthropic: anuncio y primeras impresiones",
+        "stance": "positiva",
+        "text": "Los que empezaron el curso lo encontraron una introducción sólida al protocolo."
+      },
+      {
+        "date": "2026-07-15",
+        "title": "Medición empírica del ahorro de tokens de codebase-memory MCP",
+        "stance": "mixta",
+        "text": "Algunos midieron que el ahorro de tokens era mucho menor al prometido, aunque lo consideraron útil con expectativas moderadas."
+      },
+      {
+        "date": "2026-08-05",
+        "title": "Agentes que operan la nube por CLI: el MCP de AWS y los permisos",
+        "stance": "mixta",
+        "text": "Varios prefirieron que el agente use directamente la CLI de la nube antes que un MCP, cuidando los permisos."
+      },
+      {
+        "date": "2026-09-25",
+        "title": "WebMCP y MCP UI: interfaces dinámicas generadas por agentes",
+        "stance": "mixta",
+        "text": "Algunos se entusiasmaron con WebMCP y las interfaces generadas por agentes, mientras otros no veían claro el caso de uso."
+      }
+    ]
+  },
+  {
+    "slug": "vercel",
+    "name": "Vercel",
+    "summary": "Pasó de ser la plataforma cómoda y gratuita para empezar a generar preocupación por costos inesperados, aunque sigue valorándose como herramienta.",
+    "opinions": [
+      {
+        "date": "2025-04-11",
+        "title": "Vercel AI SDK con Grok y Astro: integración y casos de uso",
+        "stance": "positiva",
+        "text": "Al grupo le interesó el AI SDK por simplificar el streaming y el uso de herramientas con varios modelos."
+      },
+      {
+        "date": "2025-11-25",
+        "title": "Deploy en VPS vs Vercel: vCPUs, Render y DonWeb",
+        "stance": "mixta",
+        "text": "Algunos recomendaban que el cliente pague Vercel, mientras otros proponían un VPS más barato."
+      },
+      {
+        "date": "2026-03-10",
+        "title": "Stitch vs v0: comparación de herramientas de prototipado de UI",
+        "stance": "positiva",
+        "text": "Quienes usaban v0 valoraban que generara código React listo para deployar."
+      },
+      {
+        "date": "2026-05-26",
+        "title": "Docker para React + Node y deploy a un VPS",
+        "stance": "mixta",
+        "text": "La comunidad comparó Vercel con un VPS para proyectos que necesitan más control sobre la infraestructura."
+      },
+      {
+        "date": "2026-06-19",
+        "title": "Cómo evitar costos inesperados en Vercel y otras plataformas de hosting",
+        "stance": "negativa",
+        "text": "Varios se quejaron de cobros altos por proyectos con poco tráfico y recomendaron firewall y límites de gasto."
+      },
+      {
+        "date": "2026-07-25",
+        "title": "Auditoría de costos de Vercel con un agente y debate sobre usar staging",
+        "stance": "mixta",
+        "text": "Algunos recomendaron auditar las cuentas después de descubrir que los deployments usaban máquinas más grandes de lo necesario."
+      }
+    ]
+  },
+  {
+    "slug": "supabase",
+    "name": "Supabase",
+    "summary": "Se la vio como una opción rápida y gratuita para arrancar proyectos, con algún dolor de cabeza de conexión, y terminó como backend habitual en proyectos asistidos por IA.",
+    "opinions": [
+      {
+        "date": "2025-08-16",
+        "title": "MCP: primera experiencia integrando Linear y GitHub desde Cursor",
+        "stance": "positiva",
+        "text": "Algunos destacaron que el MCP de Supabase sirve para armar MVPs rápido."
+      },
+      {
+        "date": "2025-09-30",
+        "title": "Problemas con Supabase direct connection en proyectos",
+        "stance": "negativa",
+        "text": "Varios chocaron con errores de conexión directa con Prisma y debieron pasarse a la conexión con pooler."
+      },
+      {
+        "date": "2025-11-25",
+        "title": "Deploy en VPS vs Vercel: vCPUs, Render y DonWeb",
+        "stance": "positiva",
+        "text": "Se la consideró una opción gratuita razonable para la base de datos de un primer proyecto fullstack."
+      },
+      {
+        "date": "2025-12-09",
+        "title": "T3 Stack, MongoDB vs relacional y refactoring de proyectos",
+        "stance": "positiva",
+        "text": "La comunidad la incluyó en un stack recomendado por su productividad y salida laboral."
+      },
+      {
+        "date": "2026-08-01",
+        "title": "Juegos de cartas hechos con agentes: harness modular, PixiJS y Supabase",
+        "stance": "positiva",
+        "text": "Algunos la siguen usando como backend en proyectos hechos con agentes."
+      },
+      {
+        "date": "2026-09-28",
+        "title": "Servicios gratuitos para alojar imágenes: Cloudflare R2, Cloudinary y Supabase Storage",
+        "stance": "positiva",
+        "text": "Se la mencionó entre las opciones gratuitas de almacenamiento de imágenes."
+      }
+    ]
+  },
+  {
+    "slug": "docker",
+    "name": "Docker",
+    "summary": "Siguió siendo una herramienta base para desplegar, aunque con quejas puntuales y el debate sobre si los agentes lo reemplazan con instrucciones de setup.",
+    "opinions": [
+      {
+        "date": "2025-06-01",
+        "title": "Debate OS: Windows vs Linux vs Mac para programar",
+        "stance": "negativa",
+        "text": "Algunos sufrieron roturas de Docker con WSL tras actualizaciones de Windows, lo que los empujó a pasarse a Mac."
+      },
+      {
+        "date": "2025-06-13",
+        "title": "Cómo deployar backend Java + PostgreSQL en un VPS con Docker",
+        "stance": "positiva",
+        "text": "El grupo coincidió en que con Docker desplegar en un VPS es mucho más limpio."
+      },
+      {
+        "date": "2025-06-16",
+        "title": "Apple lanza su propia herramienta de containers nativa (alternativa a Docker Desktop)",
+        "stance": "mixta",
+        "text": "La comunidad reaccionó con cansancio ante la herramienta nativa de Apple, que aún no soportaba Compose."
+      },
+      {
+        "date": "2026-05-06",
+        "title": "Karpathy y Software 3.0: SETUP.md como prompt vs Docker",
+        "stance": "mixta",
+        "text": "Algunos cuestionaron si hacía falta Docker cuando un SETUP.md legible por el agente podía describir el entorno."
+      },
+      {
+        "date": "2026-05-26",
+        "title": "Docker para React + Node y deploy a un VPS",
+        "stance": "positiva",
+        "text": "Varios compartieron experiencias prácticas dockerizando un stack React y Node para desplegar en un VPS."
+      },
+      {
+        "date": "2026-09-28",
+        "title": "Acelerar el CI saliendo de GitHub Actions: Blacksmith y Depot",
+        "stance": "positiva",
+        "text": "Algunos valoraron el cache de capas de Docker para reducir drásticamente los tiempos de CI."
+      }
+    ]
+  },
+  {
+    "slug": "nextjs",
+    "name": "Next.js",
+    "summary": "Se consolidó como el framework full-stack del grupo, con críticas tempranas y algunos dolores en casos particulares.",
+    "opinions": [
+      {
+        "date": "2025-05-20",
+        "title": "App de escritorio Windows para empresa de eventos: stack recomendado",
+        "stance": "negativa",
+        "text": "Algunos desaconsejaron usarlo dentro de Electron porque las rutas dinámicas dan problemas."
+      },
+      {
+        "date": "2025-06-20",
+        "title": "SvelteKit vs Next.js: debate de frameworks frontend",
+        "stance": "mixta",
+        "text": "El grupo debatió si abandonarlo tenía sentido y concluyó que muchos problemas vienen de no saber usarlo bien."
+      },
+      {
+        "date": "2025-12-09",
+        "title": "T3 Stack, MongoDB vs relacional y refactoring de proyectos",
+        "stance": "positiva",
+        "text": "La comunidad lo recomendó como parte de un stack con buena salida laboral y velocidad de desarrollo."
+      },
+      {
+        "date": "2026-04-16",
+        "title": "Debate GraphQL vs REST vs tRPC en proyectos modernos de 2026",
+        "stance": "positiva",
+        "text": "Varios valoraron las server functions por ofrecer una experiencia full-stack simple."
+      },
+      {
+        "date": "2026-08-21",
+        "title": "Estilos rotos en Windows 7 con Next.js y Tailwind recientes",
+        "stance": "negativa",
+        "text": "Algunos sufrieron incompatibilidades con navegadores viejos al usar versiones recientes junto con Tailwind."
+      }
+    ]
+  },
+  {
+    "slug": "python",
+    "name": "Python",
+    "summary": "Se mantuvo como lenguaje recomendado para empezar y para backend, con entusiasmo por sus herramientas modernas y dudas sobre su peso en la era de los agentes.",
+    "opinions": [
+      {
+        "date": "2025-06-12",
+        "title": "Recursos para aprender programación desde cero",
+        "stance": "positiva",
+        "text": "Varios lo recomendaron como el lenguaje más fácil para empezar."
+      },
+      {
+        "date": "2025-07-01",
+        "title": "Django vs FastAPI y ecosistema Python para backend",
+        "stance": "mixta",
+        "text": "El grupo elogió Django por su ORM y su panel de admin, pero señaló su lentitud y se inclinó por FastAPI para proyectos nuevos."
+      },
+      {
+        "date": "2025-08-26",
+        "title": "Debate UTN: ¿C o Python para enseñar programación?",
+        "stance": "mixta",
+        "text": "Algunos cuestionaron cambiarlo por C como primer lenguaje universitario porque un lenguaje de bajo nivel enseña a pensar como la computadora."
+      },
+      {
+        "date": "2026-01-06",
+        "title": "uv como gestor de paquetes Python: siempre uv, nunca otra cosa",
+        "stance": "positiva",
+        "text": "La comunidad adoptó uv como gestor de paquetes por sobre otras opciones."
+      },
+      {
+        "date": "2026-10-02",
+        "title": "Cómo conseguir el primer trabajo como desarrollador junior hoy",
+        "stance": "mixta",
+        "text": "Se comentó que ya no se busca dominio de un lenguaje puntual, sino gente al día con el desarrollo con agentes."
+      }
+    ]
+  },
+  {
+    "slug": "google-stitch",
+    "name": "Google Stitch",
+    "summary": "Pasó de ser una sorpresa para prototipar interfaces a una herramienta útil pero complementaria, frente a alternativas como v0 y Claude Design.",
+    "opinions": [
+      {
+        "date": "2026-02-13",
+        "title": "Google Stitch para UI: metaprompt, generación de pantallas y flujo con Claude",
+        "stance": "positiva",
+        "text": "El grupo mostró mucho interés por su flujo de generar pantallas y pasarlas a Claude Code."
+      },
+      {
+        "date": "2026-03-10",
+        "title": "Stitch vs v0: comparación de herramientas de prototipado de UI",
+        "stance": "mixta",
+        "text": "La comunidad lo valoró por sus imágenes de pantallas como referencia, mientras v0 quedó mejor para código directo."
+      },
+      {
+        "date": "2026-04-19",
+        "title": "Claude Design lanzado con design systems y slide decks integrados",
+        "stance": "mixta",
+        "text": "Algunos notaron que Claude Design seguía mejor las instrucciones."
+      },
+      {
+        "date": "2026-06-12",
+        "title": "Qué suscripción de IA pagar para programar: Claude, Codex o Cursor, y herramientas de diseño",
+        "stance": "positiva",
+        "text": "Varios destacaron que mejoró mucho y aporta buenas ideas visuales, aunque improvisa si no se lo guía bien."
+      },
+      {
+        "date": "2026-08-18",
+        "title": "Herramientas de diseño UX/UI e iteración de frontend con agentes",
+        "stance": "mixta",
+        "text": "Algunos coincidieron en que rinde bien con un buen prompt previo, pero no da el mismo control que Figma."
+      }
+    ]
+  }
+]

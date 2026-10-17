@@ -1,5 +1,6 @@
 'use client';
 
+import { EmptyState } from '@/components/empty-state';
 import { useState, useImperativeHandle, forwardRef, useMemo } from 'react';
 import { TestimonialCard } from '@/components/testimonials/testimonial-card';
 import { TestimonialForm } from '@/components/testimonials/testimonial-form';
@@ -10,14 +11,13 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { Card, CardContent } from '@/components/ui/card';
-import { Testimonial } from '@prisma/client';
+import { RuledGrid } from '@/components/ui/ruled-grid';
+import { Testimonial } from '@/generated/prisma/browser';
 
 type TestimonialWithUser = Testimonial & {
   user: {
     id: string;
     name: string;
-    email: string;
     image: string | null;
   };
 };
@@ -89,17 +89,14 @@ export const TestimonialsClient = forwardRef<TestimonialsClientRef, Testimonials
     return (
       <>
         {sortedTestimonials.length === 0 ? (
-          <Card className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:scale-[1.02] hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800">
-            <CardContent className="pt-6">
-              <div className="py-8 text-center">
-                <p className="text-muted-foreground">
-                  Aún no hay testimonios. Sé el primero en compartir tu experiencia.
-                </p>
-              </div>
-            </CardContent>
-          </Card>
+          <EmptyState
+            command="cat ~/testimonios/*"
+            output="cat: no such file or directory"
+            title="Todavía no hay testimonios"
+            description="Contá qué te dejó la comunidad y sé la primera persona en aparecer acá."
+          />
         ) : (
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3">
+          <RuledGrid className="mb-14 grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3">
             {sortedTestimonials.map((testimonial) => (
               <TestimonialCard
                 key={testimonial.id}
@@ -109,7 +106,7 @@ export const TestimonialsClient = forwardRef<TestimonialsClientRef, Testimonials
                 onEdit={handleEdit}
               />
             ))}
-          </div>
+          </RuledGrid>
         )}
 
         <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>

@@ -1,5 +1,10 @@
 import { prismaMock } from '@/test/prisma';
 import { fetchPageVisits, getPageVisitStats } from './fetch-page-visits';
+import { requireAdmin } from '@/lib/admin';
+import { nonAdminVisit } from '@/lib/page-visit-filters';
+
+// Admin-only data: every test runs as an admin unless it says otherwise.
+jest.mock('@/lib/admin', () => ({ requireAdmin: jest.fn() }));
 
 const sampleVisit = {
   id: 'visit-1',
@@ -19,7 +24,7 @@ describe('fetchPageVisits', () => {
     await fetchPageVisits();
 
     expect(prismaMock.pageVisit.findMany).toHaveBeenCalledWith(
-      expect.objectContaining({ take: 100 }),
+      expect.objectContaining({ take: 100, where: nonAdminVisit }),
     );
   });
 
@@ -73,7 +78,7 @@ describe('getPageVisitStats', () => {
       .mockResolvedValueOnce(80) // visitsThisWeek
       .mockResolvedValueOnce(300); // visitsThisMonth
 
-    prismaMock.pageVisit.groupBy
+    (prismaMock.pageVisit.groupBy as jest.Mock)
       .mockResolvedValueOnce([
         { path: '/home', _count: { path: 200 } },
         { path: '/about', _count: { path: 100 } },
@@ -111,7 +116,7 @@ describe('getPageVisitStats', () => {
       .mockResolvedValueOnce(5)
       .mockResolvedValueOnce(8);
 
-    prismaMock.pageVisit.groupBy
+    (prismaMock.pageVisit.groupBy as jest.Mock)
       .mockResolvedValueOnce([
         { path: '/a', _count: { path: 1 } },
         { path: '/b', _count: { path: 2 } },
@@ -134,7 +139,7 @@ describe('getPageVisitStats', () => {
       .mockResolvedValueOnce(0)
       .mockResolvedValueOnce(0)
       .mockResolvedValueOnce(0);
-    prismaMock.pageVisit.groupBy
+    (prismaMock.pageVisit.groupBy as jest.Mock)
       .mockResolvedValueOnce([] as any)
       .mockResolvedValueOnce([] as any)
       .mockResolvedValueOnce([] as any);
@@ -155,7 +160,7 @@ describe('getPageVisitStats', () => {
       .mockResolvedValueOnce(0)
       .mockResolvedValueOnce(0)
       .mockResolvedValueOnce(0);
-    prismaMock.pageVisit.groupBy
+    (prismaMock.pageVisit.groupBy as jest.Mock)
       .mockResolvedValueOnce([] as any)
       .mockResolvedValueOnce([] as any)
       .mockResolvedValueOnce([] as any);
@@ -165,8 +170,30 @@ describe('getPageVisitStats', () => {
     expect(prismaMock.pageVisit.groupBy).toHaveBeenCalledWith(
       expect.objectContaining({
         by: ['userId'],
-        where: { userId: { not: null } },
+        where: { ...nonAdminVisit, userId: { not: null } },
       }),
     );
+  });
+
+  it('leaves admin visits out of every count', async () => {
+    prismaMock.pageVisit.count.mockResolvedValue(0);
+    (prismaMock.pageVisit.groupBy as jest.Mock).mockResolvedValue([] as any);
+
+    await getPageVisitStats();
+
+    for (const [args] of prismaMock.pageVisit.count.mock.calls) {
+      expect(args?.where).toMatchObject(nonAdminVisit);
+    }
+    for (const [args] of (prismaMock.pageVisit.groupBy as jest.Mock).mock.calls) {
+      expect(args.where).toMatchObject(nonAdminVisit);
+    }
+  });
+});
+
+describe('fetchPageVisits access', () => {
+  it('rejects anyone who is not an admin', async () => {
+    (requireAdmin as jest.Mock).mockRejectedValueOnce(new Error('No autorizado'));
+
+    await expect(fetchPageVisits()).rejects.toThrow('No autorizado');
   });
 });

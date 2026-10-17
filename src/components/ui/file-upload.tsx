@@ -6,6 +6,10 @@ import { Input } from '@/components/ui/input';
 import { X, Loader2, Image as ImageIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { getPresignedUrl } from '@/actions/upload/get-presigned-url';
+import { postUploadForm } from '@/lib/upload-form';
+import { actionErrorMessage } from '@/lib/rate-limit-messages';
+import { IMAGE_TYPE_ERROR, isAllowedImage } from '@/lib/image-types';
+import { toJpegIfHeic } from '@/lib/heic';
 
 type FileUploadProps = {
   value?: string;
@@ -16,17 +20,31 @@ type FileUploadProps = {
   className?: string;
   disabled?: boolean;
   variant?: 'default' | 'profile'; // Variante para fotos de perfil más pequeñas
+  // Si se pasa, permite seleccionar varios archivos a la vez y recibe todas las URLs subidas
+  onChangeMultiple?: (_urls: string[]) => void;
 };
+
+async function uploadFile(file: File, folder: string): Promise<string> {
+  // 1. Obtener el formulario firmado usando Server Action
+  const { url, fields, fileUrl } = await getPresignedUrl({ contentType: file.type, folder });
+
+  // 2. Subir directamente a S3 (rechaza el archivo si pasa del tamaño firmado)
+  await postUploadForm(url, fields, file);
+
+  // 3. Usar la URL de CloudFront/S3
+  return fileUrl;
+}
 
 export function FileUpload({
   value,
   onChange,
   folder = 'events',
-  accept = 'image/jpeg,image/png,image/webp,image/gif',
+  accept = 'image/jpeg,image/png,image/webp,image/gif,image/heic,image/heif',
   maxSize = 10 * 1024 * 1024, // 10MB por defecto
   className,
   disabled = false,
   variant = 'default',
+  onChangeMultiple,
 }: FileUploadProps) {
   const [isUploading, setIsUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -41,11 +59,85 @@ export function FileUpload({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value]);
 
+  const resetInput = () => {
+    if (inputRef.current) {
+      inputRef.current.value = '';
+    }
+  };
+
+  const handleMultipleFiles = async (picked: File[]) => {
+    setError(null);
+
+    const converted = await Promise.allSettled(picked.map(toJpegIfHeic));
+    const files = converted.flatMap((r) => (r.status === 'fulfilled' ? [r.value] : []));
+    const unconverted = picked.filter((_, i) => converted[i].status === 'rejected');
+
+    const wrongType = files.filter((file) => !isAllowedImage(file));
+    const tooLarge = files.filter((file) => isAllowedImage(file) && file.size > maxSize);
+    const valid = files.filter((file) => isAllowedImage(file) && file.size <= maxSize);
+    const errors: string[] = [];
+    if (unconverted.length > 0) {
+      errors.push(`${unconverted.map((f) => f.name).join(', ')}: no se pudo convertir de HEIC`);
+    }
+    if (wrongType.length > 0) {
+      errors.push(
+        `${wrongType.map((f) => f.name).join(', ')}: no es una imagen JPEG, PNG, WebP, GIF o HEIC`,
+      );
+    }
+    if (tooLarge.length > 0) {
+      errors.push(
+        `${tooLarge.map((f) => f.name).join(', ')}: demasiado grande (máx. ${Math.round(maxSize / 1024 / 1024)}MB)`,
+      );
+    }
+
+    if (valid.length > 0) {
+      setPreview(URL.createObjectURL(valid[0]));
+      setIsUploading(true);
+      const results = await Promise.allSettled(valid.map((file) => uploadFile(file, folder)));
+      const urls = results.flatMap((r) => (r.status === 'fulfilled' ? [r.value] : []));
+      const failed = valid.filter((_, i) => results[i].status === 'rejected');
+      if (failed.length > 0) {
+        errors.push(`${failed.map((f) => f.name).join(', ')}: error al subir`);
+      }
+      if (urls.length > 0) {
+        onChangeMultiple?.(urls);
+      }
+      setIsUploading(false);
+      setPreview(null);
+    }
+
+    if (errors.length > 0) {
+      setError(errors.join('. '));
+    }
+    resetInput();
+  };
+
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+    if (onChangeMultiple) {
+      await handleMultipleFiles(Array.from(e.target.files ?? []));
+      return;
+    }
+
+    const picked = e.target.files?.[0];
+    if (!picked) return;
 
     setError(null);
+
+    let file: File;
+    try {
+      file = await toJpegIfHeic(picked);
+    } catch (err) {
+      setError((err as Error).message);
+      resetInput();
+      return;
+    }
+
+    // El tipo se valida acá: si lo rechaza el servidor, en producción el mensaje no llega
+    if (!isAllowedImage(file)) {
+      setError(IMAGE_TYPE_ERROR);
+      resetInput();
+      return;
+    }
 
     // Validar tamaño
     if (file.size > maxSize) {
@@ -60,39 +152,17 @@ export function FileUpload({
     // Subir archivo
     setIsUploading(true);
     try {
-      // 1. Obtener presigned URL usando Server Action
-      const { uploadUrl, fileUrl } = await getPresignedUrl({
-        fileName: file.name,
-        contentType: file.type,
-        folder,
-      });
-
-      // 2. Subir directamente a S3 con el Content-Type correcto (firmado en la URL)
-      const uploadResponse = await fetch(uploadUrl, {
-        method: 'PUT',
-        body: file,
-        headers: {
-          'Content-Type': file.type,
-        },
-      });
-
-      if (!uploadResponse.ok) {
-        throw new Error('Error al subir el archivo a S3');
-      }
-
-      // 3. Usar la URL de CloudFront/S3
+      const fileUrl = await uploadFile(file, folder);
       onChange(fileUrl);
       setPreview(fileUrl);
     } catch (err: any) {
-      setError(err.message || 'Error al subir el archivo');
+      setError(actionErrorMessage(err, 'Error al subir el archivo', true));
       setPreview(null);
       onChange('');
     } finally {
       setIsUploading(false);
       // Limpiar el input para permitir subir el mismo archivo de nuevo
-      if (inputRef.current) {
-        inputRef.current.value = '';
-      }
+      resetInput();
     }
   };
 
@@ -106,11 +176,12 @@ export function FileUpload({
   };
 
   return (
-    <div className={cn('space-y-2', className)}>
+    <div className={cn('flex flex-col items-start gap-2', className)}>
       <Input
         ref={inputRef}
         type="file"
         accept={accept}
+        multiple={!!onChangeMultiple}
         onChange={handleFileChange}
         disabled={disabled || isUploading}
         className="hidden"
@@ -143,12 +214,14 @@ export function FileUpload({
           </div>
           {!isUploading && (
             <Button
+              aria-label="Quitar imagen"
+              title="Quitar imagen"
               type="button"
               variant="destructive"
               size="icon"
               className={cn(
                 'absolute z-10 h-6 w-6',
-                variant === 'profile' ? '-right-1 -top-1' : '-right-2 -top-2',
+                variant === 'profile' ? '-top-1 -right-1' : '-top-2 -right-2',
               )}
               onClick={handleRemove}
               disabled={disabled}
@@ -187,10 +260,12 @@ export function FileUpload({
               {variant !== 'profile' && (
                 <>
                   <span className="text-sm text-muted-foreground">
-                    Haz clic para subir una imagen
+                    {onChangeMultiple
+                      ? 'Haz clic para subir una o más imágenes'
+                      : 'Haz clic para subir una imagen'}
                   </span>
                   <span className="text-xs text-muted-foreground/70">
-                    JPEG, PNG, WebP, GIF (máx. {Math.round(maxSize / 1024 / 1024)}MB)
+                    JPEG, PNG, WebP, GIF, HEIC (máx. {Math.round(maxSize / 1024 / 1024)}MB)
                   </span>
                 </>
               )}

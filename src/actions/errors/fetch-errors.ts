@@ -1,8 +1,11 @@
 'use server';
 
 import prisma from '@/lib/prisma';
+import { requireAdmin } from '@/lib/admin';
 
 export const fetchErrors = async (page: number = 1, limit: number = 50) => {
+  await requireAdmin();
+
   const skip = (page - 1) * limit;
 
   const [errors, total] = await Promise.all([
@@ -44,6 +47,8 @@ export const fetchErrors = async (page: number = 1, limit: number = 50) => {
 };
 
 export const getErrorStats = async () => {
+  await requireAdmin();
+
   const [totalErrors, unresolvedErrors, errorsToday, errorsThisWeek] = await Promise.all([
     prisma.errorLog.count(),
     prisma.errorLog.count({

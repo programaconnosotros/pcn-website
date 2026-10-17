@@ -11,7 +11,12 @@ image: pcn-website
 # If using something like Cloudflare, it is recommended to set encryption mode
 # in Cloudflare's SSL/TLS setting to "Full" to enable end-to-end encryption.
 proxy:
-  host: programaconnosotros.com
+  # CloudFront reaches the server as origin.programaconnosotros.com (a DNS record pointing straight
+  # at this host); programaconnosotros.com itself points at CloudFront. Both get a Let's Encrypt
+  # certificate here, so the site keeps working before and after the DNS switch.
+  hosts:
+    - programaconnosotros.com
+    - origin.programaconnosotros.com
   ssl: true
   app_port: 3000
 
@@ -41,13 +46,17 @@ env:
     - AUTH_GITHUB_ID
     - AUTH_GITHUB_SECRET
     - AUTH_TRUST_HOST
+    - TWO_FACTOR_ENCRYPTION_KEY
     - AWS_REGION
     - AWS_ACCESS_KEY_ID
     - AWS_SECRET_ACCESS_KEY
     - AWS_S3_BUCKET
     - AWS_CLOUDFRONT_URL
-    - SMTP_USER
-    - SMTP_PASS
+    - AWS_CLOUDFRONT_KEY_PAIR_ID
+    - AWS_CLOUDFRONT_PRIVATE_KEY_BASE64
+    - RESEND_API_KEY
+    - AI_GATEWAY_API_KEY
+    - CLOUDFRONT_ORIGIN_SECRET
 
 # Aliases are triggered with "bin/kamal <alias>". You can overwrite arguments on invocation:
 # "bin/kamal logs -r job" will tail logs from the first server in the job section.
@@ -59,6 +68,11 @@ env:
 #
 ssh:
   user: ubuntu
+
+# The image builds on the runner for several minutes while the SSH connection opened for
+# `docker login` sits idle and gets reset by the host; don't reuse connections idle that long.
+sshkit:
+  pool_idle_timeout: 60
 # Use a persistent storage volume.
 #
 # volumes:

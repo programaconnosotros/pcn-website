@@ -42,7 +42,7 @@ const regularSession = {
 };
 
 const TALK_ID = 'talk-1';
-const EVENT_ID = 'cTestEventId1234';
+const EVENT_ID = 'ctesteventid1234';
 
 describe('deleteTalk', () => {
   it('throws when no sessionId cookie is present', async () => {

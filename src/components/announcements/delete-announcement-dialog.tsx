@@ -14,6 +14,7 @@ import {
 import { deleteAnnouncement } from '@/actions/announcements/delete-announcement';
 import { toast } from 'sonner';
 import { Loader2 } from 'lucide-react';
+import { actionErrorMessage } from '@/lib/rate-limit-messages';
 
 interface DeleteAnnouncementDialogProps {
   announcementId: string;
@@ -37,7 +38,7 @@ export function DeleteAnnouncementDialog({
       toast.success('Anuncio eliminado exitosamente');
       onOpenChange(false);
     } catch (error: any) {
-      toast.error(error.message || 'Error al eliminar el anuncio');
+      toast.error(actionErrorMessage(error, 'Error al eliminar el anuncio', true));
     } finally {
       setIsDeleting(false);
     }
@@ -56,7 +57,12 @@ export function DeleteAnnouncementDialog({
         <AlertDialogFooter>
           <AlertDialogCancel disabled={isDeleting}>Cancelar</AlertDialogCancel>
           <AlertDialogAction
-            onClick={handleDelete}
+            // Sin preventDefault el diálogo se cierra al click: no se ve el estado de carga y, si
+            // falla, se pierde. Se cierra solo cuando termina bien.
+            onClick={(event) => {
+              event.preventDefault();
+              void handleDelete();
+            }}
             disabled={isDeleting}
             className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
           >

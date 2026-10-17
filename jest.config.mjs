@@ -5,17 +5,10 @@ const createJestConfig = nextJest({
   dir: './',
 });
 
-/** @type {import('jest').Config} */
-const config = {
-  testEnvironment: 'node',
-  setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
-  // Scope to src/ only — keeps Playwright tests/example.spec.ts out of Jest
-  testMatch: ['<rootDir>/src/**/*.test.ts'],
+const shared = {
   clearMocks: true,
   // next/jest can't parse JSONC comments in tsconfig.json so path aliases are
   // not auto-generated; list them here explicitly.
-  // NOTE: @prisma/* is intentionally omitted — @prisma/client must resolve
-  // to node_modules, not ./prisma/.
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
     '^@components/(.*)$': '<rootDir>/src/components/$1',
@@ -23,4 +16,46 @@ const config = {
   },
 };
 
-export default createJestConfig(config);
+/**
+ * Two projects:
+ * - node: `*.test.ts` — lib, schemas, server actions and route handlers, with Prisma, cookies()
+ *   and headers() mocked by jest.setup.ts.
+ * - dom: `*.test.tsx` — React components rendered with Testing Library in jsdom
+ *   (jest.setup.dom.ts mocks the Next router and the browser APIs jsdom lacks).
+ * The integration suite against Postgres runs apart with `pnpm test:db` (jest.db.config.mjs).
+ */
+const node = createJestConfig({
+  ...shared,
+  displayName: 'node',
+  testEnvironment: 'node',
+  setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
+  // Scope to src/ only — keeps the Playwright specs in tests/ out of Jest
+  testMatch: ['<rootDir>/src/**/*.test.ts'],
+  testPathIgnorePatterns: ['/node_modules/', '\\.db\\.test\\.ts$'],
+});
+
+const dom = createJestConfig({
+  ...shared,
+  displayName: 'dom',
+  testEnvironment: 'jsdom',
+  setupFilesAfterEnv: ['<rootDir>/jest.setup.dom.ts'],
+  // Rendering in jsdom and typing with user-event is slower than plain functions, more so on a
+  // busy machine; 5s made the bigger component tests flaky.
+  testTimeout: 15_000,
+  testMatch: ['<rootDir>/src/**/*.test.tsx'],
+});
+
+const jestConfig = async () => ({
+  projects: [await node(), await dom()],
+  collectCoverageFrom: [
+    'src/**/*.{ts,tsx}',
+    '!src/**/*.test.{ts,tsx}',
+    '!src/generated/**',
+    '!src/test/**',
+    '!src/scripts/**',
+    '!src/**/*.d.ts',
+  ],
+  coverageReporters: ['text-summary', 'json-summary', 'html'],
+});
+
+export default jestConfig;

@@ -4,38 +4,57 @@ import prisma from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
 import { z } from 'zod';
+import { enforceRateLimit } from '@/lib/rate-limit';
+import { findSession } from '@/lib/session';
+import { consejoTarget } from '@/lib/consejo-target';
+import { notifyUsers } from '@/actions/notifications/notify-users';
+import { excerpt } from '@/actions/notifications/excerpt';
 
 const commentSchema = z.object({
   content: z
     .string()
     .min(1, { message: 'El comentario no puede estar vacío' })
     .max(500, { message: 'El comentario no puede tener más de 500 caracteres' }),
-  adviseId: z.string(),
+  adviceId: z.string(),
   parentCommentId: z.string().nullable(),
 });
 
 export const createComment = async ({
   content,
-  adviseId,
+  adviceId,
   parentCommentId,
 }: z.infer<typeof commentSchema>) => {
-  const validatedData = commentSchema.parse({ content, adviseId, parentCommentId });
+  await enforceRateLimit('comment');
+
+  const validatedData = commentSchema.parse({ content, adviceId, parentCommentId });
 
   const sessionId = (await cookies()).get('sessionId');
 
   if (!sessionId) throw new Error('No autenticado');
 
-  const session = await prisma.session.findUnique({
-    where: { id: sessionId.value },
-  });
+  const session = await findSession(sessionId.value);
 
   if (!session) throw new Error('Sesión no encontrada');
+
+  const target = consejoTarget(validatedData.adviceId);
+
+  // Una respuesta va en el mismo consejo que su comentario padre: si no, quedaría colgada de un
+  // hilo de otro consejo y no aparecería en ninguno.
+  if (validatedData.parentCommentId) {
+    const parent = await prisma.comment.findUnique({
+      where: { id: validatedData.parentCommentId },
+      select: { adviceId: true, extractedId: true },
+    });
+    if (!parent || (parent.adviceId ?? parent.extractedId) !== validatedData.adviceId) {
+      throw new Error('El comentario al que respondés no es de este consejo');
+    }
+  }
 
   const comment = await prisma.comment.create({
     data: {
       content: validatedData.content,
       authorId: session.userId,
-      adviseId: validatedData.adviseId,
+      ...target,
       parentCommentId: validatedData.parentCommentId,
     },
     include: {
@@ -43,14 +62,32 @@ export const createComment = async ({
         select: {
           id: true,
           name: true,
-          email: true,
           image: true,
         },
       },
     },
   });
 
-  revalidatePath(`/consejos/${adviseId}`);
+  // Los consejos extraídos de las conversaciones no tienen autor en la plataforma.
+  if ('adviceId' in target) {
+    const advice = await prisma.advice.findUnique({
+      where: { id: target.adviceId },
+      select: { authorId: true },
+    });
+    await notifyUsers(
+      [advice?.authorId],
+      {
+        type: 'advice_commented',
+        title: 'Comentaron tu consejo',
+        message: `${comment.author.name} comentó tu consejo: "${excerpt(comment.content)}".`,
+        href: `/consejos/${adviceId}`,
+        metadata: { adviceId, commentId: comment.id, userId: session.userId },
+      },
+      session.userId,
+    );
+  }
+
+  revalidatePath(`/consejos/${adviceId}`);
 
   return comment;
 };

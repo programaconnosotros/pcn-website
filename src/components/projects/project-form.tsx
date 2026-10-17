@@ -1,10 +1,10 @@
 'use client';
 
 import { useState } from 'react';
-import { useFieldArray, useForm, useFormContext } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'sonner';
-import { Plus, Save, Trash2, X } from 'lucide-react';
+import { Plus, Save, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   Form,
@@ -16,91 +16,29 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { checkboxClassName } from '@/components/ui/field-surface';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { FileUpload } from '@/components/ui/file-upload';
-import { SpeakerUserPicker } from '@/components/talks/speaker-user-picker';
+import { CollaboratorsField } from './collaborators-field';
 import { projectSchema, ProjectFormData } from '@/schemas/project-schema';
 import { createProject } from '@/actions/projects/create-project';
 import { updateProject } from '@/actions/projects/update-project';
 import { fetchPublicProjects } from '@/actions/projects/fetch-public-projects';
+import { dialogFormActionBarClassName } from '@/components/ui/form-action-bar';
+import { actionErrorMessage } from '@/lib/rate-limit-messages';
 
 type ProjectWithMembers = Awaited<ReturnType<typeof fetchPublicProjects>>[number];
 
-const EMPTY_MEMBER: NonNullable<ProjectFormData['members']>[number] = {
-  userId: null,
-  memberName: '',
-};
-
-function MemberFields({ index, onRemove }: { index: number; onRemove: () => void }) {
-  const { control, setValue } = useFormContext<ProjectFormData>();
-
-  return (
-    <div className="space-y-3 rounded-lg border p-4">
-      <div className="flex items-center justify-between">
-        <h3 className="text-sm font-medium">Miembro {index + 1}</h3>
-        <Button
-          type="button"
-          variant="ghost"
-          size="sm"
-          onClick={onRemove}
-          className="text-destructive hover:text-destructive"
-        >
-          <Trash2 className="h-4 w-4" />
-        </Button>
-      </div>
-
-      <FormField
-        control={control}
-        name={`members.${index}.userId`}
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>Usuario registrado (opcional)</FormLabel>
-            <FormControl>
-              <SpeakerUserPicker
-                value={field.value ?? null}
-                onSelect={(user) => {
-                  field.onChange(user?.id ?? null);
-                  if (user) {
-                    setValue(`members.${index}.memberName`, user.name, {
-                      shouldValidate: true,
-                    });
-                  }
-                }}
-              />
-            </FormControl>
-            <FormDescription>
-              Buscá un usuario para vincular su perfil automáticamente.
-            </FormDescription>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
-
-      <FormField
-        control={control}
-        name={`members.${index}.memberName`}
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>Nombre</FormLabel>
-            <FormControl>
-              <Input placeholder="Ej: María García" {...field} />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
-    </div>
-  );
-}
-
 type Props = {
   project?: ProjectWithMembers;
+  // Usuario logueado: es el autor de los proyectos nuevos.
+  currentUser: { id: string; name: string; isAdmin: boolean };
   onSuccess?: () => void;
   onCancel?: () => void;
 };
 
-export function ProjectForm({ project, onSuccess, onCancel }: Props) {
+export function ProjectForm({ project, currentUser, onSuccess, onCancel }: Props) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [techInput, setTechInput] = useState('');
 
@@ -112,22 +50,32 @@ export function ProjectForm({ project, onSuccess, onCancel }: Props) {
       url: project?.url ?? '',
       logoUrl: project?.logoUrl ?? '',
       techStack: project?.techStack ?? [],
+      isOpenSource: project?.isOpenSource ?? false,
+      repoUrl: project?.repoUrl ?? '',
+      startYear: project?.startYear ?? '',
+      endYear: project?.endYear ?? '',
+      authorRole: project?.authorRole ?? '',
       members: project?.members
         ? project.members.map((m) => ({
             userId: m.userId ?? null,
             memberName: m.memberName,
+            role: m.role ?? '',
           }))
         : [],
-      order: project?.order ?? 0,
     },
   });
 
-  const { fields, append, remove } = useFieldArray({
-    control: form.control,
-    name: 'members',
-  });
+  // Proyectos viejos cargados por admins pueden no tener autor.
+  const author = project ? project.author : { id: currentUser.id, name: currentUser.name };
+  // Solo el autor (o un admin) arma el equipo y define los roles; los colaboradores editan
+  // la información básica.
+  const canManageTeam = !project || currentUser.isAdmin || project.authorId === currentUser.id;
+  const memberImages = Object.fromEntries(
+    (project?.members ?? []).flatMap((m) => (m.user ? [[m.user.id, m.user.image]] : [])),
+  );
 
   const techStack = form.watch('techStack') ?? [];
+  const isOpenSource = form.watch('isOpenSource');
 
   function addTech() {
     const tag = techInput.trim();
@@ -152,11 +100,11 @@ export function ProjectForm({ project, onSuccess, onCancel }: Props) {
         toast.success('Proyecto actualizado');
       } else {
         await createProject(values);
-        toast.success('Proyecto creado');
+        toast.success('Proyecto publicado');
       }
       onSuccess?.();
     } catch (error: any) {
-      toast.error(error.message || 'Error al guardar el proyecto');
+      toast.error(actionErrorMessage(error, 'Error al guardar el proyecto', true));
     } finally {
       setIsSubmitting(false);
     }
@@ -204,7 +152,7 @@ export function ProjectForm({ project, onSuccess, onCancel }: Props) {
             <FormItem>
               <FormLabel>URL del proyecto</FormLabel>
               <FormControl>
-                <Input placeholder="https://github.com/usuario/proyecto" {...field} />
+                <Input placeholder="https://mi-proyecto.com" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -218,12 +166,113 @@ export function ProjectForm({ project, onSuccess, onCancel }: Props) {
             <FormItem>
               <FormLabel>Logo del proyecto</FormLabel>
               <FormControl>
-                <FileUpload value={field.value ?? ''} onChange={field.onChange} folder="logos" />
+                <FileUpload
+                  value={field.value ?? ''}
+                  onChange={field.onChange}
+                  folder="project-logos"
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
+
+        <FormField
+          control={form.control}
+          name="isOpenSource"
+          render={({ field }) => (
+            <FormItem>
+              <div className="flex items-center gap-3">
+                <FormControl>
+                  <input
+                    type="checkbox"
+                    id="isOpenSource"
+                    checked={!!field.value}
+                    onChange={(e) => {
+                      field.onChange(e.target.checked);
+                      // El repo solo aplica a proyectos open-source; no lo dejamos validando oculto.
+                      if (!e.target.checked) form.setValue('repoUrl', '', { shouldValidate: true });
+                    }}
+                    className={checkboxClassName}
+                  />
+                </FormControl>
+                <FormLabel
+                  htmlFor="isOpenSource"
+                  className="cursor-pointer tracking-normal text-foreground normal-case before:content-none"
+                >
+                  Es open-source
+                </FormLabel>
+              </div>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        {isOpenSource && (
+          <FormField
+            control={form.control}
+            name="repoUrl"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Repositorio en GitHub</FormLabel>
+                <FormControl>
+                  <Input
+                    placeholder="https://github.com/usuario/proyecto"
+                    {...field}
+                    value={field.value ?? ''}
+                  />
+                </FormControl>
+                <FormDescription>
+                  Opcional. Así otros miembros pueden leer el código y contribuir.
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        )}
+
+        <div className="grid grid-cols-2 gap-4">
+          <FormField
+            control={form.control}
+            name="startYear"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Año de inicio</FormLabel>
+                <FormControl>
+                  <Input
+                    type="number"
+                    inputMode="numeric"
+                    placeholder="Ej: 2024"
+                    {...field}
+                    value={field.value ?? ''}
+                  />
+                </FormControl>
+                <FormDescription>Opcional.</FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="endYear"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Año de cierre</FormLabel>
+                <FormControl>
+                  <Input
+                    type="number"
+                    inputMode="numeric"
+                    placeholder="Ej: 2025"
+                    {...field}
+                    value={field.value ?? ''}
+                  />
+                </FormControl>
+                <FormDescription>Dejalo vacío si sigue activo.</FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
 
         {/* Tech stack tag input */}
         <FormField
@@ -244,7 +293,13 @@ export function ProjectForm({ project, onSuccess, onCancel }: Props) {
                     }
                   }}
                 />
-                <Button type="button" variant="outline" onClick={addTech}>
+                <Button
+                  aria-label="Agregar tecnología"
+                  title="Agregar tecnología"
+                  type="button"
+                  variant="outline"
+                  onClick={addTech}
+                >
                   <Plus className="h-4 w-4" />
                 </Button>
               </div>
@@ -269,60 +324,98 @@ export function ProjectForm({ project, onSuccess, onCancel }: Props) {
           )}
         />
 
-        {/* Members */}
-        <div className="space-y-3">
-          <div className="flex items-center justify-between">
-            <h3 className="text-base font-semibold">Participantes</h3>
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              onClick={() => append({ ...EMPTY_MEMBER })}
-            >
-              <Plus className="mr-1 h-4 w-4" />
-              Agregar participante
-            </Button>
-          </div>
-          {fields.length === 0 && (
-            <p className="text-sm text-muted-foreground">
-              Sin participantes. Podés agregar los miembros que trabajaron en este proyecto.
+        <div className="space-y-2">
+          <p className="text-sm font-medium">Autor</p>
+          <div className="flex items-center gap-2">
+            <p className="min-w-0 flex-1 truncate font-mono text-sm text-muted-foreground">
+              <span className="text-pcnGreen-500">@ </span>
+              {author?.name ?? 'Sin autor'}
             </p>
-          )}
-          {fields.map((field, idx) => (
-            <MemberFields key={field.id} index={idx} onRemove={() => remove(idx)} />
-          ))}
+            {canManageTeam && author ? (
+              <FormField
+                control={form.control}
+                name="authorRole"
+                render={({ field }) => (
+                  <FormItem className="space-y-0">
+                    <FormControl>
+                      <Input
+                        aria-label="Rol del autor"
+                        placeholder="Rol (opcional)"
+                        maxLength={100}
+                        className="h-8 w-40 text-xs sm:w-48"
+                        {...field}
+                        value={field.value ?? ''}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            ) : (
+              project?.authorRole && (
+                <span className="shrink-0 font-mono text-xs text-muted-foreground">
+                  {project.authorRole}
+                </span>
+              )
+            )}
+          </div>
         </div>
 
-        <FormField
-          control={form.control}
-          name="order"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Orden</FormLabel>
-              <FormControl>
-                <Input
-                  type="number"
-                  min={0}
-                  {...field}
-                  onChange={(e) => field.onChange(Number(e.target.value))}
-                />
-              </FormControl>
-              <FormDescription>Número menor aparece primero.</FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        {canManageTeam ? (
+          <FormField
+            control={form.control}
+            name="members"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Equipo</FormLabel>
+                <FormControl>
+                  <CollaboratorsField
+                    value={field.value ?? []}
+                    onChange={field.onChange}
+                    excludedUserIds={author ? [author.id] : []}
+                    initialImages={memberImages}
+                  />
+                </FormControl>
+                <FormDescription>
+                  Buscá a los miembros de la comunidad que participaron y, si querés, escribí el rol
+                  de cada uno. Si alguien no tiene cuenta, podés agregarlo por nombre.
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        ) : (
+          <div className="space-y-2">
+            <p className="text-sm font-medium">Equipo</p>
+            {project && project.members.length > 0 && (
+              <ul className="space-y-1 font-mono text-sm text-muted-foreground">
+                {project.members.map((member) => (
+                  <li key={member.id} className="flex gap-2">
+                    <span className="min-w-0 flex-1 truncate">
+                      <span className="text-pcnGreen-500">@ </span>
+                      {member.memberName}
+                    </span>
+                    {member.role && <span className="shrink-0 text-xs">{member.role}</span>}
+                  </li>
+                ))}
+              </ul>
+            )}
+            <p className="text-[0.8rem] text-muted-foreground">
+              Solo el autor puede cambiar el equipo y los roles.
+            </p>
+          </div>
+        )}
 
-        <div className="flex gap-4">
+        <div className={`${dialogFormActionBarClassName} flex gap-4`}>
           <Button
             type="submit"
             variant="pcn"
             className="flex-1"
             loading={isSubmitting}
-            loadingText="Guardando..."
+            loadingText="guardando..."
           >
             <Save className="mr-2 h-4 w-4" />
-            {project ? 'Actualizar proyecto' : 'Crear proyecto'}
+            {project ? 'actualizarProyecto();' : 'publicarProyecto();'}
           </Button>
           {onCancel && (
             <Button
@@ -332,7 +425,7 @@ export function ProjectForm({ project, onSuccess, onCancel }: Props) {
               disabled={isSubmitting}
               onClick={onCancel}
             >
-              Cancelar
+              cancelar();
             </Button>
           )}
         </div>

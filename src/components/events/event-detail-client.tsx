@@ -2,11 +2,13 @@
 
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { registerEvent } from '@/actions/events/register-event';
+import { registerEvent, type RegistrationResult } from '@/actions/events/register-event';
 import { RegistrationSuccessDialog } from './registration-success-dialog';
-import { RegisterEventButton } from './register-event-button';
+import { RegisterEventButton, signInUrl } from './register-event-button';
 import { CancelRegistrationButton } from './cancel-registration-button';
 import { toast } from 'sonner';
+import { actionErrorMessage } from '@/lib/rate-limit-messages';
+import { isAuthRequiredError } from '@/lib/auth-required';
 
 type Props = {
   eventId: string;
@@ -22,6 +24,9 @@ type Props = {
   } | null;
   externalRegistrationUrl?: string | null;
   isFull?: boolean;
+  // Posición en la lista de espera si la persona está esperando un lugar
+  waitlistPosition?: number | null;
+  waitlistCount?: number;
 };
 
 export function EventDetailClient({
@@ -34,6 +39,8 @@ export function EventDetailClient({
   capacityInfo,
   externalRegistrationUrl,
   isFull = false,
+  waitlistPosition: initialWaitlistPosition = null,
+  waitlistCount = 0,
 }: Props) {
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -42,12 +49,19 @@ export function EventDetailClient({
   const [isAutoRegistering, setIsAutoRegistering] = useState(false);
   // Estado local para saber si ya se registró en esta sesión
   const [justRegisteredLocally, setJustRegisteredLocally] = useState(false);
+  // Posición en la lista de espera si se sumó en esta sesión
+  const [localWaitlistPosition, setLocalWaitlistPosition] = useState<number | null>(null);
+  const [leftWaitlistLocally, setLeftWaitlistLocally] = useState(false);
 
   const autoRegister = searchParams.get('autoRegister') === 'true';
   const justRegistered = searchParams.get('registered') === 'true';
 
   // El usuario está registrado si viene del server O si se registró localmente
   const isRegistered = initialIsRegistered || justRegisteredLocally;
+  const waitlistPosition = leftWaitlistLocally
+    ? null
+    : (localWaitlistPosition ?? initialWaitlistPosition);
+  const isWaitlisted = !isRegistered && waitlistPosition !== null;
 
   // Mostrar dialog si viene con registered=true
   useEffect(() => {
@@ -65,8 +79,8 @@ export function EventDetailClient({
       autoRegister &&
       isAuthenticated &&
       !isRegistered &&
+      !isWaitlisted &&
       !hasAutoRegistered &&
-      capacityAvailable &&
       !externalRegistrationUrl
     ) {
       const performAutoRegister = async () => {
@@ -74,14 +88,19 @@ export function EventDetailClient({
         setIsAutoRegistering(true);
 
         try {
-          await registerEvent(eventId, { skipRedirect: true });
+          // Sin cupo, el servidor la suma a la lista de espera
+          const result = await registerEvent(eventId, { skipRedirect: true });
 
           // Limpiar URL y mostrar dialog
           router.replace(`/eventos/${eventId}`, { scroll: false });
-          setJustRegisteredLocally(true);
-          setShowSuccessDialog(true);
+          handleRegistrationSuccess(result);
         } catch (error: any) {
-          toast.error(error.message || 'Error al inscribirse automáticamente');
+          if (isAuthRequiredError(error)) {
+            toast.info('Tu sesión se cerró. Iniciá sesión para inscribirte.');
+            router.replace(signInUrl(eventId));
+            return;
+          }
+          toast.error(actionErrorMessage(error, 'Error al inscribirse automáticamente', true));
           router.replace(`/eventos/${eventId}`, { scroll: false });
         } finally {
           setIsAutoRegistering(false);
@@ -97,17 +116,22 @@ export function EventDetailClient({
     autoRegister,
     isAuthenticated,
     isRegistered,
+    isWaitlisted,
     hasAutoRegistered,
     eventId,
-    capacityAvailable,
     externalRegistrationUrl,
     router,
   ]);
 
-  const handleRegistrationSuccess = () => {
-    setJustRegisteredLocally(true);
+  function handleRegistrationSuccess(result: RegistrationResult) {
+    if (result.status === 'waitlisted') {
+      setLocalWaitlistPosition(result.position);
+      setLeftWaitlistLocally(false);
+    } else {
+      setJustRegisteredLocally(true);
+    }
     setShowSuccessDialog(true);
-  };
+  }
 
   const handleDialogClose = () => {
     setShowSuccessDialog(false);
@@ -120,6 +144,11 @@ export function EventDetailClient({
     setJustRegisteredLocally(false);
   };
 
+  const handleLeaveWaitlist = () => {
+    setLocalWaitlistPosition(null);
+    setLeftWaitlistLocally(true);
+  };
+
   // Renderizar según el estado
   if (externalRegistrationUrl) {
     return (
@@ -128,7 +157,7 @@ export function EventDetailClient({
         isAuthenticated={isAuthenticated}
         capacityAvailable={true}
         externalUrl={externalRegistrationUrl}
-        label={isFull ? 'Inscribirse en lista de espera' : undefined}
+        label={isFull ? 'unirmeAListaDeEspera();' : undefined}
       />
     );
   }
@@ -157,31 +186,61 @@ export function EventDetailClient({
     );
   }
 
-  if (!externalRegistrationUrl && isFull) {
+  if (isWaitlisted) {
     return (
-      <div className="space-y-2">
-        <p className="text-center text-sm font-medium text-destructive">Cupo completo</p>
-        <p className="text-center text-xs text-muted-foreground">
-          Ya no quedan lugares disponibles.
-        </p>
-      </div>
+      <>
+        <div className="space-y-3">
+          <div className="space-y-2">
+            <p className="text-center text-sm font-medium">
+              Estás en la lista de espera · lugar #{waitlistPosition}
+            </p>
+            <p className="text-center text-xs text-muted-foreground">
+              Si se libera un lugar, te inscribimos automáticamente y te avisamos por email.
+            </p>
+          </div>
+          <CancelRegistrationButton
+            eventId={eventId}
+            mode="waitlist"
+            onCancel={handleLeaveWaitlist}
+          />
+        </div>
+
+        <RegistrationSuccessDialog
+          open={showSuccessDialog}
+          onClose={handleDialogClose}
+          eventName={eventName}
+          waitlistPosition={waitlistPosition}
+        />
+      </>
     );
   }
 
   return (
     <>
       <div className="space-y-3">
+        {isFull && (
+          <p className="text-center text-sm font-medium text-destructive">Cupo completo</p>
+        )}
         <RegisterEventButton
           eventId={eventId}
           isAuthenticated={isAuthenticated}
-          capacityAvailable={capacityAvailable}
+          capacityAvailable={capacityAvailable && !isFull}
           onSuccess={handleRegistrationSuccess}
           isLoading={isAutoRegistering}
         />
-        {capacityInfo && (
+        {isFull ? (
           <p className="text-center text-xs text-muted-foreground">
-            Quedan {capacityInfo.capacity - capacityInfo.current} lugares disponibles.
+            {waitlistCount > 0
+              ? `${waitlistCount} ${waitlistCount === 1 ? 'persona espera' : 'personas esperan'} un lugar. `
+              : ''}
+            Si se libera uno, se inscribe automáticamente a quien sigue en la lista.
           </p>
+        ) : (
+          capacityInfo && (
+            <p className="text-center text-xs text-muted-foreground">
+              Quedan {capacityInfo.capacity - capacityInfo.current} lugares disponibles.
+            </p>
+          )
         )}
       </div>
 

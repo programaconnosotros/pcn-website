@@ -1,19 +1,6 @@
-import {
-  PageHeaderSkeleton,
-  TitleRowSkeleton,
-  FormSkeleton,
-} from '@/components/skeletons/page-skeletons';
+import { EventDetailSkeleton } from '@/components/skeletons/event-skeletons';
 
+// The page only redirects to the event (or its external sign-up), so wait on the event's layout.
 export default function Loading() {
-  return (
-    <>
-      <PageHeaderSkeleton breadcrumbs={4} />
-      <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-        <div className="mt-4">
-          <TitleRowSkeleton />
-          <FormSkeleton rows={5} />
-        </div>
-      </div>
-    </>
-  );
+  return <EventDetailSkeleton />;
 }

@@ -1,0 +1,169 @@
+import type { Metadata } from 'next';
+import Link from 'next/link';
+import { notFound } from 'next/navigation';
+import { getCurrentSession } from '@/actions/auth/get-current-session';
+import { SetupLikeButton } from '@/components/setups/setup-like-button';
+import { SetupOwnerActions } from '@/components/setups/setup-owner-actions';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { format } from 'date-fns';
+import { PageTitle } from '@/components/ui/page-title';
+import { StickyHeader } from '@/components/ui/sticky-header';
+import { optimizedOgImage } from '@/lib/og-image';
+import { fetchSetup } from '@/lib/setups';
+import { MISSING_TAB_TITLE, tabTitle } from '@/lib/tab-title';
+import { SETUP_SOFTWARE, calendarDate, dateInputValue } from '@/schemas/setup-schema';
+import { Fragment } from 'react';
+import { ReportButton } from '@/components/moderation/report-button';
+
+type Props = { params: Promise<{ id: string }> };
+
+const Section = ({ title, children }: { title: string; children: React.ReactNode }) => (
+  <section className="p-3">
+    <h2 className="mb-2 font-mono text-[11px] tracking-wider text-muted-foreground uppercase">
+      <span className="text-pcnGreen-500">{'// '}</span>
+      {title}
+    </h2>
+    {children}
+  </section>
+);
+
+export async function generateMetadata(props: Props): Promise<Metadata> {
+  const { id } = await props.params;
+  const setup = await fetchSetup(id);
+  if (!setup) return { title: { absolute: MISSING_TAB_TITLE } };
+
+  const title = `${setup.title} · setup de ${setup.author.name}`;
+  const description =
+    setup.description.length > 160 ? `${setup.description.slice(0, 157)}...` : setup.description;
+  const images = [{ url: optimizedOgImage(setup.imageUrl), alt: setup.title }];
+
+  return {
+    title: tabTitle.cat('setups', setup.title),
+    description,
+    openGraph: {
+      title,
+      description,
+      images,
+      url: `/setups/${setup.id}`,
+      type: 'article',
+      siteName: 'programaConNosotros',
+    },
+    twitter: { card: 'summary_large_image', title, description, images },
+  };
+}
+
+export default async function SetupPage(props: Props) {
+  const { id } = await props.params;
+  const [setup, session] = await Promise.all([fetchSetup(id), getCurrentSession()]);
+  if (!setup) notFound();
+
+  const viewer = session?.user ?? null;
+  const isAuthor = viewer?.id === setup.author.id;
+  const canDelete = isAuthor || viewer?.role === 'ADMIN';
+
+  return (
+    <div className="mx-auto flex w-full max-w-6xl flex-1 flex-col p-4 pt-0">
+      <StickyHeader className="mt-4">
+        <PageTitle
+          path={[{ label: 'setups', href: '/setups' }, { label: setup.title }]}
+          action={
+            <div className="flex items-center gap-3">
+              <ReportButton contentType="setup" contentId={setup.id} hidden={!viewer || isAuthor} />
+              <SetupLikeButton
+                setupId={setup.id}
+                likes={setup.likes.length}
+                liked={!!viewer && setup.likes.some((like) => like.userId === viewer.id)}
+                isLoggedIn={!!viewer}
+                className="px-2 py-1 text-xs"
+              />
+            </div>
+          }
+        />
+      </StickyHeader>
+
+      <div className="mb-14 grid border border-pcnGreen-200 lg:grid-cols-[1fr_320px]">
+        <div className="flex items-center justify-center bg-black max-lg:border-b max-lg:border-pcnGreen-200 lg:border-r lg:border-pcnGreen-200">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={setup.imageUrl}
+            alt={setup.title}
+            width={setup.width}
+            height={setup.height}
+            className="max-h-[calc(100dvh-10rem)] w-auto max-w-full photo-glitch-in object-contain p-2 sm:p-4"
+          />
+        </div>
+
+        <div className="flex flex-col divide-y divide-pcnGreen-200">
+          <Section title="de">
+            <Link
+              href={`/perfil/${setup.author.id}`}
+              className="group/author flex min-w-0 items-center gap-2"
+            >
+              <Avatar className="size-8 rounded-sm">
+                <AvatarImage src={setup.author.image ?? undefined} alt="" />
+                <AvatarFallback className="rounded-sm text-xs">
+                  {setup.author.name.charAt(0)}
+                </AvatarFallback>
+              </Avatar>
+              <span className="min-w-0">
+                <span className="block truncate font-mono text-sm font-semibold transition-colors group-hover/author:text-pcnGreen">
+                  {setup.author.name}
+                </span>
+                <span className="block font-mono text-[11px] text-muted-foreground">
+                  <time dateTime={dateInputValue(setup.date)}>
+                    {format(calendarDate(setup.date), 'dd/MM/yyyy')}
+                  </time>
+                </span>
+              </span>
+            </Link>
+          </Section>
+
+          <Section title="descripción">
+            <p className="text-sm leading-relaxed whitespace-pre-line text-muted-foreground">
+              {setup.description}
+            </p>
+          </Section>
+
+          {(SETUP_SOFTWARE.some(({ key }) => setup[key]) || setup.otherSoftware) && (
+            <Section title="software">
+              <dl className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 font-mono text-xs">
+                {SETUP_SOFTWARE.filter(({ key }) => setup[key]).map(({ key, label }) => (
+                  <Fragment key={key}>
+                    <dt className="text-muted-foreground">{label}</dt>
+                    <dd className="text-foreground/90">{setup[key]}</dd>
+                  </Fragment>
+                ))}
+                {setup.otherSoftware && (
+                  <>
+                    <dt className="text-muted-foreground">otras</dt>
+                    <dd className="text-foreground/90">{setup.otherSoftware}</dd>
+                  </>
+                )}
+              </dl>
+            </Section>
+          )}
+
+          {canDelete && (
+            <div className="p-3">
+              <SetupOwnerActions
+                setup={{
+                  id: setup.id,
+                  title: setup.title,
+                  description: setup.description,
+                  date: dateInputValue(setup.date),
+                  os: setup.os ?? undefined,
+                  browser: setup.browser ?? undefined,
+                  editor: setup.editor ?? undefined,
+                  terminal: setup.terminal ?? undefined,
+                  otherSoftware: setup.otherSoftware ?? undefined,
+                  imageUrl: setup.thumbUrl,
+                }}
+                canEdit={isAuthor}
+              />
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}

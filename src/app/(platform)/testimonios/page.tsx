@@ -1,30 +1,22 @@
 import { cookies } from 'next/headers';
-import prisma from '@/lib/prisma';
-import {
-  Breadcrumb,
-  BreadcrumbList,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from '@/components/ui/breadcrumb';
-import { Separator } from '@/components/ui/separator';
-import { SidebarTrigger } from '@/components/ui/sidebar';
 import { fetchTestimonials } from '@/actions/testimonials/fetch-testimonials';
 import { TestimonialsClientWrapper } from './testimonials-client-wrapper';
 import type { Metadata } from 'next';
+import { findSession } from '@/lib/session';
+import { tabTitle } from '@/lib/tab-title';
+import { listExtractedTestimonials } from '@/lib/extracted-testimonials';
+import { ExtractedTestimonials } from '@/components/testimonials/extracted-testimonials';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
 
 export const metadata: Metadata = {
-  title: 'Testimonios',
+  title: tabTitle.ls('testimonios'),
   description:
     'Historias reales de miembros que crecieron junto a la comunidad. Descubrí cómo programaConNosotros impactó en su carrera profesional.',
   openGraph: {
     title: 'Testimonios | programaConNosotros',
     description:
       'Historias reales de miembros que crecieron junto a la comunidad. Descubrí cómo programaConNosotros impactó en su carrera profesional.',
-    images: [`${SITE_URL}/pcn-link-preview.png`],
     url: `${SITE_URL}/testimonios`,
     type: 'website',
     siteName: 'programaConNosotros',
@@ -34,28 +26,20 @@ export const metadata: Metadata = {
     title: 'Testimonios | programaConNosotros',
     description:
       'Historias reales de miembros que crecieron junto a la comunidad. Descubrí cómo programaConNosotros impactó en su carrera profesional.',
-    images: [`${SITE_URL}/pcn-link-preview.png`],
   },
 };
 
 const TestimoniosPage = async () => {
   const sessionId = (await cookies()).get('sessionId')?.value;
-  let currentUserId: string | undefined = undefined;
-  let isAdmin = false;
 
-  if (sessionId) {
-    const session = await prisma.session.findUnique({
-      where: { id: sessionId },
-      include: { user: true },
-    });
-
-    if (session) {
-      currentUserId = session.userId;
-      isAdmin = session.user.role === 'ADMIN';
-    }
-  }
-
-  const testimonials = await fetchTestimonials();
+  // La sesión y los testimonios no dependen entre sí: se piden a la vez.
+  const [session, testimonials, extracted] = await Promise.all([
+    sessionId ? findSession(sessionId) : null,
+    fetchTestimonials(),
+    listExtractedTestimonials(),
+  ]);
+  const currentUserId: string | undefined = session?.userId;
+  const isAdmin = session?.user.role === 'ADMIN';
 
   // Verificar si el usuario actual ya tiene un testimonio
   const hasUserTestimonial = currentUserId
@@ -66,23 +50,6 @@ const TestimoniosPage = async () => {
 
   return (
     <>
-      <header className="flex h-16 shrink-0 items-center gap-2">
-        <div className="flex items-center gap-2 px-4">
-          <SidebarTrigger />
-          <Separator orientation="vertical" className="mr-2 data-[orientation=vertical]:h-4" />
-          <Breadcrumb>
-            <BreadcrumbList>
-              <BreadcrumbItem className="hidden md:block">
-                <BreadcrumbLink href="/">Inicio</BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator className="hidden md:block" />
-              <BreadcrumbItem>
-                <BreadcrumbPage>Testimonios</BreadcrumbPage>
-              </BreadcrumbItem>
-            </BreadcrumbList>
-          </Breadcrumb>
-        </div>
-      </header>
       <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
         <div className="mt-4">
           <TestimonialsClientWrapper
@@ -91,6 +58,7 @@ const TestimoniosPage = async () => {
             isAdmin={isAdmin}
             hasUserTestimonial={hasUserTestimonial}
           />
+          <ExtractedTestimonials testimonials={extracted} />
         </div>
       </div>
     </>

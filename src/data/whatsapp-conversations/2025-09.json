@@ -7,7 +7,8 @@
   {
     "title": "Ataque de supply chain a paquetes populares de NPM (chalk, debug, ansi-regex)",
     "date": "2025-09-09",
-    "summary": "Facundo Padilla compartió el link a un artículo de socket.dev explicando que la cuenta del autor de varios paquetes populares de NPM fue comprometida mediante phishing y se publicaron versiones maliciosas. La lista de paquetes afectados incluía chalk@5.6.1, chalk-template@1.1.1, color-convert@3.1.1, ansi-regex@6.2.1, ansi-styles@6.2.2, supports-color@10.2.1, debug@4.4.2, entre otros. El hilo fue un alerta importante dado el nivel de dependencia de estos paquetes en el ecosistema JavaScript."
+    "summary": "Facundo Padilla compartió el link a un artículo de socket.dev explicando que la cuenta del autor de varios paquetes populares de NPM fue comprometida mediante phishing y se publicaron versiones maliciosas. La lista de paquetes afectados incluía chalk@5.6.1, chalk-template@1.1.1, color-convert@3.1.1, ansi-regex@6.2.1, ansi-styles@6.2.2, supports-color@10.2.1, debug@4.4.2, entre otros. El hilo fue un alerta importante dado el nivel de dependencia de estos paquetes en el ecosistema JavaScript.",
+    "links": ["https://socket.dev/blog/npm-author-qix-compromised-in-major-supply-chain-attack"]
   },
   {
     "title": "Arquitectura ágil y diagramas: debate sobre metodologías de equipos",
@@ -17,12 +18,14 @@
   {
     "title": "Primer proyecto freelance: sistema web para negocio de máquinas de peluches",
     "date": "2025-09-16",
-    "summary": "Leandro Contrera anunció su primer proyecto para un cliente: una app web para gestionar máquinas de peluches distribuidas en varias sucursales. El sistema incluiría escaneo de QR por máquina, carga manual de datos (tiros realizados, premios entregados), listado de máquinas, login con usuario y contraseña, y generación de reportes (máquina con más tiros, más premios, etc.). Leandro planteó usar JS/TS full stack con arquitectura cliente-servidor. Varios miembros del grupo le dieron consejos: dado que son menos de 20 máquinas no se justifica POO ni arquitecturas complejas; en frontend moderno se trabaja con paradigma funcional y componentes, no con clases. El grupo lo felicitó por el primer proyecto propio."
+    "summary": "Leandro Contrera anunció su primer proyecto para un cliente: una app web para gestionar máquinas de peluches distribuidas en varias sucursales. El sistema incluiría escaneo de QR por máquina, carga manual de datos (tiros realizados, premios entregados), listado de máquinas, login con usuario y contraseña, y generación de reportes (máquina con más tiros, más premios, etc.). Leandro planteó usar JS/TS full stack con arquitectura cliente-servidor. Varios miembros del grupo le dieron consejos: dado que son menos de 20 máquinas no se justifica POO ni arquitecturas complejas; en frontend moderno se trabaja con paradigma funcional y componentes, no con clases. El grupo lo felicitó por el primer proyecto propio.",
+    "links": ["https://open.spotify.com/episode/4gUlqIPkt0GDYi9ZYVJMSm"]
   },
   {
     "title": "oRPC: alternativa a tRPC para APIs type-safe en TypeScript",
     "date": "2025-09-16",
-    "summary": "Agustín Sánchez compartió orpc.unnoq.com y un miembro venezolano del grupo dijo que ya lo estaba usando y que era 'mil veces mejor que tRPC': mucho más liviano, más rápido y con mejor sintaxis. Agustín mencionó que no lo había usado todavía pero que le apareció hacía unos días. El miembro venezolano aclaró que no le había encontrado ninguna limitación y que lo estaba usando en una app mobile también."
+    "summary": "Agustín Sánchez compartió orpc.unnoq.com y un miembro venezolano del grupo dijo que ya lo estaba usando y que era 'mil veces mejor que tRPC': mucho más liviano, más rápido y con mejor sintaxis. Agustín mencionó que no lo había usado todavía pero que le apareció hacía unos días. El miembro venezolano aclaró que no le había encontrado ninguna limitación y que lo estaba usando en una app mobile también.",
+    "links": ["https://orpc.unnoq.com/"]
   },
   {
     "title": "Patrones de diseño de arquitectura: MVC, MVP y MVVM en contexto web y mobile",
@@ -32,7 +35,8 @@
   {
     "title": "Seniority en la industria del software: debate sobre métricas y años de experiencia",
     "date": "2025-09-25",
-    "summary": "Agustín Sánchez compartió un post de Twitter que generó debate sobre cómo las empresas valoran la experiencia en software. Leandro Contrera desarrolló su punto de vista: los años no son una buena métrica de valor porque 'experiencia' es muy relativa al tipo de proyectos; un senior con 10 años en desktop que salta a mobile puede necesitar empezar casi desde cero en tecnologías pero adaptarse muy rápido. Argumentó que el verdadero valor debería medirse por mérito demostrado, no por antigüedad. Ariel Basabe, con experiencia desde 2005, compartió su perspectiva contraria: la experiencia acumulada sí importa mucho, porque una buena base permite adaptarse más rápido a nuevas tecnologías, y puso el ejemplo de un programador Cobol de 55 años que aprendió ABAP sin dificultad. Agustín cerró explicando que lo que planteaba el post original es que a veces conviene contratar un junior que con un poco de capacitación puede rendir muy bien a un costo mucho menor que un senior."
+    "summary": "Agustín Sánchez compartió un post de Twitter que generó debate sobre cómo las empresas valoran la experiencia en software. Leandro Contrera desarrolló su punto de vista: los años no son una buena métrica de valor porque 'experiencia' es muy relativa al tipo de proyectos; un senior con 10 años en desktop que salta a mobile puede necesitar empezar casi desde cero en tecnologías pero adaptarse muy rápido. Argumentó que el verdadero valor debería medirse por mérito demostrado, no por antigüedad. Ariel Basabe, con experiencia desde 2005, compartió su perspectiva contraria: la experiencia acumulada sí importa mucho, porque una buena base permite adaptarse más rápido a nuevas tecnologías, y puso el ejemplo de un programador Cobol de 55 años que aprendió ABAP sin dificultad. Agustín cerró explicando que lo que planteaba el post original es que a veces conviene contratar un junior que con un poco de capacitación puede rendir muy bien a un costo mucho menor que un senior.",
+    "links": ["https://x.com/conanbatt/status/1970814335321616638"]
   },
   {
     "title": "Debate sobre seniority, sueldos y ascensos",

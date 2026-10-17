@@ -22,8 +22,7 @@
     "paths": {
       "@/*": ["./src/*"],
       "@components/*": ["./src/components/*"],
-      "@actions/*": ["./src/actions/*"],
-      "@prisma/*": ["./prisma/*"]
+      "@actions/*": ["./src/actions/*"]
     },
     "target": "ES2017"
   },
@@ -32,7 +31,11 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    ".next/dev/types/**/*.ts"
+    ".next/dev/types/**/*.ts",
+    ".next-e2e/types/**/*.ts",
+    ".next-e2e/dev/types/**/*.ts",
+    ".next-build-check/types/**/*.ts",
+    ".next-build-check/dev/types/**/*.ts"
   ],
   "exclude": ["node_modules"]
 }

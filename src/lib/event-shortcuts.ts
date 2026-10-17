@@ -1,14 +1,12 @@
 import prisma from '@/lib/prisma';
+import { visibleGalleryItem } from '@/lib/gallery';
 
 /**
  * Finds the next upcoming event that has the given shortcut slug.
  * Multiple events can share the same slug (e.g. every cowork session uses "cowork");
  * this always returns the nearest future one.
  */
-export async function findNextEventByShortcut(
-  slug: string,
-  opts: { includeImages?: boolean } = {},
-) {
+export async function findNextEventByShortcut(slug: string) {
   const now = new Date();
 
   return prisma.event.findFirst({
@@ -18,7 +16,7 @@ export async function findNextEventByShortcut(
       OR: [{ date: { gte: now } }, { endDate: { gte: now } }],
     },
     orderBy: { date: 'asc' },
-    ...(opts.includeImages && { include: { images: true } }),
+    include: { galleryItems: { where: visibleGalleryItem, select: { src: true }, take: 1 } },
   });
 }
 

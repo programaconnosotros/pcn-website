@@ -1,12 +1,16 @@
 'use server';
 
 import prisma from '@/lib/prisma';
-import { ProfileFormData } from '@/schemas/profile-schema';
+import { profileSchema, type ProfileInput } from '@/schemas/profile-schema';
 import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
+import { enforceRateLimit } from '@/lib/rate-limit';
+import { findSession } from '@/lib/session';
 
-export const updateProfile = async (data: ProfileFormData) => {
+export const updateProfile = async (data: ProfileInput) => {
+  await enforceRateLimit('editContent');
+
   const sessionId = (await cookies()).get('sessionId')?.value;
 
   if (!sessionId) {
@@ -14,24 +18,64 @@ export const updateProfile = async (data: ProfileFormData) => {
     redirect('/');
   }
 
-  const session = await prisma.session.findUnique({
-    where: {
-      id: sessionId,
-    },
-  });
+  const session = await findSession(sessionId);
 
   if (!session) {
     console.error('Usuario no autenticado, redireccionando a /home');
     redirect('/');
   }
 
-  const { programmingLanguages, ...userData } = data;
+  // Lo que llega es lo que mande el navegador, no lo que muestra el form: sin validar, alguien
+  // podría agregar `role: 'ADMIN'`, `emailVerified` o `password` y Prisma los guardaría. El schema
+  // descarta todo campo que no sea del perfil.
+  const parsed = profileSchema.safeParse(data);
+  if (!parsed.success) throw new Error(parsed.error.issues[0]?.message ?? 'Datos inválidos');
 
-  // Actualizamos primero los datos del usuario
+  // El email no se cambia desde acá: quedaría marcado como verificado sin que nadie haya probado
+  // que es suyo, y bloquearía a su verdadero dueño.
+  const {
+    programmingLanguages,
+    positions: rawPositions,
+    stack,
+    email: _email,
+    ...userData
+  } = parsed.data;
+  const positions = rawPositions
+    .filter((position) => position.jobTitle)
+    .map((position) => ({ jobTitle: position.jobTitle, enterprise: position.enterprise || null }));
+
+  // Actualizamos primero los datos del usuario. jobTitle/enterprise espejan el primer puesto
+  // para las vistas que muestran uno solo.
   await prisma.user.update({
     where: { id: session.userId },
-    data: userData,
+    data: {
+      ...userData,
+      jobTitle: positions[0]?.jobTitle ?? null,
+      enterprise: positions[0]?.enterprise ?? null,
+    },
   });
+
+  // Reemplazamos los puestos actuales
+  await prisma.userPosition.deleteMany({
+    where: { userId: session.userId },
+  });
+
+  if (positions.length > 0) {
+    await prisma.userPosition.createMany({
+      data: positions.map((position, order) => ({ userId: session.userId, ...position, order })),
+    });
+  }
+
+  // Reemplazamos el stack: una fila por categoría con algo escrito.
+  const stackItems = Object.entries(stack)
+    .filter(([, name]) => !!name)
+    .map(([category, name]) => ({ userId: session.userId, category, name: name! }));
+
+  await prisma.userStackItem.deleteMany({ where: { userId: session.userId } });
+
+  if (stackItems.length > 0) {
+    await prisma.userStackItem.createMany({ data: stackItems });
+  }
 
   // Eliminamos los lenguajes existentes
   await prisma.userLanguage.deleteMany({

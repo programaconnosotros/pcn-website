@@ -17,6 +17,7 @@ import {
 } from '@/components/ui/alert-dialog';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { actionErrorMessage } from '@/lib/rate-limit-messages';
 
 type DeleteRegistrationButtonProps = {
   registrationId: string;
@@ -33,15 +34,18 @@ export function DeleteRegistrationButton({
 
   const handleDelete = async () => {
     setIsLoading(true);
+    // toast.promise devuelve el id del toast: se espera la action en sí
+    const promise = deleteRegistration(registrationId);
     try {
-      await toast.promise(deleteRegistration(registrationId), {
+      toast.promise(promise, {
         loading: 'Eliminando inscripción...',
         success: 'Inscripción eliminada exitosamente',
         error: (error) => {
           console.error('Error al eliminar inscripción', error);
-          return error.message || 'Ocurrió un error al eliminar la inscripción';
+          return actionErrorMessage(error, 'Ocurrió un error al eliminar la inscripción', true);
         },
       });
+      await promise;
       setOpen(false);
       router.refresh();
     } catch {
@@ -55,6 +59,8 @@ export function DeleteRegistrationButton({
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger asChild>
         <Button
+          aria-label="Eliminar inscripción"
+          title="Eliminar inscripción"
           variant="ghost"
           size="icon"
           className="h-8 w-8 text-destructive hover:text-destructive"
@@ -73,7 +79,12 @@ export function DeleteRegistrationButton({
         <AlertDialogFooter>
           <AlertDialogCancel disabled={isLoading}>Cancelar</AlertDialogCancel>
           <AlertDialogAction
-            onClick={handleDelete}
+            // Sin preventDefault el diálogo se cierra al click: no se ve el estado de carga y, si
+            // falla, se pierde. Se cierra solo cuando termina bien.
+            onClick={(event) => {
+              event.preventDefault();
+              void handleDelete();
+            }}
             disabled={isLoading}
             className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
           >

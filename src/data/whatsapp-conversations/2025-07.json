@@ -2,7 +2,12 @@
   {
     "title": "Django vs FastAPI y ecosistema Python para backend",
     "date": "2025-07-01",
-    "summary": "Agustín Sánchez abrió el debate preguntando qué opinaban de Django para backend. Facundo Padilla, que lo usó en su primer laburo, lo describió como 'hermoso': ORM fantástico, sistema de migraciones 'una locura', panel de admin 'un golazo', aunque lento comparado con alternativas de alta performance. Como contra señaló que es bastante lerdo si tenés que hacer algo ultra crítico en performance, aunque existían mil formas de hacerlo más performante. Marcelo Nuñez expresó preferencia por FastAPI. El punto de fricción principal fue Django REST Framework, que tanto Marcelo como Facundo describieron como 'un embole'. Facundo mencionó 'django-ninja' como alternativa. Para gestión de dependencias, Facundo y Marcelo recomendaron uv sobre Poetry: uv es más rápido (escrito en Rust), maneja versiones de Python internamente. Facundo García Martoni sumó que Ruff reemplaza a Pylance para linting."
+    "summary": "Agustín Sánchez abrió el debate preguntando qué opinaban de Django para backend. Facundo Padilla, que lo usó en su primer laburo, lo describió como 'hermoso': ORM fantástico, sistema de migraciones 'una locura', panel de admin 'un golazo', aunque lento comparado con alternativas de alta performance. Como contra señaló que es bastante lerdo si tenés que hacer algo ultra crítico en performance, aunque existían mil formas de hacerlo más performante. Marcelo Nuñez expresó preferencia por FastAPI. El punto de fricción principal fue Django REST Framework, que tanto Marcelo como Facundo describieron como 'un embole'. Facundo mencionó 'django-ninja' como alternativa. Para gestión de dependencias, Facundo y Marcelo recomendaron uv sobre Poetry: uv es más rápido (escrito en Rust), maneja versiones de Python internamente. Facundo García Martoni sumó que Ruff reemplaza a Pylance para linting.",
+    "links": [
+      "https://docs.djangoproject.com/en/5.2/releases/",
+      "https://github.com/vitalik/django-ninja",
+      "https://github.com/eadwinCode/django-ninja-extra"
+    ]
   },
   {
     "title": "Arquitectura FastAPI para sistema de análisis de CVs con IA",
@@ -12,7 +17,10 @@
   {
     "title": "Flasheo de BIOS con CH341A y Libreboot en ThinkPad",
     "date": "2025-07-05",
-    "summary": "Facundo García Martoni compartió que le llegó un programador de BIOS CH341A con pinza SOIC8 conseguido en Mercado Libre. Lo usó primero para desbloquear la BIOS de una netbook del gobierno (Juana Manso) y luego para instalar Libreboot en una ThinkPad x220. Explicó en detalle el concepto: los fabricantes ponen limitaciones arbitrarias (la x220 tiene un límite real de 16GB de RAM pero Intel la limita a 8GB por BIOS) para forzar la compra de equipos nuevos. Libreboot elimina esas restricciones, desactiva backdoors y usa lo más moderno disponible para que la máquina arranque más rápido. Facundo brickeó la máquina sin querer pero pudo recuperarla. Roman compartió links para adaptadores de pantalla FHD/2K en la x220 desde AliExpress."
+    "summary": "Facundo García Martoni compartió que le llegó un programador de BIOS CH341A con pinza SOIC8 conseguido en Mercado Libre. Lo usó primero para desbloquear la BIOS de una netbook del gobierno (Juana Manso) y luego para instalar Libreboot en una ThinkPad x220. Explicó en detalle el concepto: los fabricantes ponen limitaciones arbitrarias (la x220 tiene un límite real de 16GB de RAM pero Intel la limita a 8GB por BIOS) para forzar la compra de equipos nuevos. Libreboot elimina esas restricciones, desactiva backdoors y usa lo más moderno disponible para que la máquina arranque más rápido. Facundo brickeó la máquina sin querer pero pudo recuperarla. Roman compartió links para adaptadores de pantalla FHD/2K en la x220 desde AliExpress.",
+    "links": [
+      "https://articulo.mercadolibre.com.ar/MLA-792521720-programador-usb-ch341a-pinza-soic-8-bgm-taiwan-zocalos-zif-150mil-y-200mil-adaptador-de-niveles-18v-archivos-_JM"
+    ]
   },
   {
     "title": "Cursor facturación inesperada: el rugpull de Max mode",
@@ -27,12 +35,19 @@
   {
     "title": "Vercel invierte en Nuxt y logros argentinos en el mundo del software",
     "date": "2025-07-08",
-    "summary": "Exequiel De Freitas comentó que Vercel 'compró' Nuxt. Facundo Padilla aclaró que en realidad Vercel les dio financiamiento para que el equipo de Nuxt pueda dedicarse a la integración, igual que hicieron con otros proyectos. Esto derivó en una discusión sobre los logros argentinos en el mundo del software: Auth0, Vercel, Mongoose (creado por Guillermo Rauch), Muun Wallet, Godot y Aseprite. Germán Navarro confirmó que Rauch creó Mongoose e incluso Socket.IO, lo cual fue celebrado con mucho orgullo."
+    "summary": "Exequiel De Freitas comentó que Vercel 'compró' Nuxt. Facundo Padilla aclaró que en realidad Vercel les dio financiamiento para que el equipo de Nuxt pueda dedicarse a la integración, igual que hicieron con otros proyectos. Esto derivó en una discusión sobre los logros argentinos en el mundo del software: Auth0, Vercel, Mongoose (creado por Guillermo Rauch), Muun Wallet, Godot y Aseprite. Germán Navarro confirmó que Rauch creó Mongoose e incluso Socket.IO, lo cual fue celebrado con mucho orgullo.",
+    "links": [
+      "https://github.com/Automattic/mongoose/blob/133f2cada52cfc3e28bc181d8044bd364eccec5a/package.json"
+    ]
   },
   {
     "title": "Chrome AI con Gemini Nano corriendo offline en el browser",
     "date": "2025-07-22",
-    "summary": "Carlos Spagnolo compartió una web que construyó para probar las nuevas funcionalidades de IA integradas en Google Chrome a partir de la versión 138, que incluyen Gemini Nano ejecutándose localmente en el navegador de forma privada (sin peticiones a APIs externas). Las funcionalidades disponibles son: Traductor, Detector de idioma y Resumidor de textos. La demo está en chrome-ai-flame.vercel.app y el repo en github.com/SpagnoloCarlos/chrome-ai. Facundo García Martoni preguntó si funciona offline y Carlos confirmó que sí. Agustín felicitó la UI y Carlos reveló que usó shadcn y que la idea inicial se la tiró v0 y luego la acomodó."
+    "summary": "Carlos Spagnolo compartió una web que construyó para probar las nuevas funcionalidades de IA integradas en Google Chrome a partir de la versión 138, que incluyen Gemini Nano ejecutándose localmente en el navegador de forma privada (sin peticiones a APIs externas). Las funcionalidades disponibles son: Traductor, Detector de idioma y Resumidor de textos. La demo está en chrome-ai-flame.vercel.app y el repo en github.com/SpagnoloCarlos/chrome-ai. Facundo García Martoni preguntó si funciona offline y Carlos confirmó que sí. Agustín felicitó la UI y Carlos reveló que usó shadcn y que la idea inicial se la tiró v0 y luego la acomodó.",
+    "links": [
+      "https://github.com/SpagnoloCarlos/chrome-ai",
+      "https://www.linkedin.com/posts/carlos-spagnolo-andres_ai-webdev-chromeai-activity-7353400996472991744-RTNF"
+    ]
   },
   {
     "title": "Estimación de presupuesto para proyecto freelance complejo",
@@ -52,6 +67,7 @@
   {
     "title": "Debate Cursor vs Windsurf vs Claude Code como herramientas de codeo IA",
     "date": "2025-07-30",
-    "summary": "Facundo García Martoni dijo que Cursor lo estaba frustrando por un bug donde no logra salir de las consolas que instancia. Preguntó alternativas. Ariel Basabe y Exequiel De Freitas dijeron estar probando Windsurf con buenos resultados. Ariel mencionó que DeepSeek sacó un plugin para VS Code gratis. Diego compartió una comparativa de editores. Facundo mencionó también Trae (muy usado en Asia) y Kiro (propuesta de Amazon). Sobre Claude Code, dijo que la comunidad lo considera 'el peak' pero siente que lo haría más lento por ser terminal. Marcelo preguntó sobre Claude Code y la comunidad lo describió como 'similar a Cursor pero por terminal, más caro por token que GPT-5'."
+    "summary": "Facundo García Martoni dijo que Cursor lo estaba frustrando por un bug donde no logra salir de las consolas que instancia. Preguntó alternativas. Ariel Basabe y Exequiel De Freitas dijeron estar probando Windsurf con buenos resultados. Ariel mencionó que DeepSeek sacó un plugin para VS Code gratis. Diego compartió una comparativa de editores. Facundo mencionó también Trae (muy usado en Asia) y Kiro (propuesta de Amazon). Sobre Claude Code, dijo que la comunidad lo considera 'el peak' pero siente que lo haría más lento por ser terminal. Marcelo preguntó sobre Claude Code y la comunidad lo describió como 'similar a Cursor pero por terminal, más caro por token que GPT-5'.",
+    "links": ["https://github.com/sanjeed5/awesome-cursor-rules-mdc"]
   }
 ]

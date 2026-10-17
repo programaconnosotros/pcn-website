@@ -3,11 +3,12 @@ import { z } from 'zod';
 export const talkProposalSpeakerSchema = z
   .object({
     userId: z
-      .string()
-      .cuid()
+      // Los forms mandan '' cuando no hay usuario vinculado: se acepta y queda null
+      .literal('')
+      .or(z.string().cuid())
       .optional()
       .nullable()
-      .transform((v) => (v === '' ? null : v ?? null)),
+      .transform((v) => v || null),
     speakerName: z
       .string()
       .min(3, { message: 'El nombre debe tener al menos 3 caracteres' })
@@ -63,7 +64,7 @@ export const talkProposalSpeakerSchema = z
         ctx.addIssue({
           code: z.ZodIssueCode.too_small,
           minimum: 1,
-          type: 'string',
+          origin: 'string',
           inclusive: true,
           message: 'El rol es requerido para profesionales',
           path: ['jobTitle'],
@@ -73,7 +74,7 @@ export const talkProposalSpeakerSchema = z
         ctx.addIssue({
           code: z.ZodIssueCode.too_small,
           minimum: 1,
-          type: 'string',
+          origin: 'string',
           inclusive: true,
           message: 'La empresa es requerida para profesionales',
           path: ['enterprise'],
@@ -86,7 +87,7 @@ export const talkProposalSpeakerSchema = z
         ctx.addIssue({
           code: z.ZodIssueCode.too_small,
           minimum: 1,
-          type: 'string',
+          origin: 'string',
           inclusive: true,
           message: 'La carrera es requerida para estudiantes',
           path: ['career'],
@@ -96,7 +97,7 @@ export const talkProposalSpeakerSchema = z
         ctx.addIssue({
           code: z.ZodIssueCode.too_small,
           minimum: 1,
-          type: 'string',
+          origin: 'string',
           inclusive: true,
           message: 'La universidad es requerida para estudiantes',
           path: ['studyPlace'],

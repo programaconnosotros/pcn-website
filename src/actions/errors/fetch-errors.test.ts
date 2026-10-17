@@ -1,5 +1,9 @@
 import { prismaMock } from '@/test/prisma';
 import { fetchErrors, getErrorStats } from './fetch-errors';
+import { requireAdmin } from '@/lib/admin';
+
+// Admin-only data: every test runs as an admin unless it says otherwise.
+jest.mock('@/lib/admin', () => ({ requireAdmin: jest.fn() }));
 
 const sampleError = {
   id: 'error-1',
@@ -120,5 +124,13 @@ describe('getErrorStats', () => {
     expect(prismaMock.errorLog.count).toHaveBeenCalledWith(
       expect.objectContaining({ where: { resolved: false } }),
     );
+  });
+});
+
+describe('fetchErrors access', () => {
+  it('rejects anyone who is not an admin', async () => {
+    (requireAdmin as jest.Mock).mockRejectedValueOnce(new Error('No autorizado'));
+
+    await expect(fetchErrors()).rejects.toThrow('No autorizado');
   });
 });

@@ -1,0 +1,271 @@
+import { render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { toast } from 'sonner';
+import { signIn } from '@/actions/auth/sign-in';
+import { notifyOsSessionChange } from '@/components/os/os-env';
+import { rateLimitDigest } from '@/lib/rate-limit-messages';
+import { mockRouter, setLocation } from '@/test/dom';
+import { verifyTwoFactorSignIn } from '@/actions/auth/two-factor';
+import SignInPage from './page';
+
+let mockCaptchaPayload: string | null = 'captcha-ok';
+const mockRenewCaptcha = jest.fn();
+jest.mock('@/components/auth/captcha-field', () => ({
+  CAPTCHA_FAILED_MESSAGE: 'captcha fallido',
+  useCaptcha: () => ({ payload: mockCaptchaPayload, renew: mockRenewCaptcha, field: null }),
+}));
+
+jest.mock('@/actions/auth/sign-in', () => ({ signIn: jest.fn() }));
+jest.mock('@/actions/auth/two-factor', () => ({ verifyTwoFactorSignIn: jest.fn() }));
+jest.mock('@/components/os/os-env', () => ({ notifyOsSessionChange: jest.fn() }));
+jest.mock('sonner', () => ({
+  toast: { success: jest.fn(), error: jest.fn(), info: jest.fn(), warning: jest.fn() },
+}));
+
+const signInMock = signIn as jest.MockedFunction<typeof signIn>;
+
+const fillAndSubmit = async (email = 'ana@example.com', password = 'secreta') => {
+  const user = userEvent.setup();
+  const emailInput = screen.getByLabelText('Correo electrónico');
+  await user.clear(emailInput);
+  if (email) await user.type(emailInput, email);
+  if (password) await user.type(screen.getByLabelText('Contraseña'), password);
+  await user.click(screen.getByRole('button', { name: /ingresar/ }));
+};
+
+// Interaction tests run slowly when the whole suite shares a busy machine
+jest.setTimeout(20_000);
+
+describe('SignInPage', () => {
+  beforeEach(() => {
+    setLocation('/iniciar-sesion');
+    jest.spyOn(console, 'log').mockImplementation(() => {});
+  });
+
+  it('shows validation errors and does not call the action', async () => {
+    render(<SignInPage />);
+
+    await fillAndSubmit('no-es-email', '');
+
+    expect(await screen.findByText('Correo electrónico inválido')).toBeInTheDocument();
+    expect(screen.getByText('Ingresá tu contraseña')).toBeInTheDocument();
+    expect(signInMock).not.toHaveBeenCalled();
+  });
+
+  it('signs in and redirects to the returned path', async () => {
+    signInMock.mockResolvedValue({ success: true, redirectTo: '/perfil' } as never);
+    render(<SignInPage />);
+
+    await fillAndSubmit();
+
+    await waitFor(() => expect(mockRouter.push).toHaveBeenCalledWith('/perfil'));
+    expect(signInMock).toHaveBeenCalledWith({
+      email: 'ana@example.com',
+      password: 'secreta',
+      redirectTo: '',
+      captcha: 'captcha-ok',
+    });
+    expect(toast.success).toHaveBeenCalled();
+    expect(notifyOsSessionChange).toHaveBeenCalled();
+  });
+
+  it('prefills the email and forwards redirect with autoRegister', async () => {
+    setLocation(
+      '/iniciar-sesion',
+      'email=bob@example.com&redirect=/eventos/1?x=1&autoRegister=true',
+    );
+    signInMock.mockResolvedValue({ success: true, redirectTo: '/eventos/1' } as never);
+    render(<SignInPage />);
+
+    expect(screen.getByLabelText('Correo electrónico')).toHaveValue('bob@example.com');
+    expect(screen.getByRole('link', { name: /No tenés cuenta/ })).toHaveAttribute(
+      'href',
+      `/crear-cuenta?redirect=${encodeURIComponent('/eventos/1?x=1')}&autoRegister=true`,
+    );
+
+    await fillAndSubmit('bob@example.com');
+
+    await waitFor(() =>
+      expect(signInMock).toHaveBeenCalledWith(
+        expect.objectContaining({ redirectTo: '/eventos/1?x=1&autoRegister=true' }),
+      ),
+    );
+  });
+
+  it('appends autoRegister with ? when the redirect has no query', async () => {
+    setLocation('/iniciar-sesion', 'redirect=/eventos/1&autoRegister=true');
+    signInMock.mockResolvedValue({ success: true, redirectTo: '/eventos/1' } as never);
+    render(<SignInPage />);
+
+    await fillAndSubmit();
+
+    await waitFor(() =>
+      expect(signInMock).toHaveBeenCalledWith(
+        expect.objectContaining({ redirectTo: '/eventos/1?autoRegister=true' }),
+      ),
+    );
+  });
+
+  it('sends unverified users to the verification page', async () => {
+    setLocation('/iniciar-sesion', 'redirect=/eventos');
+    signInMock.mockResolvedValue({
+      success: false,
+      error: 'EMAIL_NOT_VERIFIED',
+      email: 'otro@example.com',
+    } as never);
+    render(<SignInPage />);
+
+    await fillAndSubmit();
+
+    await waitFor(() =>
+      expect(mockRouter.push).toHaveBeenCalledWith(
+        `/verificar-email?email=${encodeURIComponent('otro@example.com')}&redirect=${encodeURIComponent('/eventos')}`,
+      ),
+    );
+    expect(toast.info).toHaveBeenCalled();
+  });
+
+  it('falls back to the typed email when the result has none', async () => {
+    signInMock.mockResolvedValue({ success: false, error: 'EMAIL_NOT_VERIFIED' } as never);
+    render(<SignInPage />);
+
+    await fillAndSubmit();
+
+    await waitFor(() =>
+      expect(mockRouter.push).toHaveBeenCalledWith(
+        `/verificar-email?email=${encodeURIComponent('ana@example.com')}`,
+      ),
+    );
+  });
+
+  it('waits for the captcha before letting anyone sign in', () => {
+    mockCaptchaPayload = null;
+    render(<SignInPage />);
+
+    expect(screen.getByRole('button', { name: /ingresar/ })).toBeDisabled();
+    mockCaptchaPayload = 'captcha-ok';
+  });
+
+  it('reports a rejected captcha and gets a new one', async () => {
+    signInMock.mockResolvedValue({ success: false, error: 'CAPTCHA_FAILED' } as never);
+    render(<SignInPage />);
+
+    await fillAndSubmit();
+
+    await waitFor(() => expect(toast.error).toHaveBeenCalledWith('captcha fallido'));
+    expect(mockRenewCaptcha).toHaveBeenCalled();
+  });
+
+  it('reports invalid credentials', async () => {
+    signInMock.mockResolvedValue({ success: false, error: 'INVALID_CREDENTIALS' } as never);
+    render(<SignInPage />);
+
+    await fillAndSubmit();
+
+    await waitFor(() => expect(toast.error).toHaveBeenCalledWith('Credenciales incorrectas.'));
+    expect(mockRouter.push).not.toHaveBeenCalled();
+    expect(screen.getByRole('button', { name: /ingresar/ })).toBeEnabled();
+  });
+
+  it('reports unknown errors', async () => {
+    signInMock.mockResolvedValue({ success: false, error: 'OTHER' } as never);
+    render(<SignInPage />);
+
+    await fillAndSubmit();
+
+    await waitFor(() => expect(toast.error).toHaveBeenCalledWith('No pudimos iniciar la sesión.'));
+  });
+
+  it('shows the rate-limit message when the action throws one', async () => {
+    const error = Object.assign(new Error('x'), { digest: rateLimitDigest('signIn', 60) });
+    signInMock.mockRejectedValue(error);
+    render(<SignInPage />);
+
+    await fillAndSubmit();
+
+    await waitFor(() =>
+      expect(toast.error).toHaveBeenCalledWith(
+        expect.stringContaining('demasiados intentos de inicio de sesión'),
+      ),
+    );
+  });
+
+  it('shows a generic message when the action throws', async () => {
+    signInMock.mockRejectedValue(new Error('boom'));
+    render(<SignInPage />);
+
+    await fillAndSubmit();
+
+    await waitFor(() =>
+      expect(toast.error).toHaveBeenCalledWith(
+        'Ocurrió un error inesperado. Por favor, intentá nuevamente.',
+      ),
+    );
+  });
+
+  describe('two-factor step', () => {
+    const verifyMock = jest.mocked(verifyTwoFactorSignIn);
+    const toCodeStep = async () => {
+      signInMock.mockResolvedValue({ success: false, error: 'TWO_FACTOR_REQUIRED' } as never);
+      render(<SignInPage />);
+      await fillAndSubmit();
+      return screen.findByLabelText('Código de verificación');
+    };
+
+    it('asks for the code and signs in with it', async () => {
+      const user = userEvent.setup();
+      const input = await toCodeStep();
+      verifyMock.mockResolvedValue({
+        success: true,
+        redirectTo: '/eventos',
+        usedRecoveryCode: false,
+        recoveryCodesLeft: 10,
+      });
+
+      await user.type(input, '123456');
+      await user.click(screen.getByRole('button', { name: /verificar/ }));
+
+      await waitFor(() => expect(mockRouter.push).toHaveBeenCalledWith('/eventos'));
+      expect(verifyMock).toHaveBeenCalledWith('123456');
+      expect(notifyOsSessionChange).toHaveBeenCalled();
+    });
+
+    it('warns how many recovery codes are left after using one', async () => {
+      const user = userEvent.setup();
+      const input = await toCodeStep();
+      verifyMock.mockResolvedValue({
+        success: true,
+        redirectTo: '/',
+        usedRecoveryCode: true,
+        recoveryCodesLeft: 3,
+      });
+      await user.type(input, 'abcd-efgh');
+      await user.click(screen.getByRole('button', { name: /verificar/ }));
+      await waitFor(() =>
+        expect(toast.warning).toHaveBeenCalledWith(expect.stringContaining('te quedan 3')),
+      );
+    });
+
+    it('reports a wrong code and goes back to the password when it expires', async () => {
+      const user = userEvent.setup();
+      const input = await toCodeStep();
+
+      verifyMock.mockResolvedValueOnce({ success: false, error: 'INVALID_CODE' });
+      await user.type(input, '000000');
+      await user.click(screen.getByRole('button', { name: /verificar/ }));
+      await waitFor(() => expect(toast.error).toHaveBeenCalledWith('El código no es válido.'));
+
+      verifyMock.mockResolvedValueOnce({ success: false, error: 'EXPIRED' });
+      await user.type(screen.getByLabelText('Código de verificación'), '111111');
+      await user.click(screen.getByRole('button', { name: /verificar/ }));
+      expect(await screen.findByLabelText('Contraseña')).toBeInTheDocument();
+    });
+
+    it('goes back to the password form', async () => {
+      const user = userEvent.setup();
+      await toCodeStep();
+      await user.click(screen.getByRole('button', { name: /volver/ }));
+      expect(screen.getByLabelText('Contraseña')).toBeInTheDocument();
+    });
+  });
+});

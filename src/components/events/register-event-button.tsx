@@ -1,18 +1,24 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { UserPlus, ExternalLink, Loader2 } from 'lucide-react';
+import { UserPlus, ExternalLink, Loader2, Clock } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { toast } from 'sonner';
-import { registerEvent } from '@/actions/events/register-event';
-import { checkEventCapacity } from '@/actions/events/check-event-capacity';
+import { registerEvent, type RegistrationResult } from '@/actions/events/register-event';
+import { actionErrorMessage } from '@/lib/rate-limit-messages';
+import { isAuthRequiredError } from '@/lib/auth-required';
+
+/** Login que, al volver, inscribe automáticamente al evento. */
+export const signInUrl = (eventId: string) =>
+  `/iniciar-sesion?redirect=/eventos/${eventId}&autoRegister=true`;
 
 type RegisterEventButtonProps = {
   eventId: string;
   isAuthenticated: boolean;
+  // Sin cupo, el botón anota en la lista de espera en vez de inscribir
   capacityAvailable: boolean;
-  onSuccess?: () => void;
+  onSuccess?: (_result: RegistrationResult) => void;
   isLoading?: boolean;
   externalUrl?: string;
   label?: string;
@@ -38,41 +44,36 @@ export function RegisterEventButton({
 
     // Si no está autenticado, redirigir a login con autoRegister
     if (!isAuthenticated) {
-      router.push(`/autenticacion/iniciar-sesion?redirect=/eventos/${eventId}&autoRegister=true`);
-      return;
-    }
-
-    // Si no hay cupo disponible, no hacer nada
-    if (!capacityAvailable) {
+      router.push(signInUrl(eventId));
       return;
     }
 
     setIsSubmitting(true);
 
     try {
-      // Validar cupo antes de inscribir
-      const capacityCheck = await checkEventCapacity(eventId);
-      if (!capacityCheck.available) {
-        toast.error(
-          capacityCheck.message ||
-            'El cupo del evento está completo. No se pueden aceptar más inscripciones.',
-        );
-        setIsSubmitting(false);
-        return;
-      }
-
-      await registerEvent(eventId, { skipRedirect: true });
+      // El servidor decide si hay lugar o si va a la lista de espera
+      const result = await registerEvent(eventId, { skipRedirect: true });
 
       // Notificar éxito
       if (onSuccess) {
-        onSuccess();
+        onSuccess(result);
       } else {
-        toast.success('¡Te has inscrito exitosamente al evento! 🎉');
+        toast.success(
+          result.status === 'waitlisted'
+            ? `Te sumaste a la lista de espera (#${result.position})`
+            : '¡Te has inscrito exitosamente al evento! 🎉',
+        );
         router.refresh();
       }
     } catch (error: any) {
+      // La sesión venció o se cerró con la página abierta: que vuelva a entrar y se inscribe sola
+      if (isAuthRequiredError(error)) {
+        toast.info('Tu sesión se cerró. Iniciá sesión para inscribirte.');
+        router.push(signInUrl(eventId));
+        return;
+      }
       console.error('Error al inscribirse al evento:', error);
-      toast.error(error.message || 'Ocurrió un error al inscribirse al evento');
+      toast.error(actionErrorMessage(error, 'Ocurrió un error al inscribirse al evento', true));
     } finally {
       setIsSubmitting(false);
     }
@@ -85,16 +86,20 @@ export function RegisterEventButton({
       variant="pcn"
       className="flex w-full items-center gap-2"
       onClick={handleClick}
-      disabled={!externalUrl && (buttonIsLoading || !capacityAvailable)}
+      disabled={!externalUrl && buttonIsLoading}
     >
       {buttonIsLoading ? (
         <Loader2 className="h-4 w-4 animate-spin" />
       ) : externalUrl ? (
         <ExternalLink className="h-4 w-4" />
+      ) : !capacityAvailable ? (
+        <Clock className="h-4 w-4" />
       ) : (
         <UserPlus className="h-4 w-4" />
       )}
-      {!externalUrl && buttonIsLoading ? 'Inscribiéndote...' : label ?? 'Inscribirme al evento'}
+      {!externalUrl && buttonIsLoading
+        ? 'inscribiendo...'
+        : (label ?? (capacityAvailable ? 'inscribirme();' : 'unirmeAListaDeEspera();'))}
     </Button>
   );
 }

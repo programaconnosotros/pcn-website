@@ -6,6 +6,10 @@ import { Input } from '@/components/ui/input';
 import { X, Loader2, Camera } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { getPresignedUrlPublic } from '@/actions/upload/get-presigned-url-public';
+import { postUploadForm } from '@/lib/upload-form';
+import { actionErrorMessage } from '@/lib/rate-limit-messages';
+import { IMAGE_TYPE_ERROR, isAllowedImage } from '@/lib/image-types';
+import { toJpegIfHeic } from '@/lib/heic';
 
 type FileUploadPublicProps = {
   value?: string;
@@ -23,7 +27,7 @@ type FileUploadPublicProps = {
 export function FileUploadPublic({
   value,
   onChange,
-  accept = 'image/jpeg,image/png,image/webp,image/gif',
+  accept = 'image/jpeg,image/png,image/webp,image/gif,image/heic,image/heif',
   maxSize = 10 * 1024 * 1024, // 10MB por defecto
   className,
   disabled = false,
@@ -42,10 +46,26 @@ export function FileUploadPublic({
   }, [value]);
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+    const picked = e.target.files?.[0];
+    if (!picked) return;
 
     setError(null);
+
+    let file: File;
+    try {
+      file = await toJpegIfHeic(picked);
+    } catch (err) {
+      setError((err as Error).message);
+      if (inputRef.current) inputRef.current.value = '';
+      return;
+    }
+
+    // El tipo se valida acá: si lo rechaza el servidor, en producción el mensaje no llega
+    if (!isAllowedImage(file)) {
+      setError(IMAGE_TYPE_ERROR);
+      if (inputRef.current) inputRef.current.value = '';
+      return;
+    }
 
     // Validar tamaño
     if (file.size > maxSize) {
@@ -60,30 +80,17 @@ export function FileUploadPublic({
     // Subir archivo
     setIsUploading(true);
     try {
-      // 1. Obtener presigned URL usando Server Action pública
-      const { uploadUrl, fileUrl } = await getPresignedUrlPublic({
-        fileName: file.name,
-        contentType: file.type,
-      });
+      // 1. Obtener el formulario firmado usando Server Action pública
+      const { url, fields, fileUrl } = await getPresignedUrlPublic({ contentType: file.type });
 
-      // 2. Subir directamente a S3
-      const uploadResponse = await fetch(uploadUrl, {
-        method: 'PUT',
-        body: file,
-        headers: {
-          'Content-Type': file.type,
-        },
-      });
-
-      if (!uploadResponse.ok) {
-        throw new Error('Error al subir el archivo');
-      }
+      // 2. Subir directamente a S3 (rechaza el archivo si pasa del tamaño firmado)
+      await postUploadForm(url, fields, file);
 
       // 3. Usar la URL de CloudFront/S3
       onChange(fileUrl);
       setPreview(fileUrl);
     } catch (err: any) {
-      setError(err.message || 'Error al subir el archivo');
+      setError(actionErrorMessage(err, 'Error al subir el archivo', true));
       setPreview(null);
       onChange('');
     } finally {
@@ -104,7 +111,7 @@ export function FileUploadPublic({
   };
 
   return (
-    <div className={cn('space-y-2', className)}>
+    <div className={cn('flex flex-col items-start gap-2', className)}>
       <Input
         ref={inputRef}
         type="file"
@@ -116,21 +123,23 @@ export function FileUploadPublic({
 
       {preview ? (
         <div className="relative inline-block">
-          <div className="relative h-32 w-32 overflow-hidden rounded-xl border bg-muted">
+          <div className="relative h-32 w-32 overflow-hidden rounded-lg border bg-muted">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={preview} alt="Preview" className="h-full w-full object-cover" />
             {isUploading && (
-              <div className="absolute inset-0 flex items-center justify-center rounded-xl bg-black/50">
+              <div className="absolute inset-0 flex items-center justify-center rounded-lg bg-black/50">
                 <Loader2 className="h-6 w-6 animate-spin text-white" />
               </div>
             )}
           </div>
           {!isUploading && (
             <Button
+              aria-label="Quitar imagen"
+              title="Quitar imagen"
               type="button"
               variant="destructive"
               size="icon"
-              className="absolute -right-1 -top-1 z-10 h-6 w-6"
+              className="absolute -top-1 -right-1 z-10 h-6 w-6"
               onClick={handleRemove}
               disabled={disabled}
             >
@@ -144,7 +153,7 @@ export function FileUploadPublic({
           onClick={() => inputRef.current?.click()}
           disabled={disabled || isUploading}
           className={cn(
-            'flex h-32 w-32 flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-muted-foreground/25 bg-muted/50 transition-colors hover:border-muted-foreground/50 hover:bg-muted',
+            'flex h-32 w-32 flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed border-muted-foreground/25 bg-muted/50 transition-colors hover:border-muted-foreground/50 hover:bg-muted',
             disabled && 'cursor-not-allowed opacity-50',
             isUploading && 'cursor-wait',
           )}
@@ -158,7 +167,7 @@ export function FileUploadPublic({
       )}
 
       <p className="text-xs text-muted-foreground">
-        JPEG, PNG, WebP (máx. {Math.round(maxSize / 1024 / 1024)}MB)
+        JPEG, PNG, WebP, HEIC (máx. {Math.round(maxSize / 1024 / 1024)}MB)
       </p>
 
       {error && <p className="text-sm text-destructive">{error}</p>}

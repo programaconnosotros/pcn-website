@@ -1,17 +1,11 @@
 'use client';
+import type { SessionUser } from '@/lib/session';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog';
 import {
   Select,
   SelectContent,
@@ -19,13 +13,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Badge } from '@/components/ui/badge';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'sonner';
-import { ProfileFormData, profileSchema } from '@/schemas/profile-schema';
+import { ProfileFormData, ProfileFormInput, profileSchema } from '@/schemas/profile-schema';
 import { updateProfile } from '@actions/update-profile';
-import { User } from '@prisma/client';
+import { UserPosition } from '@/generated/prisma/browser';
 import {
   Form,
   FormControl,
@@ -35,90 +28,41 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { UserProgrammingLanguage, programmingLanguages } from '@/types/programming-language';
-import { LanguageCoinsContainer } from './language-coins-container';
+import { LanguageChip } from './language-chip';
 import { ARGENTINA_PROVINCES } from '@/lib/validations/auth-schemas';
-import { Briefcase, GraduationCap, Link2, User as UserIcon, Code } from 'lucide-react';
 import { FileUpload } from '@/components/ui/file-upload';
+import { PositionsField } from './positions-field';
+import { cn } from '@/lib/utils';
+import { formActionBarClassName } from '@/components/ui/form-action-bar';
+import { FormSection } from '@/components/ui/form-section';
+import { specialtyGroups } from '@/components/especialidades/specialties';
+import { actionErrorMessage } from '@/lib/rate-limit-messages';
+import { displayName } from '@/lib/people-names';
+import { COUNTRIES, DEFAULT_COUNTRY } from '@/lib/countries';
+import {
+  IDES,
+  OPERATING_SYSTEMS,
+  STACK_CATEGORIES,
+  STACK_ITEM_MAX,
+  type StackCategoryOption,
+} from '@/lib/tech-stack';
+import { OptionChips } from './option-chips';
 
-// Lista de países
-const COUNTRIES = [
-  'Argentina',
-  'Bolivia',
-  'Brasil',
-  'Chile',
-  'Colombia',
-  'Costa Rica',
-  'Cuba',
-  'Ecuador',
-  'El Salvador',
-  'España',
-  'Guatemala',
-  'Honduras',
-  'México',
-  'Nicaragua',
-  'Panamá',
-  'Paraguay',
-  'Perú',
-  'República Dominicana',
-  'Uruguay',
-  'Venezuela',
-  'Otro',
-];
+const SLOGAN_MAX = 160;
+const NO_IDE = 'ninguno';
+const SOFTWARE = STACK_CATEGORIES.filter((category) => category.kind === 'software');
+const HARDWARE = STACK_CATEGORIES.filter((category) => category.kind === 'hardware');
+const BAR_WIDTH = 20;
 
-type LanguageDialogProps = {
-  currentLanguage: string;
-  setCurrentLanguage: (_value: string) => void;
-  addLanguage: () => void;
-};
-
-const LanguageDialog = ({
-  currentLanguage,
-  setCurrentLanguage,
-  addLanguage,
-}: LanguageDialogProps) => (
-  <Dialog>
-    <DialogTrigger asChild>
-      <Button variant="outline" size="sm">
-        Agregar lenguaje
-      </Button>
-    </DialogTrigger>
-    <DialogContent>
-      <DialogHeader>
-        <DialogTitle>Agregar lenguaje de programación</DialogTitle>
-      </DialogHeader>
-      <div className="space-y-4 py-4">
-        <div className="space-y-2">
-          <Label htmlFor="language">Selecciona un lenguaje</Label>
-          <Select value={currentLanguage} onValueChange={setCurrentLanguage}>
-            <SelectTrigger>
-              <SelectValue placeholder="Seleccionar lenguaje" />
-            </SelectTrigger>
-            <SelectContent>
-              {programmingLanguages.map((lang) => (
-                <SelectItem key={lang.id} value={lang.id}>
-                  <div className="flex items-center gap-2">
-                    <div className="relative h-5 w-5">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        src={lang.logo || '/placeholder.svg'}
-                        alt={lang.name}
-                        className="h-full w-full object-contain"
-                      />
-                    </div>
-                    <span>{lang.name}</span>
-                  </div>
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-        <Button onClick={addLanguage} className="w-full">
-          Agregar
-        </Button>
-      </div>
-    </DialogContent>
-  </Dialog>
-);
+const LINKS = [
+  { name: 'gitHubUrl', prefix: 'github', placeholder: 'https://github.com/tu-usuario' },
+  { name: 'linkedinUrl', prefix: 'linkedin', placeholder: 'https://linkedin.com/in/tu-usuario' },
+  { name: 'xAccountUrl', prefix: 'x', placeholder: 'https://x.com/tu-usuario' },
+  { name: 'instagramUrl', prefix: 'instagram', placeholder: 'https://instagram.com/tu-usuario' },
+  { name: 'youtubeUrl', prefix: 'youtube', placeholder: 'https://youtube.com/@tu-canal' },
+  { name: 'twitchUrl', prefix: 'twitch', placeholder: 'https://twitch.tv/tu-canal' },
+  { name: 'kickUrl', prefix: 'kick', placeholder: 'https://kick.com/tu-canal' },
+] as const;
 
 type FormErrorProps = {
   error?: { message?: string };
@@ -126,41 +70,97 @@ type FormErrorProps = {
 
 const FormError = ({ error }: FormErrorProps) => {
   if (!error || !error.message) return null;
-  return <p className="text-sm text-red-500">{error.message}</p>;
+  return <p className="text-xs text-red-500">{error.message}</p>;
+};
+
+// Un campo suelto: label de terminal arriba, el input y su error abajo.
+const Field = ({
+  id,
+  label,
+  hint,
+  className,
+  children,
+}: {
+  id: string;
+  label: string;
+  hint?: ReactNode;
+  className?: string;
+  children: ReactNode;
+}) => (
+  <div className={cn('group/field min-w-0 space-y-1.5', className)}>
+    <div className="flex items-baseline justify-between gap-2">
+      <Label htmlFor={id}>{label}</Label>
+      {hint && (
+        <span className="font-mono text-[10px] leading-none text-muted-foreground">{hint}</span>
+      )}
+    </div>
+    {children}
+  </div>
+);
+
+// Los puestos guardados; si todavía no hay ninguno, el cargo viejo o una fila vacía para arrancar.
+const initialPositions = (user: SessionUser & { positions: UserPosition[] }) => {
+  if (user.positions.length > 0) {
+    return user.positions.map((p) => ({ jobTitle: p.jobTitle, enterprise: p.enterprise ?? '' }));
+  }
+  return [{ jobTitle: user.jobTitle ?? '', enterprise: user.enterprise ?? '' }];
 };
 
 export const ProfileForm = ({
   user,
+  typedName,
   languages,
 }: {
-  user: User;
+  user: SessionUser & {
+    positions: UserPosition[];
+    stackItems?: { category: string; name: string }[];
+  };
+  /** El nombre tal como lo escribió la persona: `user.name` llega formateado para mostrar. */
+  typedName: string;
   languages: UserProgrammingLanguage[];
 }) => {
-  const form = useForm<ProfileFormData>({
+  const form = useForm<ProfileFormInput, unknown, ProfileFormData>({
     resolver: zodResolver(profileSchema),
     defaultValues: {
-      name: user.name ?? '',
+      name: typedName,
       email: user.email ?? '',
       phoneNumber: user.phoneNumber ?? '',
       image: user.image ?? '',
-      countryOfOrigin: user.countryOfOrigin ?? '',
+      // Obligatorio: quien todavía no lo cargó arranca con Argentina elegida.
+      countryOfOrigin: user.countryOfOrigin || DEFAULT_COUNTRY,
       province: user.province ?? '',
       xAccountUrl: user.xAccountUrl ?? '',
       linkedinUrl: user.linkedinUrl ?? '',
       gitHubUrl: user.gitHubUrl ?? '',
+      instagramUrl: user.instagramUrl ?? '',
+      youtubeUrl: user.youtubeUrl ?? '',
+      twitchUrl: user.twitchUrl ?? '',
+      kickUrl: user.kickUrl ?? '',
       slogan: user.slogan ?? '',
-      jobTitle: user.jobTitle ?? '',
-      enterprise: user.enterprise ?? '',
+      positions: initialPositions(user),
       career: user.career ?? '',
       studyPlace: user.studyPlace ?? '',
+      specialties: user.specialties ?? [],
+      operatingSystems: user.operatingSystems ?? [],
+      favoriteIde: user.favoriteIde ?? null,
+      // Todas las categorías, también las vacías: cada una es un input registrado y, si faltara
+      // acá, quedaría como modificada en cuanto el formulario recalcula qué cambió.
+      stack: Object.fromEntries(
+        STACK_CATEGORIES.map(({ id }) => [
+          id,
+          user.stackItems?.find((item) => item.category === id)?.name ?? '',
+        ]),
+      ),
       programmingLanguages: languages || [],
     },
   });
 
   const [userLanguages, setUserLanguages] = useState<UserProgrammingLanguage[]>(languages || []);
-  const [currentLanguage, setCurrentLanguage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const watchCountry = form.watch('countryOfOrigin');
+  const values = form.watch();
+  const selectedSpecialties = values.specialties ?? [];
+  const selectedOperatingSystems = values.operatingSystems ?? [];
+  const dirtyCount = Object.keys(form.formState.dirtyFields).length;
 
   useEffect(() => {
     if (languages) {
@@ -169,27 +169,26 @@ export const ProfileForm = ({
     }
   }, [languages, form]);
 
-  const addLanguage = () => {
-    if (!currentLanguage) return;
+  const setLanguages = (updated: UserProgrammingLanguage[]) => {
+    setUserLanguages(updated);
+    form.setValue('programmingLanguages', updated, { shouldDirty: true });
+  };
 
-    const exists = userLanguages.some((lang) => lang.languageId === currentLanguage);
-    if (exists) return;
+  const addLanguage = (languageId: string) => {
+    if (userLanguages.some((lang) => lang.languageId === languageId)) return;
 
-    const selectedLanguage = programmingLanguages.find((lang) => lang.id === currentLanguage);
+    const selectedLanguage = programmingLanguages.find((lang) => lang.id === languageId);
     if (!selectedLanguage) return;
 
-    const newLanguage: UserProgrammingLanguage = {
-      languageId: currentLanguage,
-      color: selectedLanguage.color,
-      logo: selectedLanguage.logo,
-      experienceLevel: 0,
-    };
-
-    const updatedLanguages = [...userLanguages, newLanguage];
-
-    setUserLanguages(updatedLanguages);
-    form.setValue('programmingLanguages', updatedLanguages);
-    setCurrentLanguage('');
+    setLanguages([
+      ...userLanguages,
+      {
+        languageId,
+        color: selectedLanguage.color,
+        logo: selectedLanguage.ext,
+        experienceLevel: 0,
+      },
+    ]);
   };
 
   //function for removing language
@@ -201,16 +200,15 @@ export const ProfileForm = ({
       const equalPercentage = Math.floor(100 / updatedLanguages.length);
       const remainder = 100 - equalPercentage * updatedLanguages.length;
 
-      const redistributedLanguages = updatedLanguages.map((lang, index) => ({
-        ...lang,
-        experienceLevel:
-          index === updatedLanguages.length - 1 ? equalPercentage + remainder : equalPercentage,
-      }));
-      setUserLanguages(redistributedLanguages);
-      form.setValue('programmingLanguages', redistributedLanguages);
+      setLanguages(
+        updatedLanguages.map((lang, index) => ({
+          ...lang,
+          experienceLevel:
+            index === updatedLanguages.length - 1 ? equalPercentage + remainder : equalPercentage,
+        })),
+      );
     } else {
-      setUserLanguages([]);
-      form.setValue('programmingLanguages', []);
+      setLanguages([]);
     }
   };
 
@@ -220,8 +218,10 @@ export const ProfileForm = ({
       await toast.promise(updateProfile(data), {
         loading: 'Actualizando perfil...',
         success: 'Perfil actualizado correctamente',
-        error: 'Error al actualizar el perfil',
+        error: (error) => actionErrorMessage(error, 'Error al actualizar el perfil'),
       });
+      // Lo guardado pasa a ser el nuevo punto de partida: el contador de cambios vuelve a cero.
+      form.reset(form.getValues());
     } catch {
       // Error manejado por toast
     } finally {
@@ -229,21 +229,124 @@ export const ProfileForm = ({
     }
   };
 
+  // ⌘S / Ctrl+S guarda desde cualquier campo.
+  useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent) => {
+      if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 's') {
+        event.preventDefault();
+        if (!isSubmitting) form.handleSubmit(onSubmit)();
+      }
+    };
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  });
+
+  const filledPositions = values.positions.filter((p) => p.jobTitle.trim());
+  const filledLinks = LINKS.filter((link) => values[link.name]);
+
+  // Qué tiene cargado cada sección, para los contadores y la barra de completitud. Las secciones
+  // opcionales (trabajo, estudios y enlaces se dejan vacíos si no aplican) no suman al porcentaje.
+  const sections = [
+    {
+      id: 'identidad',
+      title: 'identidad',
+      checks: [!!values.image, !!values.name, !!values.countryOfOrigin, !!values.slogan],
+    },
+    { id: 'trabajo', title: 'trabajo', optional: true, checks: [filledPositions.length > 0] },
+    {
+      id: 'estudios',
+      title: 'estudios',
+      optional: true,
+      checks: [!!values.career, !!values.studyPlace],
+    },
+    {
+      id: 'enlaces',
+      title: 'enlaces',
+      optional: true,
+      checks: LINKS.map((link) => !!values[link.name]),
+    },
+    { id: 'stack', title: 'stack', checks: [userLanguages.length > 0] },
+    {
+      id: 'herramientas',
+      title: 'herramientas',
+      optional: true,
+      checks: [
+        selectedOperatingSystems.length > 0,
+        !!values.favoriteIde,
+        ...SOFTWARE.map((category) => !!values.stack?.[category.id]),
+      ],
+    },
+    {
+      id: 'hardware',
+      title: 'hardware',
+      optional: true,
+      checks: HARDWARE.map((category) => !!values.stack?.[category.id]),
+    },
+    {
+      id: 'especialidades',
+      title: 'especialidades',
+      optional: true,
+      checks: [selectedSpecialties.length > 0],
+    },
+  ].map((section) => ({
+    ...section,
+    optional: !!section.optional,
+    done: section.checks.filter(Boolean).length,
+    total: section.checks.length,
+  }));
+  const counted = sections.filter((s) => !s.optional);
+  const done = counted.reduce((sum, s) => sum + s.done, 0);
+  const total = counted.reduce((sum, s) => sum + s.total, 0);
+  const percent = Math.round((done / total) * 100);
+  const filledBar = Math.round((percent / 100) * BAR_WIDTH);
+  const progress = (id: string) => {
+    const { done, total, optional } = sections.find((s) => s.id === id)!;
+    return { done, total, optional };
+  };
+
+  // Una línea por categoría del stack, en texto libre; `first` abre la grilla (el IDE).
+  const stackFields = (categories: readonly StackCategoryOption[], first?: ReactNode) => (
+    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
+      {first}
+      {categories.map((category) => (
+        <Field key={category.id} id={`stack-${category.id}`} label={category.label}>
+          <Input
+            id={`stack-${category.id}`}
+            placeholder={category.placeholder}
+            maxLength={STACK_ITEM_MAX}
+            {...form.register(`stack.${category.id}`)}
+          />
+          <FormError error={form.formState.errors.stack?.[category.id]} />
+        </Field>
+      ))}
+    </div>
+  );
+
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 pb-6">
-        <div className="space-y-4 rounded-md border p-4 transition-all duration-300 hover:border-pcnPurple hover:shadow-[0_0_15px_rgba(80,56,189,0.3)] dark:hover:border-white/20 dark:hover:shadow-[0_0_10px_rgba(255,255,255,0.2)]">
-          <h3 className="mb-4 flex items-center gap-2 text-lg font-semibold">
-            <UserIcon className="h-5 w-5" />
-            Información personal
-          </h3>
-          <div className="space-y-4">
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="grid gap-4 pb-10 lg:grid-cols-[300px_minmax(0,1fr)] lg:items-start"
+      >
+        {/* Columna izquierda: cómo se ve el perfil, cuánto falta y el índice de secciones */}
+        <aside className="divide-y divide-pcnGreen-200 border border-pcnGreen-200 lg:sticky lg:top-4">
+          <div className="flex items-center justify-between px-4 py-2 font-mono text-[11px] text-muted-foreground">
+            <span>
+              <span className="text-pcnGreen-500">$</span> whoami
+            </span>
+            <span className="flex items-center gap-1.5">
+              <span className="size-1.5 animate-pulse rounded-full bg-pcnGreen" />
+              live
+            </span>
+          </div>
+
+          <div className="flex gap-4 p-4 lg:flex-col">
             <FormField
               control={form.control}
               name="image"
               render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Foto de perfil</FormLabel>
+                <FormItem className="shrink-0 space-y-0">
+                  <FormLabel className="sr-only">Foto de perfil</FormLabel>
                   <FormControl>
                     <FileUpload
                       value={field.value || ''}
@@ -258,79 +361,137 @@ export const ProfileForm = ({
               )}
             />
 
-            <div className="space-y-2">
-              <Label htmlFor="name">Nombre</Label>
-              <Input id="name" {...form.register('name')} />
-              <FormError error={form.formState.errors.name} />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="email">Correo electrónico</Label>
-              <Input id="email" type="email" {...form.register('email')} />
-              <FormError error={form.formState.errors.email} />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="phoneNumber">Celular</Label>
-              <Input
-                id="phoneNumber"
-                type="tel"
-                placeholder="+54 9 11 1234-5678"
-                {...form.register('phoneNumber')}
-              />
-              <FormError error={form.formState.errors.phoneNumber} />
-            </div>
-
-            <FormField
-              control={form.control}
-              name="countryOfOrigin"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>País</FormLabel>
-                  <Select
-                    onValueChange={(value) => {
-                      field.onChange(value);
-                      if (value !== 'Argentina') {
-                        form.setValue('province', '');
-                      }
-                    }}
-                    value={field.value || ''}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Selecciona tu país" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {COUNTRIES.map((country) => (
-                        <SelectItem key={country} value={country}>
-                          {country}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
+            <div className="min-w-0 space-y-1.5 font-mono">
+              <p className="truncate text-base font-semibold text-glow">
+                {displayName(values.name ?? '') || 'sin nombre'}
+              </p>
+              {filledPositions.length > 0 ? (
+                <ul className="space-y-0.5 text-[11px] text-muted-foreground">
+                  {filledPositions.map((p, i) => (
+                    <li key={i} className="truncate">
+                      {p.jobTitle}
+                      {p.enterprise && <span className="text-pcnGreen-500"> @ {p.enterprise}</span>}
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="text-[11px] text-muted-foreground/60">
+                  sin trabajo cargado, y está bien
+                </p>
               )}
-            />
+              {values.slogan && (
+                <p className="line-clamp-2 text-[11px] text-muted-foreground italic">
+                  <span className="text-pcnGreen-500 not-italic">&gt; </span>
+                  {values.slogan}
+                </p>
+              )}
+              {filledLinks.length > 0 && (
+                <p className="flex flex-wrap gap-x-2 text-[11px] text-pcnGreen-600">
+                  {filledLinks.map((link) => (
+                    <span key={link.name}>{link.prefix}↗</span>
+                  ))}
+                </p>
+              )}
+            </div>
+          </div>
 
-            {watchCountry === 'Argentina' && (
+          <div className="space-y-1 p-4 font-mono text-[11px]">
+            <div className="flex items-center justify-between text-muted-foreground">
+              <span>perfil.completo</span>
+              <span className={cn('tabular-nums', percent === 100 && 'text-pcnGreen text-glow')}>
+                {percent}%
+              </span>
+            </div>
+            <p aria-hidden className="tracking-tighter whitespace-pre">
+              <span className="text-pcnGreen-500">[</span>
+              <span className="text-pcnGreen text-glow">{'█'.repeat(filledBar)}</span>
+              <span className="text-pcnGreen-200">{'░'.repeat(BAR_WIDTH - filledBar)}</span>
+              <span className="text-pcnGreen-500">]</span>
+            </p>
+          </div>
+
+          <nav aria-label="Secciones" className="hidden py-2 font-mono text-xs lg:block">
+            {sections.map((s, i) => (
+              <a
+                key={s.id}
+                href={`#${s.id}`}
+                className="flex items-center gap-2 px-4 py-1 text-muted-foreground transition-colors hover:bg-pcnGreen/[0.04] hover:text-pcnGreen"
+              >
+                <span className="text-pcnGreen/70">{String(i + 1).padStart(2, '0')}</span>
+                <span className="flex-1">{s.title}</span>
+                <span
+                  className={cn(
+                    'tabular-nums',
+                    s.done === s.total ? 'text-pcnGreen' : 'text-muted-foreground/60',
+                  )}
+                >
+                  {s.done === s.total
+                    ? '✓'
+                    : s.optional && s.done === 0
+                      ? 'opcional'
+                      : `${s.done}/${s.total}`}
+                </span>
+              </a>
+            ))}
+          </nav>
+        </aside>
+
+        {/* Columna derecha: las secciones del formulario y la barra para guardar */}
+        <div className="min-w-0 divide-y divide-pcnGreen-200 border border-pcnGreen-200">
+          <FormSection
+            id="identidad"
+            index={1}
+            title="identidad"
+            description="contanos un poco de vos"
+            {...progress('identidad')}
+          >
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
+              <Field id="name" label="nombre">
+                <Input id="name" autoComplete="name" {...form.register('name')} />
+                <FormError error={form.formState.errors.name} />
+              </Field>
+
+              <Field id="email" label="email" hint="no editable">
+                {/* Solo lectura: cambiarlo sin verificar la dirección nueva no es seguro */}
+                <Input id="email" type="email" readOnly {...form.register('email')} />
+                <FormError error={form.formState.errors.email} />
+              </Field>
+
+              <Field id="phoneNumber" label="celular" hint="privado">
+                <Input
+                  id="phoneNumber"
+                  type="tel"
+                  autoComplete="tel"
+                  placeholder="+54 9 11 1234-5678"
+                  {...form.register('phoneNumber')}
+                />
+                <FormError error={form.formState.errors.phoneNumber} />
+              </Field>
+
               <FormField
                 control={form.control}
-                name="province"
+                name="countryOfOrigin"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Provincia</FormLabel>
-                    <Select onValueChange={field.onChange} value={field.value || ''}>
+                    <FormLabel>país</FormLabel>
+                    <Select
+                      onValueChange={(value) => {
+                        field.onChange(value);
+                        if (value !== 'Argentina') {
+                          form.setValue('province', '', { shouldDirty: true });
+                        }
+                      }}
+                      value={field.value || ''}
+                    >
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder="Selecciona tu provincia" />
+                          <SelectValue placeholder="Selecciona tu país" />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        {ARGENTINA_PROVINCES.map((province) => (
-                          <SelectItem key={province} value={province}>
-                            {province}
+                        {COUNTRIES.map((country) => (
+                          <SelectItem key={country} value={country}>
+                            {country}
                           </SelectItem>
                         ))}
                       </SelectContent>
@@ -339,161 +500,295 @@ export const ProfileForm = ({
                   </FormItem>
                 )}
               />
-            )}
 
-            <div className="space-y-2">
-              <Label htmlFor="slogan">Slogan o frase personal</Label>
-              <Textarea
+              {values.countryOfOrigin === 'Argentina' && (
+                <FormField
+                  control={form.control}
+                  name="province"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>provincia</FormLabel>
+                      <Select onValueChange={field.onChange} value={field.value || ''}>
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Selecciona tu provincia" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {ARGENTINA_PROVINCES.map((province) => (
+                            <SelectItem key={province} value={province}>
+                              {province}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              )}
+
+              <Field
                 id="slogan"
-                placeholder="Ej: Desarrollador apasionado por el código"
-                {...form.register('slogan')}
-                rows={3}
-              />
-              <FormError error={form.formState.errors.slogan} />
+                label="slogan"
+                className="col-span-full"
+                hint={
+                  <span className="tabular-nums">
+                    {values.slogan?.length ?? 0}/{SLOGAN_MAX}
+                  </span>
+                }
+              >
+                <Textarea
+                  id="slogan"
+                  placeholder="Ej: Desarrollador apasionado por el código"
+                  maxLength={SLOGAN_MAX}
+                  {...form.register('slogan')}
+                  rows={2}
+                />
+                <FormError error={form.formState.errors.slogan} />
+              </Field>
             </div>
-          </div>
-        </div>
+          </FormSection>
 
-        <div className="space-y-4 rounded-md border p-4 transition-all duration-300 hover:border-pcnPurple hover:shadow-[0_0_15px_rgba(80,56,189,0.3)] dark:hover:border-white/20 dark:hover:shadow-[0_0_10px_rgba(255,255,255,0.2)]">
-          <h3 className="flex items-center gap-2 text-lg font-semibold">
-            <Briefcase className="h-5 w-5" />
-            Información profesional
-            <Badge variant="secondary" className="text-xs font-normal">
-              opcional
-            </Badge>
-          </h3>
-          <div className="space-y-2">
-            <Label htmlFor="jobTitle">¿De qué trabajas?</Label>
-            <Input
-              id="jobTitle"
-              placeholder="Ej: Desarrollador Frontend"
-              {...form.register('jobTitle')}
-            />
-            <FormError error={form.formState.errors.jobTitle} />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="enterprise">¿En qué empresa trabajas?</Label>
-            <Input id="enterprise" placeholder="Ej: Google" {...form.register('enterprise')} />
-            <FormError error={form.formState.errors.enterprise} />
-          </div>
-        </div>
+          <FormSection
+            id="trabajo"
+            index={2}
+            title="trabajo"
+            description="si estás trabajando, sumá cada lugar; si no, dejalo vacío"
+            {...progress('trabajo')}
+          >
+            <PositionsField />
+          </FormSection>
 
-        <div className="space-y-4 rounded-md border p-4 transition-all duration-300 hover:border-pcnPurple hover:shadow-[0_0_15px_rgba(80,56,189,0.3)] dark:hover:border-white/20 dark:hover:shadow-[0_0_10px_rgba(255,255,255,0.2)]">
-          <h3 className="flex items-center gap-2 text-lg font-semibold">
-            <GraduationCap className="h-5 w-5" />
-            Información académica
-            <Badge variant="secondary" className="text-xs font-normal">
-              opcional
-            </Badge>
-          </h3>
-          <div className="space-y-2">
-            <Label htmlFor="career">¿Qué estudias o estudiaste?</Label>
-            <Input
-              id="career"
-              placeholder="Ej: Ingeniería en Sistemas"
-              {...form.register('career')}
-            />
-            <FormError error={form.formState.errors.career} />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="studyPlace">¿Dónde o cómo estudias/estudiaste?</Label>
-            <Input
-              id="studyPlace"
-              placeholder="Ej: Universidad Nacional de Tucumán / Autodidacta"
-              {...form.register('studyPlace')}
-            />
-            <FormError error={form.formState.errors.studyPlace} />
-          </div>
-        </div>
-
-        <div className="space-y-4 rounded-md border p-4 transition-all duration-300 hover:border-pcnPurple hover:shadow-[0_0_15px_rgba(80,56,189,0.3)] dark:hover:border-white/20 dark:hover:shadow-[0_0_10px_rgba(255,255,255,0.2)]">
-          <h3 className="mb-4 flex items-center gap-2 text-lg font-semibold">
-            <Link2 className="h-5 w-5" />
-            Enlaces
-            <Badge variant="secondary" className="text-xs font-normal">
-              opcional
-            </Badge>
-          </h3>
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="xAccountUrl" className="flex items-center gap-2">
-                <Link2 className="h-4 w-4" />
-                URL de cuenta de X
-              </Label>
-              <Input
-                id="xAccountUrl"
-                type="url"
-                placeholder="https://x.com/tu-usuario"
-                {...form.register('xAccountUrl', {
-                  setValueAs: (v) => (v === '' ? null : v),
-                })}
-                value={form.watch('xAccountUrl') || ''}
-              />
-              <FormError error={form.formState.errors.xAccountUrl} />
+          <FormSection
+            id="estudios"
+            index={3}
+            title="estudios"
+            description="si estudiás o estudiaste algo, contanos qué y dónde"
+            {...progress('estudios')}
+          >
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <Field id="career" label="carrera">
+                <Input
+                  id="career"
+                  placeholder="Ej: Ingeniería en Sistemas"
+                  {...form.register('career')}
+                />
+                <FormError error={form.formState.errors.career} />
+              </Field>
+              <Field id="studyPlace" label="institución">
+                <Input
+                  id="studyPlace"
+                  placeholder="Ej: UTN / Autodidacta"
+                  {...form.register('studyPlace')}
+                />
+                <FormError error={form.formState.errors.studyPlace} />
+              </Field>
             </div>
+          </FormSection>
 
-            <div className="space-y-2">
-              <Label htmlFor="linkedinUrl" className="flex items-center gap-2">
-                <Link2 className="h-4 w-4" />
-                URL de cuenta de LinkedIn
-              </Label>
-              <Input
-                id="linkedinUrl"
-                type="url"
-                placeholder="https://linkedin.com/in/tu-usuario"
-                {...form.register('linkedinUrl', {
-                  setValueAs: (v) => (v === '' ? null : v),
-                })}
-                value={form.watch('linkedinUrl') || ''}
-              />
-              <FormError error={form.formState.errors.linkedinUrl} />
+          <FormSection
+            id="enlaces"
+            index={4}
+            title="enlaces"
+            description="dónde más te pueden encontrar, si querés compartirlo"
+            {...progress('enlaces')}
+          >
+            <div className="grid grid-cols-1 gap-x-4 gap-y-3 sm:grid-cols-2">
+              {LINKS.map((link) => (
+                <div key={link.name} className="group/field min-w-0 space-y-1">
+                  <div className="flex">
+                    <label
+                      htmlFor={link.name}
+                      className="flex w-24 shrink-0 items-center rounded-l-sm border border-r-0 border-input bg-pcnGreen/[0.04] px-2 font-mono text-[11px] text-pcnGreen-700 transition-colors group-focus-within/field:text-pcnGreen group-focus-within/field:text-glow"
+                    >
+                      {link.prefix}
+                    </label>
+                    <Input
+                      id={link.name}
+                      type="url"
+                      className="rounded-l-none"
+                      placeholder={link.placeholder}
+                      // Vacío queda '' como el valor inicial; el schema lo guarda como null
+                      {...form.register(link.name)}
+                    />
+                  </div>
+                  <FormError error={form.formState.errors[link.name]} />
+                </div>
+              ))}
             </div>
+          </FormSection>
 
-            <div className="space-y-2">
-              <Label htmlFor="gitHubUrl" className="flex items-center gap-2">
-                <Link2 className="h-4 w-4" />
-                URL de cuenta de GitHub
-              </Label>
-              <Input
-                id="gitHubUrl"
-                type="url"
-                placeholder="https://github.com/tu-usuario"
-                {...form.register('gitHubUrl', {
-                  setValueAs: (v) => (v === '' ? null : v),
-                })}
-                value={form.watch('gitHubUrl') || ''}
-              />
-              <FormError error={form.formState.errors.gitHubUrl} />
+          <FormSection
+            id="stack"
+            index={5}
+            title="stack"
+            description="los lenguajes que usás o que te gustan"
+            {...progress('stack')}
+          >
+            {/* Every language as a token: click to mark or unmark it */}
+            <div className="flex flex-wrap gap-1.5">
+              {programmingLanguages.map((lang) => {
+                const selected = userLanguages.some((ul) => ul.languageId === lang.id);
+                return (
+                  <LanguageChip
+                    key={lang.id}
+                    languageId={lang.id}
+                    selectable
+                    selected={selected}
+                    onToggle={() => (selected ? removeLanguage(lang.id) : addLanguage(lang.id))}
+                  />
+                );
+              })}
             </div>
+          </FormSection>
+
+          <FormSection
+            id="herramientas"
+            index={6}
+            title="herramientas"
+            description="con qué trabajás todos los días"
+            {...progress('herramientas')}
+          >
+            <div className="space-y-4">
+              {stackFields(
+                SOFTWARE,
+                <FormField
+                  control={form.control}
+                  name="favoriteIde"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>ide favorito</FormLabel>
+                      <Select
+                        // Radix no acepta un ítem con valor vacío: "ninguno" es no tener favorito.
+                        onValueChange={(value) => field.onChange(value === NO_IDE ? null : value)}
+                        value={field.value || NO_IDE}
+                      >
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value={NO_IDE}>ninguno</SelectItem>
+                          {IDES.map((ide) => (
+                            <SelectItem key={ide.id} value={ide.id}>
+                              {ide.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />,
+              )}
+
+              <div className="space-y-1.5">
+                <p className="font-mono text-[10px] tracking-[0.18em] text-muted-foreground uppercase">
+                  sistemas operativos
+                </p>
+                <OptionChips
+                  label="Sistemas operativos"
+                  options={OPERATING_SYSTEMS}
+                  selected={selectedOperatingSystems}
+                  onChange={(ids) => form.setValue('operatingSystems', ids, { shouldDirty: true })}
+                />
+              </div>
+            </div>
+          </FormSection>
+
+          <FormSection
+            id="hardware"
+            index={7}
+            title="hardware"
+            description="la máquina y los periféricos con los que programás"
+            {...progress('hardware')}
+          >
+            {stackFields(HARDWARE)}
+          </FormSection>
+
+          <FormSection
+            id="especialidades"
+            index={8}
+            title="especialidades"
+            description="en qué sos especialista: te listamos en /especialidades para que te contacten"
+            {...progress('especialidades')}
+          >
+            <div className="flex flex-col gap-3">
+              {specialtyGroups.map((group) => (
+                <div key={group.id}>
+                  <p className="mb-1.5 font-mono text-[10px] tracking-[0.18em] text-muted-foreground uppercase">
+                    {group.title}
+                  </p>
+                  <div className="flex flex-wrap gap-1.5">
+                    {group.specialties.map((specialty) => {
+                      const selected = selectedSpecialties.includes(specialty.id);
+                      return (
+                        <button
+                          key={specialty.id}
+                          type="button"
+                          aria-pressed={selected}
+                          onClick={() =>
+                            form.setValue(
+                              'specialties',
+                              selected
+                                ? selectedSpecialties.filter((id) => id !== specialty.id)
+                                : [...selectedSpecialties, specialty.id],
+                              { shouldDirty: true },
+                            )
+                          }
+                          className={cn(
+                            'flex h-7 items-center gap-1.5 rounded-sm border px-2 font-mono text-[11px] transition-colors',
+                            selected
+                              ? 'border-pcnGreen-600 bg-pcnGreen/10 text-pcnGreen'
+                              : 'border-pcnGreen-200 text-muted-foreground hover:border-pcnGreen-500 hover:text-foreground',
+                          )}
+                        >
+                          <specialty.icon className="size-3.5" strokeWidth={1.75} />
+                          {specialty.title}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              ))}
+              <FormError error={form.formState.errors.specialties as never} />
+            </div>
+          </FormSection>
+
+          <div
+            className={cn(
+              formActionBarClassName,
+              'flex flex-wrap items-center justify-between gap-3 px-4 font-mono text-[11px]',
+            )}
+          >
+            <span className="flex items-center gap-2">
+              {dirtyCount > 0 ? (
+                <>
+                  <span className="size-1.5 animate-pulse rounded-full bg-amber-400" />
+                  <span className="text-amber-400">
+                    {dirtyCount} {dirtyCount === 1 ? 'campo modificado' : 'campos modificados'}
+                  </span>
+                </>
+              ) : (
+                <span className="text-muted-foreground">
+                  <span className="text-pcnGreen">✓</span> todo guardado
+                </span>
+              )}
+              <kbd className="border border-pcnGreen-200 px-1 text-[10px] text-muted-foreground max-sm:hidden">
+                ⌘S
+              </kbd>
+            </span>
+            <Button
+              type="submit"
+              variant="default"
+              loading={isSubmitting}
+              loadingText="guardando..."
+            >
+              guardarCambios();
+            </Button>
           </div>
-        </div>
-
-        {/* Section for adding programming languages */}
-        <div className="space-y-4 rounded-md border p-4 transition-all duration-300 hover:border-pcnPurple hover:shadow-[0_0_15px_rgba(80,56,189,0.3)] dark:hover:border-white/20 dark:hover:shadow-[0_0_10px_rgba(255,255,255,0.2)]">
-          <div className="mb-4 flex items-center justify-between gap-6">
-            <h3 className="flex items-center gap-2 text-lg font-semibold">
-              <Code className="h-5 w-5" />
-              Lenguajes de programación
-            </h3>
-            <LanguageDialog
-              currentLanguage={currentLanguage}
-              setCurrentLanguage={setCurrentLanguage}
-              addLanguage={addLanguage}
-            />
-          </div>
-
-          {/* View of added languages using the LanguageCoinsContainer */}
-          <LanguageCoinsContainer
-            languages={userLanguages}
-            editable={true}
-            onRemoveLanguage={removeLanguage}
-          />
-        </div>
-
-        <div className="mb-8 pb-4">
-          <Button type="submit" variant="default" loading={isSubmitting} loadingText="Guardando...">
-            Guardar cambios
-          </Button>
         </div>
       </form>
     </Form>

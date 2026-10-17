@@ -91,7 +91,7 @@ export function SpeakerUserPicker({ value, onSelect }: Props) {
               className="h-8 w-8 rounded-full object-cover"
             />
           ) : (
-            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-muted text-xs font-medium uppercase text-muted-foreground">
+            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-muted text-xs font-medium text-muted-foreground uppercase">
               {selected.name.charAt(0)}
             </div>
           )}
@@ -100,6 +100,8 @@ export function SpeakerUserPicker({ value, onSelect }: Props) {
             <p className="truncate text-xs text-muted-foreground">{selected.email}</p>
           </div>
           <Button
+            aria-label="Quitar persona elegida"
+            title="Quitar persona elegida"
             type="button"
             variant="ghost"
             size="icon"
@@ -113,7 +115,7 @@ export function SpeakerUserPicker({ value, onSelect }: Props) {
 
       {!selected && (
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+          <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <Input
             placeholder="Buscar por nombre o email..."
             value={query}
@@ -125,7 +127,7 @@ export function SpeakerUserPicker({ value, onSelect }: Props) {
             onFocus={() => setIsOpen(true)}
           />
           {isLoading && (
-            <Loader2 className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 animate-spin text-muted-foreground" />
+            <Loader2 className="absolute top-1/2 right-3 h-4 w-4 -translate-y-1/2 animate-spin text-muted-foreground" />
           )}
         </div>
       )}
@@ -149,7 +151,7 @@ export function SpeakerUserPicker({ value, onSelect }: Props) {
                     className="h-7 w-7 rounded-full object-cover"
                   />
                 ) : (
-                  <div className="flex h-7 w-7 items-center justify-center rounded-full bg-muted text-xs font-medium uppercase text-muted-foreground">
+                  <div className="flex h-7 w-7 items-center justify-center rounded-full bg-muted text-xs font-medium text-muted-foreground uppercase">
                     {user.name.charAt(0)}
                   </div>
                 )}

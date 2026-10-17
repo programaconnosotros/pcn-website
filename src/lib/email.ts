@@ -1,51 +1,47 @@
+import { randomInt } from 'node:crypto';
 import nodemailer from 'nodemailer';
+import { Resend } from 'resend';
+import { EMAIL_UNAVAILABLE_MESSAGE } from '@/lib/email-unavailable';
+import { reportEmailQuotaExceeded } from '@/lib/system-alerts';
+import { isDeactivatedEmail } from '@/lib/active-user';
 
 // Constantes de configuración
 export const RATE_LIMIT_SECONDS = 60; // 1 minuto entre envíos
 export const CODE_EXPIRATION_MINUTES = 15; // 15 minutos de expiración
 
 /**
- * Crea un transporter de nodemailer para enviar emails.
- * En entorno local (SMTP_HOST definido) se conecta al servidor indicado (ej. MailHog).
- * En producción (SMTP_HOST no definido) usa Gmail con las credenciales SMTP_USER/SMTP_PASS.
- * @throws Error si las credenciales SMTP no están configuradas (solo en modo Gmail)
+ * Transporte para desarrollo y la suite e2e. En producción los emails salen por Resend
+ * (`sendEmail`), no por acá.
+ * - `EMAIL_TRANSPORT=json`: no se manda nada (e2e, o desarrollo sin servidor de mail).
+ * - `SMTP_HOST`: un servidor SMTP local como MailHog, sin credenciales.
+ * @throws Error si no hay ni uno ni otro configurado
  */
 export const getEmailTransporter = () => {
-  const smtpHost = process.env.SMTP_HOST;
-  const smtpUser = process.env.SMTP_USER;
-  const smtpPass = process.env.SMTP_PASS;
+  // Nunca se define en producción: los tests leen el código de la base
+  if (process.env.EMAIL_TRANSPORT === 'json') {
+    return nodemailer.createTransport({ jsonTransport: true });
+  }
 
-  // Modo local/MailHog: conecta al host configurado sin requerir credenciales
+  const smtpHost = process.env.SMTP_HOST;
   if (smtpHost) {
     return nodemailer.createTransport({
       host: smtpHost,
       port: Number(process.env.SMTP_PORT ?? 1025),
       secure: false,
-      ...(smtpUser && smtpPass ? { auth: { user: smtpUser, pass: smtpPass } } : {}),
     });
   }
 
-  // Modo producción: Gmail requiere credenciales obligatoriamente
-  if (!smtpUser || !smtpPass) {
-    throw new Error(
-      'SMTP credentials not configured. Please set SMTP_USER and SMTP_PASS environment variables.',
-    );
-  }
-
-  return nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-      user: smtpUser,
-      pass: smtpPass,
-    },
-  });
+  throw new Error(
+    'Email not configured. Set RESEND_API_KEY (production) or SMTP_HOST (local MailHog).',
+  );
 };
 
 /**
  * Genera un código numérico de 6 dígitos
  */
 export const generateVerificationCode = (): string => {
-  return Math.floor(100000 + Math.random() * 900000).toString();
+  // randomInt usa el generador criptográfico; Math.random() es predecible
+  return randomInt(100000, 1000000).toString();
 };
 
 /**
@@ -71,6 +67,36 @@ export const checkRateLimit = (lastTokenCreatedAt: Date | null): number => {
   return 0;
 };
 
+const SENDER_NAME = 'programaConNosotros';
+const DEFAULT_SENDER_ADDRESS = 'no-reply@programaconnosotros.com';
+
+/**
+ * Remitente de los emails: siempre con una dirección (un nombre solo es un `MAIL FROM` inválido
+ * que MailHog rechaza). Con Resend tiene que ser de un dominio verificado en la cuenta;
+ * `EMAIL_FROM` permite cambiarla sin tocar el código.
+ */
+export const getSender = () => ({
+  name: SENDER_NAME,
+  address: process.env.EMAIL_FROM || DEFAULT_SENDER_ADDRESS,
+});
+
+/** Errores de Resend que no se arreglan reintentando: el plan no da más emails por hoy o por mes. */
+const QUOTA_ERRORS = new Set(['daily_quota_exceeded', 'monthly_quota_exceeded']);
+
+/**
+ * Resend se quedó sin cuota: no sale ningún email hasta que se amplíe el plan o se renueve. Su
+ * mensaje es el que lee el usuario (EMAIL_UNAVAILABLE_MESSAGE); los admins ya tienen la alerta.
+ */
+export class EmailQuotaError extends Error {
+  constructor() {
+    super(EMAIL_UNAVAILABLE_MESSAGE);
+    this.name = 'EmailQuotaError';
+  }
+}
+
+const formatSender = ({ name, address }: { name: string; address: string }) =>
+  `${name} <${address}>`;
+
 /**
  * Envía un email usando el transporter configurado
  * @throws Error si falla el envío
@@ -84,24 +110,108 @@ export const sendEmail = async ({
   subject: string;
   html: string;
 }) => {
+  // A deactivated account's placeholder address can't receive anything.
+  if (isDeactivatedEmail(to)) return;
   try {
-    const transporter = getEmailTransporter();
-    await transporter.sendMail({
-      from: 'Agus de PCN',
-      to,
-      subject,
-      html,
-    });
+    const apiKey = process.env.RESEND_API_KEY;
+    // Producción: la API de Resend. Desarrollo y e2e: MailHog o nada (getEmailTransporter).
+    if (apiKey && process.env.EMAIL_TRANSPORT !== 'json') {
+      const { error } = await new Resend(apiKey).emails.send({
+        from: formatSender(getSender()),
+        to,
+        subject,
+        html,
+      });
+      if (error && QUOTA_ERRORS.has(error.name)) {
+        await reportEmailQuotaExceeded(error.message);
+        throw new EmailQuotaError();
+      }
+      if (error) throw new Error(`Resend: ${error.message}`);
+      return;
+    }
+
+    await getEmailTransporter().sendMail({ from: getSender(), to, subject, html });
   } catch (error) {
     console.error(
       'Failed to send email:',
       error instanceof Error ? error.message : 'Unknown error',
     );
 
-    if (error instanceof Error && error.message.includes('SMTP credentials not configured')) {
-      throw new Error('Error de configuración: Las credenciales de email no están configuradas');
+    if (error instanceof EmailQuotaError) throw error;
+    if (error instanceof Error && error.message.startsWith('Email not configured')) {
+      throw new Error('Error de configuración: el envío de emails no está configurado');
     }
 
     throw new Error('Error al enviar el email. Por favor, contactá al administrador.');
   }
+};
+
+/** Resend acepta hasta 100 emails por llamada a su API de lotes. */
+const RESEND_BATCH_SIZE = 100;
+
+/** Cuánto se espera a Resend por cada lote antes de darlo por perdido. */
+export const RESEND_BATCH_TIMEOUT_MS = 10_000;
+
+/** La promesa, o un error si no termina a tiempo: un Resend colgado no frena a quien guarda. */
+const withTimeout = <T>(promise: Promise<T>, ms: number) => {
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  const timeout = new Promise<never>((_, reject) => {
+    timer = setTimeout(() => reject(new Error(`timeout after ${ms}ms`)), ms);
+  });
+  return Promise.race([promise, timeout]).finally(() => clearTimeout(timer));
+};
+
+/**
+ * Envía muchos emails de una (un aviso a todos los usuarios o a los inscriptos de un evento):
+ * en producción por la API de lotes de Resend, de a 100, así no se choca con su límite de
+ * pedidos por segundo. Nunca lanza: si el plan se queda sin cuota no manda el resto, si Resend no
+ * responde deja ese lote, y devuelve cuántos no se pudieron mandar. Lo que lo llamó (crear o
+ * editar un evento, un anuncio) sigue igual.
+ */
+export const sendEmails = async (
+  allMessages: { to: string; subject: string; html: string }[],
+): Promise<number> => {
+  const messages = allMessages.filter((message) => !isDeactivatedEmail(message.to));
+  let failed = 0;
+  const apiKey = process.env.RESEND_API_KEY;
+
+  if (apiKey && process.env.EMAIL_TRANSPORT !== 'json') {
+    const resend = new Resend(apiKey);
+    const from = formatSender(getSender());
+    for (let i = 0; i < messages.length; i += RESEND_BATCH_SIZE) {
+      const chunk = messages.slice(i, i + RESEND_BATCH_SIZE);
+      try {
+        const { error } = await withTimeout(
+          resend.batch.send(chunk.map((message) => ({ from, ...message }))),
+          RESEND_BATCH_TIMEOUT_MS,
+        );
+        if (error && QUOTA_ERRORS.has(error.name)) {
+          await reportEmailQuotaExceeded(error.message);
+          throw new EmailQuotaError();
+        }
+        if (error) throw new Error(error.message);
+      } catch (error) {
+        console.error(
+          'Failed to send email batch:',
+          error instanceof Error ? error.message : 'Unknown error',
+        );
+        if (error instanceof EmailQuotaError) return failed + messages.length - i;
+        failed += chunk.length;
+      }
+    }
+    return failed;
+  }
+
+  for (const message of messages) {
+    try {
+      await getEmailTransporter().sendMail({ from: getSender(), ...message });
+    } catch (error) {
+      failed++;
+      console.error(
+        'Failed to send email:',
+        error instanceof Error ? error.message : 'Unknown error',
+      );
+    }
+  }
+  return failed;
 };

@@ -1,11 +1,18 @@
 generator client {
-  provider = "prisma-client-js"
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
 }
 
+// El datamodel completo en JSON para el cache y el diagrama de /desarrollo (ver el generator).
+generator datamodel {
+  provider = "node prisma/datamodel-generator.mjs"
+  output   = "../src/generated/datamodel"
+}
+
+// Las URLs de conexión no van acá: la app se conecta con DATABASE_URL a través del adapter de pg
+// (src/lib/prisma.ts) y el CLI (migraciones) con la que define prisma.config.ts.
 datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
+  provider = "postgresql"
 }
 
 enum Role {
@@ -14,44 +21,138 @@ enum Role {
 }
 
 model User {
-  id              String         @id @default(cuid())
-  name            String
-  email           String         @unique
-  password        String
-  emailVerified   Boolean        @default(false)
-  phoneNumber     String?
-  role            Role           @default(REGULAR)
-  image           String?
-  countryOfOrigin String?
-  province        String? // Provincia (opcional)
-  xAccountUrl     String?
-  linkedinUrl     String?
-  gitHubUrl       String?
-  slogan          String?
-  jobTitle        String?
-  enterprise      String?
-  career          String?
-  studyPlace      String? // Dónde estudia (universidad, autodidacta, etc.)
-  sessions        Session[]
-  advises         Advise[]
-  languages       UserLanguage[]
-  comments        Comment[]
-  likes           Like[]
-  eventRegistrations EventRegistration[]
-  talkProposals            TalkProposal[]
-  speakerTalks             TalkSpeaker[]         @relation("UserTalkSpeakers")
-  talkProposalSpeakers     TalkProposalSpeaker[] @relation("UserTalkProposalSpeakers")
-  pageVisits      PageVisit[]
-  testimonials    Testimonial[]
-  notifications   Notification[]
-  errorLogs       ErrorLog[]
-  resolvedErrors  ErrorLog[] @relation("ErrorLogResolver")
-  appLogs         AppLog[]
-  announcements   Announcement[]
-  projectMemberships ProjectMember[] @relation("UserProjectMembers")
+  id                   String                @id @default(cuid())
+  name                 String
+  email                String                @unique
+  password             String
+  emailVerified        Boolean               @default(false)
+  phoneNumber          String?
+  role                 Role                  @default(REGULAR)
+  // Miembro del programa PCN Ambassadors (personas que organizan actividades e iniciativas).
+  // Lo asigna un admin.
+  isAmbassador         Boolean               @default(false)
+  // Co-founder de PCN. Lo marca un admin.
+  isCofounder          Boolean               @default(false)
+  // Cuenta suspendida por un admin: no puede iniciar sesión y sus sesiones dejan de valer.
+  suspendedAt          DateTime?
+  // Cuenta desactivada por la propia persona (soft delete): la fila queda para que lo que publicó
+  // siga en pie, pero anonimizada, sin sesiones y sin las relaciones donde estaba etiquetada.
+  deactivatedAt        DateTime?
+  image                String?
+  countryOfOrigin      String?
+  province             String? // Provincia (opcional)
+  xAccountUrl          String?
+  linkedinUrl          String?
+  gitHubUrl            String?
+  instagramUrl         String?
+  youtubeUrl           String?
+  twitchUrl            String?
+  kickUrl              String?
+  slogan               String?
+  // Espejo del primer puesto de `positions`, para las vistas que muestran uno solo.
+  jobTitle             String?
+  enterprise           String?
+  positions            UserPosition[]
+  career               String?
+  studyPlace           String? // Dónde estudia (universidad, autodidacta, etc.)
+  // Especialidades de /especialidades en las que la persona se considera especialista (ids del
+  // repo, src/components/especialidades/specialties.ts, sin clave foránea).
+  specialties          String[]              @default([])
+  // Sistemas operativos que usa (ids de src/lib/tech-stack.ts).
+  operatingSystems     String[]              @default([])
+  // IDE o editor favorito (id de src/lib/tech-stack.ts).
+  favoriteIde          String?
+  sessions             Session[]
+  advice               Advice[]
+  hiddenConsejos       HiddenConsejo[]
+  languages            UserLanguage[]
+  stackItems           UserStackItem[]
+  comments             Comment[]
+  likes                Like[]
+  commentLikes         CommentLike[]
+  eventRegistrations   EventRegistration[]
+  eventWaitlistEntries EventWaitlistEntry[]
+  talkProposals        TalkProposal[]
+  speakerTalks         TalkSpeaker[]         @relation("UserTalkSpeakers")
+  talkProposalSpeakers TalkProposalSpeaker[] @relation("UserTalkProposalSpeakers")
+  pageVisits           PageVisit[]
+  sponsorClicks        SponsorClick[]
+  workPlaces           WorkPlace[]
+  testimonials         Testimonial[]
+  notifications        Notification[]
+  errorLogs            ErrorLog[]
+  resolvedErrors       ErrorLog[]            @relation("ErrorLogResolver")
+  appLogs              AppLog[]
+  announcements        Announcement[]
+  projectMemberships   ProjectMember[]       @relation("UserProjectMembers")
+  authoredProjects     Project[]             @relation("UserAuthoredProjects")
+  contentMarks         ContentMark[]
+  identityLinks        IdentityLink[]
+  createdEvents        Event[]               @relation("UserCreatedEvents")
+  organizedEvents      EventOrganizer[]
+  badges               UserBadge[]
+  awardedBadges        UserBadge[]           @relation("BadgeAwarder")
+  uploadedGalleryItems GalleryItem[]         @relation("UserUploadedGalleryItems")
+  galleryTags          GalleryItemTag[]
+  galleryTagsAdded     GalleryItemTag[]      @relation("GalleryTagger")
+  articles             ArticleAuthor[]
+  articleAuthorsAdded  ArticleAuthor[]       @relation("ArticleAuthorAdder")
+  setups               Setup[]
+  flyerDesigns         EventFlyerDesigner[]
+  eventBroadcasts      EventBroadcast[]
+  setupLikes           SetupLike[]
+  recommendations      Recommendation[]      @relation("RecommendationSubmitter")
+  reviewedRecs         Recommendation[]      @relation("RecommendationReviewer")
+
+  createdAt              DateTime             @default(now())
+  updatedAt              DateTime             @updatedAt
+  forumPosts             ForumPost[]
+  forumComments          ForumComment[]
+  forumPostLikes         ForumPostLike[]
+  forumCommentLikes      ForumCommentLike[]
+  contentReports         ContentReport[]      @relation("ContentReporter")
+  jobOffers              JobOffers[]          @relation("UserJobOffers")
+  resolvedReports        ContentReport[]      @relation("ContentReportResolver")
+  hiddenFeedItems        HiddenFeedItem[]
+  /// Optional two-factor sign-in (TOTP). The secret is set while setting it up and kept once
+  /// confirmed; `twoFactorEnabledAt` says it's on. Recovery codes are stored as SHA-256 hashes.
+  twoFactorSecret        String?
+  twoFactorEnabledAt     DateTime?
+  twoFactorRecoveryCodes String[]             @default([])
+  /// Last TOTP time step used, so a code can't be replayed within its window.
+  twoFactorLastStep      Int?
+  twoFactorChallenges    TwoFactorChallenge[]
+}
+
+// Puestos laborales actuales: una persona puede trabajar en más de un lugar a la vez.
+model UserPosition {
+  id         String  @id @default(cuid())
+  userId     String
+  jobTitle   String
+  enterprise String?
+  order      Int     @default(0)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}
+
+// Parte del stack de un miembro (terminal, notebook, monitor…), en texto libre: una por categoría
+// (ids de src/lib/tech-stack.ts). El SO y el IDE favorito van en User.
+model UserStackItem {
+  id       String @id @default(cuid())
+  userId   String
+  category String
+  name     String
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@unique([userId, category])
 }
 
 model Session {
@@ -62,11 +163,15 @@ model Session {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([userId])
 }
 
-model Advise {
-  id      String @id @default(cuid())
+model Advice {
+  id      String   @id @default(cuid())
   content String
+  /// Categories the author picked (slugs); /consejos also infers some from the text.
+  tags    String[] @default([])
 
   author   User   @relation(fields: [authorId], references: [id])
   authorId String
@@ -76,6 +181,20 @@ model Advise {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([authorId])
+  @@index([createdAt])
+}
+
+/// A consejo extracted from the conversations (an `auto-` id) that the member it's attributed to,
+/// or an admin, took off the site.
+model HiddenConsejo {
+  extractedId String   @id
+  hiddenBy    User?    @relation(fields: [hiddenById], references: [id], onDelete: SetNull)
+  hiddenById  String?
+  createdAt   DateTime @default(now())
+
+  @@index([hiddenById])
 }
 
 model Comment {
@@ -85,15 +204,37 @@ model Comment {
   author   User   @relation(fields: [authorId], references: [id])
   authorId String
 
-  advise   Advise @relation(fields: [adviseId], references: [id], onDelete: Cascade)
-  adviseId String
+  // A comment is on a published consejo (adviceId) or on one extracted from the conversations
+  // (extractedId, an `auto-` id from src/data/consejos-extraidos); exactly one is set.
+  advice      Advice? @relation(fields: [adviceId], references: [id], onDelete: Cascade)
+  adviceId    String?
+  extractedId String?
 
-  parentComment   Comment?  @relation("CommentToComment", fields: [parentCommentId], references: [id], onDelete: Cascade)
+  parentComment   Comment?      @relation("CommentToComment", fields: [parentCommentId], references: [id], onDelete: Cascade)
   parentCommentId String?
-  replies         Comment[] @relation("CommentToComment")
+  replies         Comment[]     @relation("CommentToComment")
+  likes           CommentLike[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([adviceId])
+  @@index([extractedId])
+  @@index([authorId])
+  @@index([parentCommentId])
+}
+
+/// A member liking a comment (or reply) on a consejo, once each.
+model CommentLike {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  commentId String
+  comment   Comment  @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([userId, commentId])
+  @@index([commentId])
 }
 
 model UserLanguage {
@@ -111,17 +252,16 @@ model UserLanguage {
 }
 
 model Event {
-  id          String    @id @default(cuid())
-  date        DateTime
-  endDate     DateTime?
-  name        String
-  description String
-  city        String? // Nombre de la ciudad
-  address     String? // Dirección específica (calle, número, etc.)
-  placeName   String? // Nombre del lugar (bar, universidad, etc.)
-  flyerImages String[] @default([])
-  latitude    Float?
-  longitude   Float?
+  id                      String    @id @default(cuid())
+  date                    DateTime
+  endDate                 DateTime?
+  name                    String
+  description             String
+  city                    String? // Nombre de la ciudad
+  address                 String? // Dirección específica (calle, número, etc.)
+  placeName               String? // Nombre del lugar (bar, universidad, etc.)
+  flyerImages             String[]  @default([])
+  googleMapsUrl           String? // Link de Google Maps del lugar; de ahí salen el mapa y los links
   capacity                Int? // Cupo máximo del evento (opcional)
   externalRegistrationUrl String? // URL externa de inscripción (ej: Luma)
   markedAsFull            Boolean   @default(false)
@@ -129,69 +269,244 @@ model Event {
   isOnline                Boolean   @default(false)
   streamingUrl            String?
   shortcut                String? // Slug para URL corta de flyers (ej: "cowork" → /cowork). Reutilizable entre eventos.
+  // Foto de portada del memorial que eligió un admin. Sin elegir, la portada alterna fotos
+  // horizontales del evento al azar.
+  coverPhotoId            String?   @unique
+  // Encuadre de la portada elegida: punto focal en % (0–100) y zoom en % (100 = sin zoom). Lo
+  // ajusta quien puede editar el evento.
+  coverFocusX             Int       @default(50)
+  coverFocusY             Int       @default(50)
+  coverZoom               Int       @default(100)
   deletedAt               DateTime? // Eliminación lógica
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  // Usuario que creó el evento. Null en eventos cargados antes de que se guardara.
+  createdById             String?
+  createdAt               DateTime  @default(now())
+  updatedAt               DateTime  @updatedAt
 
-  images        Image[]
-  registrations EventRegistration[]
-  sponsors      Sponsor[]
-  announcements Announcement[]
-  talkProposals TalkProposal[]
-  talks         Talk[]
+  createdBy       User?                @relation("UserCreatedEvents", fields: [createdById], references: [id], onDelete: SetNull)
+  coverPhoto      GalleryItem?         @relation("EventCoverPhoto", fields: [coverPhotoId], references: [id], onDelete: SetNull)
+  organizers      EventOrganizer[]
+  galleryItems    GalleryItem[]
+  registrations   EventRegistration[]
+  waitlistEntries EventWaitlistEntry[]
+  sponsors        Sponsor[]
+  sponsorClicks   SponsorClick[]
+  flyerDesigners  EventFlyerDesigner[]
+  broadcasts      EventBroadcast[]
+  announcements   Announcement[]
+  talkProposals   TalkProposal[]
+  talks           Talk[]
 
   @@index([shortcut])
+  @@index([createdById])
+  @@index([deletedAt, date])
 }
 
-model Image {
-  id      String  @id @default(cuid())
-  imgSrc  String
-  event   Event?  @relation(fields: [eventId], references: [id])
-  eventId String?
+// Personas que organizan un evento (ambassadors o no). Pueden editarlo y gestionarlo, y el
+// evento aparece en su perfil. Quien crea el evento queda como organizador.
+model EventOrganizer {
+  id      String @id @default(cuid())
+  eventId String
+  userId  String
+
+  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@unique([eventId, userId])
+  @@index([userId])
 }
 
-model Like {
-  id       String @id @default(cuid())
-  userId   String
-  adviseId String
+// Foto o video de la galería. Lo que suben los admins se guarda en S3 (las fotos como webp, una
+// grande y una miniatura; los videos tal cual, con una portada) y se sirve por CloudFront con
+// URLs firmadas. Las fotos históricas viven en /public.
+enum GalleryItemKind {
+  PHOTO
+  VIDEO
+}
 
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  advise Advise @relation(fields: [adviseId], references: [id], onDelete: Cascade)
+// Lo que suben los admins se publica directo; lo que sube un miembro espera a que un admin lo
+// apruebe (si lo rechaza, se borra con sus archivos).
+enum GalleryItemStatus {
+  PENDING
+  APPROVED
+}
+
+model GalleryItem {
+  id              String            @id @default(cuid())
+  kind            GalleryItemKind   @default(PHOTO)
+  // La foto (webp) o el video tal cual se subió.
+  src             String
+  // Miniatura de la foto, o portada del video (webp).
+  thumbSrc        String
+  // Tipo MIME del archivo de `src` (video/mp4, image/webp…).
+  mimeType        String?
+  // Duración de los videos, en segundos.
+  durationSeconds Int?
+  width           Int?
+  height          Int?
+  // Objetos de S3 del ítem, para borrarlos junto con él. Vacío en las fotos de /public.
+  storageKeys     String[]          @default([])
+  // Cuándo se sacó o grabó (por defecto, la fecha del archivo).
+  takenAt         DateTime
+  description     String?
+  eventId         String?
+  uploadedById    String?
+  status          GalleryItemStatus @default(APPROVED)
+  // Foto de alguien trabajando (en su escritorio, la oficina, una hackatón): va a la pestaña
+  // "trabajando" de la galería y al perfil de quien aparece.
+  working         Boolean           @default(false)
+  // Id en la galería estática anterior, para que sigan andando los links `/galeria?foto=<n>`.
+  legacyId        Int?              @unique
+
+  event      Event?           @relation(fields: [eventId], references: [id], onDelete: SetNull)
+  coverOf    Event?           @relation("EventCoverPhoto")
+  uploadedBy User?            @relation("UserUploadedGalleryItems", fields: [uploadedById], references: [id], onDelete: SetNull)
+  tags       GalleryItemTag[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@unique([userId, adviseId])
+  @@index([takenAt])
+  @@index([eventId])
+  @@index([uploadedById])
+  @@index([createdAt])
+  @@index([status])
 }
 
+// Persona que aparece en una foto o video. La etiquetan los admins o la propia persona.
+model GalleryItemTag {
+  id         String  @id @default(cuid())
+  itemId     String
+  userId     String
+  taggedById String?
+  // Dónde está la persona en la foto, como fracción del ancho y del alto (0–1). Opcional.
+  x          Float?
+  y          Float?
+
+  item     GalleryItem @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  user     User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  taggedBy User?       @relation("GalleryTagger", fields: [taggedById], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+
+  @@unique([itemId, userId])
+  @@index([userId])
+}
+
+// Foto del lugar de trabajo de un miembro (escritorio, equipo, periféricos). La sube la propia
+// persona: el original va directo a S3 y se guarda optimizado en webp, grande y en miniatura,
+// servido por CloudFront sin firmar (es contenido público).
+model Setup {
+  id            String   @id @default(cuid())
+  title         String
+  description   String
+  imageUrl      String
+  thumbUrl      String
+  width         Int
+  height        Int
+  // Objetos de S3 de la foto, para borrarlos junto con el setup o al reemplazar la foto.
+  storageKeys   String[] @default([])
+  authorId      String
+  // El día que corresponde al setup (lo elige quien lo publica; por defecto, el día que lo sube).
+  date          DateTime @default(now()) @db.Date
+  // El software con el que trabaja, todo opcional y en texto libre.
+  os            String?
+  browser       String?
+  editor        String?
+  terminal      String?
+  // Otras herramientas que quiera contar (separadas por comas).
+  otherSoftware String?
+
+  author User        @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  likes  SetupLike[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([authorId])
+  @@index([createdAt])
+  @@index([date])
+}
+
+model SetupLike {
+  id      String @id @default(cuid())
+  userId  String
+  setupId String
+
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  setup Setup @relation(fields: [setupId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@unique([setupId, userId])
+  @@index([userId])
+}
+
+model Like {
+  id          String  @id @default(cuid())
+  userId      String
+  // Like Comment: a published consejo (adviceId) or an extracted one (extractedId), exactly one.
+  adviceId    String?
+  extractedId String?
+
+  user   User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  advice Advice? @relation(fields: [adviceId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, adviceId])
+  @@unique([userId, extractedId])
+  @@index([adviceId])
+  @@index([extractedId])
+}
+
+/// Ofertas de trabajo de /empleos, publicadas por miembros de la comunidad. Las filas viejas sin
+/// autor (de antes de la bolsa) no se muestran.
 model JobOffers {
   id          String   @id @default(cuid())
   title       String
   description String
   company     String
-  available   Boolean
+  /// Abierta: se muestra en /empleos. Quien la publicó la cierra cuando se cubre.
+  available   Boolean  @default(true)
   tags        String[]
   location    String
+  /// Jornada: full-time, part-time, freelance o pasantia.
   type        String
+  /// remoto, hibrido o presencial.
+  modality    String   @default("remoto")
+  /// trainee, junior, semi-senior, senior o lead; vacío si no aplica.
+  seniority   String?
+  /// Dónde postularse: un link https o un email.
+  applyUrl    String?
+
+  author   User?   @relation("UserJobOffers", fields: [authorId], references: [id], onDelete: SetNull)
+  authorId String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([available, createdAt])
+  @@index([authorId])
 }
 
 model Announcement {
-  id          String   @id @default(cuid())
-  title       String
-  content     String
-  category    String   // ej: "general", "evento", "noticia", "importante"
-  pinned      Boolean  @default(false) // Para destacar anuncios importantes
-  published   Boolean  @default(true)
-  authorId    String
-  author      User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  eventId     String?  // Evento relacionado (solo para categoría "evento")
-  event       Event?   @relation(fields: [eventId], references: [id], onDelete: SetNull)
+  id        String  @id @default(cuid())
+  title     String
+  content   String
+  category  String // ej: "general", "evento", "noticia", "importante"
+  pinned    Boolean @default(false) // Para destacar anuncios importantes
+  published Boolean @default(true)
+  authorId  String
+  author    User    @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  eventId   String? // Evento relacionado (solo para categoría "evento")
+  event     Event?  @relation(fields: [eventId], references: [id], onDelete: SetNull)
 
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([authorId])
   @@index([published])
@@ -200,15 +515,15 @@ model Announcement {
 }
 
 model EventRegistration {
-  id              String    @id @default(cuid())
-  eventId         String
-  userId          String    // Usuario registrado (requerido)
-  cancelledAt     DateTime? // Fecha de cancelación (si fue cancelada)
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
+  id          String    @id @default(cuid())
+  eventId     String
+  userId      String // Usuario registrado (requerido)
+  cancelledAt DateTime? // Fecha de cancelación (si fue cancelada)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 
-  event           Event     @relation(fields: [eventId], references: [id], onDelete: Cascade)
-  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([eventId, userId])
   @@index([eventId])
@@ -216,29 +531,111 @@ model EventRegistration {
   @@index([cancelledAt])
 }
 
+// Lista de espera de un evento con cupo lleno. El orden de la fila es createdAt; al conseguir
+// lugar se marca promotedAt y al salir de la lista, cancelledAt (las filas no se borran).
+model EventWaitlistEntry {
+  id          String    @id @default(cuid())
+  eventId     String
+  userId      String
+  cancelledAt DateTime?
+  promotedAt  DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([eventId, userId])
+  @@index([eventId, cancelledAt, promotedAt, createdAt])
+  @@index([userId])
+}
+
+// Un mail que quien gestiona un evento mandó a sus inscriptos (a todos, a los confirmados o a la
+// lista de espera). Queda el historial para no repetir envíos y saber qué se le dijo a quién.
+model EventBroadcast {
+  id         String  @id @default(cuid())
+  eventId    String
+  authorId   String?
+  // "confirmados", "lista-de-espera" o "todos" (validado en src/actions/events/event-broadcast).
+  audience   String
+  subject    String
+  message    String
+  recipients Int
+  failed     Int     @default(0)
+
+  event  Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  author User? @relation(fields: [authorId], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+
+  @@index([eventId, createdAt])
+  @@index([authorId])
+}
+
+// Quién diseñó el flyer de un evento: ninguno, uno o varios, para el evento entero (no por imagen
+// del carrusel). Puede ser alguien con cuenta (userId) o solo un nombre; el nombre se guarda
+// siempre, para mostrarlo sin la cuenta.
+model EventFlyerDesigner {
+  id      String  @id @default(cuid())
+  eventId String
+  userId  String?
+  name    String
+
+  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  user  User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+
+  @@index([eventId])
+  @@index([userId])
+}
+
 model Sponsor {
   id        String   @id @default(cuid())
   eventId   String
   name      String
   website   String? // URL del sitio web del sponsor
+  // Logo: una ruta de /public (los partners del sitio) o una URL https.
+  logo      String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  event     Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
 
   @@index([eventId])
 }
 
-model PageVisit {
+// Un clic en el logo o la card de un sponsor, para que los admins sepan cuánto tráfico le manda
+// el sitio a cada uno: un partner del sitio (sin evento, su nombre en src/data/partners.ts) o un
+// sponsor de un evento. Va por nombre y evento, no por la fila de Sponsor, que se recrea cada vez
+// que se edita el evento.
+model SponsorClick {
   id        String   @id @default(cuid())
-  path      String   // Ruta de la página visitada
-  userId    String?  // Usuario que visitó (si está logueado)
-  ipAddress String?  // Dirección IP (opcional, para privacidad)
-  userAgent String?  // User agent del navegador
-  referer   String?  // Página de origen
+  name      String
+  eventId   String?
+  // Dónde estaba el logo: "inicio", "partners", "feed" o "evento".
+  source    String
+  userId    String?
   createdAt DateTime @default(now())
 
-  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  event Event? @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  user  User?  @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([name])
+  @@index([eventId])
+  @@index([createdAt])
+}
+
+model PageVisit {
+  id        String   @id @default(cuid())
+  path      String // Ruta de la página visitada
+  userId    String? // Usuario que visitó (si está logueado)
+  ipAddress String? // Dirección IP (opcional, para privacidad)
+  userAgent String? // User agent del navegador
+  referer   String? // Página de origen
+  createdAt DateTime @default(now())
+
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
 
   @@index([path])
   @@index([userId])
@@ -248,12 +645,12 @@ model PageVisit {
 model Testimonial {
   id        String   @id @default(cuid())
   body      String
-  userId    String   // Usuario que creó el testimonio (requerido)
+  userId    String // Usuario que creó el testimonio (requerido)
   featured  Boolean  @default(false) // Si aparece en la home page
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
   @@index([createdAt])
@@ -262,37 +659,37 @@ model Testimonial {
 
 model Notification {
   id        String   @id @default(cuid())
-  type      String   // Tipo de notificación (testimonial_created, testimonial_updated, testimonial_deleted, etc.)
-  title     String   // Título de la notificación
-  message   String   // Mensaje de la notificación
-  userId    String?  // Usuario destinatario (null = todos los admins)
+  type      String // Tipo de notificación (testimonial_created, testimonial_updated, testimonial_deleted, etc.)
+  title     String // Título de la notificación
+  message   String // Mensaje de la notificación
+  userId    String? // Usuario destinatario (null = todos los admins)
   read      Boolean  @default(false)
-  metadata  String?  // JSON con información adicional
+  metadata  String? // JSON con información adicional
   createdAt DateTime @default(now())
 
-  user      User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User? @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@index([userId])
   @@index([read])
   @@index([createdAt])
+  @@index([userId, read])
 }
 
 model ErrorLog {
-  id          String   @id @default(cuid())
-  message     String   // Mensaje del error
-  stack       String?  // Stack trace del error
-  path        String?  // Ruta donde ocurrió el error
-  userId      String?  // Usuario que estaba usando la app cuando ocurrió (si está logueado)
-  userAgent   String?  // User agent del navegador
-  ipAddress   String?  // Dirección IP
-  metadata    String?  // JSON con información adicional del error
-  resolved    Boolean  @default(false) // Si el error fue resuelto
-  resolvedAt  DateTime? // Fecha en que se resolvió
-  resolvedBy  String?  // ID del admin que lo resolvió
-  createdAt   DateTime @default(now())
+  id         String    @id @default(cuid())
+  message    String // Mensaje del error
+  stack      String? // Stack trace del error
+  path       String? // Ruta donde ocurrió el error
+  userId     String? // Usuario que estaba usando la app cuando ocurrió (si está logueado)
+  userAgent  String? // User agent del navegador
+  ipAddress  String? // Dirección IP
+  metadata   String? // JSON con información adicional del error
+  resolved   Boolean   @default(false) // Si el error fue resuelto
+  resolvedAt DateTime? // Fecha en que se resolvió
+  resolvedBy String? // ID del admin que lo resolvió
+  createdAt  DateTime  @default(now())
 
-  user        User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
-  resolver    User?    @relation("ErrorLogResolver", fields: [resolvedBy], references: [id], onDelete: SetNull)
+  user     User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+  resolver User? @relation("ErrorLogResolver", fields: [resolvedBy], references: [id], onDelete: SetNull)
 
   @@index([userId])
   @@index([path])
@@ -300,18 +697,32 @@ model ErrorLog {
   @@index([createdAt])
 }
 
-model AppLog {
-  id          String   @id @default(cuid())
-  level       String   // Nivel del log: info, warn, error, debug
-  message     String   // Mensaje del log
-  path        String?  // Ruta donde ocurrió el log
-  userId      String?  // Usuario que estaba usando la app cuando ocurrió (si está logueado)
-  userAgent   String?  // User agent del navegador
-  ipAddress   String?  // Dirección IP
-  metadata    String?  // JSON con información adicional del log
-  createdAt   DateTime @default(now())
+/// A problem with the platform itself that an admin has to fix (e.g. Resend out of quota): admins
+/// see a critical dialog while one is open. At most one open alert per kind.
+model SystemAlert {
+  id         String    @id @default(cuid())
+  /// "email_quota"
+  kind       String
+  detail     String
+  createdAt  DateTime  @default(now())
+  resolvedAt DateTime?
+  resolvedBy String?
 
-  user        User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  @@index([kind, resolvedAt])
+}
+
+model AppLog {
+  id        String   @id @default(cuid())
+  level     String // Nivel del log: info, warn, error, debug
+  message   String // Mensaje del log
+  path      String? // Ruta donde ocurrió el log
+  userId    String? // Usuario que estaba usando la app cuando ocurrió (si está logueado)
+  userAgent String? // User agent del navegador
+  ipAddress String? // Dirección IP
+  metadata  String? // JSON con información adicional del log
+  createdAt DateTime @default(now())
+
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
 
   @@index([userId])
   @@index([path])
@@ -322,9 +733,10 @@ model AppLog {
 model PasswordResetToken {
   id        String   @id @default(cuid())
   email     String
-  code      String   // Código de 6 dígitos
+  code      String // Código de 6 dígitos
   expiresAt DateTime // Expira en 15 minutos
   used      Boolean  @default(false)
+  attempts  Int      @default(0) // Intentos de validación, con tope
   createdAt DateTime @default(now())
 
   @@index([email])
@@ -334,9 +746,10 @@ model PasswordResetToken {
 model EmailVerificationToken {
   id        String   @id @default(cuid())
   email     String
-  code      String   // Código de 6 dígitos
+  code      String // Código de 6 dígitos
   expiresAt DateTime // Expira en 15 minutos
   used      Boolean  @default(false)
+  attempts  Int      @default(0) // Intentos de validación, con tope
   createdAt DateTime @default(now())
 
   @@index([email])
@@ -459,10 +872,57 @@ model Project {
   techStack   String[]
   order       Int      @default(0)
 
+  // Proyectos de código abierto: el repo es opcional y siempre apunta a GitHub.
+  isOpenSource Boolean @default(false)
+  repoUrl      String?
+
+  // Años en que arrancó y (si terminó) cerró el proyecto. Ambos opcionales.
+  startYear Int?
+  endYear   Int?
+
+  // Usuario que cargó el proyecto. Null solo en proyectos cargados por admins antes de que
+  // los usuarios pudieran publicar los suyos.
+  authorId   String?
+  author     User?   @relation("UserAuthoredProjects", fields: [authorId], references: [id], onDelete: Cascade)
+  // Rol del autor en el equipo (texto libre).
+  authorRole String?
+
   members ProjectMember[]
+  media   ProjectMedia[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([authorId])
+}
+
+// Fotos y videos que el equipo sube a la página de un proyecto. Las fotos se optimizan a WebP
+// (grande y miniatura) en el servidor; los videos se optimizan en el navegador y se suben con una
+// portada. Se sirven por CloudFront sin firmar, como los setups.
+model ProjectMedia {
+  id              String          @id @default(cuid())
+  projectId       String
+  kind            GalleryItemKind
+  // La foto grande o el video.
+  src             String
+  // La miniatura de la foto o la portada del video.
+  thumbSrc        String
+  width           Int?
+  height          Int?
+  durationSeconds Int?
+  // Lo que cuenta quien la sube (opcional) y el día en que se sacó: sale del archivo y se puede
+  // cambiar. Solo el día, sin hora.
+  description     String?
+  takenAt         DateTime?       @db.Date
+  // Objetos de S3, para borrarlos junto con la foto, el video o el proyecto.
+  storageKeys     String[]        @default([])
+  order           Int             @default(0)
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@index([projectId])
 }
 
 model ProjectMember {
@@ -470,6 +930,8 @@ model ProjectMember {
   projectId  String
   userId     String?
   memberName String
+  // Rol en el equipo (texto libre). Solo el autor del proyecto lo edita.
+  role       String?
   order      Int     @default(0)
 
   createdAt DateTime @default(now())
@@ -481,4 +943,356 @@ model ProjectMember {
   @@index([projectId])
   @@index([userId])
   @@index([projectId, order])
+}
+
+// A personal mark a user leaves on static content listed on the site, like an article they
+// already read. `contentType`/`mark` pairs are validated in src/actions/content-marks.
+model ContentMark {
+  id          String @id @default(cuid())
+  userId      String
+  contentType String
+  contentId   String
+  mark        String
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@unique([userId, contentType, contentId, mark])
+  @@index([userId, contentType])
+}
+
+// Ties a name the site knows from outside the platform to a real user, set by an admin: a
+// member as named in the WhatsApp conversation summaries, a GitHub login that contributed to
+// this website's repository, or an author of the /lectura articles.
+model IdentityLink {
+  id           String @id @default(cuid())
+  /// "whatsapp", "github" or "articulos" (validated in src/actions/identity-links).
+  source       String
+  externalName String
+  userId       String
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([source, externalName])
+  @@index([userId])
+}
+
+// Badge custom que un admin crea y otorga a miembros de la comunidad.
+model Badge {
+  id          String @id @default(cuid())
+  name        String
+  description String
+  // Ícono y color del badge, validados en src/lib/badges.
+  icon        String
+  tone        String
+
+  awards UserBadge[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model UserBadge {
+  id          String  @id @default(cuid())
+  userId      String
+  badgeId     String
+  awardedById String?
+
+  user      User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  badge     Badge @relation(fields: [badgeId], references: [id], onDelete: Cascade)
+  awardedBy User? @relation("BadgeAwarder", fields: [awardedById], references: [id], onDelete: SetNull)
+
+  awardedAt DateTime @default(now())
+
+  @@unique([userId, badgeId])
+  @@index([badgeId])
+}
+
+// Miembro de la comunidad que escribió uno de los artículos de /lectura (`articleId` es el slug
+// de su Recommendation de tipo ARTICLE, sin clave foránea). Lo asigna un admin y el artículo
+// aparece en su perfil.
+model ArticleAuthor {
+  id        String  @id @default(cuid())
+  articleId String
+  userId    String
+  addedById String?
+
+  user    User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  addedBy User? @relation("ArticleAuthorAdder", fields: [addedById], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+
+  @@unique([articleId, userId])
+  @@index([userId])
+}
+
+// ─── Foro ─────────────────────────────────────────────────────────────────────
+// Ported from the forum v1 PR (#197): categories, threads in markdown, threaded replies and likes.
+
+model ForumCategory {
+  id          String @id @default(cuid())
+  slug        String @unique
+  name        String
+  description String
+  /// Order on /foro.
+  position    Int    @default(0)
+
+  posts ForumPost[]
+
+  createdAt DateTime @default(now())
+}
+
+model ForumPost {
+  id       String  @id @default(cuid())
+  title    String
+  /// Markdown.
+  content  String
+  isPinned Boolean @default(false)
+  /// Locked threads take no new replies.
+  isLocked Boolean @default(false)
+
+  author     User          @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  authorId   String
+  category   ForumCategory @relation(fields: [categoryId], references: [id])
+  categoryId String
+
+  comments ForumComment[]
+  likes    ForumPostLike[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  /// Last reply or edit, for sorting threads by activity.
+  activeAt  DateTime @default(now())
+
+  @@index([categoryId, activeAt])
+  @@index([activeAt])
+  @@index([authorId])
+}
+
+model ForumComment {
+  id      String @id @default(cuid())
+  content String
+
+  author   User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  authorId String
+  post     ForumPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId   String
+
+  parentComment   ForumComment?      @relation("ForumCommentReplies", fields: [parentCommentId], references: [id], onDelete: Cascade)
+  parentCommentId String?
+  replies         ForumComment[]     @relation("ForumCommentReplies")
+  likes           ForumCommentLike[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([postId, createdAt])
+  @@index([authorId])
+  @@index([parentCommentId])
+}
+
+model ForumPostLike {
+  id     String @id @default(cuid())
+  userId String
+  postId String
+
+  user User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  post ForumPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@unique([userId, postId])
+  @@index([postId])
+}
+
+/// A member liking a reply in a forum thread, once each.
+model ForumCommentLike {
+  id        String       @id @default(cuid())
+  userId    String
+  user      User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  commentId String
+  comment   ForumComment @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  createdAt DateTime     @default(now())
+
+  @@unique([userId, commentId])
+  @@index([commentId])
+}
+
+/// A sign-in that passed the password and waits for the second factor. The id is the SHA-256 of
+/// the token in the httpOnly cookie, like Session.
+model TwoFactorChallenge {
+  id         String   @id
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId     String
+  redirectTo String
+  attempts   Int      @default(0)
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+
+  @@index([userId])
+}
+
+// ─── Recomendaciones ──────────────────────────────────────────────────────────
+// Lo que la comunidad recomienda en /lectura (artículos y libros), /cursos y /videos (las charlas
+// externas de /charlas son los videos con `isTalk`). Una sola tabla para los cuatro tipos: comparten
+// la revisión (lo que manda un miembro espera a un admin) y casi todos los campos; los que son de
+// un solo tipo quedan vacíos en el resto. Las listas que antes vivían en el repo se cargaron con una
+// migración de datos, aprobadas y sin `submittedBy`.
+
+enum RecommendationKind {
+  ARTICLE
+  BOOK
+  COURSE
+  VIDEO
+  // Una serie o película sobre tecnología (/series-y-peliculas).
+  SERIES
+  // Un creador de contenido de ingeniería de software (/influencers).
+  INFLUENCER
+}
+
+enum RecommendationStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+model Recommendation {
+  id                String               @id @default(cuid())
+  kind              RecommendationKind
+  // Clave estable dentro del tipo: el id de YouTube de un video, el slug de la URL de un curso
+  // (/cursos/<slug>), el id de un artículo o libro. ContentMark y ArticleAuthor la referencian.
+  slug              String
+  status            RecommendationStatus @default(PENDING)
+  title             String
+  description       String               @default("")
+  // La web del artículo, libro o curso. Los videos la arman con su id de YouTube.
+  url               String?
+  // Quién lo escribió (artículo, libro), lo dicta (curso) o lo presenta (video).
+  author            String?
+  // Quienes firmaron un artículo junto con `author`.
+  coauthors         String[]             @default([])
+  // El sitio de un artículo o el canal de YouTube de un video.
+  source            String?
+  // Categorías de un libro; la de un artículo es la primera.
+  categories        String[]             @default([])
+  // "es" o "en".
+  language          String?
+  // Fecha de publicación de un artículo o video, o la del curso.
+  publishedAt       DateTime?
+  // Año de un libro.
+  year              Int?
+  // Avatar del autor de un artículo, tapa de un libro o logo de un curso.
+  imageUrl          String?
+  isbn              String?
+  durationSeconds   Int?
+  // Horas de un curso.
+  hours             Int?
+  // Videos de YouTube (embed) de un curso.
+  youtubeUrls       String[]             @default([])
+  // Charla de una conferencia: también se lista en las externas de /charlas.
+  isTalk            Boolean              @default(false)
+  isMadeByCommunity Boolean              @default(false)
+  acceptDonations   Boolean              @default(false)
+  // Orden entre las del mismo tipo con la misma fecha (el de las listas del repo).
+  position          Int                  @default(0)
+  // Por qué lo recomienda quien lo mandó. Solo lo ven los admins.
+  note              String?
+  submittedById     String?
+  reviewedById      String?
+  reviewedAt        DateTime?
+
+  submittedBy User? @relation("RecommendationSubmitter", fields: [submittedById], references: [id], onDelete: SetNull)
+  reviewedBy  User? @relation("RecommendationReviewer", fields: [reviewedById], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([kind, slug])
+  @@index([kind, status])
+  @@index([status, createdAt])
+  @@index([submittedById])
+}
+
+// ─── Lugares para laburar ─────────────────────────────────────────────────────
+// Cafés, coworks y bibliotecas que la comunidad recomienda para trabajar, en /lugares. Los carga
+// cualquier miembro; lo editan quien lo cargó y los admins. Los puntajes van de 1 a 5; los de la
+// comida quedan vacíos si el lugar no tiene.
+
+model WorkPlace {
+  id            String  @id @default(cuid())
+  name          String
+  city          String
+  address       String?
+  googleMapsUrl String?
+  wifi          Int
+  // Si hay varias mesas con enchufes.
+  plugs         Int
+  // Qué tan silencioso es como para tener llamadas (5 = ideal).
+  calls         Int
+  foodQuality   Int?
+  foodVariety   Int?
+  notes         String?
+  // Foto opcional, subida al bucket (carpeta work-places/).
+  photoUrl      String?
+  authorId      String
+
+  author User @relation(fields: [authorId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([authorId])
+  @@index([city])
+}
+
+// ─── Moderación ───────────────────────────────────────────────────────────────
+
+enum ContentReportStatus {
+  PENDING
+  RESOLVED
+  DISMISSED
+}
+
+/// A member flagging something on the site for the admins to look at (src/lib/content-reports.ts
+/// lists what can be reported). No foreign key to the content: it can be of several tables, and
+/// the report outlives it when an admin deletes it.
+model ContentReport {
+  id          String              @id @default(cuid())
+  /// forum_post, forum_comment, advice, advice_comment, setup, gallery_item, project, user.
+  contentType String
+  contentId   String
+  /// spam, ofensivo, acoso, falso u otro.
+  reason      String
+  details     String?
+  status      ContentReportStatus @default(PENDING)
+
+  reporter     User?     @relation("ContentReporter", fields: [reporterId], references: [id], onDelete: SetNull)
+  reporterId   String?
+  resolvedBy   User?     @relation("ContentReportResolver", fields: [resolvedById], references: [id], onDelete: SetNull)
+  resolvedById String?
+  resolvedAt   DateTime?
+
+  createdAt DateTime @default(now())
+
+  @@unique([reporterId, contentType, contentId])
+  @@index([status, createdAt])
+  @@index([contentType, contentId])
+}
+
+/// A feed entry an admin took off /feed (and the notification center) for everyone. Keyed by the
+/// feed item's id (`evento-<id>`, `changelog-<date>-<n>`…), since items come from many tables and
+/// static data. Title and link are kept so /admin/feed can list it after it leaves the feed.
+model HiddenFeedItem {
+  itemId String @id
+  title  String
+  href   String
+
+  hiddenBy   User?   @relation(fields: [hiddenById], references: [id], onDelete: SetNull)
+  hiddenById String?
+
+  createdAt DateTime @default(now())
 }

@@ -1,5 +1,5 @@
 import type { DeepMockProxy } from 'jest-mock-extended';
-import type { PrismaClient } from '@prisma/client';
+import type { PrismaClient } from '@/generated/prisma/client';
 
 /**
  * Typed reference to the Prisma deep mock created in jest.setup.ts.

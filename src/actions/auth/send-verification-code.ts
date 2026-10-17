@@ -8,22 +8,26 @@ import {
   getCodeExpirationDate,
   checkRateLimit,
   sendEmail,
+  EmailQuotaError,
 } from '@/lib/email';
 import { render } from '@react-email/render';
+import { RateLimitError, enforceRateLimit } from '@/lib/rate-limit';
 
-export const sendVerificationCode = async (email: string) => {
-  // Verificar que el usuario existe
+const EMAIL_UNAVAILABLE = { success: false, error: 'EMAIL_UNAVAILABLE', waitSeconds: 0 } as const;
+
+export const sendVerificationCode = async (
+  email: string,
+): Promise<{ success: true; waitSeconds: number } | typeof EMAIL_UNAVAILABLE> => {
+  await enforceRateLimit('sendCode');
+
   const user = await prisma.user.findUnique({
     where: { email },
   });
 
-  if (!user) {
-    throw new Error('Usuario no encontrado');
-  }
-
-  // Si ya está verificado, no hacer nada
-  if (user.emailVerified) {
-    return { success: true, alreadyVerified: true, waitSeconds: 0 };
+  // Si el email no existe o ya está verificado no se envía nada, pero se responde igual que al
+  // enviar: así esta action no sirve para averiguar qué emails tienen cuenta.
+  if (!user || user.emailVerified) {
+    return { success: true, waitSeconds: RATE_LIMIT_SECONDS };
   }
 
   // Verificar rate limiting: buscar el último token enviado
@@ -34,7 +38,7 @@ export const sendVerificationCode = async (email: string) => {
 
   const waitSeconds = checkRateLimit(lastToken?.createdAt ?? null);
   if (waitSeconds > 0) {
-    throw new Error(`RATE_LIMIT:${waitSeconds}`);
+    throw new RateLimitError('sendCode', waitSeconds);
   }
 
   // Invalidar tokens anteriores para este email
@@ -63,11 +67,18 @@ export const sendVerificationCode = async (email: string) => {
 
   // Enviar email con el código
   const emailHtml = await render(EmailVerificationEmail({ userName: user.name, code }));
-  await sendEmail({
-    to: user.email,
-    subject: 'Verificá tu correo electrónico - Programa Con Nosotros',
-    html: emailHtml,
-  });
+  try {
+    await sendEmail({
+      to: user.email,
+      subject: 'Verificá tu correo electrónico - programaConNosotros',
+      html: emailHtml,
+    });
+  } catch (error) {
+    // Sin cuota en Resend: se devuelve (en producción Next oculta el mensaje de lo que se lanza)
+    // para que la página le explique al usuario qué pasa. Los admins ya tienen la alerta.
+    if (error instanceof EmailQuotaError) return EMAIL_UNAVAILABLE;
+    throw error;
+  }
 
-  return { success: true, alreadyVerified: false, waitSeconds: RATE_LIMIT_SECONDS };
+  return { success: true, waitSeconds: RATE_LIMIT_SECONDS };
 };

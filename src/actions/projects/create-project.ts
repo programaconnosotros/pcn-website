@@ -2,31 +2,27 @@
 
 import prisma from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
-import { cookies } from 'next/headers';
 import { projectSchema, ProjectFormData } from '@/schemas/project-schema';
+import { requireSessionUser } from './get-session-user';
+import { buildProjectMembers, notifyNewProjectMembers } from './build-project-members';
+import { enforceRateLimit } from '@/lib/rate-limit';
 
 export const createProject = async (data: ProjectFormData) => {
-  const sessionId = (await cookies()).get('sessionId')?.value;
-  if (!sessionId) {
-    throw new Error('Debes estar autenticado');
-  }
+  await enforceRateLimit('createContent');
 
-  const session = await prisma.session.findUnique({
-    where: { id: sessionId },
-    include: { user: true },
-  });
-
-  if (!session || session.user.role !== 'ADMIN') {
-    throw new Error('No tenés permisos para realizar esta acción');
-  }
+  const user = await requireSessionUser();
 
   const parsed = projectSchema.safeParse(data);
   if (!parsed.success) {
-    throw new Error(parsed.error.errors[0]?.message ?? 'Datos inválidos');
+    throw new Error(parsed.error.issues[0]?.message ?? 'Datos inválidos');
   }
 
   const projectData = parsed.data;
 
+  // Los proyectos nuevos van al final; solo un admin los reordena desde la lista.
+  const last = await prisma.project.aggregate({ _max: { order: true } });
+
+  const members = buildProjectMembers(projectData.members, user.id);
   const project = await prisma.project.create({
     data: {
       title: projectData.title,
@@ -34,16 +30,27 @@ export const createProject = async (data: ProjectFormData) => {
       url: projectData.url,
       logoUrl: projectData.logoUrl ?? '',
       techStack: projectData.techStack,
-      order: projectData.order,
+      isOpenSource: projectData.isOpenSource,
+      // Solo un proyecto open-source guarda el link al repo.
+      repoUrl: projectData.isOpenSource ? (projectData.repoUrl ?? null) : null,
+      startYear: projectData.startYear,
+      endYear: projectData.endYear,
+      authorRole: projectData.authorRole,
+      order: (last._max.order ?? -1) + 1,
+      // El autor es siempre quien carga el proyecto, nunca un valor enviado por el cliente.
+      authorId: user.id,
       members: {
-        create: projectData.members.map((m, idx) => ({
-          userId: m.userId ?? null,
-          memberName: m.memberName,
-          order: idx,
-        })),
+        create: members,
       },
     },
   });
+
+  await notifyNewProjectMembers(
+    project,
+    members.map((member) => member.userId),
+    [],
+    user,
+  );
 
   revalidatePath('/proyectos');
 

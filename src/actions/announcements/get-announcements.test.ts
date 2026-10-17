@@ -1,5 +1,8 @@
 import { prismaMock } from '@/test/prisma';
+import { requireAdmin } from '@/lib/admin';
 import { fetchAnnouncements, fetchAllAnnouncements } from './get-announcements';
+
+jest.mock('@/lib/admin', () => ({ requireAdmin: jest.fn() }));
 
 const publishedAnnouncement = {
   id: 'ann-1',
@@ -50,6 +53,13 @@ describe('fetchAnnouncements', () => {
 });
 
 describe('fetchAllAnnouncements', () => {
+  it('refuses anyone who is not an admin, since it includes drafts', async () => {
+    (requireAdmin as jest.Mock).mockRejectedValueOnce(new Error('No autorizado'));
+
+    await expect(fetchAllAnnouncements()).rejects.toThrow('No autorizado');
+    expect(prismaMock.announcement.findMany).not.toHaveBeenCalled();
+  });
+
   it('returns all announcements including unpublished', async () => {
     prismaMock.announcement.findMany.mockResolvedValue([
       publishedAnnouncement,

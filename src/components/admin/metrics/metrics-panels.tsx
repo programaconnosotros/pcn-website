@@ -1,0 +1,612 @@
+import type { ComponentProps, ReactNode } from 'react';
+import Link from 'next/link';
+import { ArrowDownRight, ArrowUpRight, Minus, TrendingDown } from 'lucide-react';
+import { RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
+import { findProgramForPath, GENERIC_PROGRAM } from '@/components/os/programs';
+import type {
+  FunnelStep,
+  ModulePage,
+  ModuleTraffic,
+  ModuleUsageMap,
+  PathCount,
+} from '@/lib/product-metrics';
+import { cn } from '@/lib/utils';
+import { isSitePath } from '@/lib/safe-redirect';
+
+const number = (value: number) => value.toLocaleString('es-AR');
+const percent = (value: number) =>
+  `${value.toLocaleString('es-AR', { maximumFractionDigits: value < 10 ? 1 : 0 })}%`;
+
+/** `// título` heading of each block, with an optional note on the right. */
+export const PanelTitle = ({ children, note }: { children: ReactNode; note?: ReactNode }) => (
+  <div className="mb-2 flex items-end justify-between gap-3 font-mono">
+    <h2 className="text-[11px] tracking-[0.18em] text-pcnGreen uppercase">
+      <span className="text-pcnGreen-500">{'// '}</span>
+      {children}
+    </h2>
+    {note && <span className="text-[10px] text-muted-foreground">{note}</span>}
+  </div>
+);
+
+/** Change against the previous period, with an arrow so it never relies on color alone. */
+export function Delta({ current, previous }: { current: number; previous: number }) {
+  if (previous === 0) {
+    return current === 0 ? (
+      <span className="inline-flex items-center gap-0.5 text-muted-foreground">
+        <Minus className="size-3" aria-hidden />
+        sin cambios
+      </span>
+    ) : (
+      <span className="inline-flex items-center gap-0.5 text-pcnGreen">
+        <ArrowUpRight className="size-3" aria-hidden />
+        nuevo
+      </span>
+    );
+  }
+  const change = ((current - previous) / previous) * 100;
+  const Icon = change > 0 ? ArrowUpRight : change < 0 ? ArrowDownRight : Minus;
+  return (
+    <span
+      className={cn(
+        'inline-flex items-center gap-0.5 tabular-nums',
+        change > 0 ? 'text-pcnGreen' : change < 0 ? 'text-red-400' : 'text-muted-foreground',
+      )}
+      title={`antes: ${number(previous)}`}
+    >
+      <Icon className="size-3" aria-hidden />
+      {/* Past 10x a percentage stops being readable; say how many times bigger it got. */}
+      {change >= 900
+        ? `×${(current / previous).toLocaleString('es-AR', { maximumFractionDigits: 0 })}`
+        : `${change > 0 ? '+' : ''}${percent(Math.abs(change) < 0.05 ? 0 : change)}`}
+    </span>
+  );
+}
+
+/** A tiny single-series line for a KPI tile. */
+export function Sparkline({ values }: { values: number[] }) {
+  if (values.length < 2) return null;
+  const max = Math.max(1, ...values);
+  const points = values
+    .map((value, index) => `${(index / (values.length - 1)) * 100},${30 - (value / max) * 28}`)
+    .join(' ');
+  return (
+    <svg viewBox="0 0 100 30" preserveAspectRatio="none" className="h-7 w-full" aria-hidden>
+      <polyline
+        points={points}
+        fill="none"
+        stroke="#04f4be"
+        strokeOpacity={0.8}
+        strokeWidth={1.5}
+        vectorEffect="non-scaling-stroke"
+      />
+    </svg>
+  );
+}
+
+export function KpiTile({
+  label,
+  value,
+  current,
+  previous,
+  hint,
+  spark,
+}: {
+  label: string;
+  value: string;
+  current: number;
+  /** Leave out when the metric has no comparable previous value. */
+  previous?: number;
+  hint?: string;
+  spark?: number[];
+}) {
+  return (
+    <div className={cn(ruledCellClassName, 'flex flex-col gap-1 p-3 font-mono')}>
+      <span className="text-[10px] tracking-wider text-muted-foreground uppercase">{label}</span>
+      <span className="text-2xl font-semibold text-foreground tabular-nums [text-shadow:0_0_14px_rgba(4,244,190,0.35)]">
+        {value}
+      </span>
+      <span className="flex items-center justify-between gap-2 text-[10px]">
+        {previous !== undefined && <Delta current={current} previous={previous} />}
+        {hint && <span className="truncate text-muted-foreground/70">{hint}</span>}
+      </span>
+      {spark && <Sparkline values={spark} />}
+    </div>
+  );
+}
+
+/** A labelled horizontal bar: the bar shows the share of `max`, the number sits beside it. */
+function Bar({ value, max }: { value: number; max: number }) {
+  return (
+    <span className="relative block h-1.5 flex-1 bg-pcnGreen/30">
+      <span
+        className="absolute inset-y-0 left-0 rounded-r-[2px] bg-pcnGreen-600 group-hover:bg-pcnGreen group-hover:shadow-[0_0_8px_rgba(4,244,190,0.7)]"
+        style={{ width: `${max > 0 ? Math.max(1.5, (value / max) * 100) : 0}%` }}
+      />
+    </span>
+  );
+}
+
+const moduleName = (section: string) => {
+  if (section === '/autenticacion') return { name: 'Registro y login', icon: null };
+  const program = findProgramForPath(section);
+  return program === GENERIC_PROGRAM
+    ? { name: section, icon: null }
+    : { name: program.name, icon: program.icon };
+};
+
+export function ModuleRanking({
+  modules,
+  previous,
+}: {
+  modules: { section: string; visits: number; visitors: number; members: number }[];
+  previous: { section: string; visits: number }[];
+}) {
+  const total = modules.reduce((sum, module) => sum + module.visits, 0);
+  const max = modules[0]?.visits ?? 0;
+  if (modules.length === 0) return <EmptyPanel />;
+  return (
+    <ol className="flex flex-col">
+      {modules.slice(0, 12).map((module, index) => {
+        const { name, icon: Icon } = moduleName(module.section);
+        const before = previous.find(({ section }) => section === module.section)?.visits ?? 0;
+        return (
+          <li
+            key={module.section}
+            className="grid group grid-cols-[1.5rem_minmax(0,9rem)_1fr_auto] items-center gap-2 border-b border-pcnGreen/60 py-1.5 font-mono text-xs last:border-b-0"
+            title={`${number(module.visitors)} visitantes únicos · ${number(module.members)} miembros`}
+          >
+            <span className="text-[10px] text-muted-foreground/60 tabular-nums">
+              {String(index + 1).padStart(2, '0')}
+            </span>
+            <span className="flex min-w-0 items-center gap-1.5">
+              {Icon && <Icon className="size-3.5 shrink-0 text-pcnGreen-600" aria-hidden />}
+              <span className="truncate group-hover:text-pcnGreen">{name}</span>
+            </span>
+            <Bar value={module.visits} max={max} />
+            <span className="flex w-28 items-center justify-end gap-2 text-[11px] tabular-nums">
+              <span className="text-foreground">{number(module.visits)}</span>
+              <span className="w-8 text-right text-muted-foreground/70">
+                {percent((module.visits / total) * 100)}
+              </span>
+              <span className="w-12 text-right text-[10px]">
+                <Delta current={module.visits} previous={before} />
+              </span>
+            </span>
+          </li>
+        );
+      })}
+    </ol>
+  );
+}
+
+/**
+ * Una ruta registrada por `trackPageVisit`. Las visitas las manda cualquiera, así que solo se
+ * linkea lo que es una ruta de este sitio; el resto (`//otro-dominio`, filas viejas) va como texto.
+ */
+function PathLabel({ path, className }: { path: string; className?: string }) {
+  const label = (
+    <>
+      <span className="text-pcnGreen-500">~</span>
+      {path}
+    </>
+  );
+  if (!isSitePath(path)) return <span className={className}>{label}</span>;
+  return (
+    <Link href={path} className={cn(className, 'hover:text-pcnGreen')}>
+      {label}
+    </Link>
+  );
+}
+
+export function TopPages({ pages }: { pages: PathCount[] }) {
+  if (pages.length === 0) return <EmptyPanel />;
+  const max = pages[0].visits;
+  return (
+    <table className="w-full font-mono text-xs">
+      <thead>
+        <tr className="text-left text-[10px] tracking-wider text-muted-foreground uppercase">
+          <th className="pb-1 font-normal">ruta</th>
+          <th className="w-1/4 pb-1 font-normal" aria-label="Proporción" />
+          <th className="w-px pb-1 text-right font-normal whitespace-nowrap">visitas</th>
+          <th className="w-px pb-1 pl-3 text-right font-normal whitespace-nowrap">únicos</th>
+        </tr>
+      </thead>
+      <tbody>
+        {pages.map((page) => (
+          <tr key={page.path} className="group border-t border-pcnGreen/60">
+            <td className="max-w-0 truncate py-1.5 pr-2">
+              <PathLabel path={page.path} className="text-muted-foreground" />
+            </td>
+            <td className="py-1.5 pr-3">
+              <span className="flex">
+                <Bar value={page.visits} max={max} />
+              </span>
+            </td>
+            <td className="py-1.5 text-right whitespace-nowrap text-foreground tabular-nums">
+              {number(page.visits)}
+            </td>
+            <td className="py-1.5 pl-3 text-right whitespace-nowrap text-muted-foreground tabular-nums">
+              {number(page.visitors)}
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  );
+}
+
+/**
+ * Each onboarding step as a bar sized against the first one, with the conversion from the step
+ * before and how many people were lost there. The biggest leak is called out.
+ */
+export function SignupFunnel({ steps }: { steps: FunnelStep[] }) {
+  const top = steps[0]?.count ?? 0;
+  const losses = steps.map((step, index) =>
+    index === 0 ? 0 : steps[index - 1].count - step.count,
+  );
+  const worst = losses.indexOf(Math.max(...losses));
+  return (
+    <div className="flex flex-col gap-3">
+      <ol className="flex flex-col gap-2">
+        {steps.map((step, index) => {
+          const share = top > 0 ? (step.count / top) * 100 : 0;
+          const barWidth = Math.max(share, step.count > 0 ? 1 : 0);
+          const fromPrevious =
+            index > 0 && steps[index - 1].count > 0
+              ? (step.count / steps[index - 1].count) * 100
+              : null;
+          return (
+            <li key={step.id} className="font-mono">
+              {index > 0 && losses[index] > 0 && (
+                <p
+                  className={cn(
+                    'mb-1 flex items-center gap-1 pl-6 text-[10px]',
+                    index === worst ? 'text-red-400' : 'text-muted-foreground/70',
+                  )}
+                >
+                  <TrendingDown className="size-3" aria-hidden />
+                  {number(losses[index])} se quedaron acá
+                  {fromPrevious !== null && ` · pasa el ${percent(fromPrevious)}`}
+                  {index === worst && ' · mayor fuga'}
+                </p>
+              )}
+              <div
+                className="grid group grid-cols-[1.25rem_1fr] items-center gap-2"
+                title={step.hint}
+              >
+                <span className="text-[10px] text-muted-foreground/60 tabular-nums">
+                  {index + 1}.
+                </span>
+                <div className="relative h-8 overflow-hidden border border-pcnGreen-200 bg-pcnGreen/10">
+                  <div
+                    className="absolute inset-y-0 left-0 bg-linear-to-r from-pcnGreen/70 to-pcnGreen/60 transition-[width] duration-700 group-hover:to-pcnGreen/80"
+                    style={{ width: `${barWidth}%` }}
+                  />
+                  <FunnelLabels
+                    label={step.label}
+                    count={step.count}
+                    share={share}
+                    className="relative text-foreground"
+                    mutedClassName="text-muted-foreground"
+                  />
+                  {/* Dark copy clipped to the bar, so text over the green reads in black. */}
+                  {barWidth > 0 && (
+                    <FunnelLabels
+                      label={step.label}
+                      count={step.count}
+                      share={share}
+                      className="absolute inset-0 text-black transition-[clip-path] duration-700"
+                      mutedClassName="text-black/60"
+                      style={{ clipPath: `inset(0 ${100 - barWidth}% 0 0)` }}
+                      aria-hidden
+                    />
+                  )}
+                </div>
+              </div>
+            </li>
+          );
+        })}
+      </ol>
+      <p className="font-mono text-[10px] text-muted-foreground/70">
+        <span className="text-pcnGreen-500">&gt; </span>
+        de quienes se registraron en el período; los pasos se cumplen en orden
+      </p>
+    </div>
+  );
+}
+
+function FunnelLabels({
+  label,
+  count,
+  share,
+  className,
+  mutedClassName,
+  ...props
+}: {
+  label: string;
+  count: number;
+  share: number;
+  mutedClassName: string;
+} & ComponentProps<'div'>) {
+  return (
+    <div
+      className={cn('flex h-full items-center justify-between gap-2 px-2 text-xs', className)}
+      {...props}
+    >
+      <span className="truncate">{label}</span>
+      <span className="shrink-0 tabular-nums">
+        <span className="font-semibold">{number(count)}</span>
+        <span className={cn('ml-2 text-[10px]', mutedClassName)}>{percent(share)}</span>
+      </span>
+    </div>
+  );
+}
+
+const WEEKDAYS = ['dom', 'lun', 'mar', 'mié', 'jue', 'vie', 'sáb'];
+// Monday first, the way people read a week.
+const WEEK_ORDER = [1, 2, 3, 4, 5, 6, 0];
+
+/** Visits by weekday and hour: one hue, darker to brighter as visits grow. */
+export function HourHeatmap({ grid }: { grid: number[][] }) {
+  const max = Math.max(1, ...grid.flat());
+  const busiest = grid
+    .flatMap((hours, dow) => hours.map((visits, hour) => ({ dow, hour, visits })))
+    .sort((a, b) => b.visits - a.visits)[0];
+  return (
+    <figure className="flex flex-col gap-2">
+      <div className="grid grid-cols-[2rem_repeat(24,minmax(0,1fr))] gap-[2px] font-mono text-[9px] text-muted-foreground">
+        <span />
+        {Array.from({ length: 24 }, (_, hour) => (
+          <span key={hour} className="text-center tabular-nums">
+            {hour % 3 === 0 ? hour : ''}
+          </span>
+        ))}
+        {WEEK_ORDER.map((dow) => (
+          <div key={dow} className="contents">
+            <span className="self-center">{WEEKDAYS[dow]}</span>
+            {grid[dow].map((visits, hour) => (
+              <span
+                key={hour}
+                title={`${WEEKDAYS[dow]} ${hour}h · ${number(visits)} visitas`}
+                className="h-4 rounded-[2px] border border-pcnGreen/40 transition-transform hover:scale-125 hover:border-pcnGreen sm:h-5"
+                style={{
+                  backgroundColor:
+                    visits > 0 ? `rgba(4,244,190,${0.12 + (visits / max) * 0.88})` : undefined,
+                  boxShadow: visits / max > 0.75 ? '0 0 8px rgba(4,244,190,0.6)' : undefined,
+                }}
+              />
+            ))}
+          </div>
+        ))}
+      </div>
+      <figcaption className="flex items-center justify-between font-mono text-[10px] text-muted-foreground">
+        <span>
+          {busiest && busiest.visits > 0 && (
+            <>
+              pico:{' '}
+              <span className="text-pcnGreen">
+                {WEEKDAYS[busiest.dow]} {busiest.hour}h
+              </span>{' '}
+              ({number(busiest.visits)})
+            </>
+          )}
+        </span>
+        <span className="flex items-center gap-1">
+          menos
+          {[0.12, 0.35, 0.6, 0.85, 1].map((alpha) => (
+            <span
+              key={alpha}
+              className="size-2 rounded-[1px]"
+              style={{ backgroundColor: `rgba(4,244,190,${alpha})` }}
+            />
+          ))}
+          más
+        </span>
+      </figcaption>
+    </figure>
+  );
+}
+
+export function RankedList({
+  items,
+  empty,
+}: {
+  items: { label: string; value: number }[];
+  empty?: string;
+}) {
+  if (items.length === 0) return <EmptyPanel>{empty}</EmptyPanel>;
+  const max = Math.max(...items.map(({ value }) => value));
+  const total = items.reduce((sum, { value }) => sum + value, 0);
+  return (
+    <ul className="flex flex-col gap-1.5 font-mono text-xs">
+      {items.map(({ label, value }) => (
+        <li
+          key={label}
+          className="grid group grid-cols-[minmax(0,8rem)_1fr_auto] items-center gap-2"
+        >
+          <span className="truncate text-muted-foreground group-hover:text-pcnGreen">{label}</span>
+          <Bar value={value} max={max} />
+          <span className="w-20 text-right tabular-nums">
+            <span className="text-foreground">{number(value)}</span>
+            <span className="ml-1.5 text-[10px] text-muted-foreground/70">
+              {percent((value / total) * 100)}
+            </span>
+          </span>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+/** One number of a module's cell: a small label over its value. */
+const ModuleStat = ({ label, value, title }: { label: string; value: string; title?: string }) => (
+  <div className="flex min-w-0 flex-col" title={title}>
+    <span className="truncate text-[9px] tracking-wider text-muted-foreground/70 uppercase">
+      {label}
+    </span>
+    <span className="text-sm text-foreground tabular-nums">{value}</span>
+  </div>
+);
+
+const perVisitor = (visits: number, visitors: number) =>
+  visitors > 0 ? (visits / visitors).toLocaleString('es-AR', { maximumFractionDigits: 1 }) : '—';
+const shareOf = (part: number, whole: number) => (whole > 0 ? percent((part / whole) * 100) : '—');
+
+/**
+ * Every module in detail: how much it's visited (and against the period before), by how many
+ * people, how deep they go, how many were logged in or came back another day, what they did in
+ * it and its most visited pages.
+ */
+export function ModuleDetails({
+  modules,
+  previous,
+  usage,
+  previousUsage,
+  pages,
+  returning,
+}: {
+  modules: ModuleTraffic[];
+  previous: { section: string; visits: number }[];
+  usage: ModuleUsageMap;
+  previousUsage: ModuleUsageMap;
+  pages: ModulePage[];
+  returning: Record<string, number>;
+}) {
+  const total = modules.reduce((sum, module) => sum + module.visits, 0);
+  // Modules with actions but no tracked visits in the range still show what was done in them.
+  const quiet = Object.keys(usage)
+    .filter(
+      (section) =>
+        !modules.some((module) => module.section === section) &&
+        usage[section].some(({ count }) => count > 0),
+    )
+    .map((section) => ({ section, visits: 0, visitors: 0, members: 0, memberVisits: 0 }));
+  const rows = [...modules.slice(0, 15), ...quiet];
+  if (rows.length === 0) return <EmptyPanel />;
+  const max = rows[0]?.visits ?? 0;
+
+  return (
+    <RuledGrid className="grid-cols-1 md:grid-cols-2 2xl:grid-cols-3">
+      {rows.map((module, index) => {
+        const { name, icon: Icon } = moduleName(module.section);
+        const before = previous.find(({ section }) => section === module.section)?.visits ?? 0;
+        const actions = usage[module.section] ?? [];
+        const top = pages.filter(({ section }) => section === module.section);
+        const back = returning[module.section] ?? 0;
+        return (
+          <article
+            key={module.section}
+            className={cn(ruledCellClassName, 'flex min-w-0 group flex-col gap-3 p-3 font-mono')}
+          >
+            <header className="flex items-start justify-between gap-2">
+              <div className="flex min-w-0 items-center gap-2">
+                <span className="text-[10px] text-muted-foreground/60 tabular-nums">
+                  {String(index + 1).padStart(2, '0')}
+                </span>
+                {Icon && <Icon className="size-4 shrink-0 text-pcnGreen-600" aria-hidden />}
+                <h3 className="min-w-0">
+                  <span className="block truncate text-sm font-semibold group-hover:text-pcnGreen">
+                    {name}
+                  </span>
+                  <span className="block truncate text-[10px] text-muted-foreground/70">
+                    ~{module.section}
+                  </span>
+                </h3>
+              </div>
+              <div className="flex shrink-0 flex-col items-end">
+                <span className="text-lg font-semibold tabular-nums [text-shadow:0_0_12px_rgba(4,244,190,0.35)]">
+                  {number(module.visits)}
+                </span>
+                <span className="text-[10px]">
+                  <Delta current={module.visits} previous={before} />
+                </span>
+              </div>
+            </header>
+
+            <div className="flex items-center gap-2 text-[10px] text-muted-foreground">
+              <Bar value={module.visits} max={max} />
+              <span className="w-24 text-right tabular-nums">
+                {shareOf(module.visits, total)} del tráfico
+              </span>
+            </div>
+
+            <div className="grid grid-cols-4 gap-2">
+              <ModuleStat label="únicos" value={number(module.visitors)} />
+              <ModuleStat
+                label="por visitante"
+                value={perVisitor(module.visits, module.visitors)}
+                title="visitas por visitante único: cuánto navegan dentro del módulo"
+              />
+              <ModuleStat
+                label="logueados"
+                value={shareOf(module.memberVisits, module.visits)}
+                title={`${number(module.members)} miembros distintos`}
+              />
+              <ModuleStat
+                label="vuelven"
+                value={shareOf(back, module.visitors)}
+                title={`${number(back)} visitantes entraron en 2+ días distintos`}
+              />
+            </div>
+
+            {actions.length > 0 && (
+              <ul className="flex flex-col gap-1 border-t border-pcnGreen/60 pt-2 text-[11px]">
+                {actions.map((action) => {
+                  const earlier =
+                    previousUsage[module.section]?.find(({ key }) => key === action.key)?.count ??
+                    0;
+                  return (
+                    <li key={action.key} className="flex items-center justify-between gap-2">
+                      <span className="truncate text-muted-foreground">
+                        <span className="text-pcnGreen-500">+ </span>
+                        {action.label}
+                      </span>
+                      <span className="flex shrink-0 items-center gap-2 tabular-nums">
+                        <span className="text-foreground">{number(action.count)}</span>
+                        <span className="w-12 text-right text-[10px]">
+                          <Delta current={action.count} previous={earlier} />
+                        </span>
+                      </span>
+                    </li>
+                  );
+                })}
+              </ul>
+            )}
+
+            {top.length > 0 && (
+              <ol className="flex flex-col gap-0.5 border-t border-pcnGreen/60 pt-2 text-[11px]">
+                {top.map((page) => (
+                  <li key={page.path} className="flex items-center justify-between gap-2">
+                    <PathLabel
+                      path={page.path}
+                      className="min-w-0 truncate text-muted-foreground"
+                    />
+                    <span className="shrink-0 text-muted-foreground tabular-nums">
+                      {number(page.visits)}
+                    </span>
+                  </li>
+                ))}
+              </ol>
+            )}
+          </article>
+        );
+      })}
+    </RuledGrid>
+  );
+}
+
+export const EmptyPanel = ({ children }: { children?: ReactNode }) => (
+  <p className="py-6 text-center font-mono text-xs text-muted-foreground">
+    <span className="text-pcnGreen-500">$ </span>
+    {children ?? 'sin datos en este período'}
+  </p>
+);
+
+export const Panel = ({ className, ...props }: React.HTMLAttributes<HTMLElement>) => (
+  <section
+    className={cn(ruledCellClassName, 'min-w-0 p-4 hover:bg-transparent', className)}
+    {...props}
+  />
+);
+
+export { RuledGrid };

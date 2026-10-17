@@ -30,8 +30,12 @@ import { toast } from 'sonner';
 import { createTalk } from '@/actions/talks/create-talk';
 import { updateTalk } from '@/actions/talks/update-talk';
 import { fetchEventsForSelect } from '@/actions/talks/fetch-events-for-select';
+import { EventOptionLabel } from '@/components/events/event-option-label';
 import { fetchTalks } from '@/actions/talks/fetch-talks';
 import { Plus, Save, Trash2 } from 'lucide-react';
+import { dialogFormActionBarClassName } from '@/components/ui/form-action-bar';
+import { actionErrorMessage } from '@/lib/rate-limit-messages';
+import { DateInput } from '@/components/ui/date-input';
 
 type EventOption = {
   id: string;
@@ -71,6 +75,8 @@ const getEventLocation = (event: EventOption) => {
 type Props = {
   eventId?: string;
   talk?: TalkWithSpeakers;
+  // Charla nueva precargada, por ejemplo con lo que dedujo el agente a partir de la foto.
+  draft?: TalkFormData;
   onSuccess?: () => void;
   onCancel?: () => void;
 };
@@ -89,11 +95,13 @@ function SpeakerFields({
   const isStudent = !!useWatch({ control, name: `speakers.${index}.isStudent` });
 
   return (
-    <div className="space-y-4 rounded-lg border p-4">
+    <div className="space-y-4 border border-pcnGreen-200 p-3">
       <div className="flex items-center justify-between">
         <h3 className="text-sm font-medium">Orador {index + 1}</h3>
         {canRemove && (
           <Button
+            aria-label="Quitar orador"
+            title="Quitar orador"
             type="button"
             variant="ghost"
             size="sm"
@@ -183,7 +191,7 @@ function SpeakerFields({
       />
 
       {isProfessional && (
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <FormField
             control={control}
             name={`speakers.${index}.jobTitle`}
@@ -238,7 +246,7 @@ function SpeakerFields({
       />
 
       {isStudent && (
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <FormField
             control={control}
             name={`speakers.${index}.career`}
@@ -261,7 +269,7 @@ function SpeakerFields({
             name={`speakers.${index}.studyPlace`}
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Universidad / Institución</FormLabel>
+                <FormLabel>Institución</FormLabel>
                 <FormControl>
                   <Input
                     placeholder="Ej: Universidad Nacional de Tucumán"
@@ -279,7 +287,7 @@ function SpeakerFields({
   );
 }
 
-export function TalkForm({ eventId, talk, onSuccess, onCancel }: Props) {
+export function TalkForm({ eventId, talk, draft, onSuccess, onCancel }: Props) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [events, setEvents] = useState<EventOption[]>([]);
 
@@ -288,34 +296,46 @@ export function TalkForm({ eventId, talk, onSuccess, onCancel }: Props) {
   }, []);
 
   const form = useForm<TalkFormData>({
-    resolver: zodResolver(talkSchema),
-    defaultValues: {
-      eventId: talk?.eventId ?? eventId ?? null,
-      manualEventTitle: talk?.manualEventTitle ?? '',
-      manualEventDate: toDateInputValue(talk?.manualEventDate),
-      manualEventLocation: talk?.manualEventLocation ?? '',
-      title: talk?.title ?? '',
-      description: talk?.description ?? '',
-      speakers:
-        talk?.speakers && talk.speakers.length > 0
-          ? talk.speakers.map((s) => ({
-              userId: s.userId ?? null,
-              speakerName: s.speakerName,
-              speakerPhone: s.speakerPhone,
-              isProfessional: s.isProfessional,
-              jobTitle: s.jobTitle ?? '',
-              enterprise: s.enterprise ?? '',
-              isStudent: s.isStudent,
-              career: s.career ?? '',
-              studyPlace: s.studyPlace ?? '',
-            }))
-          : [{ ...EMPTY_SPEAKER }],
-      order: talk?.order ?? 0,
-      portraitUrl: talk?.portraitUrl ?? '',
-      slidesUrl: talk?.slidesUrl ?? '',
-      slideImages: talk?.slideImages ?? [],
-      videoUrl: talk?.videoUrl ?? '',
-    },
+    // `raw`: el submit recibe lo que cargó el form y no lo ya transformado por el schema, porque
+    // createTalk/updateTalk lo vuelven a validar con el mismo schema y la fecha transformada (un
+    // Date) no pasa como texto: con un evento elegido, guardar fallaba con "Invalid input".
+    resolver: zodResolver(talkSchema, undefined, { raw: true }),
+    defaultValues: draft
+      ? {
+          manualEventTitle: '',
+          manualEventDate: '',
+          manualEventLocation: '',
+          slidesUrl: '',
+          videoUrl: '',
+          ...draft,
+        }
+      : {
+          eventId: talk?.eventId ?? eventId ?? null,
+          manualEventTitle: talk?.manualEventTitle ?? '',
+          manualEventDate: toDateInputValue(talk?.manualEventDate),
+          manualEventLocation: talk?.manualEventLocation ?? '',
+          title: talk?.title ?? '',
+          description: talk?.description ?? '',
+          speakers:
+            talk?.speakers && talk.speakers.length > 0
+              ? talk.speakers.map((s) => ({
+                  userId: s.userId ?? null,
+                  speakerName: s.speakerName,
+                  speakerPhone: s.speakerPhone,
+                  isProfessional: s.isProfessional,
+                  jobTitle: s.jobTitle ?? '',
+                  enterprise: s.enterprise ?? '',
+                  isStudent: s.isStudent,
+                  career: s.career ?? '',
+                  studyPlace: s.studyPlace ?? '',
+                }))
+              : [{ ...EMPTY_SPEAKER }],
+          order: talk?.order ?? 0,
+          portraitUrl: talk?.portraitUrl ?? '',
+          slidesUrl: talk?.slidesUrl ?? '',
+          slideImages: talk?.slideImages ?? [],
+          videoUrl: talk?.videoUrl ?? '',
+        },
   });
 
   const selectedEventId = useWatch({ control: form.control, name: 'eventId' });
@@ -353,7 +373,7 @@ export function TalkForm({ eventId, talk, onSuccess, onCancel }: Props) {
       }
       onSuccess?.();
     } catch (error: any) {
-      toast.error(error.message || 'Error al guardar la charla');
+      toast.error(actionErrorMessage(error, 'Error al guardar la charla', true));
     } finally {
       setIsSubmitting(false);
     }
@@ -382,13 +402,10 @@ export function TalkForm({ eventId, talk, onSuccess, onCancel }: Props) {
                     <SelectItem value="__none__">Sin evento</SelectItem>
                     {events.map((event) => (
                       <SelectItem key={event.id} value={event.id}>
-                        {event.name} &mdash;{' '}
-                        {new Date(event.date).toLocaleDateString('es-ES', {
-                          day: '2-digit',
-                          month: '2-digit',
-                          year: 'numeric',
-                        })}{' '}
-                        &mdash; {getEventLocation(event) || 'Sin ubicación'}
+                        <EventOptionLabel name={event.name} date={event.date} />{' '}
+                        <span className="text-muted-foreground">
+                          · {getEventLocation(event) || 'Sin ubicación'}
+                        </span>
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -426,12 +443,7 @@ export function TalkForm({ eventId, talk, onSuccess, onCancel }: Props) {
               <FormItem>
                 <FormLabel>Fecha del evento</FormLabel>
                 <FormControl>
-                  <Input
-                    type="date"
-                    {...field}
-                    value={field.value ?? ''}
-                    disabled={!!selectedEvent}
-                  />
+                  <DateInput {...field} disabled={!!selectedEvent} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -443,7 +455,7 @@ export function TalkForm({ eventId, talk, onSuccess, onCancel }: Props) {
             name="manualEventLocation"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Ubicación del evento</FormLabel>
+                <FormLabel>Ubicación</FormLabel>
                 <FormControl>
                   <Input
                     placeholder="Ej: Once57, San Miguel de Tucumán"
@@ -500,7 +512,7 @@ export function TalkForm({ eventId, talk, onSuccess, onCancel }: Props) {
               onClick={() => append({ ...EMPTY_SPEAKER })}
             >
               <Plus className="mr-1 h-4 w-4" />
-              Agregar orador
+              agregarOrador();
             </Button>
           </div>
           {fields.map((field, idx) => (
@@ -531,7 +543,7 @@ export function TalkForm({ eventId, talk, onSuccess, onCancel }: Props) {
           )}
         />
 
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <FormField
             control={form.control}
             name="order"
@@ -606,16 +618,16 @@ export function TalkForm({ eventId, talk, onSuccess, onCancel }: Props) {
           )}
         />
 
-        <div className="flex gap-4">
+        <div className={`${dialogFormActionBarClassName} flex gap-4`}>
           <Button
             type="submit"
             variant="pcn"
             className="flex-1"
             loading={isSubmitting}
-            loadingText="Guardando..."
+            loadingText="guardando..."
           >
             <Save className="mr-2 h-4 w-4" />
-            {talk ? 'Actualizar charla' : 'Crear charla'}
+            {talk ? 'actualizarCharla();' : 'crearCharla();'}
           </Button>
           {onCancel && (
             <Button
@@ -625,7 +637,7 @@ export function TalkForm({ eventId, talk, onSuccess, onCancel }: Props) {
               disabled={isSubmitting}
               onClick={onCancel}
             >
-              Cancelar
+              cancelar();
             </Button>
           )}
         </div>

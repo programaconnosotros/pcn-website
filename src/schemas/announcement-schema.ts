@@ -16,3 +16,5 @@ export const announcementSchema = z.object({
 });
 
 export type AnnouncementFormData = z.infer<typeof announcementSchema>;
+/** Los valores del form antes de validar: los campos con `.default()` pueden faltar. */
+export type AnnouncementFormInput = z.input<typeof announcementSchema>;

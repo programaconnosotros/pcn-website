@@ -1,0 +1,125 @@
+'use client';
+
+import { EmptyState } from '@/components/empty-state';
+import { useMemo, useState } from 'react';
+import Link from 'next/link';
+import { PageTitle } from '@/components/ui/page-title';
+import { StickyHeader } from '@/components/ui/sticky-header';
+import { RuledGrid } from '@/components/ui/ruled-grid';
+import { ChangelogRow } from '@/components/changelog/changelog-row';
+import { SearchBar } from '@/components/ui/search-bar';
+import { normalize } from '@/components/conversations/highlight';
+import type { VisibleChangelogEntry } from '@/lib/changelog';
+import { cn } from '@/lib/utils';
+
+const dayLabel = (date: string) =>
+  new Date(`${date}T12:00:00`).toLocaleDateString('es-AR', {
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  });
+
+interface ChangelogClientProps {
+  entries: VisibleChangelogEntry[];
+  isAdmin: boolean;
+}
+
+export function ChangelogClient({ entries, isAdmin }: ChangelogClientProps) {
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const filtered = useMemo(() => {
+    const query = normalize(searchTerm.trim());
+    if (!query) return entries;
+    return entries.filter((entry) =>
+      [
+        entry.title,
+        entry.description,
+        entry.area,
+        ...entry.authors.flatMap(({ login, user }) => [login, user?.name ?? '']),
+      ].some((text) => normalize(text).includes(query)),
+    );
+  }, [entries, searchTerm]);
+
+  const byDay = useMemo(() => {
+    const groups = new Map<string, VisibleChangelogEntry[]>();
+    for (const entry of filtered)
+      groups.set(entry.date, [...(groups.get(entry.date) ?? []), entry]);
+    return [...groups.entries()];
+  }, [filtered]);
+
+  return (
+    <div className="flex flex-1 flex-col p-4 pt-0">
+      <div className="mt-4">
+        <StickyHeader>
+          <PageTitle
+            path="changelog"
+            meta="todos los cambios de la plataforma desde 2024"
+            action={
+              isAdmin && (
+                <Link
+                  href="/vinculos"
+                  className="font-mono text-xs text-pcnGreen-700 hover:text-pcnGreen"
+                >
+                  vincular perfiles →
+                </Link>
+              )
+            }
+          />
+
+          {/* Search and count share one row, even on phones. */}
+          <div className="mb-4 flex items-center gap-2">
+            <SearchBar
+              searchQuery={searchTerm}
+              setSearchQuery={setSearchTerm}
+              placeholder="cambios, secciones o personas"
+              label="Buscar cambios"
+            />
+            <p
+              className="ml-auto shrink-0 font-mono text-xs text-muted-foreground tabular-nums"
+              aria-live="polite"
+            >
+              <span className={cn(searchTerm.trim() ? 'text-pcnGreen' : 'text-foreground')}>
+                {filtered.length}
+              </span>
+              /{entries.length} cambios
+            </p>
+          </div>
+        </StickyHeader>
+
+        {filtered.length === 0 ? (
+          <EmptyState
+            command={`git log --grep="${searchTerm.trim()}"`}
+            output="0 commits"
+            title="Ningún cambio coincide con la búsqueda"
+            description="Probá con otra palabra o con el nombre de una sección."
+          />
+        ) : (
+          <div className="mb-14 space-y-6">
+            {byDay.map(([date, items]) => (
+              <section key={date}>
+                <h2 className="mb-2 flex items-center gap-2 font-mono text-xs tracking-[0.2em] text-muted-foreground uppercase">
+                  <span className="text-pcnGreen">{'>'}</span>
+                  <time dateTime={date} className="text-foreground">
+                    {date}
+                  </time>
+                  <span className="max-sm:hidden">{dayLabel(date)}</span>
+                  <span
+                    aria-hidden
+                    className="h-px flex-1 bg-linear-to-r from-pcnGreen-400 to-transparent"
+                  />
+                  <span className="tabular-nums">[{items.length}]</span>
+                </h2>
+                <RuledGrid className="grid-cols-1 lg:grid-cols-2">
+                  {items.map((entry) => (
+                    <ChangelogRow key={`${entry.date}-${entry.title}`} entry={entry} />
+                  ))}
+                </RuledGrid>
+              </section>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}

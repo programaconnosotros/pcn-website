@@ -15,7 +15,7 @@ const mockComment = {
   id: 'comment-1',
   content: 'Un comentario válido',
   authorId: 'user-1',
-  adviseId: 'advise-1',
+  adviceId: 'advice-1',
   parentCommentId: null,
   createdAt: new Date('2025-01-01'),
   updatedAt: new Date('2025-01-01'),
@@ -29,7 +29,7 @@ const mockComment = {
 
 const validInput = {
   content: 'Un comentario válido',
-  adviseId: 'advise-1',
+  adviceId: 'advice-1',
   parentCommentId: null,
 };
 
@@ -38,7 +38,7 @@ describe('createComment', () => {
     mockCookies({ sessionId: 'session-1' });
 
     await expect(
-      createComment({ content: '', adviseId: 'advise-1', parentCommentId: null }),
+      createComment({ content: '', adviceId: 'advice-1', parentCommentId: null }),
     ).rejects.toThrow('El comentario no puede estar vacío');
 
     expect(prismaMock.comment.create).not.toHaveBeenCalled();
@@ -49,7 +49,7 @@ describe('createComment', () => {
     const longContent = 'a'.repeat(501);
 
     await expect(
-      createComment({ content: longContent, adviseId: 'advise-1', parentCommentId: null }),
+      createComment({ content: longContent, adviceId: 'advice-1', parentCommentId: null }),
     ).rejects.toThrow('El comentario no puede tener más de 500 caracteres');
 
     expect(prismaMock.comment.create).not.toHaveBeenCalled();
@@ -84,21 +84,22 @@ describe('createComment', () => {
       data: {
         content: validInput.content,
         authorId: 'user-1',
-        adviseId: 'advise-1',
+        adviceId: 'advice-1',
         parentCommentId: null,
       },
       include: {
         author: {
-          select: { id: true, name: true, email: true, image: true },
+          select: { id: true, name: true, image: true },
         },
       },
     });
-    expect(revalidatePath).toHaveBeenCalledWith('/consejos/advise-1');
+    expect(revalidatePath).toHaveBeenCalledWith('/consejos/advice-1');
   });
 
   it('creates a reply when parentCommentId is provided', async () => {
     mockCookies({ sessionId: 'session-1' });
     prismaMock.session.findUnique.mockResolvedValue(baseSession as any);
+    prismaMock.comment.findUnique.mockResolvedValue({ adviceId: validInput.adviceId } as any);
     prismaMock.comment.create.mockResolvedValue({
       ...mockComment,
       parentCommentId: 'comment-parent',
@@ -115,5 +116,50 @@ describe('createComment', () => {
         data: expect.objectContaining({ parentCommentId: 'comment-parent' }),
       }),
     );
+  });
+
+  it.each([
+    ['belongs to another advice', { adviceId: 'otro-consejo' }],
+    ['does not exist', null],
+  ])('rejects a reply whose parent comment %s', async (_case, parent) => {
+    mockCookies({ sessionId: 'session-1' });
+    prismaMock.session.findUnique.mockResolvedValue(baseSession as any);
+    prismaMock.comment.findUnique.mockResolvedValue(parent as any);
+
+    await expect(
+      createComment({ ...validInput, parentCommentId: 'comment-parent' }),
+    ).rejects.toThrow('El comentario al que respondés no es de este consejo');
+    expect(prismaMock.comment.create).not.toHaveBeenCalled();
+  });
+
+  it("notifies the consejo's author, but not about their own comments", async () => {
+    mockCookies({ sessionId: 'session-1' });
+    prismaMock.session.findUnique.mockResolvedValue(baseSession as any);
+    prismaMock.comment.create.mockResolvedValue(mockComment as any);
+    prismaMock.advice.findUnique.mockResolvedValue({ authorId: 'author-1' } as any);
+
+    await createComment(validInput);
+
+    expect(prismaMock.notification.createMany).toHaveBeenCalledWith({
+      data: [
+        {
+          type: 'advice_commented',
+          title: 'Comentaron tu consejo',
+          message: 'Test User comentó tu consejo: "Un comentario válido".',
+          userId: 'author-1',
+          metadata: JSON.stringify({
+            adviceId: 'advice-1',
+            commentId: 'comment-1',
+            userId: 'user-1',
+            href: '/consejos/advice-1',
+          }),
+        },
+      ],
+    });
+
+    prismaMock.notification.createMany.mockClear();
+    prismaMock.advice.findUnique.mockResolvedValue({ authorId: 'user-1' } as any);
+    await createComment(validInput);
+    expect(prismaMock.notification.createMany).not.toHaveBeenCalled();
   });
 });

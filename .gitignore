@@ -12,6 +12,7 @@
 
 # next.js
 /.next/
+/.next-e2e/
 /out/
 
 # production
@@ -49,6 +50,7 @@ next-env.d.ts
 node_modules/
 /test-results/
 /playwright-report/
+/tests/e2e/.auth/
 /blob-report/
 /playwright/.cache/
 
@@ -62,3 +64,9 @@ dist
 
 # PR screenshots (local capture dir; PNGs are published to the pr-screenshots branch)
 .pr-screenshots/
+# WhatsApp chat exports are private: never commit them (see .claude/skills/agregar-conversaciones)
+whatsapp-chat*.txt
+_chat.txt
+
+# Prisma Client (pnpm prisma generate)
+/src/generated/

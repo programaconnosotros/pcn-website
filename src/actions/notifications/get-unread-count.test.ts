@@ -62,14 +62,17 @@ describe('getUnreadNotificationsCount', () => {
     expect(prismaMock.notification.count).not.toHaveBeenCalled();
   });
 
-  it('returns 0 when the session user is not an ADMIN', async () => {
+  it('counts the unread notifications of any user, not only admins', async () => {
     mockCookies({ sessionId: 'session-regular' });
     prismaMock.session.findUnique.mockResolvedValue(regularSession as any);
+    prismaMock.notification.count.mockResolvedValue(2);
 
     const result = await getUnreadNotificationsCount();
 
-    expect(result).toBe(0);
-    expect(prismaMock.notification.count).not.toHaveBeenCalled();
+    expect(result).toBe(2);
+    expect(prismaMock.notification.count).toHaveBeenCalledWith({
+      where: { userId: 'user-regular', read: false },
+    });
   });
 
   it('returns the unread notification count for an ADMIN user', async () => {

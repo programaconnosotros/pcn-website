@@ -1,6 +1,7 @@
 import { prismaMock } from '@/test/prisma';
 import { mockCookies } from '@/test/cookies';
 import { mockHeaders } from '@/test/headers';
+import { enforceRateLimit } from '@/lib/rate-limit';
 import { logClient } from './log-client';
 
 const adminUser = {
@@ -44,6 +45,26 @@ const regularSession = {
 const logData = { level: 'info' as const, message: 'Test message', path: '/home' };
 
 describe('logClient', () => {
+  it('drops the log silently once the caller hits the rate limit', async () => {
+    (enforceRateLimit as jest.Mock).mockRejectedValueOnce(new Error('RATE_LIMIT:30'));
+
+    await expect(logClient(logData)).resolves.toBeUndefined();
+
+    expect(enforceRateLimit).toHaveBeenCalledWith('log');
+    expect(prismaMock.appLog.create).not.toHaveBeenCalled();
+  });
+
+  it('clips oversized fields before storing them', async () => {
+    mockCookies();
+    mockHeaders();
+    prismaMock.appLog.create.mockResolvedValue({} as any);
+
+    await logClient({ ...logData, message: 'x'.repeat(50_000) });
+
+    const { data } = prismaMock.appLog.create.mock.calls[0][0];
+    expect(data.message).toHaveLength(2000);
+  });
+
   it('creates an anonymous log when there is no session cookie', async () => {
     mockCookies();
     mockHeaders({ 'user-agent': 'Jest/1.0', 'x-forwarded-for': '1.2.3.4' });

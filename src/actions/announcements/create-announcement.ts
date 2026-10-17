@@ -4,6 +4,8 @@ import prisma from '@/lib/prisma';
 import { cookies } from 'next/headers';
 import { revalidatePath } from 'next/cache';
 import { announcementSchema, AnnouncementFormData } from '@/schemas/announcement-schema';
+import { findSession } from '@/lib/session';
+import { notifyEventAnnouncement } from '@/actions/notifications/event-announcement-notice';
 
 export async function createAnnouncement(data: AnnouncementFormData) {
   const sessionId = (await cookies()).get('sessionId')?.value;
@@ -12,10 +14,7 @@ export async function createAnnouncement(data: AnnouncementFormData) {
     throw new Error('No autorizado');
   }
 
-  const session = await prisma.session.findUnique({
-    where: { id: sessionId },
-    include: { user: true },
-  });
+  const session = await findSession(sessionId);
 
   if (!session || session.user.role !== 'ADMIN') {
     throw new Error('No tienes permisos para crear anuncios');
@@ -34,6 +33,16 @@ export async function createAnnouncement(data: AnnouncementFormData) {
       eventId: validatedData.category === 'evento' ? validatedData.eventId : null,
     },
   });
+
+  // Un anuncio publicado en un evento les llega a sus inscriptos, igual que desde la página del
+  // evento.
+  if (announcement.eventId && announcement.published) {
+    const event = await prisma.event.findFirst({
+      where: { id: announcement.eventId, deletedAt: null },
+      select: { id: true, name: true },
+    });
+    if (event) await notifyEventAnnouncement(event, announcement, session.user.id);
+  }
 
   revalidatePath('/anuncios');
   if (validatedData.eventId) {

@@ -1,28 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from '@/components/ui/carousel';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -33,38 +13,57 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { Heading2 } from '@/components/ui/heading-2';
-import {
-  Calendar,
-  CalendarDays,
-  Edit,
-  FileText,
-  MapPin,
-  MicVocal,
-  MoreVertical,
-  Plus,
-  Trash2,
-  User,
-  Youtube,
-} from 'lucide-react';
+import { PageTitle } from '@/components/ui/page-title';
+import { StickyHeader } from '@/components/ui/sticky-header';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Construction, MicVocal, Plus, Sparkles } from 'lucide-react';
 import Link from 'next/link';
 import { toast } from 'sonner';
 import { TalkForm } from './talk-form';
+import { TalkFromPhotoDialog } from './talk-from-photo-dialog';
+import type { TalkFormData } from '@/schemas/talk-schema';
+import { VideoGrid } from '@/components/videos/video-grid';
+import type { Video } from '@/components/videos/videos';
+import { RecommendButton } from '@/components/recommendations/recommend-button';
 import { deleteTalk } from '@/actions/talks/delete-talk';
-import { fetchPublicTalks } from '@/actions/talks/fetch-public-talks';
-
-type TalkWithEvent = Awaited<ReturnType<typeof fetchPublicTalks>>[number];
+import { fetchTalkForEdit } from '@/actions/talks/fetch-talks';
+import { actionErrorMessage } from '@/lib/rate-limit-messages';
+import { CommunityTalks, type TalkWithEvent } from './community-talks';
+import { TALK_CONTACT_URL, TalkIdeas } from './talk-ideas';
 
 interface Props {
   talks: TalkWithEvent[];
+  /** Talks from other conferences the community recommends, newest first. */
+  externalTalks: Video[];
   isAdmin: boolean;
 }
 
-export function CharlasAdminWrapper({ talks, isAdmin }: Props) {
+export function CharlasAdminWrapper({ talks, externalTalks, isAdmin }: Props) {
   const [showCreate, setShowCreate] = useState(false);
-  const [editingTalk, setEditingTalk] = useState<TalkWithEvent | null>(null);
+  const [showFromPhoto, setShowFromPhoto] = useState(false);
+  const [draft, setDraft] = useState<TalkFormData | undefined>();
+  const [editingTalk, setEditingTalk] = useState<Awaited<
+    ReturnType<typeof fetchTalkForEdit>
+  > | null>(null);
   const [deletingTalk, setDeletingTalk] = useState<TalkWithEvent | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [tab, setTab] = useState('comunidad');
+
+  // `/charlas?tab=externas` (linked from the home) opens the recommended external talks, and
+  // `?tab=ideas` the ideas for a talk.
+  useEffect(() => {
+    const requested = new URLSearchParams(window.location.search).get('tab');
+    if (requested === 'externas' || requested === 'ideas') setTab(requested);
+  }, []);
+
+  // El listado no trae los teléfonos de los oradores y el form los reescribe: se piden al editar
+  const handleEdit = async (talk: TalkWithEvent) => {
+    try {
+      setEditingTalk(await fetchTalkForEdit(talk.id));
+    } catch (error) {
+      toast.error(actionErrorMessage(error, 'Error al abrir la charla'));
+    }
+  };
 
   const handleDelete = async () => {
     if (!deletingTalk) return;
@@ -74,7 +73,7 @@ export function CharlasAdminWrapper({ talks, isAdmin }: Props) {
       toast.success('Charla eliminada');
       setDeletingTalk(null);
     } catch (error: any) {
-      toast.error(error.message || 'Error al eliminar la charla');
+      toast.error(actionErrorMessage(error, 'Error al eliminar la charla', true));
     } finally {
       setIsDeleting(false);
     }
@@ -82,217 +81,118 @@ export function CharlasAdminWrapper({ talks, isAdmin }: Props) {
 
   return (
     <div className="mt-4">
-      <div className="mb-4 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="flex w-full flex-row items-center justify-between">
-          <Heading2 className="m-0 flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-pcnPurple/30 bg-pcnPurple/10 dark:border-pcnGreen/50 dark:bg-pcnGreen/10 dark:shadow-[0_0_10px_rgba(4,244,190,0.4)]">
-              <MicVocal className="h-5 w-5 text-pcnPurple dark:text-pcnGreen dark:drop-shadow-[0_0_8px_rgba(4,244,190,0.8)]" />
-            </div>
-            <span className="dark:drop-shadow-[0_0_12px_rgba(4,244,190,0.8)]">Charlas</span>
-          </Heading2>
-
-          {isAdmin ? (
-            <Button variant="pcn" onClick={() => setShowCreate(true)}>
-              <Plus className="mr-2 h-4 w-4" />
-              Nueva charla
-            </Button>
-          ) : (
-            <Link href="https://wa.me/5493815777562">
-              <Button variant="pcn" className="flex flex-row items-center gap-2">
-                Quiero dar una charla
-                <MicVocal className="h-5 w-5" />
-              </Button>
-            </Link>
-          )}
-        </div>
-      </div>
-
-      <div className="my-5 ml-0 grid grid-cols-1 gap-5 xl:grid-cols-2">
-        {talks.map((talk) => {
-          const eventTitle = talk.event?.name ?? talk.manualEventTitle;
-          const eventDate = talk.event?.date ?? talk.manualEventDate;
-          const location = talk.event
-            ? talk.event.isOnline
-              ? 'Online'
-              : [talk.event.placeName, talk.event.city].filter(Boolean).join(', ')
-            : talk.manualEventLocation ?? '';
-          return (
-            <Card
-              key={talk.id}
-              className="flex flex-col overflow-hidden border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 md:flex-row"
-            >
-              {talk.portraitUrl && (
-                <div className="relative aspect-square w-full shrink-0 md:aspect-auto md:h-auto md:w-64">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={talk.portraitUrl}
-                    alt={`Foto de la charla "${talk.title}"`}
-                    className="h-full w-full object-cover"
-                  />
-                </div>
-              )}
-
-              <div className="flex flex-1 flex-col">
-                <CardHeader>
-                  <div className="flex items-start justify-between gap-2">
-                    <CardTitle className="text-lg">{talk.title}</CardTitle>
-                    {isAdmin && (
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" size="icon" className="h-8 w-8 shrink-0">
-                            <MoreVertical className="h-4 w-4" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                          <DropdownMenuItem onClick={() => setEditingTalk(talk)}>
-                            <Edit className="mr-2 h-4 w-4" />
-                            Editar
-                          </DropdownMenuItem>
-                          <DropdownMenuItem
-                            onClick={() => setDeletingTalk(talk)}
-                            className="text-destructive focus:text-destructive"
-                          >
-                            <Trash2 className="mr-2 h-4 w-4" />
-                            Eliminar
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    )}
-                  </div>
-                </CardHeader>
-
-                <CardContent className="flex-1">
-                  <div className="flex items-start gap-2">
-                    <User className="mt-0.5 h-4 w-4 shrink-0 text-pcnPurple dark:text-pcnGreen" />
-                    <div className="flex min-w-0 flex-col gap-0.5">
-                      {talk.speakers.map((speaker) =>
-                        speaker.user ? (
-                          <Link
-                            key={speaker.id}
-                            href={`/perfil/${speaker.user.id}`}
-                            className="text-sm text-muted-foreground hover:underline"
-                          >
-                            {speaker.speakerName}
-                          </Link>
-                        ) : (
-                          <p key={speaker.id} className="text-sm text-muted-foreground">
-                            {speaker.speakerName}
-                          </p>
-                        ),
-                      )}
-                    </div>
-                  </div>
-
-                  {eventTitle && (
-                    <div className="mt-2 flex items-start gap-2">
-                      <CalendarDays className="mt-0.5 h-4 w-4 shrink-0 text-pcnPurple dark:text-pcnGreen" />
-                      {talk.event?.id ? (
-                        <Link
-                          href={`/eventos/${talk.event.id}`}
-                          className="min-w-0 text-sm text-muted-foreground hover:underline"
-                        >
-                          {eventTitle}
-                        </Link>
-                      ) : (
-                        <p className="min-w-0 text-sm text-muted-foreground">{eventTitle}</p>
-                      )}
-                    </div>
-                  )}
-
-                  {eventDate && (
-                    <div className="mt-2 flex items-start gap-2">
-                      <Calendar className="mt-0.5 h-4 w-4 shrink-0 text-pcnPurple dark:text-pcnGreen" />
-                      <p className="min-w-0 text-sm text-muted-foreground">
-                        {new Date(eventDate)
-                          .toLocaleDateString('es-ES', {
-                            day: '2-digit',
-                            month: '2-digit',
-                            year: 'numeric',
-                          })
-                          .replace(/\//g, '/')}
-                      </p>
-                    </div>
-                  )}
-
-                  {location && (
-                    <div className="mt-2 flex items-start gap-2">
-                      <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-pcnPurple dark:text-pcnGreen" />
-                      <p className="min-w-0 text-sm text-muted-foreground">{location}</p>
-                    </div>
-                  )}
-                </CardContent>
-
-                <CardFooter className="mt-auto flex flex-col items-start gap-2">
-                  {talk.videoUrl && (
-                    <Link href={talk.videoUrl} target="_blank" rel="noopener noreferrer">
-                      <Button className="flex items-center gap-2" variant="youtube">
-                        Ver en YouTube
-                        <Youtube className="h-4 w-4 text-white" />
-                      </Button>
-                    </Link>
-                  )}
-
-                  {talk.slideImages.length > 0 ? (
-                    <Dialog>
-                      <DialogTrigger asChild>
-                        <Button className="flex items-center gap-2" variant="outline">
-                          Ver slides
-                          <FileText className="h-4 w-4 text-pcnPurple dark:text-pcnGreen" />
-                        </Button>
-                      </DialogTrigger>
-
-                      <DialogContent className="max-w-4xl px-16">
-                        <DialogHeader>
-                          <DialogTitle>{talk.title}</DialogTitle>
-                        </DialogHeader>
-
-                        <Carousel>
-                          <CarouselContent>
-                            {talk.slideImages.map((slide, index) => (
-                              <CarouselItem key={index}>
-                                {/* eslint-disable-next-line @next/next/no-img-element */}
-                                <img
-                                  src={slide}
-                                  alt={`Slide ${index + 1}`}
-                                  className="h-auto w-full"
-                                />
-                              </CarouselItem>
-                            ))}
-                          </CarouselContent>
-
-                          <CarouselPrevious />
-                          <CarouselNext />
-                        </Carousel>
-                      </DialogContent>
-                    </Dialog>
-                  ) : talk.slidesUrl ? (
-                    <Link href={talk.slidesUrl} target="_blank" rel="noopener noreferrer">
-                      <Button className="flex items-center gap-2" variant="outline">
-                        Ver slides
-                        <FileText className="h-4 w-4 text-pcnPurple dark:text-pcnGreen" />
-                      </Button>
-                    </Link>
-                  ) : null}
-                </CardFooter>
+      <Tabs value={tab} onValueChange={setTab}>
+        <StickyHeader>
+          <div className="mb-4 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-2">
+            <PageTitle
+              path="charlas"
+              meta={`${talks.length} de la comunidad · ${externalTalks.length} recomendadas`}
+              className="mb-0 flex-1"
+            />
+            {/* External talks are recommended like any video; community ones are given at PCN. */}
+            {tab === 'externas' ? (
+              <RecommendButton kind="VIDEO" defaults={{ isTalk: true }} label="recomendar charla" />
+            ) : isAdmin && tab === 'comunidad' ? (
+              <div className="flex gap-2">
+                <Button variant="outline" size="sm" onClick={() => setShowFromPhoto(true)}>
+                  <Sparkles className="mr-1.5 h-4 w-4" />
+                  cargarConFoto();
+                </Button>
+                <Button variant="pcn" size="sm" onClick={() => setShowCreate(true)}>
+                  <Plus className="mr-1.5 h-4 w-4" />
+                  nuevaCharla();
+                </Button>
               </div>
-            </Card>
-          );
-        })}
-      </div>
+            ) : (
+              <Link
+                href={TALK_CONTACT_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-1.5 font-mono text-xs text-pcnGreen-700 hover:text-pcnGreen"
+              >
+                <MicVocal className="h-3.5 w-3.5" />
+                quiero dar una charla
+              </Link>
+            )}
+          </div>
+
+          <TabsList className="mb-4">
+            <TabsTrigger value="comunidad">Comunidad</TabsTrigger>
+            <TabsTrigger value="externas">Externas</TabsTrigger>
+            <TabsTrigger value="ideas">Ideas</TabsTrigger>
+          </TabsList>
+        </StickyHeader>
+
+        <TabsContent value="comunidad">
+          <CommunityTalks
+            talks={talks}
+            isAdmin={isAdmin}
+            onEdit={handleEdit}
+            onDelete={setDeletingTalk}
+          />
+
+          <div
+            role="status"
+            className="mb-14 flex items-start gap-3 border border-t-0 border-dashed border-pcnGreen-200 px-3 py-2.5 font-mono text-xs text-muted-foreground"
+          >
+            <Construction className="mt-px h-3.5 w-3.5 shrink-0 text-pcnGreen" />
+            <p>
+              <span className="text-pcnGreen">[mantenimiento]</span> Estamos cargando todo el
+              historial de charlas de la comunidad. Todavía faltan algunas, así que si no encontrás
+              la tuya, probablemente esté en camino
+              <span className="ml-0.5 animate-blink text-pcnGreen">_</span>
+            </p>
+          </div>
+        </TabsContent>
+
+        <TabsContent value="ideas">
+          <TalkIdeas />
+        </TabsContent>
+
+        {/* Talks from other conferences that the community recommends watching. */}
+        <TabsContent value="externas" className="mb-14">
+          <VideoGrid videos={externalTalks} searchable />
+        </TabsContent>
+      </Tabs>
+
+      <TalkFromPhotoDialog
+        open={showFromPhoto}
+        onOpenChange={setShowFromPhoto}
+        onDraft={(next) => {
+          setDraft(next);
+          setShowCreate(true);
+        }}
+      />
 
       {/* Create dialog */}
-      <Dialog open={showCreate} onOpenChange={setShowCreate}>
-        <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-[600px]">
+      <Dialog
+        open={showCreate}
+        onOpenChange={(open) => {
+          setShowCreate(open);
+          if (!open) setDraft(undefined);
+        }}
+      >
+        <DialogContent className="sm:max-w-[600px]">
           <DialogHeader>
             <DialogTitle>Nueva charla</DialogTitle>
           </DialogHeader>
-          <TalkForm onSuccess={() => setShowCreate(false)} onCancel={() => setShowCreate(false)} />
+          <TalkForm
+            draft={draft}
+            onSuccess={() => {
+              setShowCreate(false);
+              setDraft(undefined);
+            }}
+            onCancel={() => {
+              setShowCreate(false);
+              setDraft(undefined);
+            }}
+          />
         </DialogContent>
       </Dialog>
 
       {/* Edit dialog */}
       <Dialog open={!!editingTalk} onOpenChange={(open) => !open && setEditingTalk(null)}>
-        <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-[600px]">
+        <DialogContent className="sm:max-w-[600px]">
           <DialogHeader>
             <DialogTitle>Editar charla</DialogTitle>
           </DialogHeader>
@@ -319,7 +219,12 @@ export function CharlasAdminWrapper({ talks, isAdmin }: Props) {
           <AlertDialogFooter>
             <AlertDialogCancel disabled={isDeleting}>Cancelar</AlertDialogCancel>
             <AlertDialogAction
-              onClick={handleDelete}
+              // Sin preventDefault el diálogo se cierra al click: no se ve el estado de carga y, si
+              // falla, se pierde. Se cierra solo cuando termina bien.
+              onClick={(event) => {
+                event.preventDefault();
+                void handleDelete();
+              }}
               disabled={isDeleting}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >

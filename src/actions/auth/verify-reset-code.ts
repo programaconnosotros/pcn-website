@@ -1,27 +1,23 @@
 'use server';
 
-import prisma from '@/lib/prisma';
+import { getRateLimitWait } from '@/lib/rate-limit';
+import { findValidPasswordResetToken } from '@/lib/verification-codes';
 
-export const verifyResetCode = async (email: string, code: string) => {
-  // Buscar token válido
-  const token = await prisma.passwordResetToken.findFirst({
-    where: {
-      email,
-      code,
-      used: false,
-      expiresAt: {
-        gt: new Date(),
-      },
-    },
-  });
+export type VerifyResetCodeResult =
+  | { success: true }
+  | { success: false; error: 'INVALID_CODE' }
+  | { success: false; error: 'RATE_LIMIT'; waitSeconds: number };
 
-  if (!token) {
-    throw new Error('Código inválido o expirado');
-  }
+/** Paso 2 del reseteo: confirma el código antes de pedir la contraseña nueva. */
+export const verifyResetCode = async (
+  email: string,
+  code: string,
+): Promise<VerifyResetCodeResult> => {
+  const waitSeconds = await getRateLimitWait('verifyCode');
+  if (waitSeconds > 0) return { success: false, error: 'RATE_LIMIT', waitSeconds };
 
-  // Retornar el token id para usarlo en el siguiente paso
-  return {
-    success: true,
-    tokenId: token.id,
-  };
+  const token = await findValidPasswordResetToken(email, code);
+  if (!token) return { success: false, error: 'INVALID_CODE' };
+
+  return { success: true };
 };

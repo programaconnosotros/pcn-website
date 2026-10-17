@@ -1,5 +1,7 @@
 import { z } from 'zod';
 import { UserProgrammingLanguage } from '@/types/programming-language';
+import { isSpecialtyId } from '@/components/especialidades/specialties';
+import { isIde, isOperatingSystem, STACK_CATEGORY_IDS, STACK_ITEM_MAX } from '@/lib/tech-stack';
 
 // Helper para validar URLs opcionales (permite string vacío o URL válida)
 const optionalUrl = z
@@ -20,21 +22,83 @@ const optionalUrl = z
     { message: 'La URL debe ser válida' },
   );
 
+// Textos libres con tope: el perfil se guarda tal cual llega, y sin tope cualquiera podría guardar
+// megas en un campo que después se muestra en todas partes.
+const optionalText = (max: number) =>
+  z
+    .string()
+    .max(max, { message: `Máximo ${max} caracteres` })
+    .optional()
+    .nullable();
+
 export const profileSchema = z.object({
-  name: z.string().min(3, { message: 'El nombre debe tener al menos 3 caracteres' }),
+  name: z
+    .string()
+    .min(3, { message: 'El nombre debe tener al menos 3 caracteres' })
+    .max(100, { message: 'Máximo 100 caracteres' }),
   email: z.string().email({ message: 'El email debe ser válido' }),
-  phoneNumber: z.string().optional().nullable(),
-  image: z.string().optional().nullable(),
-  countryOfOrigin: z.string().optional().nullable(),
-  province: z.string().optional().nullable(),
+  phoneNumber: optionalText(30),
+  // La foto que se sube al bucket (o la que ya tenía): solo una URL https, nunca otro esquema.
+  image: z
+    .string()
+    .max(2048)
+    .refine((value) => value === '' || value.startsWith('https://'), {
+      message: 'La imagen debe ser una URL https',
+    })
+    .optional()
+    .nullable(),
+  countryOfOrigin: z
+    .string()
+    .trim()
+    .min(1, { message: 'El país es requerido' })
+    .max(100, { message: 'Máximo 100 caracteres' }),
+  province: optionalText(100),
   xAccountUrl: optionalUrl,
   linkedinUrl: optionalUrl,
   gitHubUrl: optionalUrl,
-  slogan: z.string().optional().nullable(),
-  jobTitle: z.string().optional().nullable(),
-  enterprise: z.string().optional().nullable(),
-  career: z.string().optional().nullable(),
-  studyPlace: z.string().optional().nullable(),
+  instagramUrl: optionalUrl,
+  youtubeUrl: optionalUrl,
+  twitchUrl: optionalUrl,
+  kickUrl: optionalUrl,
+  slogan: optionalText(500),
+  // Puestos actuales, en orden. Las filas sin cargo se descartan al guardar.
+  positions: z
+    .array(
+      z.object({
+        jobTitle: z.string().trim().max(80, { message: 'Máximo 80 caracteres' }),
+        enterprise: z.string().trim().max(80, { message: 'Máximo 80 caracteres' }),
+      }),
+    )
+    .max(5, { message: 'Podés cargar hasta 5 puestos' }),
+  career: optionalText(150),
+  studyPlace: optionalText(150),
+  // Ids de /especialidades en las que la persona se considera especialista: las que quiera, sin
+  // repetir.
+  specialties: z
+    .array(z.string().refine(isSpecialtyId, { message: 'Especialidad inválida' }))
+    .default([])
+    .transform((ids) => [...new Set(ids)]),
+  // Sistemas operativos que usa: los del catálogo, sin repetir.
+  operatingSystems: z
+    .array(z.string().refine(isOperatingSystem, { message: 'Sistema operativo inválido' }))
+    .default([])
+    .transform((ids) => [...new Set(ids)]),
+  // IDE favorito, del catálogo; vacío es que no eligió ninguno.
+  favoriteIde: z
+    .string()
+    .nullish()
+    .transform((id) => id || null)
+    .refine((id) => id === null || isIde(id), { message: 'IDE inválido' }),
+  // El resto del stack (terminal, notebook, monitor…): texto libre por categoría; vacío es nada.
+  stack: z
+    .partialRecord(
+      z.enum(STACK_CATEGORY_IDS),
+      z
+        .string()
+        .trim()
+        .max(STACK_ITEM_MAX, { message: `Máximo ${STACK_ITEM_MAX} caracteres` }),
+    )
+    .default({}),
   programmingLanguages: z.array(
     z.object({
       languageId: z.string(),
@@ -46,3 +110,7 @@ export const profileSchema = z.object({
 });
 
 export type ProfileFormData = z.infer<typeof profileSchema>;
+/** Los valores del form antes de validar: los campos con `.default()` pueden faltar. */
+export type ProfileFormInput = z.input<typeof profileSchema>;
+/** What the action accepts: fields with a default (like `specialties`) may be left out. */
+export type ProfileInput = z.input<typeof profileSchema>;

@@ -4,52 +4,72 @@ import * as React from 'react';
 import * as TabsPrimitive from '@radix-ui/react-tabs';
 
 import { cn } from '@/lib/utils';
+import { TabBrackets, tabsListClassName, tabsTriggerClassName } from './tab-styles';
 
-const Tabs = TabsPrimitive.Root;
+/** The selected tab, so each panel knows whether it has been opened before. */
+const TabsValueContext = React.createContext<string | undefined>(undefined);
+
+const Tabs = React.forwardRef<
+  React.ElementRef<typeof TabsPrimitive.Root>,
+  React.ComponentPropsWithoutRef<typeof TabsPrimitive.Root>
+>(({ value, defaultValue, onValueChange, ...props }, ref) => {
+  const [uncontrolledValue, setUncontrolledValue] = React.useState(defaultValue);
+  const current = value ?? uncontrolledValue;
+  return (
+    <TabsValueContext.Provider value={current}>
+      <TabsPrimitive.Root
+        ref={ref}
+        value={current}
+        onValueChange={(next) => {
+          if (value === undefined) setUncontrolledValue(next);
+          onValueChange?.(next);
+        }}
+        {...props}
+      />
+    </TabsValueContext.Provider>
+  );
+});
+Tabs.displayName = TabsPrimitive.Root.displayName;
 
 const TabsList = React.forwardRef<
   React.ElementRef<typeof TabsPrimitive.List>,
   React.ComponentPropsWithoutRef<typeof TabsPrimitive.List>
 >(({ className, ...props }, ref) => (
-  <TabsPrimitive.List
-    ref={ref}
-    className={cn(
-      'inline-flex h-10 items-center justify-center rounded-md bg-muted p-1 text-muted-foreground',
-      className,
-    )}
-    {...props}
-  />
+  <TabsPrimitive.List ref={ref} className={cn(tabsListClassName, className)} {...props} />
 ));
 TabsList.displayName = TabsPrimitive.List.displayName;
 
 const TabsTrigger = React.forwardRef<
   React.ElementRef<typeof TabsPrimitive.Trigger>,
   React.ComponentPropsWithoutRef<typeof TabsPrimitive.Trigger>
->(({ className, ...props }, ref) => (
-  <TabsPrimitive.Trigger
-    ref={ref}
-    className={cn(
-      'inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm',
-      className,
-    )}
-    {...props}
-  />
+>(({ className, children, ...props }, ref) => (
+  <TabsPrimitive.Trigger ref={ref} className={cn(tabsTriggerClassName, className)} {...props}>
+    <TabBrackets>{children}</TabBrackets>
+  </TabsPrimitive.Trigger>
 ));
 TabsTrigger.displayName = TabsPrimitive.Trigger.displayName;
 
 const TabsContent = React.forwardRef<
   React.ElementRef<typeof TabsPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof TabsPrimitive.Content>
->(({ className, ...props }, ref) => (
-  <TabsPrimitive.Content
-    ref={ref}
-    className={cn(
-      'mt-2 ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
-      className,
-    )}
-    {...props}
-  />
-));
+>(({ className, forceMount, ...props }, ref) => {
+  // A panel mounts the first time it's opened and then stays mounted (just hidden), so coming
+  // back to a tab shows it as it was left (scroll, filters, loaded data) instead of rebuilding it.
+  const active = React.useContext(TabsValueContext) === props.value;
+  const [visited, setVisited] = React.useState(active);
+  if (active && !visited) setVisited(true);
+  return (
+    <TabsPrimitive.Content
+      ref={ref}
+      forceMount={forceMount ?? (visited || undefined)}
+      className={cn(
+        'mt-2 ring-offset-background focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-hidden data-[state=inactive]:hidden',
+        className,
+      )}
+      {...props}
+    />
+  );
+});
 TabsContent.displayName = TabsPrimitive.Content.displayName;
 
 export { Tabs, TabsList, TabsTrigger, TabsContent };

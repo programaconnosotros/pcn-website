@@ -1,5 +1,9 @@
 import { prismaMock } from '@/test/prisma';
 import { fetchLogs, getLogStats } from './fetch-logs';
+import { requireAdmin } from '@/lib/admin';
+
+// Admin-only data: every test runs as an admin unless it says otherwise.
+jest.mock('@/lib/admin', () => ({ requireAdmin: jest.fn() }));
 
 const sampleLog = {
   id: 'log-1',
@@ -90,7 +94,7 @@ describe('getLogStats', () => {
       .mockResolvedValueOnce(100) // totalLogs
       .mockResolvedValueOnce(5) // logsToday
       .mockResolvedValueOnce(20); // logsThisWeek
-    prismaMock.appLog.groupBy.mockResolvedValue([
+    (prismaMock.appLog.groupBy as jest.Mock).mockResolvedValue([
       { level: 'info', _count: { level: 50 } },
       { level: 'error', _count: { level: 30 } },
       { level: 'warn', _count: { level: 15 } },
@@ -112,10 +116,20 @@ describe('getLogStats', () => {
       .mockResolvedValueOnce(10)
       .mockResolvedValueOnce(2)
       .mockResolvedValueOnce(8);
-    prismaMock.appLog.groupBy.mockResolvedValue([{ level: 'info', _count: { level: 10 } }] as any);
+    (prismaMock.appLog.groupBy as jest.Mock).mockResolvedValue([
+      { level: 'info', _count: { level: 10 } },
+    ] as any);
 
     const result = await getLogStats();
 
     expect(result.logsByLevel).toEqual({ info: 10, warn: 0, error: 0, debug: 0 });
+  });
+});
+
+describe('fetchLogs access', () => {
+  it('rejects anyone who is not an admin', async () => {
+    (requireAdmin as jest.Mock).mockRejectedValueOnce(new Error('No autorizado'));
+
+    await expect(fetchLogs()).rejects.toThrow('No autorizado');
   });
 });

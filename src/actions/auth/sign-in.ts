@@ -1,65 +1,92 @@
 'use server';
 
 import prisma from '@/lib/prisma';
-import { cookies } from 'next/headers';
 import { z } from 'zod';
 import bcrypt from 'bcryptjs';
+import { DUMMY_PASSWORD_HASH, hashPassword, needsRehash } from '@/lib/password';
+import { enforceRateLimit } from '@/lib/rate-limit';
+import { createSession } from '@/lib/session';
+import { safeRedirectPath } from '@/lib/safe-redirect';
+import { createTwoFactorChallenge } from '@/lib/two-factor';
+import { verifyCaptcha } from '@/lib/captcha';
 
 const formSchema = z.object({
   email: z.string().email({
     message: 'Debe ser un email válido.',
   }),
-  password: z.string().min(4, {
-    message: 'La contraseña debe tener al menos 4 caracteres.',
-  }),
+  password: z.string().min(1, 'Ingresá tu contraseña.').max(200),
   redirectTo: z.string().optional(),
+  // What the captcha widget submits (src/lib/captcha.ts).
+  captcha: z.string().max(10_000).optional(),
 });
 
 export const signIn = async (
   data: z.infer<typeof formSchema>,
 ): Promise<
   | { success: true; redirectTo: string }
+  | { success: false; error: 'CAPTCHA_FAILED' }
   | { success: false; error: 'INVALID_CREDENTIALS' }
+  | { success: false; error: 'ACCOUNT_SUSPENDED' }
   | { success: false; error: 'EMAIL_NOT_VERIFIED'; email: string }
+  | { success: false; error: 'TWO_FACTOR_REQUIRED' }
 > => {
+  await enforceRateLimit('signIn');
+
   try {
     const validatedData = formSchema.parse(data);
     const { email, password } = validatedData;
 
+    // Before looking at the password: a bot that can't solve it never gets to try one.
+    if (!(await verifyCaptcha(validatedData.captcha))) {
+      return { success: false, error: 'CAPTCHA_FAILED' };
+    }
+
     const user = await prisma.user.findUnique({
       where: { email },
+      // El cliente de Prisma omite el hash por defecto; el login es el único que lo necesita
+      omit: { password: false },
     });
 
-    if (!user) {
+    // Sin usuario se compara igual contra un hash falso: responder antes delataría por el tiempo
+    // que el email no está registrado.
+    const isPasswordValid = await bcrypt.compare(password, user?.password ?? DUMMY_PASSWORD_HASH);
+
+    if (!user || !isPasswordValid) {
       return { success: false, error: 'INVALID_CREDENTIALS' };
     }
 
-    const isPasswordValid = await bcrypt.compare(password, user.password);
+    // Los hashes con un costo viejo se regeneran ahora, que tenemos la contraseña en claro.
+    // Si falla, el login sigue: se reintenta la próxima vez.
+    if (needsRehash(user.password)) {
+      try {
+        await prisma.user.update({
+          where: { id: user.id },
+          data: { password: await hashPassword(password) },
+        });
+      } catch (error) {
+        console.error('Failed to rehash password:', error instanceof Error ? error.message : error);
+      }
+    }
 
-    if (!isPasswordValid) {
-      return { success: false, error: 'INVALID_CREDENTIALS' };
+    // Solo se dice después de validar la contraseña, para no contarle a cualquiera qué emails
+    // están suspendidos.
+    if (user.suspendedAt) {
+      return { success: false, error: 'ACCOUNT_SUSPENDED' };
     }
 
     if (!user.emailVerified) {
       return { success: false, error: 'EMAIL_NOT_VERIFIED', email };
     }
 
-    const session = await prisma.session.create({
-      data: {
-        userId: user.id,
-        expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
-      },
-    });
+    const redirectTo = safeRedirectPath(validatedData.redirectTo);
 
-    (await cookies()).set('sessionId', session.id, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      path: '/',
-      maxAge: 60 * 60 * 24 * 365,
-    });
+    // With two-factor on, the password only opens the second step (src/lib/two-factor.ts).
+    if (user.twoFactorEnabledAt) {
+      await createTwoFactorChallenge(user.id, redirectTo);
+      return { success: false, error: 'TWO_FACTOR_REQUIRED' };
+    }
 
-    const redirectTo = data.redirectTo || '/';
+    await createSession(user.id);
 
     return { success: true, redirectTo };
   } catch {

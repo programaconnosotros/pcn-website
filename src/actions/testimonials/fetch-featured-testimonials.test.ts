@@ -24,7 +24,7 @@ describe('fetchFeaturedTestimonials', () => {
       take: 3,
       include: {
         user: {
-          select: { id: true, name: true, email: true, image: true },
+          select: { id: true, name: true, image: true },
         },
       },
     });

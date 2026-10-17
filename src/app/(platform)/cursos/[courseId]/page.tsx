@@ -1,27 +1,23 @@
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from '@/components/ui/breadcrumb';
-import { Separator } from '@/components/ui/separator';
-import { SidebarTrigger } from '@/components/ui/sidebar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from '@/components/ui/carousel';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Heading2 } from '@/components/ui/heading-2';
+import { CoursePlayer } from '@/components/courses/course-player';
+import { PageTitle } from '@/components/ui/page-title';
+import { StickyHeader } from '@/components/ui/sticky-header';
+import Image from 'next/image';
 import { ExternalLink } from 'lucide-react';
-import { getCourseById } from '../courses';
+import { courseTeachers } from '../courses';
+import { getAllCourses, getArticles, getCourseById } from '@/lib/recommendations';
+import { getIdentityMap } from '@/lib/identity-links';
+import Link from 'next/link';
+import { Fragment } from 'react';
+import { CourseRow } from '@/components/courses/course-row';
+import { RelatedArticles } from '@/components/courses/related-articles';
+import { FullRowsCell, RuledGrid } from '@/components/ui/ruled-grid';
+import { rankRelated } from '@/lib/related';
 import type { Metadata } from 'next';
+import { MISSING_TAB_TITLE, tabTitle } from '@/lib/tab-title';
+import { EmptyState } from '@/components/empty-state';
+import { JsonLd } from '@/components/seo/json-ld';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
 
@@ -29,11 +25,11 @@ export async function generateMetadata(props: {
   params: Promise<{ courseId: string }>;
 }): Promise<Metadata> {
   const { courseId } = await props.params;
-  const course = getCourseById(courseId);
+  const course = await getCourseById(courseId);
 
   if (!course) {
     return {
-      title: 'Curso no encontrado',
+      title: { absolute: MISSING_TAB_TITLE },
       description: 'El curso que buscas no existe.',
     };
   }
@@ -45,12 +41,11 @@ export async function generateMetadata(props: {
       : course.description;
 
   return {
-    title,
+    title: tabTitle.cat('cursos', course.name),
     description,
     openGraph: {
       title: `${title} | programaConNosotros`,
       description,
-      images: [`${SITE_URL}/pcn-link-preview.png`],
       url: `${SITE_URL}/cursos/${courseId}`,
       type: 'website',
       siteName: 'programaConNosotros',
@@ -59,122 +54,201 @@ export async function generateMetadata(props: {
       card: 'summary_large_image',
       title: `${title} | programaConNosotros`,
       description,
-      images: [`${SITE_URL}/pcn-link-preview.png`],
     },
   };
 }
+
+// Four: two full rows of two, or one row of three with the fourth hidden (FullRowsCell).
+const RELATED_COURSES = 4;
+const RELATED_ARTICLES = 4;
+/** Matches the related courses' `grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3`. */
+const RELATED_COURSE_COLUMNS = { lg: 2, '2xl': 3 };
+
+const courseText = (course: { name: string; description: string }) =>
+  `${course.name} ${course.description}`;
+
+const SectionHeading = ({ command, label }: { command: string; label: string }) => (
+  <h2 className="mb-2 flex items-center gap-2 font-mono text-xs tracking-widest text-pcnGreen-500 uppercase">
+    <span className="text-pcnGreen/60">#</span>
+    {label}
+    <span className="tracking-normal text-muted-foreground/60 normal-case">{command}</span>
+    <span className="h-px flex-1 bg-pcnGreen-200" />
+  </h2>
+);
 
 const Course = async (props: { params: Promise<{ courseId: string }> }) => {
   const params = await props.params;
 
   const { courseId } = params;
 
-  const course = getCourseById(courseId);
+  const course = await getCourseById(courseId);
 
-  if (!course) return <div>El curso no existe.</div>;
+  if (!course)
+    return (
+      <div className="flex flex-1 flex-col p-4 pt-0">
+        <div className="mt-4">
+          <PageTitle path={[{ label: 'cursos', href: '/cursos' }, { label: '404' }]} />
+          <EmptyState
+            command={`cat ~/cursos/${courseId}`}
+            output={`cat: ~/cursos/${courseId}: no such file or directory`}
+            title="No encontramos este curso"
+            description="Puede que lo hayan sacado de la lista o que el enlace esté mal."
+            action={
+              <Link href="/cursos" className="text-pcnGreen hover:underline">
+                cd ~/cursos
+              </Link>
+            }
+          />
+        </div>
+      </div>
+    );
+
+  // Teachers who are platform users, linked in /vinculos.
+  const [teacherProfiles, allCourses, articles] = await Promise.all([
+    getIdentityMap('cursos'),
+    getAllCourses(),
+    getArticles(),
+  ]);
+
+  // Community courses first, then the newest, so ties in relevance favor what we made.
+  const otherCourses = [...allCourses]
+    .filter((other) => other.id !== course.id)
+    .sort(
+      (a, b) =>
+        Number(b.isMadeByCommunity) - Number(a.isMadeByCommunity) ||
+        b.date.getTime() - a.date.getTime(),
+    );
+  const relatedCourses = rankRelated(courseText(course), otherCourses, courseText).slice(
+    0,
+    RELATED_COURSES,
+  );
+  const relatedArticles = rankRelated(
+    courseText(course),
+    [...articles].sort((a, b) => b.date.localeCompare(a.date)),
+    (article) => `${article.title} ${article.description} ${article.category}`,
+  ).slice(0, RELATED_ARTICLES);
+
+  const info = (
+    <section className="flex gap-3 p-4">
+      {course.logo && (
+        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-sm bg-white p-1">
+          <Image
+            src={course.logo}
+            alt={`Logo de ${course.name}`}
+            width={28}
+            height={28}
+            className="h-full w-full object-contain"
+          />
+        </div>
+      )}
+      <div className="flex min-w-0 flex-1 flex-col gap-2">
+        <div className="flex items-center gap-2 font-mono text-sm">
+          <h2 className="font-semibold">{course.name}</h2>
+          {course.isMadeByCommunity && <Badge className="px-1.5 py-0 text-[10px]">pcn</Badge>}
+        </div>
+        <p className="text-sm leading-6 text-muted-foreground">{course.description}</p>
+        <p className="font-mono text-[11px] text-muted-foreground/70">
+          <span className="text-pcnGreen-500">@ </span>
+          {courseTeachers(course).some((name) => teacherProfiles[name])
+            ? courseTeachers(course).map((name, index) => (
+                <Fragment key={name}>
+                  {index > 0 && ', '}
+                  {teacherProfiles[name] ? (
+                    <Link
+                      href={`/perfil/${teacherProfiles[name].id}`}
+                      className="text-pcnGreen-700 underline-offset-2 hover:text-pcnGreen hover:underline"
+                    >
+                      {name}
+                    </Link>
+                  ) : (
+                    name
+                  )}
+                </Fragment>
+              ))
+            : course.teachedBy}
+        </p>
+      </div>
+    </section>
+  );
+
+  const disclaimer = !course.isMadeByCommunity && (
+    <p className="p-4 font-mono text-[11px] leading-relaxed text-muted-foreground">
+      <span className="text-pcnGreen-500"># </span>
+      Este curso no fue creado por un miembro de la comunidad, fue publicado gratuitamente en
+      YouTube y nos parece de muy buena calidad, por lo cual lo recomendamos. Embebemos el curso
+      aquí para que las ganancias y estadísticas de ver el video, sean para el autor original del
+      curso.
+    </p>
+  );
+
+  const courseJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Course',
+    name: course.name,
+    description: course.description,
+    url: `${SITE_URL}/cursos/${course.id}`,
+    inLanguage: 'es',
+    provider: { '@type': 'Organization', name: course.teachedBy },
+  };
 
   return (
     <>
-      <header className="flex h-16 shrink-0 items-center gap-2">
-        <div className="flex items-center gap-2 px-4">
-          <SidebarTrigger />
-          <Separator orientation="vertical" className="mr-2 data-[orientation=vertical]:h-4" />
-          <Breadcrumb>
-            <BreadcrumbList>
-              <BreadcrumbItem className="hidden md:block">
-                <BreadcrumbLink href="/">Inicio</BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator className="hidden md:block" />
-              <BreadcrumbItem className="hidden md:block">
-                <BreadcrumbLink href="/cursos">Cursos</BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator className="hidden md:block" />
-              <BreadcrumbItem>
-                <BreadcrumbPage>{course.name}</BreadcrumbPage>
-              </BreadcrumbItem>
-            </BreadcrumbList>
-          </Breadcrumb>
-        </div>
-      </header>
-      <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
+      <JsonLd data={courseJsonLd} />
+      <div className="flex flex-1 flex-col p-4 pt-0">
         <div className="mt-4">
-          <div className="mb-4 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-            <Heading2 className="m-0">{course.name}</Heading2>
-          </div>
+          <StickyHeader>
+            <PageTitle
+              path={`cursos/${course.id}`}
+              meta={[
+                course.websiteUrl ? 'interactivo' : `${course.hours}h`,
+                course.isMadeByCommunity && 'hecho en pcn',
+              ]
+                .filter(Boolean)
+                .join(' · ')}
+            />
+          </StickyHeader>
 
-          {course.websiteUrl ? (
-            <div className="mt-6">
-              <a href={course.websiteUrl} target="_blank" rel="noopener noreferrer">
-                <Button className="flex flex-row items-center gap-2">
-                  Ir al curso
-                  <ExternalLink className="h-5 w-5" />
-                </Button>
-              </a>
-            </div>
+          {course.youtubeUrls && course.youtubeUrls.length > 0 ? (
+            <CoursePlayer videoUrls={course.youtubeUrls}>
+              {info}
+              {disclaimer}
+            </CoursePlayer>
           ) : (
-            <div
-              className={`mt-6${course.youtubeUrls && course.youtubeUrls.length > 1 ? 'px-12' : ''}`}
-            >
-              <Carousel>
-                <CarouselContent>
-                  {course.youtubeUrls?.map((classUrl) => (
-                    <CarouselItem key={classUrl}>
-                      <div className="w-full" style={{ aspectRatio: '16/9' }}>
-                        <iframe
-                          className="h-full w-full"
-                          src={classUrl}
-                          title="YouTube video player"
-                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                          referrerPolicy="strict-origin-when-cross-origin"
-                          allowFullScreen
-                        />
-                      </div>
-                    </CarouselItem>
-                  ))}
-                </CarouselContent>
-
-                {course.youtubeUrls && course.youtubeUrls.length > 1 && (
-                  <>
-                    <CarouselPrevious />
-                    <CarouselNext />
-                  </>
-                )}
-              </Carousel>
-            </div>
-          )}
-
-          <Card className="mt-6">
-            <CardHeader className="flex flex-row items-center justify-between gap-2 pb-2">
-              <div className="flex min-w-0 items-center gap-2">
-                <CardTitle className="min-w-0">Descripción</CardTitle>
-                {course.isMadeByCommunity && (
-                  <Badge className="shrink-0 border-pcnPurple/30 bg-pcnPurple/10 text-pcnPurple dark:border-pcnGreen/50 dark:bg-pcnGreen/10 dark:text-pcnGreen">
-                    Made in PCN
-                  </Badge>
-                )}
-              </div>
-              {!course.websiteUrl && course.hours !== undefined && (
-                <div className="shrink-0">
-                  <Badge variant="outline">
-                    {course.hours} {course.hours === 1 ? 'hora' : 'horas'}
-                  </Badge>
+            <div className="divide-y divide-pcnGreen-200 border border-pcnGreen-200">
+              {info}
+              {course.websiteUrl && (
+                <div className="p-4">
+                  <a href={course.websiteUrl} target="_blank" rel="noopener noreferrer">
+                    <Button size="sm" className="flex flex-row items-center gap-2">
+                      irAlCurso();
+                      <ExternalLink className="h-4 w-4" />
+                    </Button>
+                  </a>
                 </div>
               )}
-            </CardHeader>
-            <CardContent className="text-sm">{course.description}</CardContent>
-            <CardFooter className="text-sm text-muted-foreground">
-              Dictado por {course.teachedBy}
-            </CardFooter>
-          </Card>
-
-          {!course.isMadeByCommunity && !course.websiteUrl && (
-            <p className="mt-4 text-sm text-muted-foreground">
-              Este curso no fue creado por un miembro de la comunidad, fue publicado gratuitamente
-              en YouTube y nos parece de muy buena calidad, por lo cual lo recomendamos. Embebemos
-              el curso aquí para que las ganancias y estadísticas de ver el video, sean para el
-              autor original del curso.
-            </p>
+            </div>
           )}
+
+          <section className="mt-10">
+            <SectionHeading label="seguí aprendiendo" command="ls ../cursos | sort -r" />
+            <RuledGrid className="grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3">
+              {relatedCourses.map((related, index) => (
+                <FullRowsCell
+                  key={related.id}
+                  index={index}
+                  count={relatedCourses.length}
+                  columns={RELATED_COURSE_COLUMNS}
+                >
+                  <CourseRow course={related} index={index} />
+                </FullRowsCell>
+              ))}
+            </RuledGrid>
+          </section>
+
+          <section className="mt-8 mb-14">
+            <SectionHeading label="para leer" command="cat ~/lectura/articulos" />
+            <RelatedArticles articles={relatedArticles} fillRows />
+          </section>
         </div>
       </div>
     </>

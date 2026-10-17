@@ -1,52 +1,28 @@
 import { InfluencerCard } from '@/components/influencers/influencer-card';
-import { Heading2 } from '@/components/ui/heading-2';
-import { Users } from 'lucide-react';
-import {
-  Breadcrumb,
-  BreadcrumbList,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from '@/components/ui/breadcrumb';
-import { Separator } from '@/components/ui/separator';
-import { SidebarTrigger } from '@/components/ui/sidebar';
-
-interface Platform {
-  youtube?: string;
-  instagram?: string;
-  twitter?: string;
-  linkedin?: string;
-  github?: string;
-  page?: string;
-}
-
-interface Influencer {
-  id: string;
-  name: string;
-  image: string;
-  description: string;
-  platforms: Platform;
-  specialties: string[];
-}
+import { PageTitle } from '@/components/ui/page-title';
+import { StickyHeader } from '@/components/ui/sticky-header';
+import { RuledGrid } from '@/components/ui/ruled-grid';
+import { RecommendButton } from '@/components/recommendations/recommend-button';
+import type { Influencer } from '@/components/influencers/influencers';
+import { getCommunityInfluencers } from '@/lib/recommendations';
 
 interface InfluencersData {
   influencers: Influencer[];
 }
 
 import type { Metadata } from 'next';
+import { tabTitle } from '@/lib/tab-title';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
 
 export const metadata: Metadata = {
-  title: 'Creadores de contenido recomendados',
+  title: tabTitle.ls('influencers'),
   description:
     'Una lista curada de creadores de contenido sobre ingeniería de software que la comunidad recomienda seguir.',
   openGraph: {
     title: 'Creadores de contenido recomendados | programaConNosotros',
     description:
       'Una lista curada de creadores de contenido sobre ingeniería de software que la comunidad recomienda seguir.',
-    images: [`${SITE_URL}/pcn-link-preview.png`],
     url: `${SITE_URL}/influencers`,
     type: 'website',
     siteName: 'programaConNosotros',
@@ -56,7 +32,6 @@ export const metadata: Metadata = {
     title: 'Creadores de contenido recomendados | programaConNosotros',
     description:
       'Una lista curada de creadores de contenido sobre ingeniería de software que la comunidad recomienda seguir.',
-    images: [`${SITE_URL}/pcn-link-preview.png`],
   },
 };
 
@@ -409,49 +384,29 @@ const influencersData: InfluencersData = {
 };
 
 export default async function InfluencersPage() {
+  // The curated list first, then the ones members recommended and an admin approved.
+  const curated = new Set(influencersData.influencers.map((i) => i.name.toLowerCase()));
+  const influencers = [
+    ...influencersData.influencers,
+    ...(await getCommunityInfluencers()).filter((i) => !curated.has(i.name.toLowerCase())),
+  ];
+
   return (
     <>
-      <header className="flex h-16 shrink-0 items-center gap-2">
-        <div className="flex items-center gap-2 px-4">
-          <SidebarTrigger />
-          <Separator orientation="vertical" className="mr-2 data-[orientation=vertical]:h-4" />
-          <Breadcrumb>
-            <BreadcrumbList>
-              <BreadcrumbItem className="hidden md:block">
-                <BreadcrumbLink href="/">Inicio</BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator className="hidden md:block" />
-              <BreadcrumbItem>
-                <BreadcrumbPage>Influencers</BreadcrumbPage>
-              </BreadcrumbItem>
-            </BreadcrumbList>
-          </Breadcrumb>
-        </div>
-      </header>
-      <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-        <div className="mt-4">
-          <div className="mb-4 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-            <Heading2 className="m-0 flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-pcnPurple/30 bg-pcnPurple/10 dark:border-pcnGreen/50 dark:bg-pcnGreen/10 dark:shadow-[0_0_10px_rgba(4,244,190,0.4)]">
-                <Users className="h-5 w-5 text-pcnPurple dark:text-pcnGreen dark:drop-shadow-[0_0_8px_rgba(4,244,190,0.8)]" />
-              </div>
-              <span className="dark:drop-shadow-[0_0_12px_rgba(4,244,190,0.8)]">Influencers</span>
-            </Heading2>
-          </div>
+      <div className="flex flex-1 flex-col p-4 pt-0">
+        <StickyHeader className="mt-4">
+          <PageTitle
+            path="influencers"
+            meta={`${influencers.length} referentes para seguir`}
+            action={<RecommendButton kind="INFLUENCER" />}
+          />
+        </StickyHeader>
 
-          <div className="mb-6">
-            <p className="mt-2 text-gray-600 dark:text-gray-400">
-              Acá te mostramos algunas personas o grupos que consideramos referentes en el mundo del
-              software y que creemos que pueden aportar mucho a tu crecimiento profesional.
-            </p>
-          </div>
-
-          <div className="mb-4 grid grid-cols-1 gap-6 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
-            {influencersData.influencers.map((influencer: Influencer) => (
-              <InfluencerCard key={influencer.id} influencer={influencer} />
-            ))}
-          </div>
-        </div>
+        <RuledGrid className="mb-14 grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3">
+          {influencers.map((influencer) => (
+            <InfluencerCard key={influencer.id} influencer={influencer} />
+          ))}
+        </RuledGrid>
       </div>
     </>
   );

@@ -1,9 +1,14 @@
 'use server';
 
 import prisma from '@/lib/prisma';
+import { requireAdmin } from '@/lib/admin';
+import { nonAdminVisit } from '@/lib/page-visit-filters';
 
 export const fetchPageVisits = async (limit: number = 100) => {
+  await requireAdmin();
+
   return prisma.pageVisit.findMany({
+    where: nonAdminVisit,
     take: limit,
     orderBy: {
       createdAt: 'desc',
@@ -21,6 +26,8 @@ export const fetchPageVisits = async (limit: number = 100) => {
 };
 
 export const getPageVisitStats = async () => {
+  await requireAdmin();
+
   const now = new Date();
   const oneDayAgo = new Date(now);
   oneDayAgo.setDate(oneDayAgo.getDate() - 1);
@@ -38,9 +45,10 @@ export const getPageVisitStats = async () => {
     topPages,
     visitsByUser,
   ] = await Promise.all([
-    prisma.pageVisit.count(),
+    prisma.pageVisit.count({ where: nonAdminVisit }),
     prisma.pageVisit.count({
       where: {
+        ...nonAdminVisit,
         createdAt: {
           gte: oneDayAgo,
         },
@@ -48,6 +56,7 @@ export const getPageVisitStats = async () => {
     }),
     prisma.pageVisit.count({
       where: {
+        ...nonAdminVisit,
         createdAt: {
           gte: oneWeekAgo,
         },
@@ -55,6 +64,7 @@ export const getPageVisitStats = async () => {
     }),
     prisma.pageVisit.count({
       where: {
+        ...nonAdminVisit,
         createdAt: {
           gte: oneMonthAgo,
         },
@@ -62,12 +72,14 @@ export const getPageVisitStats = async () => {
     }),
     prisma.pageVisit.groupBy({
       by: ['path'],
+      where: nonAdminVisit,
       _count: {
         path: true,
       },
     }),
     prisma.pageVisit.groupBy({
       by: ['path'],
+      where: nonAdminVisit,
       _count: {
         path: true,
       },
@@ -84,6 +96,7 @@ export const getPageVisitStats = async () => {
         userId: true,
       },
       where: {
+        ...nonAdminVisit,
         userId: {
           not: null,
         },

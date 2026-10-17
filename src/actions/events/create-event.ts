@@ -5,8 +5,44 @@ import { eventSchema, EventFormData } from '@/schemas/event-schema';
 import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
+import { canCreateEvents } from '@/lib/event-permissions';
+import { enforceRateLimit } from '@/lib/rate-limit';
+import { findSession } from '@/lib/session';
+import { notifyEveryone } from '@/actions/notifications/notify-users';
+import { emailUsers } from '@/actions/notifications/email-users';
+import { EventNoticeEmail } from '@/components/events/event-notice-email';
+import { formatEventWhen, formatEventWhere } from '@/lib/event-notices';
+import { ACTIVE_USER } from '@/lib/active-user';
+
+/**
+ * Designers of the event's flyer, deduplicated, with only user ids that exist (a stale id is
+ * kept as a plain name). None when the event has no flyer left.
+ */
+const flyerDesignerRows = async (
+  designers: { userId?: string | null; name: string }[],
+  flyers: string[],
+) => {
+  const kept = flyers.length > 0 ? designers : [];
+  const ids = [...new Set(kept.flatMap((designer) => (designer.userId ? [designer.userId] : [])))];
+  const existing = new Set(
+    ids.length
+      ? (await prisma.user.findMany({ where: { id: { in: ids } }, select: { id: true } })).map(
+          (user) => user.id,
+        )
+      : [],
+  );
+  const seen = new Set<string>();
+  return kept.flatMap(({ userId, name }) => {
+    const key = userId ?? `name:${name.toLowerCase()}`;
+    if (seen.has(key)) return [];
+    seen.add(key);
+    return [{ name, userId: userId && existing.has(userId) ? userId : null }];
+  });
+};
 
 export const createEvent = async (data: EventFormData) => {
+  await enforceRateLimit('createContent');
+
   const validatedData = eventSchema.parse(data);
 
   const sessionId = (await cookies()).get('sessionId')?.value;
@@ -15,16 +51,13 @@ export const createEvent = async (data: EventFormData) => {
     throw new Error('Usuario no autenticado');
   }
 
-  const session = await prisma.session.findUnique({
-    where: { id: sessionId },
-    include: { user: true },
-  });
+  const session = await findSession(sessionId);
 
   if (!session) {
     throw new Error('Sesión no encontrada');
   }
 
-  if (session.user.role !== 'ADMIN') {
+  if (!canCreateEvents(session.user)) {
     throw new Error('No tienes permisos para crear eventos');
   }
 
@@ -37,16 +70,20 @@ export const createEvent = async (data: EventFormData) => {
     throw new Error('La fecha de finalización debe ser posterior a la fecha de inicio');
   }
 
-  const { sponsors, ...eventData } = validatedData;
+  const { sponsors, flyerDesigners, ...eventData } = validatedData;
+  const designers = await flyerDesignerRows(flyerDesigners, eventData.flyerImages);
 
   const event = await prisma.event.create({
     data: {
       ...eventData,
       date: date,
       endDate: endDate,
-      latitude: validatedData.latitude ?? null,
-      longitude: validatedData.longitude ?? null,
+      googleMapsUrl: validatedData.googleMapsUrl ?? null,
       capacity: validatedData.capacity ?? null,
+      createdById: session.user.id,
+      // Quien crea el evento queda como organizador; el resto se suma desde su página.
+      organizers: { create: { userId: session.user.id } },
+      flyerDesigners: { create: designers },
       sponsors: {
         create:
           sponsors
@@ -54,10 +91,55 @@ export const createEvent = async (data: EventFormData) => {
             .map((sponsor) => ({
               name: sponsor.name,
               website: sponsor.website && sponsor.website.trim() !== '' ? sponsor.website : null,
+              logo: sponsor.logo ?? null,
             })) || [],
       },
     },
   });
+
+  // Un evento que ya pasó se carga para el archivo: no hay nada a qué anotarse.
+  if (date > new Date()) {
+    await notifyEveryone(
+      {
+        type: 'event_created',
+        title: 'Nuevo evento',
+        message: `Se publicó "${event.name}", el ${date.toLocaleDateString('es-AR', {
+          day: 'numeric',
+          month: 'long',
+          timeZone: 'America/Argentina/Buenos_Aires',
+        })}.`,
+        href: `/eventos/${event.id}`,
+        metadata: { eventId: event.id },
+      },
+      session.user.id,
+    );
+
+    // Y por email a todos los que verificaron su dirección: en una sola tanda, de a lotes.
+    try {
+      const users = await prisma.user.findMany({
+        where: { ...ACTIVE_USER, emailVerified: true, id: { not: session.user.id } },
+        select: { name: true, email: true },
+      });
+      await emailUsers(users, `Nuevo evento: ${event.name}`, (firstName) =>
+        EventNoticeEmail({
+          userName: firstName,
+          eventName: event.name,
+          eventId: event.id,
+          path: 'eventos/nuevo',
+          title: 'Nuevo evento',
+          preview: `Se publicó ${event.name}`,
+          command: 'pcn eventos --nuevo',
+          intro: 'Se publicó un nuevo evento en la comunidad. Anotate desde su página.',
+          rows: [
+            { label: 'fecha', value: formatEventWhen(date) },
+            { label: 'lugar', value: formatEventWhere(event) },
+          ],
+        }),
+      );
+    } catch (error) {
+      console.error('Error emailing everyone about a new event:', error);
+    }
+  }
 
   revalidatePath('/eventos');
   redirect(`/eventos/${event.id}`);

@@ -1,0 +1,109 @@
+'use client';
+
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
+import { Textarea } from '@/components/ui/textarea';
+import { Button } from '@/components/ui/button';
+import { useState } from 'react';
+import { editAdvice } from '@/actions/advice/edit-advice';
+import { toast } from 'sonner';
+import { adviceSchema, AdviceFormData, AdviceFormInput } from '@/schemas/advice-schema';
+import { actionErrorMessage } from '@/lib/rate-limit-messages';
+import { TopicPicker } from './topic-picker';
+
+interface EditAdviceDialogProps {
+  adviceId: string;
+  initialContent: string;
+  initialTags?: string[];
+  isOpen: boolean;
+  onOpenChange: (_open: boolean) => void;
+}
+
+export const EditAdviceDialog = ({
+  adviceId,
+  initialContent,
+  initialTags = [],
+  isOpen,
+  onOpenChange,
+}: EditAdviceDialogProps) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const form = useForm<AdviceFormInput, unknown, AdviceFormData>({
+    resolver: zodResolver(adviceSchema),
+    defaultValues: {
+      content: initialContent,
+      tags: initialTags,
+    },
+  });
+
+  const onSubmitEditAdvice = async ({ content, tags }: AdviceFormData) => {
+    setIsSubmitting(true);
+    // toast.promise devuelve el id del toast: se espera la action para que el botón quede en
+    // "editando" mientras corre
+    const promise = editAdvice({ id: adviceId, content, tags });
+    toast.promise(promise, {
+      loading: 'Editando consejo...',
+      success: () => {
+        form.reset({ content, tags });
+        onOpenChange(false);
+        return 'Tu consejo fue editado exitosamente.';
+      },
+      error: (error) => actionErrorMessage(error, 'Ocurrió un error al editar el consejo'),
+    });
+    try {
+      await promise;
+    } catch {
+      // El toast ya avisó del error
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  return (
+    <Dialog open={isOpen} onOpenChange={onOpenChange}>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Editar consejo</DialogTitle>
+        </DialogHeader>
+
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmitEditAdvice)} className="space-y-8">
+            <FormField
+              control={form.control}
+              name="content"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <Textarea aria-label="Consejo" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="tags"
+              render={({ field }) => (
+                <FormItem>
+                  <TopicPicker value={field.value ?? []} onChange={field.onChange} />
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <Button
+              type="submit"
+              className="w-full"
+              loading={isSubmitting}
+              loadingText="guardando..."
+            >
+              guardarCambios();
+            </Button>
+          </form>
+        </Form>
+      </DialogContent>
+    </Dialog>
+  );
+};

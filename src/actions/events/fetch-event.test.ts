@@ -6,7 +6,7 @@ const mockEvent = {
   name: 'Tech Talk',
   date: new Date('2026-08-15'),
   deletedAt: null,
-  images: [],
+  galleryItems: [],
   sponsors: [],
 };
 

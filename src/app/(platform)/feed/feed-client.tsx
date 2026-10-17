@@ -1,0 +1,258 @@
+'use client';
+
+import { EmptyState } from '@/components/empty-state';
+import { useMemo, useState, type ReactNode } from 'react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useRealtime } from '@/components/realtime/use-realtime';
+import { ArrowUpRight } from 'lucide-react';
+import { PageTitle } from '@/components/ui/page-title';
+import { StickyHeader } from '@/components/ui/sticky-header';
+import { RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
+import { TabBrackets, tabsListClassName, tabsTriggerClassName } from '@/components/ui/tab-styles';
+import type { FeedItem, FeedKind } from '@/lib/feed';
+import { cn } from '@/lib/utils';
+import { HideFeedItemButton } from './hide-feed-item-button';
+
+const KINDS: Record<FeedKind, { label: string; tag: string; className: string }> = {
+  evento: { label: 'eventos', tag: 'evento', className: 'border-rose-400/50 text-rose-300' },
+  charla: { label: 'charlas', tag: 'charla', className: 'border-fuchsia-400/50 text-fuchsia-300' },
+  fotos: { label: 'fotos', tag: 'galería', className: 'border-lime-400/50 text-lime-300' },
+  setup: { label: 'setups', tag: 'setup', className: 'border-amber-400/50 text-amber-300' },
+  proyecto: { label: 'proyectos', tag: 'proyecto', className: 'border-pink-400/50 text-pink-300' },
+  conversacion: {
+    label: 'conversaciones',
+    tag: 'whatsapp',
+    className: 'border-sky-400/50 text-sky-300',
+  },
+  changelog: {
+    label: 'plataforma',
+    tag: 'changelog',
+    className: 'border-pcnGreen-200 text-pcnGreen-700',
+  },
+  desarrollo: {
+    label: 'desarrollo',
+    tag: 'nuevo dev',
+    className: 'border-violet-400/50 text-violet-300',
+  },
+  foro: { label: 'foro', tag: 'foro', className: 'border-cyan-400/50 text-cyan-300' },
+  consejo: {
+    label: 'consejos',
+    tag: 'consejo',
+    className: 'border-emerald-400/50 text-emerald-300',
+  },
+  anuncio: { label: 'anuncios', tag: 'anuncio', className: 'border-orange-400/50 text-orange-300' },
+  testimonio: {
+    label: 'testimonios',
+    tag: 'testimonio',
+    className: 'border-yellow-300/50 text-yellow-200',
+  },
+  lugar: { label: 'lugares', tag: 'lugar', className: 'border-teal-400/50 text-teal-300' },
+  empleo: { label: 'empleos', tag: 'empleo', className: 'border-blue-400/50 text-blue-300' },
+  miembros: {
+    label: 'miembros',
+    tag: 'bienvenida',
+    className: 'border-indigo-400/50 text-indigo-300',
+  },
+};
+
+type Filter = 'todo' | FeedKind;
+
+const shiftDay = (day: string, days: number) => {
+  const date = new Date(`${day}T12:00:00Z`);
+  date.setUTCDate(date.getUTCDate() + days);
+  return date.toISOString().slice(0, 10);
+};
+
+const dayLabel = (day: string, today: string) => {
+  if (day === today) return 'hoy';
+  if (day === shiftDay(today, -1)) return 'ayer';
+  return new Date(`${day}T12:00:00`).toLocaleDateString('es-AR', {
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+  });
+};
+
+function FeedRow({ item, canHide }: { item: FeedItem; canHide: boolean }) {
+  const kind = KINDS[item.kind];
+
+  const link = (
+    <Link
+      href={item.href}
+      className={cn(
+        !canHide && ruledCellClassName,
+        'flex group flex-col gap-1.5 p-3',
+        // Room on the first line for the admin's hide button, outside the link.
+        canHide && 'pr-20',
+      )}
+    >
+      <span className="flex items-center gap-2 font-mono text-[11px] text-muted-foreground">
+        <span className={cn('border px-1 leading-4', kind.className)}>{item.tag ?? kind.tag}</span>
+        {item.meta && <span className="min-w-0 truncate">{item.meta}</span>}
+        <ArrowUpRight className="ml-auto size-3.5 shrink-0 text-muted-foreground/60 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-pcnGreen" />
+      </span>
+
+      <h3 className="font-mono text-sm leading-snug font-semibold tracking-tight text-foreground group-hover:text-pcnGreen">
+        {item.title}
+      </h3>
+
+      {item.description && (
+        <p className="line-clamp-3 text-xs leading-relaxed text-muted-foreground">
+          {item.description}
+        </p>
+      )}
+
+      {item.thumbs && item.thumbs.length > 0 && (
+        <span className="mt-1 grid grid-cols-4 gap-1">
+          {item.thumbs.map(({ id, src }) => (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              key={id}
+              src={src}
+              alt=""
+              loading="lazy"
+              decoding="async"
+              className="aspect-square w-full rounded-sm bg-black object-cover brightness-[0.85] transition group-hover:brightness-100"
+            />
+          ))}
+        </span>
+      )}
+    </Link>
+  );
+
+  if (!canHide) return link;
+  return (
+    <div className={cn(ruledCellClassName, 'relative')}>
+      {link}
+      <HideFeedItemButton item={item} className="absolute top-3 right-3" />
+    </div>
+  );
+}
+
+interface FeedClientProps {
+  items: FeedItem[];
+  /** The community's current day, computed on the server so "hoy" matches the feed's days. */
+  today: string;
+  /** Pinned beside the feed on wide screens: the next event, announcements, partners. */
+  aside?: ReactNode;
+  /** Admins get a button on each item to take it off the feed for everyone. */
+  isAdmin?: boolean;
+}
+
+export function FeedClient({ items, today, aside, isAdmin = false }: FeedClientProps) {
+  const [filter, setFilter] = useState<Filter>('todo');
+  const router = useRouter();
+  // Live news arrive as a banner instead of moving the list while someone reads it.
+  const [news, setNews] = useState(0);
+  useRealtime(['feed'], () => setNews((count) => count + 1));
+
+  // Only offer filters for kinds that actually have something to show.
+  const filters = useMemo<Filter[]>(
+    () => [
+      'todo',
+      ...(Object.keys(KINDS) as FeedKind[]).filter((kind) =>
+        items.some((item) => item.kind === kind),
+      ),
+    ],
+    [items],
+  );
+
+  const byDay = useMemo(() => {
+    const groups = new Map<string, FeedItem[]>();
+    for (const item of items)
+      if (filter === 'todo' || item.kind === filter)
+        groups.set(item.day, [...(groups.get(item.day) ?? []), item]);
+    return [...groups.entries()];
+  }, [items, filter]);
+
+  return (
+    <div className="flex flex-1 flex-col p-4 pt-0">
+      <div className="mt-4">
+        {/* Pinned on large screens, so the filters stay at hand along the whole feed. */}
+        <StickyHeader pinnedOnDesktop>
+          <PageTitle path="feed" meta="tail -f comunidad.log" />
+
+          {/* Scrolls sideways instead of wrapping when the window is narrow. */}
+          <div className="-mx-1 mb-3 scrollbar-none overflow-x-auto px-1 pb-1">
+            <div role="tablist" aria-label="Filtrar el feed" className={tabsListClassName}>
+              {filters.map((value) => (
+                <button
+                  key={value}
+                  type="button"
+                  role="tab"
+                  aria-selected={filter === value}
+                  data-state={filter === value ? 'active' : 'inactive'}
+                  onClick={() => setFilter(value)}
+                  className={tabsTriggerClassName}
+                >
+                  <TabBrackets>{value === 'todo' ? 'todo' : KINDS[value].label}</TabBrackets>
+                </button>
+              ))}
+            </div>
+          </div>
+        </StickyHeader>
+
+        {news > 0 && (
+          <button
+            type="button"
+            onClick={() => {
+              setNews(0);
+              router.refresh();
+            }}
+            className="mb-4 flex w-full max-w-3xl items-center justify-center gap-2 border border-pcnGreen-600 bg-pcnGreen/10 py-2 font-mono text-xs text-pcnGreen transition-colors hover:bg-pcnGreen/20"
+          >
+            <span aria-hidden className="size-1.5 animate-pulse rounded-full bg-pcnGreen" />
+            {news === 1 ? 'hay 1 novedad' : `hay ${news} novedades`} · tocá para verlas
+          </button>
+        )}
+
+        {/* One column of news, easy to read top to bottom, with the side panels pinned at its
+            right when there's room for them. */}
+        <div className="flex items-start gap-6">
+          <div className="max-w-3xl min-w-0 flex-1">
+            {byDay.length === 0 ? (
+              <EmptyState
+                command="tail -f ~/feed"
+                output="(sin novedades)"
+                title="Nada nuevo por acá todavía"
+                description="Eventos, fotos, proyectos y temas nuevos de la comunidad van a aparecer acá."
+              />
+            ) : (
+              <div className="mb-14 space-y-6 pt-4">
+                {byDay.map(([day, dayItems]) => (
+                  <section key={day}>
+                    <h2 className="mb-2 flex items-center gap-2 font-mono text-xs tracking-[0.2em] text-muted-foreground uppercase">
+                      <span className="text-pcnGreen">{'>'}</span>
+                      <time dateTime={day} className="text-foreground">
+                        {dayLabel(day, today)}
+                      </time>
+                      <span
+                        aria-hidden
+                        className="h-px flex-1 bg-linear-to-r from-pcnGreen-400 to-transparent"
+                      />
+                      <span className="tabular-nums">[{dayItems.length}]</span>
+                    </h2>
+                    <RuledGrid className="grid-cols-1">
+                      {dayItems.map((item) => (
+                        <FeedRow key={item.id} item={item} canHide={isAdmin} />
+                      ))}
+                    </RuledGrid>
+                  </section>
+                ))}
+              </div>
+            )}
+          </div>
+          {aside && (
+            <aside
+              aria-label="Destacados"
+              className="sticky top-[calc(var(--sticky-header-offset,0px)+1rem)] mb-14 hidden w-72 shrink-0 xl:block"
+            >
+              {aside}
+            </aside>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}

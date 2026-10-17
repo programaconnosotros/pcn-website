@@ -1,4 +1,5 @@
-'use server';
+// Server-only helper for other server actions. Not a server action itself, so nobody can call it
+// from the browser to notify the admins.
 
 import prisma from '@/lib/prisma';
 

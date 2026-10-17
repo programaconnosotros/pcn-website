@@ -12,17 +12,27 @@
   {
     "title": "Charla de Karpathy sobre Software 3.0 y redes neuronales como hardware",
     "date": "2026-05-04",
-    "summary": "Facundo García Martoni compartió una charla reciente de Andrej Karpathy que el grupo consideró muy importante para entender la dirección del software. Las dos ideas centrales que extrajo fueron: primero, investigar fine-tuning y frameworks de Reinforcement Learning para escapar de la dependencia de los labs y adaptar los modelos al intent específico del producto; y segundo, el concepto de Software 3.0, donde en lugar de ensamblar código se crean entornos donde los datos pueden fluir y transformarse de maneras infinitamente creativas. Iñaki Fernando Lozano confirmó que Karpathy había introducido el concepto de Software 3.0 años antes en una charla en Y Combinator. Facundo Padilla compartió un resumen en español de la charla."
+    "summary": "Facundo García Martoni compartió una charla reciente de Andrej Karpathy que el grupo consideró muy importante para entender la dirección del software. Las dos ideas centrales que extrajo fueron: primero, investigar fine-tuning y frameworks de Reinforcement Learning para escapar de la dependencia de los labs y adaptar los modelos al intent específico del producto; y segundo, el concepto de Software 3.0, donde en lugar de ensamblar código se crean entornos donde los datos pueden fluir y transformarse de maneras infinitamente creativas. Iñaki Fernando Lozano confirmó que Karpathy había introducido el concepto de Software 3.0 años antes en una charla en Y Combinator. Facundo Padilla compartió un resumen en español de la charla.",
+    "links": [
+      "https://www.youtube.com/watch?v=96jN2OCOfLs",
+      "https://lilys.ai/digest/9417464/10853988?noteVersionId=7367187"
+    ]
   },
   {
     "title": "Archicise: plataforma de Agustín Sánchez para practicar arquitectura de sistemas",
     "date": "2026-05-04",
-    "summary": "Agustín Sánchez presentó Archicise (archicise.com), el proyecto que construyó durante la hackathon Zero to Agent. La plataforma permitía practicar distintas facetas de arquitectura de sistemas: system design, database design, API design, AI design y OOP design. Cada ejercicio guiaba al usuario a través de pasos para resolver un problema de arquitectura, y el usuario podía hacer diagramas con Excalidraw que el agente tomaba como input para la revisión. Al submitear la solución, el sistema daba un score de 0 a 100 con feedback de fortalezas, debilidades y sugerencias de mejora. La visión era hacerlo SaaS y vendérselo tanto a individuos como a empresas de software para subir el nivel de sus engineers en arquitectura."
+    "summary": "Agustín Sánchez presentó Archicise (archicise.com), el proyecto que construyó durante la hackathon Zero to Agent. La plataforma permitía practicar distintas facetas de arquitectura de sistemas: system design, database design, API design, AI design y OOP design. Cada ejercicio guiaba al usuario a través de pasos para resolver un problema de arquitectura, y el usuario podía hacer diagramas con Excalidraw que el agente tomaba como input para la revisión. Al submitear la solución, el sistema daba un score de 0 a 100 con feedback de fortalezas, debilidades y sugerencias de mejora. La visión era hacerlo SaaS y vendérselo tanto a individuos como a empresas de software para subir el nivel de sus engineers en arquitectura.",
+    "links": ["https://archicise.com"]
   },
   {
     "title": "Joel comparte su desorientación: el mercado cambió y no sabe por dónde empezar",
     "date": "2026-05-05",
-    "summary": "Joel, desarrollador backend con 6 años de experiencia que llevaba 2 meses desempleado, compartió en el grupo su sensación de estar completamente perdido con el nuevo ecosistema de herramientas. Expresó que no entendía de qué hablaban cuando mencionaban agentes, Cursor, Vercel, n8n y demás, y que sentía que el mercado había cambiado radicalmente. Solo había hecho el curso de Copilot de Microsoft pero sentía que el espectro era muchísimo más amplio. El grupo respondió con empatía y recursos: Facundo García Martoni le recomendó una charla específica de YouTube, Nacho Tello recomendó videos de Midudev sobre OpenCode y workflows actuales. El episodio resonó en el grupo como un recordatorio de la brecha que se estaba generando entre quienes seguían el ecosistema de cerca y quienes no habían podido actualizarse."
+    "summary": "Joel, desarrollador backend con 6 años de experiencia que llevaba 2 meses desempleado, compartió en el grupo su sensación de estar completamente perdido con el nuevo ecosistema de herramientas. Expresó que no entendía de qué hablaban cuando mencionaban agentes, Cursor, Vercel, n8n y demás, y que sentía que el mercado había cambiado radicalmente. Solo había hecho el curso de Copilot de Microsoft pero sentía que el espectro era muchísimo más amplio. El grupo respondió con empatía y recursos: Facundo García Martoni le recomendó una charla específica de YouTube, Nacho Tello recomendó videos de Midudev sobre OpenCode y workflows actuales. El episodio resonó en el grupo como un recordatorio de la brecha que se estaba generando entre quienes seguían el ecosistema de cerca y quienes no habían podido actualizarse.",
+    "links": [
+      "https://www.youtube.com/watch?v=2aN_-m1uU4k",
+      "https://www.youtube.com/watch?v=eABNL3igtVo",
+      "https://www.youtube.com/watch?v=ZZq4TpNgnvg"
+    ]
   },
   {
     "title": "Debate final sobre stacks de suscripciones: Cursor + Codex como combo óptimo",
@@ -47,7 +57,11 @@
   {
     "title": "Colossus: el cluster de 300 MW de xAI",
     "date": "2026-05-06",
-    "summary": "Iñaki Fernando Lozano compartió datos sobre Colossus, el datacenter de 300 MW de xAI, y el grupo conversó sobre la escala de cómputo detrás del entrenamiento de modelos de frontera y lo que implica para la industria."
+    "summary": "Iñaki Fernando Lozano compartió datos sobre Colossus, el datacenter de 300 MW de xAI, y el grupo conversó sobre la escala de cómputo detrás del entrenamiento de modelos de frontera y lo que implica para la industria.",
+    "links": [
+      "https://x.com/ClaudeDevs/status/2052064938840228237",
+      "https://x.com/i/status/2052066271487824191"
+    ]
   },
   {
     "title": "Alternativas a Bugbot para análisis de seguridad en CI",
@@ -92,42 +106,56 @@
   {
     "title": "Skill babysit-pr y el debate prevención vs tracking en PRs",
     "date": "2026-05-17",
-    "summary": "Facundo García Martoni compartió su skill babysit-pr para acompañar la revisión de pull requests con un agente. Se generó un debate con Facundo Padilla sobre si conviene invertir en prevenir errores antes del PR o en trackearlos y corregirlos durante la revisión, con argumentos a favor de ambas estrategias según el contexto del equipo."
+    "summary": "Facundo García Martoni compartió su skill babysit-pr para acompañar la revisión de pull requests con un agente. Se generó un debate con Facundo Padilla sobre si conviene invertir en prevenir errores antes del PR o en trackearlos y corregirlos durante la revisión, con argumentos a favor de ambas estrategias según el contexto del equipo.",
+    "links": ["https://www.skills.sh/openai/codex/babysit-pr"]
   },
   {
     "title": "Composer 2.5: \"nivel de Opus por dos mangos\"",
     "date": "2026-05-18",
-    "summary": "Con el lanzamiento de Composer 2.5, el grupo celebró su relación precio-calidad, resumida en la frase \"nivel de Opus por dos mangos\". También se habló de overmind para unificar los dev servers en tmux, del debate AGENTS.md vs CONTEXT.md como archivo de instrucciones para los agentes y de react.review como revisor especializado en código React."
+    "summary": "Con el lanzamiento de Composer 2.5, el grupo celebró su relación precio-calidad, resumida en la frase \"nivel de Opus por dos mangos\". También se habló de overmind para unificar los dev servers en tmux, del debate AGENTS.md vs CONTEXT.md como archivo de instrucciones para los agentes y de react.review como revisor especializado en código React.",
+    "links": ["https://github.com/DarthSim/overmind", "https://react.review/"]
   },
   {
     "title": "Zed vs Neovim y ergonomía del puesto de trabajo",
     "date": "2026-05-19",
-    "summary": "Conversación sobre editores alternativos (Zed vs Neovim) y sobre la ergonomía del puesto de trabajo: sillas, monitores y mouse, con recomendaciones para largas jornadas frente a la pantalla. También se mencionó la cuenta de Instagram aguslogs de Agustín Sánchez."
+    "summary": "Conversación sobre editores alternativos (Zed vs Neovim) y sobre la ergonomía del puesto de trabajo: sillas, monitores y mouse, con recomendaciones para largas jornadas frente a la pantalla. También se mencionó la cuenta de Instagram aguslogs de Agustín Sánchez.",
+    "links": [
+      "https://articulo.mercadolibre.com.ar/MLA-1518361157-silla-postural-balans-encastrable-premium-silla-home-office-_JM?searchVariation=185085542668"
+    ]
   },
   {
     "title": "Ataques a la cadena de suministro: extensión maliciosa de VS Code y tanstack",
     "date": "2026-05-20",
-    "summary": "El grupo analizó dos incidentes de seguridad ocurridos en mayo: una extensión maliciosa de VS Code relacionada con GitHub/TeamPCP que afectó a miles de repositorios, y un ataque de cadena de suministro sobre el paquete tanstack en npm. Chelo recomendó usar pnpm --frozen-lockfile y correr pnpm audit en CI para mitigar riesgos de dependencias comprometidas. También se mencionó el firewall gratuito de Vercel como capa adicional de protección."
+    "summary": "El grupo analizó dos incidentes de seguridad ocurridos en mayo: una extensión maliciosa de VS Code relacionada con GitHub/TeamPCP que afectó a miles de repositorios, y un ataque de cadena de suministro sobre el paquete tanstack en npm. Chelo recomendó usar pnpm --frozen-lockfile y correr pnpm audit en CI para mitigar riesgos de dependencias comprometidas. También se mencionó el firewall gratuito de Vercel como capa adicional de protección.",
+    "links": [
+      "https://tanstack.com/blog/npm-supply-chain-compromise-postmortem",
+      "https://www.bleepingcomputer.com/news/security/malicious-vscode-extensions-with-millions-of-installs-discovered/",
+      "https://www.linkedin.com/posts/rauchg_all-firewall-mitigations-are-now-fully-free-share-7462322186087931904-wujL"
+    ]
   },
   {
     "title": "Qodo gratis para code review y créditos de tokens de YC",
     "date": "2026-05-21",
-    "summary": "Se compartió que Qodo ofrece 30 revisiones de PR gratuitas al mes de por vida, junto con comentarios sobre créditos de tokens para startups que participan de YC. La conversación giró en torno a cómo abaratar el code review automatizado combinando herramientas con planes gratuitos generosos."
+    "summary": "Se compartió que Qodo ofrece 30 revisiones de PR gratuitas al mes de por vida, junto con comentarios sobre créditos de tokens para startups que participan de YC. La conversación giró en torno a cómo abaratar el code review automatizado combinando herramientas con planes gratuitos generosos.",
+    "links": ["https://qodo.ai", "https://x.com/OpenAIDevs/status/2057530207976989179"]
   },
   {
     "title": "Comparativa detallada Codex vs Cursor y uso de worktrees en Codex",
     "date": "2026-05-22",
-    "summary": "Facundo García Martoni hizo una comparación detallada de Codex frente a Cursor: a favor de Codex, el uso generoso, el harness y la experiencia en Mac; en contra, el plan mode y la velocidad de respuesta. También se habló de usar git worktrees en Codex junto con un script de configuración del entorno local para aislar tareas largas. Alejo contó que llegó a resolver un sistema completo en una sola sesión con Cursor y Composer 2.5. Se sumó una recomendación de gestores de contraseñas, destacando Bitwarden por ser open source."
+    "summary": "Facundo García Martoni hizo una comparación detallada de Codex frente a Cursor: a favor de Codex, el uso generoso, el harness y la experiencia en Mac; en contra, el plan mode y la velocidad de respuesta. También se habló de usar git worktrees en Codex junto con un script de configuración del entorno local para aislar tareas largas. Alejo contó que llegó a resolver un sistema completo en una sola sesión con Cursor y Composer 2.5. Se sumó una recomendación de gestores de contraseñas, destacando Bitwarden por ser open source.",
+    "links": ["https://gist.github.com/facmartoni/4f1b939458b160c988a8e853a398a788"]
   },
   {
     "title": "macch-babysit: cinco revisores de PR concurrentes en minutos",
     "date": "2026-05-23",
-    "summary": "Facundo García Martoni presentó su skill macch-babysit, que corre cinco proveedores de revisión de código en paralelo (CodeRabbit, Qodo, Bugbot, Vercel y React Review), reduciendo el tiempo de code review de varias horas a unos pocos minutos. También se habló de generar ADRs con grill-with-docs y de usar Sentry para monitoreo de errores en producción."
+    "summary": "Facundo García Martoni presentó su skill macch-babysit, que corre cinco proveedores de revisión de código en paralelo (CodeRabbit, Qodo, Bugbot, Vercel y React Review), reduciendo el tiempo de code review de varias horas a unos pocos minutos. También se habló de generar ADRs con grill-with-docs y de usar Sentry para monitoreo de errores en producción.",
+    "links": ["https://x.com/steipete/status/2058307930613518698"]
   },
   {
     "title": "Grammarly para pulir prompts y documentación técnica",
     "date": "2026-05-25",
-    "summary": "Facundo García Martoni recomendó Grammarly para pulir prompts y textos técnicos en inglés, manteniendo el estilo propio de redacción en lugar de delegarle la generación al modelo. Se comparó con las Writing Tools de Apple como alternativa gratuita disponible en macOS, con opiniones divididas sobre cuál resultaba más útil en el día a día."
+    "summary": "Facundo García Martoni recomendó Grammarly para pulir prompts y textos técnicos en inglés, manteniendo el estilo propio de redacción en lugar de delegarle la generación al modelo. Se comparó con las Writing Tools de Apple como alternativa gratuita disponible en macOS, con opiniones divididas sobre cuál resultaba más útil en el día a día.",
+    "links": ["https://grammarly.com"]
   },
   {
     "title": "Docker para React + Node y deploy a un VPS",
@@ -137,7 +165,8 @@
   {
     "title": "Opus 4.8 más agéntico y Codex \"UI-iza\" el git diff por commit",
     "date": "2026-05-28",
-    "summary": "Con la salida de Opus 4.8, los miembros lo describieron como más agéntico que su predecesor (itera más en tareas largas) aunque todavía con debilidades en casos borde. En paralelo, Facundo García Martoni celebró que Codex agregó la posibilidad de ver el diff por commit en su interfaz —\"UI-izó\" el git diff— lo que le permitió auditar mejor cambios generados durante un rebase. Facundo Padilla también mencionó Composer 2.5 Fast para ganar velocidad sin sacrificar demasiada calidad."
+    "summary": "Con la salida de Opus 4.8, los miembros lo describieron como más agéntico que su predecesor (itera más en tareas largas) aunque todavía con debilidades en casos borde. En paralelo, Facundo García Martoni celebró que Codex agregó la posibilidad de ver el diff por commit en su interfaz —\"UI-izó\" el git diff— lo que le permitió auditar mejor cambios generados durante un rebase. Facundo Padilla también mencionó Composer 2.5 Fast para ganar velocidad sin sacrificar demasiada calidad.",
+    "links": ["https://www.anthropic.com/news/claude-opus-4-8"]
   },
   {
     "title": "Permisos en Codex CLI: bypass de aprobaciones por sesión",
@@ -147,11 +176,17 @@
   {
     "title": "ModernSysacad: extensión open source para mejorar el Sysacad de la UTN",
     "date": "2026-05-29",
-    "summary": "Iñaki García compartió ModernSysacad, su extensión de código abierto que mejora la interfaz del Sysacad en varias regionales de la UTN (FRT, FRA, FRGP y FRRE), haciéndolo más práctico y visualmente agradable. Disponible para navegadores Chromium y Firefox, invitó a los miembros del grupo a colaborar en el repositorio."
+    "summary": "Iñaki García compartió ModernSysacad, su extensión de código abierto que mejora la interfaz del Sysacad en varias regionales de la UTN (FRT, FRA, FRGP y FRRE), haciéndolo más práctico y visualmente agradable. Disponible para navegadores Chromium y Firefox, invitó a los miembros del grupo a colaborar en el repositorio.",
+    "links": [
+      "https://github.com/inakigarcia1/modern-sysacad",
+      "https://chromewebstore.google.com/detail/modernsysacad/mabcfjnfkmedahekjndbbbnmmlodeccm",
+      "https://addons.mozilla.org/es-AR/firefox/addon/modernsysacad/"
+    ]
   },
   {
     "title": "PunaTech 2026: hackathon en Salta y charla sobre ingeniería con agentes",
     "date": "2026-05-30",
-    "summary": "Se desarrolló PunaTech 2026 en Salta, con un hackathon de dos días y una jornada general que reunió alrededor de 135 personas. Agustín Sánchez dio una charla sobre ingeniería de software con agentes, el workflow de Dizenz para llevar una app desde la idea hasta el release de producción y una guía para sobrevivir a la revolución de la IA en la industria del software. Facundo Padilla y otros miembros del grupo participaron como mentores y organizadores."
+    "summary": "Se desarrolló PunaTech 2026 en Salta, con un hackathon de dos días y una jornada general que reunió alrededor de 135 personas. Agustín Sánchez dio una charla sobre ingeniería de software con agentes, el workflow de Dizenz para llevar una app desde la idea hasta el release de producción y una guía para sobrevivir a la revolución de la IA en la industria del software. Facundo Padilla y otros miembros del grupo participaron como mentores y organizadores.",
+    "links": ["https://m.twitch.tv/saltadev2026"]
   }
 ]

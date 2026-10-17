@@ -1,18 +1,15 @@
-import prisma from '@/lib/prisma';
+import prisma, { typedNameOf } from '@/lib/prisma';
 import { ProfileForm } from '@components/profile/profile-form';
-import { Heading2 } from '@components/ui/heading-2';
-import {
-  Breadcrumb,
-  BreadcrumbList,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from '@/components/ui/breadcrumb';
-import { Separator } from '@/components/ui/separator';
-import { SidebarTrigger } from '@/components/ui/sidebar';
+import { TwoFactorSettings } from '@/components/auth/two-factor-settings';
+import { DeactivateAccount } from '@/components/profile/deactivate-account';
+import { PageTitle } from '@/components/ui/page-title';
+import { StickyHeader } from '@/components/ui/sticky-header';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
+import { findSession } from '@/lib/session';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = { title: 'whoami' };
 
 const Profile = async () => {
   const sessionId = (await cookies()).get('sessionId')?.value;
@@ -22,11 +19,7 @@ const Profile = async () => {
     redirect('/');
   }
 
-  const session = await prisma.session.findUnique({
-    where: {
-      id: sessionId,
-    },
-  });
+  const session = await findSession(sessionId);
 
   if (!session) {
     console.error('Usuario no autenticado, redireccionando a /home');
@@ -39,13 +32,21 @@ const Profile = async () => {
     },
     include: {
       languages: true,
+      positions: { orderBy: { order: 'asc' } },
+      stackItems: { select: { category: true, name: true } },
     },
   });
 
   if (!user) {
-    console.error('Usuario no encontrawdo, redireccionando a /home');
+    console.error('Usuario no encontrado, redireccionando a /home');
     redirect('/');
   }
+
+  // Only how many recovery codes are left; the codes themselves never leave the server.
+  const twoFactor = await prisma.user.findUnique({
+    where: { id: user.id },
+    select: { twoFactorRecoveryCodes: true },
+  });
 
   const userLanguages = user.languages
     ? user.languages.map((language) => ({
@@ -57,30 +58,28 @@ const Profile = async () => {
 
   return (
     <>
-      <header className="flex h-16 shrink-0 items-center gap-2">
-        <div className="flex items-center gap-2 px-4">
-          <SidebarTrigger />
-          <Separator orientation="vertical" className="mr-2 data-[orientation=vertical]:h-4" />
-          <Breadcrumb>
-            <BreadcrumbList>
-              <BreadcrumbItem className="hidden md:block">
-                <BreadcrumbLink href="/">Inicio</BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator className="hidden md:block" />
-              <BreadcrumbItem>
-                <BreadcrumbPage>Mi perfil</BreadcrumbPage>
-              </BreadcrumbItem>
-            </BreadcrumbList>
-          </Breadcrumb>
-        </div>
-      </header>
+      <div className="mt-4 px-4 md:px-10">
+        <StickyHeader className="md:-mx-10 md:px-10">
+          <PageTitle path="perfil" meta={user.email} />
+        </StickyHeader>
 
-      <div className="mt-4 px-6 md:px-20">
-        <div className="mb-4">
-          <Heading2>Mi perfil</Heading2>
-        </div>
+        <ProfileForm user={user} typedName={await typedNameOf(user.id)} languages={userLanguages} />
 
-        <ProfileForm user={user} languages={userLanguages} />
+        <div className="mt-8 mb-14 flex flex-col gap-6">
+          <div className="border border-pcnGreen-200 p-4">
+            <TwoFactorSettings
+              enabledAt={user.twoFactorEnabledAt?.toISOString() ?? null}
+              recoveryCodesLeft={twoFactor?.twoFactorRecoveryCodes?.length ?? 0}
+            />
+          </div>
+
+          {/* An admin has to hand over the role first; the action refuses it too. */}
+          {user.role !== 'ADMIN' && (
+            <div className="border border-dashed border-red-500/40 p-4">
+              <DeactivateAccount />
+            </div>
+          )}
+        </div>
       </div>
     </>
   );

@@ -1,33 +1,49 @@
 'use client';
 
 import {
+  Activity,
+  ChartPie,
+  Coffee,
+  MousePointerClick,
+  Gauge,
+  Link2,
   AlertTriangle,
   Bell,
+  BriefcaseBusiness,
   BookOpen,
   CalendarDays,
   Code2,
+  Contact,
   Eye,
   GraduationCap,
+  Handshake,
+  History,
   Home,
   Image,
-  Instagram,
+  MonitorSmartphone,
   LayoutDashboard,
   Layers,
   Library,
   LifeBuoy,
-  Linkedin,
   MessageCircle,
+  MessagesSquare,
+  MessageSquare,
+  MessageSquareHeart,
   MicVocal,
   Podcast,
   Rocket,
+  Rss,
   ScrollText,
-  Send,
   Share2,
+  Trophy,
   Users,
   Wrench,
-  Youtube,
 } from 'lucide-react';
-import { NavMain } from '@/components/ui/nav-main';
+import { Youtube } from '@/components/icons/brand-icons';
+import { useEffect } from 'react';
+import { GeistMono } from 'geist/font/mono';
+import Link from 'next/link';
+import { NavMain, type NavItem } from '@/components/ui/nav-main';
 import { NavUser } from '@/components/ui/nav-user';
 import {
   Sidebar,
@@ -37,235 +53,196 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  useSidebar,
 } from '@/components/ui/sidebar';
-import { User } from '@prisma/client';
+import { MobileNav } from '@/components/ui/mobile-nav';
+import type { SessionUser } from '@/lib/session';
+import { cn } from '@/lib/utils';
 import { NavSecondary } from './nav-secondary';
+import { InstallAppButton } from './install-app-button';
+import { OsClassicReturn } from '@/components/os/os-classic-return';
+import { consumeOpenSidebarRequest } from '@/components/os/os-display-mode';
+import { SearchTrigger } from '@/components/search/search-trigger';
+import { SidebarUpcomingEvents, type UpcomingEvent } from './sidebar-upcoming-events';
 
-interface UpcomingEvent {
-  id: string;
-  name: string;
-  date: Date;
-}
+/** A row of the sidebar's footer block: no own border or rounding, a hairline below. */
+const FOOTER_ROW = 'rounded-none border-0 border-b border-pcnGreen-200';
 
-const formatEventDate = (date: Date) => {
-  return new Intl.DateTimeFormat('es-AR', {
-    month: 'short',
-    day: 'numeric',
-  }).format(date);
-};
+const feedItem: NavItem = { title: 'Feed', url: '/feed', icon: Rss };
 
-const getHomeItem = () => {
-  return [
-    {
-      title: 'Inicio',
-      url: '/',
-      icon: Home,
-    },
-  ];
-};
+const homeItems: NavItem[] = [{ title: 'Inicio', url: '/', icon: Home }, feedItem];
 
-const getActividadesItems = (upcomingEvents: UpcomingEvent[] = []) => {
-  const eventItems = upcomingEvents.map((event) => ({
-    title: `${formatEventDate(event.date)} - ${event.name}`,
-    url: `/eventos/${event.id}`,
-  }));
+const actividadesItems: NavItem[] = [
+  { title: 'Eventos', url: '/eventos', icon: CalendarDays },
+  { title: 'Conversaciones', url: '/conversaciones', icon: MessageCircle },
+  { title: 'Foro', url: '/foro', icon: MessagesSquare },
+  { title: 'Consejos', url: '/consejos', icon: MessageSquare },
+  { title: 'Charlas', url: '/charlas', icon: MicVocal },
+  { title: 'Podcast', url: '/podcast', icon: Podcast },
+  { title: 'Desarrollo', url: '/desarrollo', icon: Code2 },
+  { title: 'Proyectos', url: '/proyectos', icon: Rocket },
+];
 
-  // Agregar "Ver todos" al final si hay eventos
-  if (eventItems.length > 0) {
-    eventItems.push({
-      title: 'Ver todos los eventos',
-      url: '/eventos',
-    });
-  }
-
-  return [
-    {
-      title: 'Eventos',
-      url: '/eventos',
-      icon: CalendarDays,
-      items: eventItems.length > 0 ? eventItems : undefined,
-    },
-    {
-      title: 'Conversaciones',
-      url: '/conversaciones',
-      icon: MessageCircle,
-    },
-    {
-      title: 'Charlas',
-      url: '/charlas',
-      icon: MicVocal,
-    },
-    {
-      title: 'Podcast',
-      url: '/podcast',
-      icon: Podcast,
-    },
-    {
-      title: 'Desarrollo',
-      url: '/desarrollo',
-      icon: Code2,
-    },
-  ];
-};
-
-const getRecursosItems = () => [
+const recursosItems: NavItem[] = [
   { title: 'Cursos', url: '/cursos', icon: GraduationCap },
   { title: 'Lectura', url: '/lectura', icon: BookOpen },
+  { title: 'Videos', url: '/videos', icon: Youtube },
   { title: 'Especialidades', url: '/especialidades', icon: Layers },
   { title: 'Herramientas', url: '/herramientas', icon: Wrench },
-  { title: 'Proyectos', url: '/proyectos', icon: Rocket },
+  { title: 'Entrevistas', url: '/entrevistas', icon: BriefcaseBusiness },
   {
     title: 'Más recursos',
     icon: Library,
     items: [
       { title: 'Influencers', url: '/influencers' },
       { title: 'Música', url: '/music' },
+      { title: 'Motivación', url: '/motivacion' },
       { title: 'Series y películas', url: '/series-y-peliculas' },
       { title: 'Preguntas frecuentes', url: '/preguntas-frecuentes' },
     ],
   },
 ];
 
-const socialNetworks = [
-  {
-    name: 'WhatsApp',
-    url: 'https://chat.whatsapp.com/IFwKhHXoMwM6ysKcbfHiEh',
-    icon: Send,
-  },
-  {
-    name: 'Discord',
-    url: 'https://discord.gg/dTQexKw56S',
-    icon: Send,
-  },
-  {
-    name: 'Instagram',
-    url: 'https://www.instagram.com/programa.con.nosotros/',
-    icon: Instagram,
-  },
-  // {
-  //   name: 'X',
-  //   url: 'https://x.com/programaconnos',
-  //   icon: X,
-  // },
-  {
-    name: 'YouTube',
-    url: 'https://www.youtube.com/@programaconnosotros2689/videos',
-    icon: Youtube,
-  },
-  {
-    name: 'LinkedIn',
-    url: 'https://www.linkedin.com/company/programaconnosotros/',
-    icon: Linkedin,
-  },
+export const socialNetworks = [
+  { title: 'WhatsApp', url: 'https://chat.whatsapp.com/IFwKhHXoMwM6ysKcbfHiEh' },
+  { title: 'Discord', url: 'https://discord.gg/dTQexKw56S' },
+  { title: 'Instagram', url: 'https://www.instagram.com/programa.con.nosotros/' },
+  { title: 'YouTube', url: 'https://www.youtube.com/@programaconnosotros2689/videos' },
+  { title: 'LinkedIn', url: 'https://www.linkedin.com/company/programaconnosotros/' },
 ];
 
-const getComunidadItems = () => {
-  return [
-    {
-      title: 'Historia',
-      url: '/historia',
-      icon: ScrollText,
-    },
-    {
-      title: 'Galería',
-      url: '/galeria',
-      icon: Image,
-    },
-    {
-      title: 'Redes',
-      icon: Share2,
-      items: socialNetworks.map(({ name, url }) => ({ title: name, url })),
-    },
-  ];
-};
+const comunidadItems: NavItem[] = [
+  { title: 'Historia', url: '/historia', icon: ScrollText },
+  { title: 'Miembros', url: '/miembros', icon: Contact },
+  { title: 'Logros', url: '/logros', icon: Trophy },
+  { title: 'Galería', url: '/galeria', icon: Image },
+  { title: 'Setups', url: '/setups', icon: MonitorSmartphone },
+  { title: 'Lugares', url: '/lugares', icon: Coffee },
+  { title: 'Partners', url: '/partners', icon: Handshake },
+  { title: 'Changelog', url: '/changelog', icon: History },
+  { title: 'Métricas', url: '/metricas', icon: Activity },
+  { title: 'Estadísticas', url: '/estadisticas', icon: ChartPie },
+  { title: 'Redes', icon: Share2, items: socialNetworks },
+];
 
-const getAdminItems = (unreadCount: number = 0) => {
-  return [
-    {
-      title: 'Usuarios',
-      url: '/usuarios',
-      icon: Users,
-    },
-    {
-      title: 'Analíticas',
-      url: '/analiticas',
-      icon: LayoutDashboard,
-    },
-    {
-      title: 'Visitas',
-      url: '/visitas',
-      icon: Eye,
-    },
-    {
-      title: 'Notificaciones',
-      url: '/notificaciones',
-      icon: Bell,
-      badge: unreadCount,
-    },
-    {
-      title: 'Monitoreo',
-      url: '/monitoreo',
-      icon: AlertTriangle,
-    },
-  ];
-};
+/** Each user's own notifications, under the feed; only with a session. */
+const notificationsItem = (unreadCount: number): NavItem => ({
+  title: 'Notificaciones',
+  url: '/notificaciones',
+  icon: Bell,
+  badge: unreadCount,
+});
 
-const data = {
-  navSecondary: [
-    {
-      title: 'Soporte',
-      url: 'https://wa.me/5493815777562',
-      icon: LifeBuoy,
-    },
-    {
-      title: 'Feedback',
-      url: 'https://wa.me/5493815777562',
-      icon: Send,
-    },
-  ],
-};
+const adminItems: NavItem[] = [
+  { title: 'Panel', url: '/admin', icon: Gauge },
+  { title: 'Usuarios', url: '/usuarios', icon: Users },
+  { title: 'Analíticas', url: '/analiticas', icon: LayoutDashboard },
+  { title: 'Visitas', url: '/visitas', icon: Eye },
+  { title: 'Monitoreo', url: '/monitoreo', icon: AlertTriangle },
+  { title: 'Vínculos', url: '/vinculos', icon: Link2 },
+  { title: 'Sponsors', url: '/admin/sponsors', icon: MousePointerClick },
+];
+
+export const secondaryItems = [
+  { title: 'Soporte', url: 'https://wa.me/5493815777562', icon: LifeBuoy },
+  { title: 'Feedback', url: 'https://wa.me/5493815777562', icon: MessageSquareHeart },
+];
 
 interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
-  user: User | null;
+  user: SessionUser | null;
   upcomingEvents?: UpcomingEvent[];
   unreadNotificationsCount?: number;
 }
 
 export function AppSidebar(props: AppSidebarProps) {
   const { user, upcomingEvents = [], unreadNotificationsCount = 0, ...sidebarProps } = props;
+  const { isMobile, setOpen } = useSidebar();
+
+  // Just switched from PCN OS to the classic layout: start with the navigation in view.
+  useEffect(() => {
+    if (!isMobile && consumeOpenSidebarRequest()) setOpen(true);
+  }, [isMobile, setOpen]);
+
+  if (isMobile)
+    return (
+      <MobileNav
+        user={user}
+        footerItems={secondaryItems}
+        sections={[
+          { label: 'Actividades', items: actividadesItems },
+          { label: 'Recursos', items: recursosItems },
+          {
+            label: 'Comunidad',
+            items: [
+              feedItem,
+              ...(user ? [notificationsItem(unreadNotificationsCount)] : []),
+              ...comunidadItems,
+            ],
+          },
+          ...(user?.role === 'ADMIN' ? [{ label: 'Administración', items: adminItems }] : []),
+        ]}
+      />
+    );
 
   return (
-    <Sidebar collapsible="offcanvas" variant="sidebar" {...sidebarProps}>
-      <SidebarHeader>
+    <Sidebar
+      collapsible="offcanvas"
+      variant="sidebar"
+      className="border-pcnGreen-200 **:data-[sidebar=sidebar]:bg-black"
+      {...sidebarProps}
+    >
+      <SidebarHeader className="px-3 pt-3 pb-1">
         <SidebarMenu>
-          <SidebarMenuItem className="-ml-2 mt-1.5 group-data-[collapsible=icon]:ml-0 group-data-[collapsible=icon]:mt-3.5">
-            <SidebarMenuButton size="lg" asChild>
-              <a href="#" className="flex items-center gap-3">
-                <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-black p-1 text-sidebar-primary-foreground">
+          <SidebarMenuItem>
+            <SidebarMenuButton
+              size="lg"
+              asChild
+              className="h-12 rounded-sm px-2 hover:bg-sidebar-accent/70"
+            >
+              <Link href="/" className="flex items-center gap-3">
+                <span className="relative flex size-9 shrink-0 items-center justify-center rounded-sm bg-black ring-1 ring-pcnGreen-400 ring-inset">
+                  <span className="absolute inset-0 rounded-sm bg-pcnGreen/20 blur-md" />
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src="/logo.webp" alt="programaConNosotros" />
-                </div>
-                <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold">programaConNosotros</span>
-                  <span className="text-xs text-muted-foreground">Impulsando desde 2020.</span>
-                </div>
-              </a>
+                  <img src="/logo.webp" alt="programaConNosotros" className="relative size-6" />
+                </span>
+                <span className="grid min-w-0 flex-1 text-left leading-tight">
+                  <span className="truncate font-mono text-[13px] font-semibold tracking-tight text-pcnGreen text-glow">
+                    programaConNosotros
+                  </span>
+                  <span
+                    className={cn(
+                      GeistMono.className,
+                      'truncate text-[10px] tracking-widest text-pcnGreen-500 uppercase',
+                    )}
+                  >
+                    Comunidad · desde 2020
+                  </span>
+                </span>
+              </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
+        <SearchTrigger className="mt-2" />
       </SidebarHeader>
-      <SidebarContent>
-        <NavMain items={getHomeItem()} />
-        <NavMain items={getActividadesItems(upcomingEvents)} label="Actividades" />
-        <NavMain items={getRecursosItems()} label="Recursos" />
-        <NavMain items={getComunidadItems()} label="Comunidad" />
-        {user?.role === 'ADMIN' && (
-          <NavMain items={getAdminItems(unreadNotificationsCount)} label="Administración" />
-        )}
-        <NavSecondary items={data.navSecondary} className="mt-auto" />
+
+      <SidebarContent className="scrollbar-thin gap-0 px-1">
+        <NavMain
+          items={user ? [...homeItems, notificationsItem(unreadNotificationsCount)] : homeItems}
+        />
+        <SidebarUpcomingEvents events={upcomingEvents} />
+        <NavMain items={actividadesItems} label="Actividades" />
+        <NavMain items={recursosItems} label="Recursos" />
+        <NavMain items={comunidadItems} label="Comunidad" />
+        {user?.role === 'ADMIN' && <NavMain items={adminItems} label="Administración" />}
       </SidebarContent>
-      <SidebarFooter>
-        <NavUser user={user} />
+
+      {/* One ruled block flush with the sidebar's edges: the rows share their hairlines with each
+          other and with the sidebar itself instead of sitting in a box of their own. */}
+      <SidebarFooter className="gap-0 border-t border-pcnGreen-200 bg-black/40 p-0">
+        <InstallAppButton className={FOOTER_ROW} />
+        <OsClassicReturn className={FOOTER_ROW} />
+        <NavSecondary items={secondaryItems} className="p-0" flush />
+        <NavUser user={user} flush />
       </SidebarFooter>
     </Sidebar>
   );

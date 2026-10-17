@@ -1,678 +1,363 @@
 'use client';
 
+import { EmptyState } from '@/components/empty-state';
+import { PageTitle } from '@/components/ui/page-title';
+import { StickyHeader } from '@/components/ui/sticky-header';
+import { CollapsibleFilters } from '@/components/ui/collapsible-filters';
+import { RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
+import { SearchBar } from '@/components/ui/search-bar';
+import { Button } from '@/components/ui/button';
 import { dateContainsString } from '@/lib/date-formatter';
-import { useRouter } from 'next/navigation';
-import { useEffect, useMemo, useState } from 'react';
+import type { GalleryFilterOptions, GalleryTile } from '@/lib/gallery';
+import { galleryQuery, isFiltered, type GalleryFilter } from '@/lib/gallery-filters';
+import { cn } from '@/lib/utils';
+import { Check, Hourglass, ImagePlus, ListChecks } from 'lucide-react';
+import Link from 'next/link';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { GalleryBulkBar } from './gallery-bulk-bar';
+import { GalleryFilters } from './gallery-filters';
+import type { EventOption } from './photo-event-select';
 import { PhotoCard } from './photo-card';
-import { PhotoDialog } from './photo-dialog';
-import { SearchBar } from './search-bar';
+import { photoCaption } from './photo-utils';
+import { ShareDialog } from './share-dialog';
 
-const photos = [
-  {
-    id: 1,
-    title: 'Agus y Chelo dando una charla de ingeniería de software en Tafí Viejo',
-    image: '/photos/agus-chelo-talk.webp',
-    date: new Date(2023, 11, 24),
-  },
-  {
-    id: 2,
-    title: 'Agus, Chelo y Tobi resolviendo problemas con Docker en la web de PCN',
-    image: '/photos/agus-chelo-tobias-watch-pc.webp',
-    date: new Date(2024, 6, 30),
-  },
-  {
-    id: 3,
-    title: 'Agus luego de dar una lightning talk virtual en la pandemia',
-    image: '/photos/agus-init.webp',
-    date: new Date(2024, 11, 27),
-  },
-  {
-    id: 4,
-    title: 'Agus desarrollando la web de PCN',
-    image: '/photos/agus-pc.webp',
-    date: new Date(2024, 6, 30),
-  },
-  {
-    id: 5,
-    title: 'Agus dando una charla de DDD y arquitectura hexagonal en la UTN-FRT',
-    image: '/photos/agus-talk.webp',
-    date: new Date(2024, 9, 16),
-  },
-  {
-    id: 6,
-    title: 'Cena de founders de PCN',
-    image: '/photos/boys-having-a-snack.webp',
-    date: new Date(2024, 2, 15),
-  },
-  {
-    id: 7,
-    title: 'Chelo dando una charla de paradigmas de programación en la UTN-FRT',
-    image: '/photos/chelo-watch-pc.webp',
-    date: new Date(2024, 2, 15),
-  },
-  {
-    id: 8,
-    title: 'Noche de hamburguesas en la casa de Tobi',
-    image: '/photos/leno-time.webp',
-    date: new Date(2024, 2, 15),
-  },
-  {
-    id: 9,
-    title: 'Mauri dando una charla sobre diseño en la UTN-FRT',
-    image: '/photos/mauricio-talk.webp',
-    date: new Date(2024, 2, 15),
-  },
-  {
-    id: 10,
-    title: 'Agus, Facu y Chelo luego de una charla en Tafí Viejo',
-    image: '/photos/photo-casual.webp',
-    date: new Date(2024, 2, 15),
-  },
-  {
-    id: 11,
-    title: 'Esteban enseñando algoritmos de ordenamiento en la UTN-FRT',
-    image: '/photos/talk-class.webp',
-    date: new Date(2024, 2, 15),
-  },
-  {
-    id: 12,
-    title: 'Tobi dando una charla sobre unit testing en la UTN-FRT',
-    image: '/photos/tobias-talk.webp',
-    date: new Date(2024, 2, 15),
-  },
-  {
-    id: 13,
-    title: 'Tobi dando una charla sobre depuración de código en la UTN-FRT',
-    image: '/photos/tobias-watch-pc.webp',
-    date: new Date(2024, 2, 15),
-  },
-  {
-    id: 14,
-    title: 'Evento de PCN',
-    image: '/IMG_2332.webp',
-    date: new Date(2024, 2, 15),
-  },
-  {
-    id: 15,
-    title: 'Evento de PCN',
-    image: '/IMG_8943.webp',
-    date: new Date(2024, 2, 15),
-  },
-  {
-    id: 16,
-    title: 'Header de PCN',
-    image: '/pcn-header.webp',
-    date: new Date(2024, 2, 15),
-  },
-  {
-    id: 17,
-    title: 'Mauri y Tobi en un evento de PCN',
-    image: '/mauri-y-tobias.webp',
-    date: new Date(2024, 2, 15),
-  },
-  {
-    id: 18,
-    title: 'Miembros de PCN programando',
-    image: '/programando-1.webp',
-    date: new Date(2024, 2, 15),
-  },
-  {
-    id: 19,
-    title: 'Pre Lightning Talks',
-    image: '/pre-lightning-talks.webp',
-    date: new Date(2024, 2, 15),
-  },
-  {
-    id: 20,
-    title: 'Evento de PCN',
-    image: '/IMG_9143.webp',
-    date: new Date(2024, 2, 15),
-  },
-  {
-    id: 21,
-    title: 'Juntada de PCN',
-    image: '/juntada.webp',
-    date: new Date(2024, 2, 15),
-  },
-  {
-    id: 22,
-    title: 'Evento de PCN',
-    image: '/IMG_9119.webp',
-    date: new Date(2024, 2, 15),
-  },
-  {
-    id: 23,
-    title: 'Agus dando una lightning talk',
-    image: '/agus-lightning-talk-1.webp',
-    date: new Date(2024, 2, 15),
-  },
-  {
-    id: 24,
-    title: 'Evento de PCN',
-    image: '/galeria/814a45cf-d0dd-43f6-b4aa-8a3b93b4b6c7.webp',
-    date: new Date(2024, 2, 15),
-  },
-  {
-    id: 25,
-    title: 'Evento de PCN',
-    image: '/galeria/FullSizeRender (1).webp',
-    date: new Date(2024, 2, 15),
-  },
-  {
-    id: 26,
-    title: 'Evento de PCN',
-    image: '/galeria/IMG_0620.webp',
-    date: new Date(2024, 2, 15),
-  },
-  {
-    id: 27,
-    title: 'Evento de PCN',
-    image: '/galeria/IMG_1076.webp',
-    date: new Date(2024, 2, 15),
-  },
-  {
-    id: 28,
-    title: 'Evento de PCN',
-    image: '/galeria/IMG_1099.webp',
-    date: new Date(2024, 2, 15),
-  },
-  {
-    id: 29,
-    title: 'Evento de PCN',
-    image: '/galeria/IMG_1113.webp',
-    date: new Date(2024, 2, 15),
-  },
-  {
-    id: 30,
-    title: 'Evento de PCN',
-    image: '/galeria/IMG_1150.webp',
-    date: new Date(2024, 2, 15),
-  },
-  {
-    id: 31,
-    title: 'Evento de PCN',
-    image: '/galeria/IMG_2275.webp',
-    date: new Date(2024, 2, 15),
-  },
-  {
-    id: 32,
-    title: 'Evento de PCN',
-    image: '/galeria/IMG_2322.webp',
-    date: new Date(2024, 2, 15),
-  },
-  {
-    id: 33,
-    title: 'Evento de PCN',
-    image: '/galeria/IMG_2345.webp',
-    date: new Date(2024, 2, 15),
-  },
-  {
-    id: 34,
-    title: 'Evento de PCN',
-    image: '/galeria/IMG_2420.webp',
-    date: new Date(2024, 2, 15),
-  },
-  {
-    id: 35,
-    title: 'Evento de PCN',
-    image: '/galeria/IMG_2482.webp',
-    date: new Date(2024, 2, 15),
-  },
-  {
-    id: 36,
-    title: 'Evento de PCN',
-    image: '/galeria/IMG_2496.webp',
-    date: new Date(2024, 2, 15),
-  },
-  {
-    id: 37,
-    title: 'Evento de PCN',
-    image: '/galeria/IMG_2497.webp',
-    date: new Date(2024, 2, 15),
-  },
-  {
-    id: 38,
-    title: 'Evento de PCN',
-    image: '/galeria/IMG_3046.webp',
-    date: new Date(2024, 2, 15),
-  },
-  {
-    id: 39,
-    title: 'Evento de PCN',
-    image: '/galeria/IMG_3048.webp',
-    date: new Date(2024, 2, 15),
-  },
-  {
-    id: 40,
-    title: 'Evento de PCN',
-    image: '/galeria/IMG_3082.webp',
-    date: new Date(2024, 2, 15),
-  },
-  {
-    id: 41,
-    title: 'Evento de PCN',
-    image: '/galeria/IMG_3084.webp',
-    date: new Date(2024, 2, 15),
-  },
-  {
-    id: 42,
-    title: 'Evento de PCN',
-    image: '/galeria/IMG_3087.webp',
-    date: new Date(2024, 2, 15),
-  },
-  {
-    id: 43,
-    title: 'Evento de PCN',
-    image: '/galeria/IMG_3088.webp',
-    date: new Date(2024, 2, 15),
-  },
-  {
-    id: 44,
-    title: 'Evento de PCN',
-    image: '/galeria/IMG_3097.webp',
-    date: new Date(2024, 2, 15),
-  },
-  {
-    id: 45,
-    title: 'Evento de PCN',
-    image: '/galeria/IMG_3220.webp',
-    date: new Date(2024, 2, 15),
-  },
-  {
-    id: 46,
-    title: 'Evento de PCN',
-    image: '/galeria/IMG_3653.webp',
-    date: new Date(2024, 2, 15),
-  },
-  {
-    id: 47,
-    title: 'Evento de PCN',
-    image: '/galeria/IMG_3660.webp',
-    date: new Date(2024, 2, 15),
-  },
-  {
-    id: 48,
-    title: 'Evento de PCN',
-    image: '/galeria/IMG_4254.webp',
-    date: new Date(2024, 2, 15),
-  },
-  {
-    id: 49,
-    title: 'Evento de PCN',
-    image: '/galeria/IMG_4322.webp',
-    date: new Date(2024, 2, 15),
-  },
-  {
-    id: 50,
-    title: 'Evento de PCN',
-    image: '/galeria/IMG_4695.webp',
-    date: new Date(2024, 2, 15),
-  },
-  {
-    id: 51,
-    title: 'Evento de PCN',
-    image: '/galeria/IMG_4707.webp',
-    date: new Date(2024, 2, 15),
-  },
-  {
-    id: 52,
-    title: 'Evento de PCN',
-    image: '/galeria/IMG_4763.webp',
-    date: new Date(2024, 2, 15),
-  },
-  {
-    id: 53,
-    title: 'Evento de PCN',
-    image: '/galeria/IMG_4766.webp',
-    date: new Date(2024, 2, 15),
-  },
-  {
-    id: 54,
-    title: 'Evento de PCN',
-    image: '/galeria/IMG_4872.webp',
-    date: new Date(2024, 2, 15),
-  },
-  {
-    id: 55,
-    title: 'Evento de PCN',
-    image: '/galeria/IMG_4881.webp',
-    date: new Date(2024, 2, 15),
-  },
-  {
-    id: 56,
-    title: 'Evento de PCN',
-    image: '/galeria/IMG_4900.webp',
-    date: new Date(2024, 2, 15),
-  },
-  {
-    id: 57,
-    title: 'Evento de PCN',
-    image: '/galeria/IMG_5142.webp',
-    date: new Date(2024, 2, 15),
-  },
-  {
-    id: 58,
-    title: 'Evento de PCN',
-    image: '/galeria/IMG_5166.webp',
-    date: new Date(2024, 2, 15),
-  },
-  {
-    id: 59,
-    title: 'Evento de PCN',
-    image: '/galeria/IMG_5180.webp',
-    date: new Date(2024, 2, 15),
-  },
-  {
-    id: 60,
-    title: 'Evento de PCN',
-    image: '/galeria/IMG_5188.webp',
-    date: new Date(2024, 2, 15),
-  },
-  {
-    id: 61,
-    title: 'Evento de PCN',
-    image: '/galeria/IMG_5191.webp',
-    date: new Date(2024, 2, 15),
-  },
-  {
-    id: 62,
-    title: 'Evento de PCN',
-    image: '/galeria/IMG_5751.webp',
-    date: new Date(2024, 2, 15),
-  },
-  {
-    id: 63,
-    title: 'Evento de PCN',
-    image: '/galeria/IMG_5917.webp',
-    date: new Date(2024, 2, 15),
-  },
-  {
-    id: 64,
-    title: 'Evento de PCN',
-    image: '/galeria/IMG_6719.webp',
-    date: new Date(2024, 2, 15),
-  },
-  {
-    id: 65,
-    title: 'Evento de PCN',
-    image: '/galeria/IMG_7611.webp',
-    date: new Date(2024, 2, 15),
-  },
-  {
-    id: 66,
-    title: 'Evento de PCN',
-    image: '/galeria/IMG_8414.webp',
-    date: new Date(2024, 2, 15),
-  },
-  {
-    id: 67,
-    title: 'Evento de PCN',
-    image: '/galeria/IMG_8723.webp',
-    date: new Date(2024, 2, 15),
-  },
-  {
-    id: 68,
-    title: 'Evento de PCN',
-    image: '/galeria/IMG_8740.webp',
-    date: new Date(2024, 2, 15),
-  },
-  {
-    id: 69,
-    title: 'Evento de PCN',
-    image: '/galeria/IMG_8824.webp',
-    date: new Date(2024, 2, 15),
-  },
-  {
-    id: 70,
-    title: 'Evento de PCN',
-    image: '/galeria/IMG_8870.webp',
-    date: new Date(2024, 2, 15),
-  },
-  {
-    id: 71,
-    title: 'Evento de PCN',
-    image: '/galeria/IMG_8936.webp',
-    date: new Date(2024, 2, 15),
-  },
-  {
-    id: 72,
-    title: 'Evento de PCN',
-    image: '/galeria/IMG_8945.webp',
-    date: new Date(2024, 2, 15),
-  },
-  {
-    id: 73,
-    title: 'Evento de PCN',
-    image: '/galeria/IMG_8949.webp',
-    date: new Date(2024, 2, 15),
-  },
-  {
-    id: 74,
-    title: 'Evento de PCN',
-    image: '/galeria/IMG_8955.webp',
-    date: new Date(2024, 2, 15),
-  },
-  {
-    id: 75,
-    title: 'Evento de PCN',
-    image: '/galeria/IMG_8968.webp',
-    date: new Date(2024, 2, 15),
-  },
-  {
-    id: 76,
-    title: 'Evento de PCN',
-    image: '/galeria/IMG_8973.webp',
-    date: new Date(2024, 2, 15),
-  },
-  {
-    id: 77,
-    title: 'Evento de PCN',
-    image: '/galeria/IMG_8975.webp',
-    date: new Date(2024, 2, 15),
-  },
-  {
-    id: 78,
-    title: 'Evento de PCN',
-    image: '/galeria/IMG_8985.webp',
-    date: new Date(2024, 2, 15),
-  },
-  {
-    id: 79,
-    title: 'Evento de PCN',
-    image: '/galeria/IMG_8999 (1).webp',
-    date: new Date(2024, 2, 15),
-  },
-  {
-    id: 80,
-    title: 'Evento de PCN',
-    image: '/galeria/IMG_8999.webp',
-    date: new Date(2024, 2, 15),
-  },
-  {
-    id: 81,
-    title: 'Evento de PCN',
-    image: '/galeria/IMG_9011.webp',
-    date: new Date(2024, 2, 15),
-  },
-  {
-    id: 82,
-    title: 'Evento de PCN',
-    image: '/galeria/IMG_9025.webp',
-    date: new Date(2024, 2, 15),
-  },
-  {
-    id: 83,
-    title: 'Evento de PCN',
-    image: '/galeria/IMG_9031.webp',
-    date: new Date(2024, 2, 15),
-  },
-  {
-    id: 84,
-    title: 'Evento de PCN',
-    image: '/galeria/IMG_9040.webp',
-    date: new Date(2024, 2, 15),
-  },
-  {
-    id: 85,
-    title: 'Evento de PCN',
-    image: '/galeria/IMG_9076.webp',
-    date: new Date(2024, 2, 15),
-  },
-  {
-    id: 86,
-    title: 'Evento de PCN',
-    image: '/galeria/IMG_9104.webp',
-    date: new Date(2024, 2, 15),
-  },
-  {
-    id: 87,
-    title: 'Evento de PCN',
-    image: '/galeria/IMG_9109.webp',
-    date: new Date(2024, 2, 15),
-  },
-  {
-    id: 88,
-    title: 'Evento de PCN',
-    image: '/galeria/IMG_9113.webp',
-    date: new Date(2024, 2, 15),
-  },
-  {
-    id: 89,
-    title: 'Evento de PCN',
-    image: '/galeria/IMG_9123.webp',
-    date: new Date(2024, 2, 15),
-  },
-  {
-    id: 90,
-    title: 'Evento de PCN',
-    image: '/galeria/IMG_9261.webp',
-    date: new Date(2024, 2, 15),
-  },
-  {
-    id: 91,
-    title: 'Evento de PCN',
-    image: '/galeria/IMG_9308.webp',
-    date: new Date(2024, 2, 15),
-  },
-  {
-    id: 92,
-    title: 'Evento de PCN',
-    image: '/galeria/IMG_9512.webp',
-    date: new Date(2024, 2, 15),
-  },
-  {
-    id: 93,
-    title: 'Evento de PCN',
-    image: '/galeria/photo_2019-10-14_01-58-24.webp',
-    date: new Date(2024, 2, 15),
-  },
-  {
-    id: 94,
-    title: 'Evento de PCN',
-    image: '/IMG_1457.webp',
-    date: new Date(2024, 2, 15),
-  },
-];
+// Lowercase without accents, so `tafi` finds `Tafí`.
+const normalize = (text: string) =>
+  text
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase();
 
-interface GalleryProps {
-  initialPhotoId?: number | null;
+const plural = (count: number, one: string, many: string) => `${count} ${count === 1 ? one : many}`;
+
+/** Tiles mounted at first and added each time the end of the grid comes near. */
+export const GALLERY_PAGE_SIZE = 24;
+/** The first row loads eagerly: it's what the page opens with. */
+const EAGER_TILES = 4;
+
+/**
+ * How many of `total` tiles to mount: a page at first and another one each time the sentinel
+ * comes within a screen of the viewport. Resets when `resetKey` changes (a new search).
+ */
+function useIncrementalCount(total: number, resetKey: string) {
+  const [count, setCount] = useState(GALLERY_PAGE_SIZE);
+  const [prevKey, setPrevKey] = useState(resetKey);
+  const sentinelRef = useRef<HTMLDivElement>(null);
+  if (prevKey !== resetKey) {
+    setPrevKey(resetKey);
+    setCount(GALLERY_PAGE_SIZE);
+  }
+
+  useEffect(() => {
+    const sentinel = sentinelRef.current;
+    if (!sentinel || count >= total || typeof IntersectionObserver === 'undefined') return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((entry) => entry.isIntersecting))
+          setCount((current) => Math.min(total, current + GALLERY_PAGE_SIZE));
+      },
+      { rootMargin: '100% 0px' },
+    );
+    observer.observe(sentinel);
+    return () => observer.disconnect();
+  }, [count, total]);
+
+  return { count: Math.min(count, total), sentinelRef };
 }
 
-export function Gallery({ initialPhotoId }: GalleryProps) {
-  const router = useRouter();
-  const [selectedPhotoIndex, setSelectedPhotoIndex] = useState<number>(-1);
+interface GalleryProps {
+  items: GalleryTile[];
+  filter: GalleryFilter;
+  options: GalleryFilterOptions;
+  /** Anyone logged in: what members upload waits for an admin. */
+  canUpload: boolean;
+  /** Every event, for admins: enables selecting many items to edit them at once. */
+  events: EventOption[] | null;
+  /** For admins: how many members' uploads wait for review. */
+  pendingCount?: number | null;
+}
+
+// The community's photos and videos, mixed and newest first, filterable by type, event and
+// person (in the URL) and searchable by text.
+export function Gallery({
+  items,
+  filter,
+  options,
+  canUpload,
+  events,
+  pendingCount = null,
+}: GalleryProps) {
+  const [sharedItem, setSharedItem] = useState<GalleryTile | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
-  const isDialogOpen = selectedPhotoIndex !== -1;
+  // Admins' bulk editing: while selecting, a click on a tile toggles it instead of opening it.
+  const [isSelecting, setIsSelecting] = useState(false);
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  // Where the last click landed, so shift + click selects the whole range up to it.
+  const [anchor, setAnchor] = useState<number | null>(null);
 
-  // Filter photos based on search query
-  const filteredPhotos = useMemo(() => {
-    if (!searchQuery.trim()) return [...photos];
+  const event = options.events.find(({ id }) => id === filter.eventId) ?? null;
+  const query = galleryQuery(filter);
 
-    const query = searchQuery.toLowerCase().trim();
-    return photos.filter(
-      (photo) =>
-        photo.title.toLowerCase().includes(query) ||
-        (photo.date && dateContainsString(photo.date, query)),
+  const filteredItems = useMemo(() => {
+    const search = normalize(searchQuery.trim());
+    if (!search) return items;
+
+    return items.filter(
+      (item) =>
+        normalize(item.description ?? '').includes(search) ||
+        normalize(item.event?.name ?? '').includes(search) ||
+        item.tags.some((tag) => normalize(tag.user.name).includes(search)) ||
+        dateContainsString(item.takenAt, search),
     );
-  }, [searchQuery]);
+  }, [items, searchQuery]);
 
-  // Use filtered photos
-  const sortedPhotos = filteredPhotos;
+  // Only what's still in the gallery (and on screen) counts: a refresh or a search can hide items.
+  const selected = filteredItems.filter((item) => selectedIds.has(item.id));
 
-  // Open photo dialog when initialPhotoId is provided
+  // Hundreds of tiles (each an image, with its hover effects) mount a page at a time.
+  const { count: shownCount, sentinelRef } = useIncrementalCount(
+    filteredItems.length,
+    searchQuery.trim(),
+  );
+  const shownItems = filteredItems.slice(0, shownCount);
+
+  const exitSelection = () => {
+    setIsSelecting(false);
+    setSelectedIds(new Set());
+    setAnchor(null);
+  };
+
   useEffect(() => {
-    if (initialPhotoId) {
-      const photoIndex = sortedPhotos.findIndex((photo) => photo.id === initialPhotoId);
-      if (photoIndex !== -1) {
-        setSelectedPhotoIndex(photoIndex);
+    if (!isSelecting) return;
+    const onKeyDown = (event: KeyboardEvent) => {
+      // Esc inside a dialog or a dropdown closes that, not the selection.
+      if (event.key === 'Escape' && !document.querySelector('[role="dialog"],[role="listbox"]')) {
+        exitSelection();
       }
-    }
-  }, [initialPhotoId, sortedPhotos]);
+    };
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [isSelecting]);
 
-  const handlePhotoClick = (index: number) => {
-    const photo = sortedPhotos[index];
-    // Update URL with photo ID
-    router.push(`?foto=${photo.id}`, { scroll: false });
-    setSelectedPhotoIndex(index);
+  const toggle = (index: number, range: boolean) => {
+    const id = filteredItems[index].id;
+    setSelectedIds((current) => {
+      const next = new Set(current);
+      if (range && anchor !== null) {
+        // The range takes the state of the item where it started.
+        const select = current.has(filteredItems[anchor]?.id);
+        const [from, to] = anchor < index ? [anchor, index] : [index, anchor];
+        filteredItems
+          .slice(from, to + 1)
+          .forEach((item) => (select ? next.add(item.id) : next.delete(item.id)));
+      } else if (next.has(id)) {
+        next.delete(id);
+      } else {
+        next.add(id);
+      }
+      return next;
+    });
+    setAnchor(index);
   };
 
-  const handleCloseDialog = () => {
-    // Remove photo ID from URL
-    router.push('/galeria', { scroll: false });
-    setSelectedPhotoIndex(-1);
-  };
-
-  const handleNavigate = (index: number) => {
-    const photo = sortedPhotos[index];
-    // Update URL with new photo ID
-    router.push(`?foto=${photo.id}`, { scroll: false });
-    setSelectedPhotoIndex(index);
-  };
-
-  const getShareUrl = (photoId: number) => {
-    // Create absolute URL for sharing
-    const baseUrl = typeof window !== 'undefined' ? window.location.origin : '';
-    return `${baseUrl}/galeria?foto=${photoId}`;
-  };
+  const photoCount = items.filter((item) => item.kind === 'PHOTO').length;
+  const videoCount = items.length - photoCount;
 
   return (
     <>
-      <div className="mb-6 flex justify-center">
-        <SearchBar
-          searchQuery={searchQuery}
-          setSearchQuery={setSearchQuery}
-          placeholder="Buscar por título o fecha..."
+      <StickyHeader className="mt-4">
+        <PageTitle
+          path={event ? [{ label: 'galeria', href: '/galeria' }, { label: event.name }] : 'galeria'}
+          meta={`${plural(photoCount, 'foto', 'fotos')} · ${plural(videoCount, 'video', 'videos')}`}
+          action={
+            <>
+              {events && items.length > 0 && (
+                <Button
+                  variant={isSelecting ? 'pcn' : 'outline'}
+                  size="sm"
+                  onClick={() => (isSelecting ? exitSelection() : setIsSelecting(true))}
+                  aria-pressed={isSelecting}
+                  className="flex items-center gap-1.5 font-mono"
+                >
+                  <ListChecks className="h-4 w-4" />
+                  {/* Icon only on phones, so the actions fit next to the meta. */}
+                  <span className="max-sm:sr-only">{isSelecting ? 'listo' : 'seleccionar'}</span>
+                </Button>
+              )}
+              {!!pendingCount && (
+                <Link href="/galeria/pendientes">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="flex items-center gap-1.5 font-mono"
+                  >
+                    <Hourglass className="h-4 w-4" />
+                    <span className="max-sm:sr-only">pendientes</span>
+                    <span className="text-pcnGreen">{pendingCount}</span>
+                  </Button>
+                </Link>
+              )}
+              {canUpload && (
+                <Link
+                  href={
+                    event
+                      ? `/galeria/subir?evento=${event.id}`
+                      : filter.type === 'trabajando'
+                        ? '/galeria/subir?trabajando=1'
+                        : '/galeria/subir'
+                  }
+                >
+                  <Button variant="pcn" size="sm" className="flex items-center gap-1.5">
+                    <ImagePlus className="h-4 w-4" />
+                    subir();
+                  </Button>
+                </Link>
+              )}
+            </>
+          }
         />
-      </div>
 
-      {sortedPhotos.length === 0 ? (
-        <div className="py-12 text-center">
-          <p className="text-gray-500">
-            No se encontraron fotos que coincidan con &quot;{searchQuery}&quot;
-          </p>
-        </div>
+        <CollapsibleFilters
+          className="mb-4"
+          // Type, event and person stay on their own row above the search on wide screens.
+          panelClassName="md:order-first md:basis-full"
+          activeCount={
+            Number(filter.type !== 'todo') + Number(!!filter.eventId) + Number(!!filter.userId)
+          }
+          search={
+            <SearchBar
+              searchQuery={searchQuery}
+              setSearchQuery={setSearchQuery}
+              placeholder="descripción, evento, persona o fecha"
+              label="Buscar en la galería"
+            />
+          }
+          aside={
+            <p className="font-mono text-xs text-muted-foreground tabular-nums" aria-live="polite">
+              {searchQuery.trim() ? (
+                <>
+                  <span className="text-pcnGreen">{filteredItems.length}</span>/{items.length}{' '}
+                  coincidencias
+                </>
+              ) : (
+                <>
+                  ls -la <span className="text-pcnGreen-600">./galeria{query}</span>
+                </>
+              )}
+            </p>
+          }
+        >
+          <GalleryFilters filter={filter} options={options} />
+        </CollapsibleFilters>
+      </StickyHeader>
+
+      {items.length === 0 ? (
+        <EmptyState
+          command="ls ~/galeria"
+          title={
+            isFiltered(filter) ? 'No hay nada con estos filtros' : 'Todavía no hay fotos ni videos'
+          }
+          description={
+            isFiltered(filter)
+              ? 'Probá con otro evento, año o persona.'
+              : 'Subí las fotos de los eventos para que queden en la memoria de la comunidad.'
+          }
+          action={
+            isFiltered(filter) && (
+              <Link href="/galeria" className="text-pcnGreen hover:underline">
+                cd ~/galeria --todo
+              </Link>
+            )
+          }
+        />
+      ) : filteredItems.length === 0 ? (
+        <EmptyState
+          command={`grep -i "${searchQuery}" ~/galeria`}
+          output="0 coincidencias"
+          title="Ninguna foto coincide con la búsqueda"
+          description="Probá con el nombre de un evento, un lugar o una persona."
+        />
       ) : (
-        <div className="grid grid-cols-2 gap-0 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
-          {sortedPhotos.map((photo, index) => (
-            <div key={photo.id} className="cursor-pointer">
-              <PhotoCard
-                photo={photo}
-                getShareUrl={getShareUrl}
-                onCardClick={() => handlePhotoClick(index)}
-              />
+        <div className="mb-14">
+          {/* Big enough to see the photos: one per row on phones, up to three on large screens. */}
+          <RuledGrid className="grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
+            {shownItems.map((item, index) => {
+              const isSelected = selectedIds.has(item.id);
+              return (
+                <div key={item.id} className={cn(ruledCellClassName, 'relative p-1')}>
+                  <PhotoCard
+                    photo={item}
+                    index={index}
+                    total={filteredItems.length}
+                    priority={index < EAGER_TILES}
+                    href={`/galeria/${item.id}${query}`}
+                    onShare={() => setSharedItem(item)}
+                  />
+                  {isSelecting && (
+                    <button
+                      type="button"
+                      onClick={(event) => toggle(index, event.shiftKey)}
+                      aria-pressed={isSelected}
+                      aria-label={`Seleccionar ${photoCaption(item)}`}
+                      className={cn(
+                        'absolute inset-1 z-10 flex items-start justify-end p-1.5 transition-colors focus-visible:ring-2 focus-visible:ring-pcnGreen focus-visible:outline-hidden focus-visible:ring-inset',
+                        isSelected
+                          ? 'bg-pcnGreen/15 ring-2 ring-pcnGreen ring-inset'
+                          : 'bg-black/30 hover:bg-black/10',
+                      )}
+                    >
+                      <span
+                        className={cn(
+                          'flex size-5 items-center justify-center rounded-sm border transition-colors',
+                          isSelected
+                            ? 'border-pcnGreen bg-pcnGreen text-black'
+                            : 'border-white/70 bg-black/60',
+                        )}
+                      >
+                        {isSelected && <Check className="size-3.5" strokeWidth={3} />}
+                      </span>
+                    </button>
+                  )}
+                </div>
+              );
+            })}
+          </RuledGrid>
+          {shownCount < filteredItems.length && (
+            <div
+              ref={sentinelRef}
+              aria-hidden
+              className="flex h-16 items-center justify-center font-mono text-[11px] text-muted-foreground"
+            >
+              cargando {shownCount}/{filteredItems.length}…
             </div>
-          ))}
+          )}
+
+          {isSelecting && events && (
+            <GalleryBulkBar
+              selected={selected}
+              visibleCount={filteredItems.length}
+              events={events}
+              onSelectAll={() => setSelectedIds(new Set(filteredItems.map((item) => item.id)))}
+              onClear={() => setSelectedIds(new Set())}
+              onExit={exitSelection}
+              onDeleted={(ids) =>
+                setSelectedIds((current) => {
+                  const next = new Set(current);
+                  ids.forEach((id) => next.delete(id));
+                  return next;
+                })
+              }
+            />
+          )}
         </div>
       )}
 
-      {isDialogOpen && (
-        <PhotoDialog
-          photos={sortedPhotos}
-          currentPhotoIndex={selectedPhotoIndex}
-          isOpen={isDialogOpen}
-          onClose={handleCloseDialog}
-          onNavigate={handleNavigate}
-          getShareUrl={getShareUrl}
+      {sharedItem && (
+        <ShareDialog
+          isOpen
+          onClose={() => setSharedItem(null)}
+          url={`${window.location.origin}/galeria/${sharedItem.id}`}
+          title={photoCaption(sharedItem)}
         />
       )}
     </>

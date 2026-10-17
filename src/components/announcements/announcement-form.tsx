@@ -2,7 +2,11 @@
 
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { announcementSchema, AnnouncementFormData } from '@/schemas/announcement-schema';
+import {
+  announcementSchema,
+  AnnouncementFormData,
+  AnnouncementFormInput,
+} from '@/schemas/announcement-schema';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -22,9 +26,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Announcement } from '@prisma/client';
-import { format } from 'date-fns';
-import { es } from 'date-fns/locale';
+import { Announcement } from '@/generated/prisma/browser';
+import { EventOptionLabel } from '@/components/events/event-option-label';
 
 interface EventOption {
   id: string;
@@ -55,9 +58,9 @@ export function AnnouncementForm({
   onSubmit,
   onCancel,
   isLoading = false,
-  submitLabel = 'Guardar',
+  submitLabel = 'guardar();',
 }: AnnouncementFormProps) {
-  const form = useForm<AnnouncementFormData>({
+  const form = useForm<AnnouncementFormInput, unknown, AnnouncementFormData>({
     resolver: zodResolver(announcementSchema),
     defaultValues: {
       title: defaultValues?.title || '',
@@ -72,7 +75,9 @@ export function AnnouncementForm({
   const watchCategory = form.watch('category');
 
   const handleSubmit = async (data: AnnouncementFormData) => {
-    await onSubmit(data);
+    // El evento solo aplica a la categoría "evento": si se eligió uno y después se cambió la
+    // categoría, el selector se oculta pero el valor seguía viajando
+    await onSubmit({ ...data, eventId: data.category === 'evento' ? data.eventId : null });
   };
 
   return (
@@ -178,7 +183,7 @@ export function AnnouncementForm({
                   <SelectContent>
                     {events.map((event) => (
                       <SelectItem key={event.id} value={event.id}>
-                        {event.name} - {format(new Date(event.date), 'dd MMM yyyy', { locale: es })}
+                        <EventOptionLabel name={event.name} date={event.date} />
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -222,9 +227,9 @@ export function AnnouncementForm({
 
         <div className="flex justify-end gap-2 pt-4">
           <Button type="button" variant="outline" onClick={onCancel} disabled={isLoading}>
-            Cancelar
+            cancelar();
           </Button>
-          <Button type="submit" loading={isLoading} loadingText="Guardando...">
+          <Button type="submit" loading={isLoading} loadingText="guardando...">
             {submitLabel}
           </Button>
         </div>

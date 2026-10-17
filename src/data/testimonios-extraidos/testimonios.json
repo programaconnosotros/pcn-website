@@ -1,0 +1,100 @@
+[
+  {
+    "id": "auto-643c865-leandro-andriani",
+    "member": "Leandro Andriani",
+    "date": "2026-10-02",
+    "title": "Qué aprender hoy: fundamentos, harness, skills y cómo perderle el miedo a otro lenguaje",
+    "content": "Agradeció a la comunidad por ser un espacio donde la gente comparte su experiencia sin miedo, algo que valora porque viene de entornos más celosos y competitivos."
+  },
+  {
+    "id": "auto-33f5372-leandro-contrera",
+    "member": "Leandro Contrera",
+    "date": "2026-10-02",
+    "title": "Para hacer primero hay que ser: predisposición, networking y merecer las oportunidades",
+    "content": "Contó que los consejos de integrantes de la comunidad lo empujaron a meterse de lleno en proyectos reales y aprender sobre la marcha, y agradeció a un compañero por lo aprendido trabajando juntos."
+  },
+  {
+    "id": "auto-33f5372-gonzalo-morales",
+    "member": "Gonzalo Morales",
+    "date": "2026-10-02",
+    "title": "Para hacer primero hay que ser: predisposición, networking y merecer las oportunidades",
+    "content": "Destacó que en PCN hay gente con la cabeza abierta y que rodearse de personas así importa tanto como el nivel técnico."
+  },
+  {
+    "id": "auto-f18193e-facundo-garcia-martoni",
+    "member": "Facundo García Martoni",
+    "date": "2026-09-29",
+    "title": "Salvador Juárez se suma a Macch como AI Engineer tras su charla en un evento de PCN",
+    "content": "Destacó que sin la comunidad no habría conocido a una persona que terminó sumándose a su equipo, tras escuchar su charla en un evento de PCN."
+  },
+  {
+    "id": "auto-f18193e-salvador-juarez",
+    "member": "Salvador Juárez",
+    "date": "2026-09-29",
+    "title": "Salvador Juárez se suma a Macch como AI Engineer tras su charla en un evento de PCN",
+    "content": "Presentó su proyecto en un evento de la comunidad y esa charla terminó abriéndole una oportunidad profesional: se sumó a un equipo como AI Engineer."
+  },
+  {
+    "id": "auto-e8687a6-juan-farber",
+    "member": "Juan Farber",
+    "date": "2026-07-27",
+    "title": "Reducir el gasto de tokens con OpenCode Go, modelos baratos y herramientas de contexto",
+    "content": "Agradeció la recomendación del grupo sobre OpenCode Go y contó que gracias a eso bajó muchísimo lo que gastaba por sesión trabajando con agentes."
+  },
+  {
+    "id": "auto-18899fa-facundo-garcia-martoni",
+    "member": "Facundo García Martoni",
+    "date": "2026-06-13",
+    "title": "Aprendizajes de las charlas del evento de la comunidad",
+    "content": "Compartió lo que se llevó de cada charla del evento de la comunidad y contó que una de esas ideas, trabajar con varios worktrees en paralelo, le permitió avanzar muchísimo al día siguiente."
+  },
+  {
+    "id": "auto-b1d9883-leandro-contrera",
+    "member": "Leandro Contrera",
+    "date": "2026-01-06",
+    "title": "uv como gestor de paquetes Python: siempre uv, nunca otra cosa",
+    "content": "Contó que la respuesta del grupo sobre uv le ahorró muchas horas de prueba y error con Python."
+  },
+  {
+    "id": "auto-39cf9f4-leandro-contrera",
+    "member": "Leandro Contrera",
+    "date": "2025-12-30",
+    "title": "Dev Meetup del 30 de diciembre: PCN cierra el año",
+    "content": "Estuvo en la meetup de fin de año y agradeció a quienes dieron charlas técnicas, un cierre de año que disfrutó junto a la comunidad."
+  },
+  {
+    "id": "auto-39cf9f4-santiago-de-marco",
+    "member": "Santiago De Marco",
+    "date": "2025-12-30",
+    "title": "Dev Meetup del 30 de diciembre: PCN cierra el año",
+    "content": "Después de la meetup de fin de año contó que pensaba seguir yendo a las juntadas y que iba a compartir el grupo con sus compañeros de facultad."
+  },
+  {
+    "id": "auto-a3057b9-ariel-basabe",
+    "member": "Ariel Basabe",
+    "date": "2025-10-26",
+    "title": "Extensiones para reducir distracciones en el browser",
+    "content": "Agradeció las herramientas que compartió el grupo para reducir distracciones en el navegador."
+  },
+  {
+    "id": "auto-8faf814-leandro-contrera",
+    "member": "Leandro Contrera",
+    "date": "2025-10-01",
+    "title": "Taller de diseño de sistemas de Marcelo y Mauricio Sánchez",
+    "content": "Agradeció públicamente el taller de diseño de sistemas que dieron dos integrantes y destacó que las preguntas planteadas lo dejaron pensando."
+  },
+  {
+    "id": "auto-db132dc-leandro-contrera",
+    "member": "Leandro Contrera",
+    "date": "2025-06-02",
+    "title": "Evento PCN en UTN-FRT y lanzamiento del website de la comunidad",
+    "content": "Valoró mucho el primer evento presencial de la comunidad: agradeció especialmente que un orador le respondiera todas sus preguntas."
+  },
+  {
+    "id": "auto-ccf190f-facundo-garcia-martoni",
+    "member": "Facundo García Martoni",
+    "date": "2025-05-23",
+    "title": "Facundo García Martoni consiguió trabajo como Senior Full-Stack Engineer",
+    "content": "Agradeció al grupo por la oportunidad de ser parte, por la ayuda con system design y por las recomendaciones, y celebró haber cerrado un nuevo trabajo con el apoyo de la comunidad."
+  }
+]

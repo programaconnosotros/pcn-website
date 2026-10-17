@@ -1,5 +1,9 @@
 import { prismaMock } from '@/test/prisma';
 import { getUsers } from './get-users';
+import { requireAdmin } from '@/lib/admin';
+
+// Admin-only data: every test runs as an admin unless it says otherwise.
+jest.mock('@/lib/admin', () => ({ requireAdmin: jest.fn() }));
 
 const stubUserWithoutPassword = {
   id: 'user-1',
@@ -88,5 +92,13 @@ describe('getUsers', () => {
     expect(result[0].languages).toEqual([
       { language: 'TypeScript', color: '#3178c6', logo: 'ts.svg' },
     ]);
+  });
+});
+
+describe('getUsers access', () => {
+  it('rejects anyone who is not an admin', async () => {
+    (requireAdmin as jest.Mock).mockRejectedValueOnce(new Error('No autorizado'));
+
+    await expect(getUsers()).rejects.toThrow('No autorizado');
   });
 });

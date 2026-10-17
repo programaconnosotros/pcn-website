@@ -1,6 +1,6 @@
 import { mockReset } from 'jest-mock-extended';
 import type { DeepMockProxy } from 'jest-mock-extended';
-import type { PrismaClient } from '@prisma/client';
+import type { PrismaClient } from '@/generated/prisma/client';
 
 // ─── Prisma ──────────────────────────────────────────────────────────────────
 // Use require() inside the factory to avoid jest.mock hoisting issues with
@@ -16,9 +16,12 @@ jest.mock('@/lib/prisma', () => {
 const prismaMock: DeepMockProxy<PrismaClient> = jest.requireMock('@/lib/prisma').default;
 
 // ─── Next.js server APIs ─────────────────────────────────────────────────────
+// unstable_cache runs the function every time, like a cache that always misses.
 jest.mock('next/cache', () => ({
   revalidatePath: jest.fn(),
   revalidateTag: jest.fn(),
+  updateTag: jest.fn(),
+  unstable_cache: (fn: unknown) => fn,
 }));
 
 // redirect() normally throws to interrupt control flow; replicate that here so
@@ -37,9 +40,19 @@ jest.mock('next/headers', () => ({
   headers: jest.fn(),
 }));
 
+// Rate limiting is covered by src/lib/rate-limit.test.ts; everywhere else it
+// is a no-op so action tests don't consume their Prisma/cookie mocks on it.
+jest.mock('@/lib/rate-limit', () => ({
+  ...jest.requireActual('@/lib/rate-limit'),
+  enforceRateLimit: jest.fn(),
+  getRateLimitWait: jest.fn().mockResolvedValue(0),
+}));
+
 // ─── Reset mocks between tests ───────────────────────────────────────────────
 beforeEach(() => {
   mockReset(prismaMock);
+  // Many pages list the extracted consejos minus the hidden ones: by default nobody hid any.
+  prismaMock.hiddenConsejo.findMany.mockResolvedValue([]);
 });
 
 // ─── Silence console.error in test output ────────────────────────────────────
