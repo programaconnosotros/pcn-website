@@ -2,7 +2,7 @@ import { Fragment, type ReactNode } from 'react';
 import { cn } from '@/lib/utils';
 import { adrAnchor, adrNumber, type Adr, type AdrStatus } from '@/app/(platform)/desarrollo/adrs';
 
-const REPO_BLOB_URL = 'https://github.com/programaconnosotros/pcn-website/blob/main';
+const REPO_BLOB_URL = 'https://github.com/programaconnosotros/pcn-os/blob/main';
 
 const statusClassName: Record<AdrStatus, string> = {
   aceptada: 'border-pcnGreen-500 text-pcnGreen',

@@ -30,7 +30,7 @@ import {
 } from './design-system';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
-const REPO_URL = 'https://github.com/programaconnosotros/pcn-website';
+const REPO_URL = 'https://github.com/programaconnosotros/pcn-os';
 const DESCRIPTION =
   'El design system del website de PCN: cómo encontramos la estética de terminal, los principios de diseño para gente nerd, los tokens y cada componente con sus estados.';
 

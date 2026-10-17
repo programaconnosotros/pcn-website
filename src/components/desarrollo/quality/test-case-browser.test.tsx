@@ -151,7 +151,7 @@ describe('TestCaseBrowser', () => {
     expect(within(panel).getByText('# archivo · unit')).toBeInTheDocument();
     expect(within(panel).getByRole('link', { name: 'src/lib/auth.test.ts ↗' })).toHaveAttribute(
       'href',
-      'https://github.com/programaconnosotros/pcn-website/blob/main/src/lib/auth.test.ts',
+      'https://github.com/programaconnosotros/pcn-os/blob/main/src/lib/auth.test.ts',
     );
     expect(within(panel).getByText('# cómo correrlo')).toBeInTheDocument();
     expect(

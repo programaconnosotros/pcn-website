@@ -279,7 +279,7 @@ function Agent({ active }: { active: boolean }) {
 
   return (
     <Pane
-      title="agent@pcn — ~/pcn-website"
+      title="agent@pcn — ~/pcn-os"
       status={done ? '● idle' : `${SPINNER[step % SPINNER.length]} working`}
       active={active}
       className="top-12 right-6 w-[390px]"

@@ -28,7 +28,7 @@ jest.mock('@/components/ui/table-of-contents', () => ({
   ),
 }));
 
-const REPO = 'https://github.com/programaconnosotros/pcn-website';
+const REPO = 'https://github.com/programaconnosotros/pcn-os';
 
 describe('DisenoPage', () => {
   beforeEach(() => renderInPlatform(<DisenoPage />));

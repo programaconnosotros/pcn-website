@@ -102,7 +102,7 @@
     "title": "Cómo deployar backend Java + PostgreSQL en un VPS con Docker",
     "date": "2025-06-13",
     "summary": "Un integrante del grupo preguntó cómo desplegar un backend en Java con base de datos PostgreSQL en un VPS, sin idea de por dónde arrancar. Germán Navarro explicó que sin Docker habría que instalar manualmente JDK, Maven, Postgres e inicializar la base desde la CLI. Con Docker el proceso es mucho más limpio: un Dockerfile declara todos los pasos para resolver dependencias en el container, y las imágenes oficiales de Postgres permiten configurar todo con variables de entorno. Facundo Padilla explicó el concepto más a fondo: Docker descarga imágenes y crea un pipeline con reglas de networking aisladas para levantar el entorno limpio. Germán mencionó Kamal como herramienta de automatización de deployment que se usa en el repositorio de PCN (con GitHub Actions).",
-    "links": ["https://kamal-deploy.org/", "https://github.com/programaconnosotros/pcn-website"]
+    "links": ["https://kamal-deploy.org/", "https://github.com/programaconnosotros/pcn-os"]
   },
   {
     "title": "Apple lanza su propia herramienta de containers nativa (alternativa a Docker Desktop)",
@@ -142,7 +142,7 @@
     "summary": "Leandro Contrera compartió neetcode.io/courses preguntando si alguien la conocía. Agustín Sánchez respondió que no la conocía pero que tenía muy buena pinta. Facundo Padilla también la revisó y la encontró interesante. Agustín comentó que el recurso lo inspiró a crear una issue en el repositorio del website de PCN para agregar una sección similar de recursos de aprendizaje. El hilo fue breve pero dejó una acción concreta sobre el producto de la comunidad.",
     "links": [
       "https://neetcode.io/courses",
-      "https://github.com/programaconnosotros/pcn-website/issues/194"
+      "https://github.com/programaconnosotros/pcn-os/issues/194"
     ]
   },
   {

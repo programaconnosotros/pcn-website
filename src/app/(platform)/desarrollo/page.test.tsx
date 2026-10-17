@@ -58,7 +58,7 @@ describe('DesarrolloPage', () => {
 
   it('links to the repo, the dev chat, the design system and the quality pages', () => {
     renderInPlatform(<DesarrolloPage />);
-    const repo = 'https://github.com/programaconnosotros/pcn-website';
+    const repo = 'https://github.com/programaconnosotros/pcn-os';
     expect(screen.getByRole('link', { name: /abrirGitHub/ })).toHaveAttribute('href', repo);
     expect(screen.getByRole('link', { name: /irAlRepositorio/ })).toHaveAttribute('href', repo);
     expect(screen.getByRole('link', { name: /unirseAlGrupo/ })).toHaveAttribute(

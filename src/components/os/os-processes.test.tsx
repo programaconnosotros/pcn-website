@@ -61,7 +61,7 @@ describe('OsProcesses', () => {
   it('renders the four panes and keeps them ticking', () => {
     const { container } = render(<OsProcesses covered={false} />);
     expect(screen.getByText('htop — pcn-prod-01')).toBeInTheDocument();
-    expect(screen.getByText('agent@pcn — ~/pcn-website')).toBeInTheDocument();
+    expect(screen.getByText('agent@pcn — ~/pcn-os')).toBeInTheDocument();
     expect(screen.getByText('pcn-events --tail -f')).toBeInTheDocument();
     expect(screen.getByText('netmon — edge')).toBeInTheDocument();
     expect(screen.getByText('task 1/3')).toBeInTheDocument();

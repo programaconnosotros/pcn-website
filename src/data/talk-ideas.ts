@@ -13,7 +13,7 @@ export interface TalkIdea {
   example?: { label: string; href: string };
 }
 
-const REPO = 'https://github.com/programaconnosotros/pcn-website/blob/main';
+const REPO = 'https://github.com/programaconnosotros/pcn-os/blob/main';
 
 export const talkIdeas: TalkIdea[] = [
   // ── Web ──
@@ -197,7 +197,7 @@ export const talkIdeas: TalkIdea[] = [
     level: 'intermedio',
     example: {
       label: 'los tests e2e de la web',
-      href: 'https://github.com/programaconnosotros/pcn-website/tree/main/tests/e2e',
+      href: 'https://github.com/programaconnosotros/pcn-os/tree/main/tests/e2e',
     },
   },
   {
@@ -256,7 +256,7 @@ export const talkIdeas: TalkIdea[] = [
     level: 'inicial',
     example: {
       label: 'el repo de la web',
-      href: 'https://github.com/programaconnosotros/pcn-website',
+      href: 'https://github.com/programaconnosotros/pcn-os',
     },
   },
   {

@@ -30,7 +30,7 @@ describe('ComponentGallery', () => {
       within(block('button')).getByRole('link', { name: 'src/components/ui/button.tsx ↗' }),
     ).toHaveAttribute(
       'href',
-      'https://github.com/programaconnosotros/pcn-website/blob/main/src/components/ui/button.tsx',
+      'https://github.com/programaconnosotros/pcn-os/blob/main/src/components/ui/button.tsx',
     );
     // Forced interaction states wrap the frozen specimens
     expect(block('button').querySelectorAll('[data-force-state="hover"]').length).toBe(6);

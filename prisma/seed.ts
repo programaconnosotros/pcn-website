@@ -1029,10 +1029,10 @@ async function main() {
       title: 'PCN Website',
       description:
         'El sitio de la comunidad: eventos, charlas, cursos, lecturas y PCN OS, un escritorio en el navegador.',
-      url: 'https://github.com/programaconnosotros/pcn-website',
+      url: 'https://github.com/programaconnosotros/pcn-os',
       logoUrl: '/software-logos/github.webp',
       techStack: ['Next.js', 'TypeScript', 'Prisma', 'Tailwind'],
-      repoUrl: 'https://github.com/programaconnosotros/pcn-website',
+      repoUrl: 'https://github.com/programaconnosotros/pcn-os',
       author: adminUser,
       members: [regularUsers[0], regularUsers[1]],
     },

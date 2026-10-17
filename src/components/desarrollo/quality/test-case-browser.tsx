@@ -22,7 +22,7 @@ import {
 } from '@/app/(platform)/desarrollo/calidad/quality-areas';
 import { layerLabels, testCases } from '@/app/(platform)/desarrollo/calidad/quality-cases';
 
-const REPO_BLOB_URL = 'https://github.com/programaconnosotros/pcn-website/blob/main';
+const REPO_BLOB_URL = 'https://github.com/programaconnosotros/pcn-os/blob/main';
 const PAGE_SIZE = 50;
 const ALL = 'todas';
 

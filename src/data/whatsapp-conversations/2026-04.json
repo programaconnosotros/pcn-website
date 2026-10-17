@@ -128,7 +128,7 @@
     "date": "2026-04-27",
     "summary": "Agustín Sánchez planteó la duda de si hacer el repositorio de PCN closed-source por razones de seguridad, argumentando que alguien podría analizar las vulnerabilidades del código con IA más fácilmente si era público. Victor Figueredo respondió que mantenerlo open-source tenía más ventajas: cerrado no garantiza seguridad porque el riesgo se reduce pero no se elimina, y en cambio open-source permite que miembros de la comunidad usen IA para descubrir y parchear vulnerabilidades antes de que las explote alguien externo. Facundo García Martoni coincidió y propuso incentivos para que la gente contribuya: remeras o tazas de PCN para quienes tengan una PR mergeada. Iñaki Fernando Lozano recomendó verificar que no hubiera datos críticos expuestos y tener buenos backups. La decisión fue mantenerlo open-source.",
     "links": [
-      "https://github.com/programaconnosotros/pcn-website",
+      "https://github.com/programaconnosotros/pcn-os",
       "https://programaconnosotros.com/desarrollo"
     ]
   },

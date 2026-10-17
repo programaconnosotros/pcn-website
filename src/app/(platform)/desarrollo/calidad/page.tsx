@@ -24,7 +24,7 @@ import {
 } from './quality-stack';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
-const REPO_BLOB_URL = 'https://github.com/programaconnosotros/pcn-website/blob/main';
+const REPO_BLOB_URL = 'https://github.com/programaconnosotros/pcn-os/blob/main';
 
 const description =
   'Cómo se prueba el website de PCN: las herramientas y técnicas de testing que usamos, los checks que pasa cada cambio y un repositorio público de casos de prueba manuales y automatizados.';

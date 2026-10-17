@@ -79,7 +79,7 @@ const SECTION_CARDS = {
     meta: ['producido por la comunidad'],
   },
   desarrollo: {
-    command: 'git clone pcn-website',
+    command: 'git clone pcn-os',
     title: 'Desarrollá el proyecto',
     description:
       'El website de PCN es open source. Sumate al desarrollo, ganá experiencia real con un equipo y dejá tu huella.',

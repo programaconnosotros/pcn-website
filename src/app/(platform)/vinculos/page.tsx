@@ -157,7 +157,7 @@ export default async function VinculosPage() {
           <IdentityLinksTable
             source="github"
             title="github"
-            command="gh api repos/pcn-website/contributors"
+            command="gh api repos/pcn-os/contributors"
             rows={githubRows}
             emptyMessage={
               stats ? 'sin contribuidores' : 'no pudimos conectarnos con GitHub, probá más tarde'

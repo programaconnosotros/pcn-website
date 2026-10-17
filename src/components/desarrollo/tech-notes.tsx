@@ -4,8 +4,8 @@ import { cn } from '@/lib/utils';
 import { HighlightedCode } from './highlighted-code';
 import type { TechExample, TechNote, TechNoteGroup } from '@/app/(platform)/desarrollo/tech-notes';
 
-const REPO_BLOB_URL = 'https://github.com/programaconnosotros/pcn-website/blob/main';
-const REPO_TREE_URL = 'https://github.com/programaconnosotros/pcn-website/tree/main';
+const REPO_BLOB_URL = 'https://github.com/programaconnosotros/pcn-os/blob/main';
+const REPO_TREE_URL = 'https://github.com/programaconnosotros/pcn-os/tree/main';
 
 /** Renders `backtick` spans in a note's prose as inline code. */
 const renderInline = (text: string): ReactNode =>

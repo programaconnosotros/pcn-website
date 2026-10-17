@@ -35,11 +35,11 @@ Este es el repositorio del website de PCN. El website está construido con Next.
 >
 > Si desarrollás sin Docker necesitás **Node.js 24** (`nvm use` toma la versión de `.nvmrc`) y **pnpm 10**: la versión exacta está en `packageManager` del `package.json`, y con `corepack enable` se usa esa sola.
 
-6. Elegí una [issue](https://github.com/programaconnosotros/pcn-website/issues) y creá una nueva rama en Git para ir guardando tus cambios (la página se va refrescando automáticamente en tu browser, no hace falta que refresques manualmente).
+6. Elegí una [issue](https://github.com/programaconnosotros/pcn-os/issues) y creá una nueva rama en Git para ir guardando tus cambios (la página se va refrescando automáticamente en tu browser, no hace falta que refresques manualmente).
 
 7. Pusheá tus cambios a GitHub y crea una pull request hacia la rama `testing`, asegurate de que tenga una buena descripción explicando lo que hiciste, con capturas de pantalla o videos si incluyen cambios de UI. Si usás un agente, pedile "abrí la PR": la skill `create-pr` hace todo esto por vos (ver [Desarrollo con agentes](#-desarrollo-con-agentes)).
 
-   Las tareas se organizan con [issues de GitHub](https://github.com/programaconnosotros/pcn-website/issues). Si tu pull request resuelve una issue, mencionala en la descripción con `Closes #<número de la issue>` para que se cierre sola al mergearse.
+   Las tareas se organizan con [issues de GitHub](https://github.com/programaconnosotros/pcn-os/issues). Si tu pull request resuelve una issue, mencionala en la descripción con `Closes #<número de la issue>` para que se cierre sola al mergearse.
 
 8. Si queres instalar dependencias de desarrollo, tenes que usar el siguiente comando:
 

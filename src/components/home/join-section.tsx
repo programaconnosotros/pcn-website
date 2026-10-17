@@ -9,7 +9,7 @@ import Link from 'next/link';
 import { SectionHeader } from './section-header';
 
 const CONTACT_URL = 'https://wa.me/5493815777562';
-const REPO_URL = 'https://github.com/programaconnosotros/pcn-website';
+const REPO_URL = 'https://github.com/programaconnosotros/pcn-os';
 
 // Libraries and tools on /desarrollo beyond the main technologies, without repeating any.
 const moreTools = new Set(

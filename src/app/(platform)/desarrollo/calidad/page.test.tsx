@@ -92,7 +92,7 @@ describe('CalidadPage', () => {
     const tool = qualityTools.find((item) => item.file)!;
     expect(section('herramientas').getByRole('link', { name: `${tool.file} ↗` })).toHaveAttribute(
       'href',
-      `https://github.com/programaconnosotros/pcn-website/blob/main/${tool.file}`,
+      `https://github.com/programaconnosotros/pcn-os/blob/main/${tool.file}`,
     );
     const pending = section('pendiente');
     expect(pending.getAllByText('[ ]')).toHaveLength(qualityRoadmap.length);

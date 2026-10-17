@@ -7,7 +7,7 @@
 import { execSync } from 'node:child_process';
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 
-const REPO = 'programaconnosotros/pcn-website';
+const REPO = 'programaconnosotros/pcn-os';
 const API = `https://api.github.com/repos/${REPO}`;
 const OUT = 'src/data/github-stats.json';
 

@@ -203,7 +203,7 @@ const BulletList = ({ items }: { items: string[] }) => (
   </ul>
 );
 
-const REPO_URL = 'https://github.com/programaconnosotros/pcn-website';
+const REPO_URL = 'https://github.com/programaconnosotros/pcn-os';
 // Grupo donde charlamos el desarrollo del sitio; abierto también a quien solo quiera leer.
 const DEV_CHAT_URL = 'https://chat.whatsapp.com/LAHHq1vtgY6ApnPCyZXX4X';
 

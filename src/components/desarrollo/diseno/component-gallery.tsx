@@ -68,7 +68,7 @@ import { cn } from '@/lib/utils';
 import { documentedComponents, type DocumentedComponentId } from './component-list';
 import type { ForcedState } from './forced-state';
 
-const REPO_BLOB_URL = 'https://github.com/programaconnosotros/pcn-website/blob/main/';
+const REPO_BLOB_URL = 'https://github.com/programaconnosotros/pcn-os/blob/main/';
 
 type StateId =
   | 'default'

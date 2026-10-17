@@ -73,11 +73,11 @@ describe('TechNotes', () => {
 
     expect(screen.getByRole('link', { name: '~/src/app/page.tsx' })).toHaveAttribute(
       'href',
-      'https://github.com/programaconnosotros/pcn-website/blob/main/src/app/page.tsx',
+      'https://github.com/programaconnosotros/pcn-os/blob/main/src/app/page.tsx',
     );
     expect(screen.getByRole('link', { name: /cd src\/app/ })).toHaveAttribute(
       'href',
-      'https://github.com/programaconnosotros/pcn-website/tree/main/src/app',
+      'https://github.com/programaconnosotros/pcn-os/tree/main/src/app',
     );
     expect(screen.getByRole('link', { name: /man nextjs/ })).toHaveAttribute(
       'href',

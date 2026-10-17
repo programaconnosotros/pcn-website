@@ -13,7 +13,7 @@ describe('TalkIdeas', () => {
     expect(within(owasp).getByText('seguridad')).toBeInTheDocument();
     expect(within(owasp).getByRole('link', { name: /cómo la web cubre el OWASP/ })).toHaveAttribute(
       'href',
-      'https://github.com/programaconnosotros/pcn-website/blob/main/docs/seguridad-owasp.md',
+      'https://github.com/programaconnosotros/pcn-os/blob/main/docs/seguridad-owasp.md',
     );
     // Pages of the site open in place
     const design = screen.getByText(/Diseño de sistemas visuales/).closest('article')!;
@@ -39,7 +39,7 @@ describe('TalkIdeas', () => {
       if (example.href.startsWith('/')) {
         expect(SITE_ROUTES).toContain(example.href);
       } else {
-        expect(example.href).toMatch(/^https:\/\/github\.com\/programaconnosotros\/pcn-website/);
+        expect(example.href).toMatch(/^https:\/\/github\.com\/programaconnosotros\/pcn-os/);
       }
     }
   });
