@@ -1,7 +1,7 @@
 FROM node:24.21.0
 WORKDIR /app
 COPY . .
-RUN npm install -g pnpm
+RUN npm install -g pnpm@10.34.6
 RUN pnpm install
 EXPOSE 3000
 
