@@ -12,7 +12,7 @@ const KIND_STYLES: Record<string, { label: string; className: string }> = {
   setup: { label: 'SETUP', className: 'text-amber-400' },
   proyecto: { label: 'PROYECTO', className: 'text-violet-400' },
   conversacion: { label: 'CHAT', className: 'text-teal-300' },
-  changelog: { label: 'SITIO', className: 'text-orange-400' },
+  changelog: { label: 'MEJORA', className: 'text-orange-400' },
   desarrollo: { label: 'CÓDIGO', className: 'text-lime-400' },
 };
 
@@ -71,9 +71,8 @@ export function NewsTicker() {
                 <span className={cn('font-bold', kind.className)}>{kind.label}</span>
                 {item.title}
                 {item.meta && <span className="text-muted-foreground">· {item.meta}</span>}
-                <span aria-hidden className="pl-6 text-pcnGreen-600">
-                  ◆
-                </span>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src="/logo.webp" alt="" aria-hidden className="ml-6 size-4" />
               </Link>
             );
           })}
