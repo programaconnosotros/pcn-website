@@ -44,23 +44,15 @@ const openFromDock = async (page: Page, name: string) => {
 const waitForWindowReady = (page: Page, name: string) =>
   expect(windowFrame(page, name).locator('html[data-app-ready]')).toBeAttached({ timeout: 30_000 });
 
-const nextFrames = (page: Page) =>
-  page.evaluate(
-    () =>
-      new Promise<void>((resolve) =>
-        requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
-      ),
-  );
-
 /**
- * Doble clic con el mouse, dejando que React pinte entre los dos clics: el primer pointerdown
- * arranca un arrastre y pone un escudo sobre los iframes que se va al soltar.
+ * Doble clic con el mouse, seguido como lo haría una persona: la ventana lo detecta con dos
+ * pointerdown a menos de 500 ms (el primero arranca un arrastre y pone un escudo sobre los
+ * iframes, así que el dblclick nativo nunca llega). Esperar entre los clics lo volvía lento.
  */
 const doubleClickAt = async (page: Page, x: number, y: number) => {
   await page.mouse.move(x, y);
   await page.mouse.down();
   await page.mouse.up();
-  await nextFrames(page);
   await page.mouse.down({ clickCount: 2 });
   await page.mouse.up({ clickCount: 2 });
 };

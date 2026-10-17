@@ -266,7 +266,9 @@ export function OsWindow({
     onFocus();
     // A double click is detected here instead of with onDoubleClick: the first press puts the
     // interaction shield over the page, so its release (and the dblclick) never reach the header.
-    const now = performance.now();
+    // When the press happened, not when this runs: if the page is busy between the two
+    // presses, a quick double click would otherwise measure as a slow one and be missed.
+    const now = event.timeStamp;
     const previous = lastPress.current;
     if (
       previous &&

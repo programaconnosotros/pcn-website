@@ -6,15 +6,14 @@ import { getCachedProductMetrics, getProductMetrics } from './product-metrics';
 // Like the real data cache: what comes back went through JSON, so Dates are strings.
 jest.mock('next/cache', () => ({
   revalidateTag: jest.fn(),
-  unstable_cache: jest.fn(
-    (fn: (..._args: unknown[]) => Promise<unknown>) =>
-      async (...args: unknown[]) =>
-        JSON.parse(JSON.stringify(await fn(...args))),
+  unstable_cache: jest.fn((fn: (..._args: unknown[]) => Promise<unknown>) =>
+    jest.fn(async (...args: unknown[]) => JSON.parse(JSON.stringify(await fn(...args)))),
   ),
 }));
 
 // Captured at import, before clearMocks wipes the calls.
 const [cacheCall] = jest.mocked(unstable_cache).mock.calls;
+const cachedFn = jest.mocked(unstable_cache).mock.results[0].value as jest.Mock;
 
 const DAY = 86_400_000;
 const range = {
@@ -333,6 +332,23 @@ describe('getCachedProductMetrics', () => {
     expect(withAdmins.includeAdmins).toBe(true);
     const without = await getCachedProductMetrics({ rango: '7d', admins: 'no' }, []);
     expect(without.includeAdmins).toBe(false);
+  });
+
+  it('starts a new cache entry at midnight in Argentina', async () => {
+    jest.useFakeTimers({
+      now: new Date('2026-10-17T02:59:00Z'),
+      doNotFake: ['nextTick', 'setImmediate'],
+    });
+    await getCachedProductMetrics({ rango: '7d' }, []);
+    jest.setSystemTime(new Date('2026-10-17T03:01:00Z'));
+    await getCachedProductMetrics({ rango: '7d' }, []);
+    jest.useRealTimers();
+
+    const keys = cachedFn.mock.calls.map(([params]) => params);
+    expect(keys).toEqual([
+      { rango: '7d', day: '2026-10-16' },
+      { rango: '7d', day: '2026-10-17' },
+    ]);
   });
 
   it('caches for an hour under a fixed key', () => {

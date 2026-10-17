@@ -542,14 +542,18 @@ const cachedProductMetrics = unstable_cache(
   { revalidate: METRICS_CACHE_SECONDS },
 );
 
+const today = new Intl.DateTimeFormat('en-CA', { timeZone: METRICS_TIME_ZONE });
+
 /**
  * getProductMetrics for the page's query string, computed at most once an hour per range and
  * admin filter. The cache key is the preset (`30d`) or the custom dates, not the instants they
- * resolve to, so a preset keeps hitting the same entry while `now` moves.
+ * resolve to, so a preset keeps hitting the same entry while `now` moves. It also carries the
+ * day: without it, for up to an hour after midnight the page kept showing yesterday's range.
  */
 export const getCachedProductMetrics = async (params: RangeParams, ownHosts: string[]) => {
   const { preset } = parseMetricsRange(params);
   const dates = preset ? { rango: preset } : { desde: params.desde, hasta: params.hasta };
-  const key = includesAdmins(params) ? { ...dates, admins: '1' } : dates;
+  const day = today.format(new Date());
+  const key = includesAdmins(params) ? { ...dates, admins: '1', day } : { ...dates, day };
   return reviveDates(await cachedProductMetrics(key, ownHosts));
 };

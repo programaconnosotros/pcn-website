@@ -2,6 +2,9 @@ import { prismaMock } from '@/test/prisma';
 import { HISTORIA_FLYERS } from '@/components/historia/event-flyers';
 import { getHistoriaEvents } from './historia-events';
 
+// Fuera de un request de Next, connection() falla: acá no hay prerender que frenar
+jest.mock('next/server', () => ({ ...jest.requireActual('next/server'), connection: jest.fn() }));
+
 describe('getHistoriaEvents', () => {
   it('returns the flyer events with their photos and photo count', async () => {
     const date = new Date('2023-05-01T20:00:00Z');

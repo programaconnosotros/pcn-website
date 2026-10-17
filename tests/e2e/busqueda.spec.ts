@@ -3,6 +3,7 @@ import bcrypt from 'bcryptjs';
 import { AUTH_PATH, EVENTS, PASSWORD, PROJECT } from './support/data';
 import { expect, test } from './support/fixtures';
 import { platformId } from './support/platform-helpers';
+import { displayName } from '../../src/lib/people-names';
 
 // Búsqueda global (⌘K / Ctrl+K, /api/search), la de /miembros y la barra `$ grep -i` de las páginas.
 
@@ -210,10 +211,12 @@ test('TC-BUS-003 Buscar miembros de forma tolerante', async ({ page, db }) => {
   // Una persona propia con acentos, cargo y empresa. Se crea con una contraseña de costo bajo:
   // al iniciar sesión la app la regenera, y esa escritura expira el directorio cacheado.
   const tag = platformId('bus').slice(4);
+  // Como lo muestra el sitio: el tag al azar puede tener una tira de letras que pasa a mayúscula
+  const name = displayName(`Agustina Sánchez Ñuñez ${tag}`);
   const user = await db.user.create({
     data: {
       email: `e2e-bus-${tag}@e2e.pcn`,
-      name: `Agustina Sánchez Ñuñez ${tag}`,
+      name,
       password: await bcrypt.hash(PASSWORD, 4),
       emailVerified: true,
       countryOfOrigin: 'Argentina',
@@ -230,7 +233,7 @@ test('TC-BUS-003 Buscar miembros de forma tolerante', async ({ page, db }) => {
 
   await page.goto('/miembros');
   const search = page.getByRole('textbox', { name: 'Buscar miembros' });
-  const card = page.getByRole('link', { name: new RegExp(`Agustina Sánchez Ñuñez ${tag}`) });
+  const card = page.getByRole('link', { name: new RegExp(name) });
 
   // Otro orden, sin acentos ni mayúsculas
   await search.fill(`${tag} SANC agus nunez`);

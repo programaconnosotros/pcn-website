@@ -1,3 +1,4 @@
+import { connection } from 'next/server';
 import prisma from '@/lib/prisma';
 import { cached } from '@/lib/cache';
 import { HISTORIA_FLYERS } from '@/components/historia/event-flyers';
@@ -21,6 +22,9 @@ export interface HistoriaEvent {
  * A database error leaves the story without them instead of breaking the page.
  */
 export const getHistoriaEvents = async (): Promise<HistoriaEvent[]> => {
+  // Signed per request, so never at build time: without this the build's prerender attempt
+  // queried the database (absent there) and logged the error before the page turned dynamic.
+  await connection();
   try {
     // Cached unsigned: signed URLs expire, so they're signed on each request.
     return (await listHistoriaEvents()).map(({ photos, ...event }) => ({

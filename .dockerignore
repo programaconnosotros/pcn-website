@@ -1,6 +1,15 @@
 node_modules
 .next
+.next-*
 .git
 .gitignore
 *.md
-distsrc/generated
+dist
+src/generated
+coverage
+playwright-report
+test-results
+tests/e2e/.auth
+# Los secretos llegan como variables de entorno, nunca dentro de la imagen (en CI no existen)
+.env*
+!.env.template

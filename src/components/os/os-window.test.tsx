@@ -1,4 +1,4 @@
-import { act, fireEvent, render, screen } from '@testing-library/react';
+import { act, createEvent, fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { OsWindow } from './os-window';
 import type { OsWindowState, Rect } from './os-window-geometry';
@@ -154,19 +154,25 @@ describe('OsWindow', () => {
   });
 
   it('treats slow or distant second presses as new drags, not a double click', () => {
-    const now = jest.spyOn(performance, 'now').mockReturnValue(1_000);
+    // The time is the press's own (event.timeStamp), not when the handler got to run
+    const pressAt = (clientX: number, time: number) => {
+      const event = createEvent.pointerDown(header(), { button: 0, clientX, clientY: 60 });
+      Object.defineProperty(event, 'timeStamp', { value: time });
+      fireEvent(header(), event);
+    };
     const { props } = setup();
-    fireEvent.pointerDown(header(), { button: 0, clientX: 300, clientY: 60 });
+    pressAt(300, 1_000);
     pointer('pointerup', 300, 60);
-    now.mockReturnValue(1_800);
-    fireEvent.pointerDown(header(), { button: 0, clientX: 300, clientY: 60 });
+    pressAt(300, 1_800);
     pointer('pointerup', 300, 60);
-    now.mockReturnValue(1_900);
-    fireEvent.pointerDown(header(), { button: 0, clientX: 340, clientY: 60 });
+    pressAt(340, 1_900);
     pointer('pointerup', 340, 60);
     expect(props.onToggleMaximize).not.toHaveBeenCalled();
     expect(props.onInteractionChange).toHaveBeenCalledTimes(6);
-    now.mockRestore();
+
+    // Within 500 ms of the last press, even if the handler runs later, it is a double click
+    pressAt(340, 2_300);
+    expect(props.onToggleMaximize).toHaveBeenCalledTimes(1);
   });
 
   it('focuses on any pointer down inside', () => {

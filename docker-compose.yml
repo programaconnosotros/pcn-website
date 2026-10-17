@@ -1,6 +1,8 @@
 services:
   mailhog:
     image: mailhog/mailhog:latest
+    # Solo se publica para amd64; en Apple Silicon corre emulada
+    platform: linux/amd64
     container_name: pcn-mailhog
     restart: always
     ports:
@@ -32,12 +34,16 @@ services:
     volumes:
       - .:/app
       - /app/node_modules
+      # Su propio .next: el del host tiene la caché de Turbopack de otro build y lo hace entrar en pánico
+      - /app/.next
     depends_on:
       database:
         condition: service_healthy
       mailhog:
         condition: service_started
     environment:
+      # Prisma ofrece versiones nuevas (hasta release candidates) en cada migración
+      - PRISMA_HIDE_UPDATE_MESSAGE=true
       - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@database:5432/${POSTGRES_DB}
       - DIRECT_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@database:5432/${POSTGRES_DB}
       - AWS_REGION=${AWS_REGION}
@@ -45,5 +51,7 @@ services:
       - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
       - AWS_S3_BUCKET=${AWS_S3_BUCKET}
       - AWS_CLOUDFRONT_URL=${AWS_CLOUDFRONT_URL}
-      - SMTP_HOST=${SMTP_HOST:-mailhog}
-      - SMTP_PORT=${SMTP_PORT:-1025}
+      # Siempre el MailHog del stack: el SMTP_HOST del .env apunta al localhost de `pnpm dev`, que
+      # adentro del contenedor es el propio contenedor
+      - SMTP_HOST=mailhog
+      - SMTP_PORT=1025
