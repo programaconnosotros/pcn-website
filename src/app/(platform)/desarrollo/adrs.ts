@@ -190,6 +190,52 @@ export const adrs: Adr[] = [
       'Una dependencia externa más con su API key. En desarrollo los emails van por SMTP a MailHog.',
     ],
   },
+  {
+    number: 10,
+    slug: 'busqueda-full-text-postgres',
+    title: 'Búsqueda híbrida: tablas chicas en memoria, las que crecen en Postgres',
+    status: 'aceptada',
+    date: '2026-10-17',
+    context:
+      'El buscador (⌘K) cargaba en memoria, en cada búsqueda, todo el foro (con tope de 2000 respuestas), los consejos y los miembros, y filtraba en JavaScript. Cada vez costaba más y no toleraba errores de tipeo: "reakt" no encontraba nada.',
+    decision:
+      'El foro, los consejos y los miembros se buscan en Postgres con full-text search (`tsvector`, por prefijo) y `pg_trgm` para los typos, con índices GIN de expresión sobre `search_text()`, que normaliza como el buscador en memoria. Las tablas chicas (eventos, charlas, proyectos, páginas) siguen en la caché y se filtran en memoria.',
+    consequences: [
+      'La búsqueda escala con el contenido y tolera typos. Los resultados con un typo aparecen después de los exactos.',
+      'Los índices de expresión no existen para Prisma: viven en una migración escrita a mano, y cada consulta tiene que repetir la expresión exacta o Postgres deja de usarlos.',
+      'La base necesita las extensiones `unaccent` y `pg_trgm`. Desde Postgres 13 no requieren superusuario.',
+    ],
+    alternatives: [
+      'Un motor aparte (Meilisearch, Algolia): otro servicio para operar o pagar, y sincronizar con la base, para un volumen que Postgres maneja sobrado.',
+      '`ILIKE` con Prisma: no tolera typos y, sin índices, recorre la tabla entera.',
+    ],
+    references: [
+      'src/lib/search/full-text.ts',
+      'prisma/migrations/20261031120000_full_text_search/migration.sql',
+      'docs/cache-de-datos.md',
+    ],
+  },
+  {
+    number: 11,
+    slug: 'web-push-vapid',
+    title: 'Notificaciones push con Web Push y claves VAPID propias',
+    status: 'aceptada',
+    date: '2026-10-17',
+    context:
+      'Las notificaciones solo se veían entrando al sitio. Avisos que importan en el momento (un evento nuevo, un cambio de horario, una respuesta en el foro, una oferta de empleo) llegaban tarde o no llegaban.',
+    decision:
+      'Web Push estándar con la librería `web-push` y un par de claves VAPID propio, sin Firebase ni otro intermediario. El service worker de la PWA muestra lo que llega. Solo mandan push los avisos que importan en el momento (eventos, respuestas en el foro y empleos); el resto queda dentro del sitio.',
+    consequences: [
+      'Funciona en Chrome, Firefox, Edge y Safari (en iPhone y iPad, con el sitio instalado en la pantalla de inicio) sin cuentas en servicios externos.',
+      'El servidor hace POST a endpoints que manda el navegador: solo se aceptan los de los servicios de push conocidos, para no abrir un SSRF.',
+      'Las claves VAPID no se pueden rotar sin que los miembros vuelvan a activar las push.',
+    ],
+    alternatives: [
+      'Firebase Cloud Messaging: otra cuenta y otro SDK para algo que el estándar ya resuelve.',
+      'Emails: ya existen para lo importante, pero no son inmediatos ni llegan a la pantalla del celular.',
+    ],
+    references: ['src/lib/web-push.ts', 'src/lib/push-endpoints.ts', 'public/sw.js'],
+  },
 ];
 
 export const adrAnchor = (adr: Pick<Adr, 'slug'>) => `adr-${adr.slug}`;

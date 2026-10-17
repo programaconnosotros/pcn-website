@@ -44,7 +44,16 @@ export const toolchain = [
   },
   {
     category: 'Backend & datos',
-    tools: ['Prisma', 'Zod', 'bcryptjs', 'Nodemailer', 'React Email'],
+    tools: [
+      'Prisma',
+      'Zod',
+      'bcryptjs',
+      'Resend',
+      'Nodemailer',
+      'React Email',
+      'web-push',
+      'pg_trgm',
+    ],
   },
   {
     category: 'Imágenes y video',
@@ -60,10 +69,19 @@ export const toolchain = [
       'Prettier',
       'Husky',
       'lint-staged',
+      'CodeRabbit',
     ],
   },
   {
     category: 'Infraestructura & dev',
-    tools: ['Docker Compose', 'Dev Containers', 'Portless', 'Kamal', 'GitHub Actions', 'MailHog'],
+    tools: [
+      'Docker Compose',
+      'Dev Containers',
+      'Portless',
+      'Kamal',
+      'GitHub Actions',
+      'Amazon ECR',
+      'MailHog',
+    ],
   },
 ];

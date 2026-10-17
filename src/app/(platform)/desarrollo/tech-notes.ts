@@ -1191,9 +1191,25 @@ if (process.env.NODE_ENV !== 'production') globalThis.prismaGlobal = prisma;`,
             detail:
               '`mode: "insensitive"` en Prisma usa `ILIKE` de Postgres para buscar ignorando mayúsculas.',
           },
+          {
+            term: 'full-text search',
+            detail:
+              '`to_tsvector` parte un texto en palabras y `to_tsquery` arma la búsqueda: `progra:*` encuentra toda palabra que empiece así. Un índice GIN sobre el `tsvector` evita leer la tabla entera, y `ts_rank` ordena por relevancia.',
+          },
+          {
+            term: 'pg_trgm',
+            detail:
+              'Extensión que compara textos por trigramas (grupos de 3 letras). Con el operador `<%` encuentra palabras parecidas: "reakt" encuentra "React". Así el buscador tolera errores de tipeo.',
+          },
+          {
+            term: 'índice de expresión',
+            detail:
+              'Un índice sobre el resultado de una función (`search_text(content)`) en vez de una columna. La consulta tiene que repetir la expresión exacta o Postgres no lo usa, y la función tiene que ser `IMMUTABLE`.',
+          },
         ],
         usage: [
           'En local Postgres corre en Docker Compose. Cada git worktree tiene además su propia base aislada, creada por `scripts/setup-worktree-db.sh`, así podés probar migraciones en una branch sin romper la de otra.',
+          'El buscador (⌘K) busca el foro, los consejos y los miembros directamente en Postgres, porque son las tablas que más crecen. Usa full-text search por prefijo y, si no hay coincidencia exacta, `pg_trgm` para los errores de tipeo. `search_text()` normaliza igual que el buscador en memoria: minúsculas, sin tildes (con `unaccent`) y sin puntuación. Prisma no conoce estos índices, así que viven solo en la migración SQL escrita a mano.',
         ],
         examples: [
           {
@@ -1216,21 +1232,38 @@ if (process.env.NODE_ENV !== 'production') globalThis.prismaGlobal = prisma;`,
     retries: 5`,
           },
           {
-            file: 'src/app/api/search/route.ts',
-            lang: 'ts',
-            code: `const contains = { contains: query, mode: 'insensitive' as const };
-const [events, talks, advice, projects] = await Promise.all([
-  prisma.event.findMany({
-    where: { deletedAt: null, OR: [{ name: contains }, { description: contains }] },
-    orderBy: { date: 'desc' },
-    take: DB_CANDIDATES,
-    // …
-  }),
-  // …
-]);`,
+            file: 'prisma/migrations/20261031120000_full_text_search/migration.sql',
+            lang: 'sql',
+            caption:
+              'Las extensiones, la función que normaliza el texto y los dos índices de una tabla.',
+            code: `CREATE EXTENSION IF NOT EXISTS unaccent;
+CREATE EXTENSION IF NOT EXISTS pg_trgm;
+
+CREATE OR REPLACE FUNCTION search_text(text) RETURNS text
+  LANGUAGE sql IMMUTABLE PARALLEL SAFE STRICT
+  AS $$ SELECT btrim(regexp_replace(lower(public.unaccent('public.unaccent'::regdictionary, $1)), '[^a-z0-9]+', ' ', 'g')) $$;
+-- …
+CREATE INDEX "Advice_search_fts_idx" ON "Advice"
+  USING GIN (to_tsvector('simple', search_text("content")));
+CREATE INDEX "Advice_search_trgm_idx" ON "Advice"
+  USING GIN (search_text("content") gin_trgm_ops);`,
+          },
+          {
+            file: 'src/lib/search/full-text.ts',
+            lang: 'sql',
+            caption:
+              'La consulta del foro: coincidencias por prefijo o con un typo, las exactas primero.',
+            code: `SELECT "id" FROM "ForumPost"
+WHERE to_tsvector('simple', search_text("title" || ' ' || "content")) @@ to_tsquery('simple', \${query.prefixes})
+   OR (\${query.typos} AND \${query.text} <% search_text("title" || ' ' || "content"))
+ORDER BY
+  ts_rank(to_tsvector('simple', search_text("title" || ' ' || "content")), to_tsquery('simple', \${query.prefixes})) DESC,
+  word_similarity(\${query.text}, search_text("title" || ' ' || "content")) DESC,
+  "activeAt" DESC
+LIMIT \${CANDIDATES}`,
           },
         ],
-        docsUrl: 'https://www.postgresql.org/docs/current/tutorial.html',
+        docsUrl: 'https://www.postgresql.org/docs/current/textsearch-intro.html',
       },
       {
         id: 'auth',
@@ -1716,9 +1749,15 @@ CMD ["pnpm", "start"]`,
             detail:
               'Las credenciales viven en GitHub Secrets y llegan como variables de entorno; nunca se commitean.',
           },
+          {
+            term: 'lifecycle policy',
+            detail:
+              'Reglas con las que el registry borra solo las imágenes viejas. Sin ellas, cada deploy suma una imagen de más de 1 GB que se paga para siempre.',
+          },
         ],
         usage: [
           'Trabajamos en branches, las mergeamos a `testing` y de ahí a `main`. Cada push a `main` dispara el workflow: instala dependencias, aplica las migraciones pendientes con `prisma migrate deploy` y corre `kamal deploy`. El healthcheck que usa Kamal es la ruta `/up`.',
+          'ECR conserva las últimas 10 imágenes con tag, que alcanzan para volver atrás con `kamal rollback`, y borra las imágenes sin tag (capas de builds intermedios) un día después de subidas. La política está versionada en `config/ecr-lifecycle-policy.json`; si la cambiás, aplicala con `aws ecr put-lifecycle-policy`.',
         ],
         examples: [
           {
@@ -1745,7 +1784,9 @@ CMD ["pnpm", "start"]`,
             code: `service: pcn-website
 # …
 proxy:
-  host: programaconnosotros.com
+  hosts:
+    - programaconnosotros.com
+    - origin.programaconnosotros.com
   ssl: true
   app_port: 3000
 # …
@@ -1755,6 +1796,21 @@ builder:
   dockerfile: Dockerfile.prod
   cache:
     type: gha`,
+          },
+          {
+            file: 'config/ecr-lifecycle-policy.json',
+            lang: 'json',
+            code: `{
+  "rulePriority": 1,
+  "description": "Keep the last 10 deployed images (for kamal rollback)",
+  "selection": {
+    "tagStatus": "tagged",
+    "tagPatternList": ["*"],
+    "countType": "imageCountMoreThan",
+    "countNumber": 10
+  },
+  "action": { "type": "expire" }
+}`,
           },
         ],
         docsUrl: 'https://kamal-deploy.org/docs/installation/',
@@ -2744,6 +2800,76 @@ moveTo(x, y, event.data);`,
         ],
         docsUrl: 'https://nextjs.org/docs/app/api-reference/functions/use-router',
         sourcePath: 'src/components/pull-to-refresh.tsx',
+      },
+      {
+        id: 'notificaciones-push',
+        name: 'Notificaciones push',
+        tagline: 'avisos en el celular con el sitio cerrado',
+        what: 'Web Push permite que un sitio mande notificaciones aunque nadie lo tenga abierto. El navegador se suscribe a su servicio de push (el de Google en Chrome, el de Mozilla en Firefox, el de Apple en Safari) y le da al sitio una URL única, el endpoint. Para avisar, el servidor le hace un POST cifrado a ese endpoint; el servicio lo entrega al dispositivo, donde el service worker se despierta y muestra la notificación.',
+        concepts: [
+          {
+            term: 'VAPID',
+            detail:
+              'Un par de claves que identifica al sitio ante los servicios de push. El navegador se suscribe con la pública y el servidor firma cada envío con la privada. Si se cambian, las suscripciones existentes dejan de recibir.',
+          },
+          {
+            term: 'suscripción',
+            detail:
+              'Un endpoint más dos claves (`p256dh` y `auth`) con las que el servidor cifra el mensaje: el servicio de push lo transporta pero no lo puede leer.',
+          },
+          {
+            term: 'service worker',
+            detail:
+              'El script que el navegador corre aparte de la página. Recibe el evento `push`, muestra la notificación y, al tocarla, abre la página que corresponde.',
+          },
+          {
+            term: '404 / 410',
+            detail:
+              'Lo que responde el servicio de push cuando una suscripción ya no existe (se revocó el permiso o se borró el sitio). Ahí la borramos de la base.',
+          },
+        ],
+        usage: [
+          'Cada miembro las activa por dispositivo desde `/perfil`. En iPhone y iPad, Safari solo las ofrece con el sitio agregado a la pantalla de inicio, y la pantalla lo explica. Llegan push por eventos nuevos, cambios y anuncios de eventos a los que te anotaste, respuestas en el foro y ofertas de empleo nuevas. El resto de las notificaciones (likes, por ejemplo) quedan solo dentro del sitio.',
+          '`notifyUsers` crea la notificación en la base y, si lleva `push: true`, llama a `sendPush`, que nunca tira error: una push que falla no rompe la acción que la disparó. Como el servidor hace un POST a una URL que manda el navegador, solo acepta endpoints de los servicios de push conocidos; cualquier otra sería un SSRF. Al cerrar sesión se desactivan las push de ese navegador, para que un dispositivo compartido no siga recibiendo las de otra persona.',
+          'Las claves VAPID son secrets del repo (`VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY` y `VAPID_SUBJECT`). Sin ellas la opción no aparece y no se envía nada; en local se generan con `pnpm exec web-push generate-vapid-keys`.',
+        ],
+        examples: [
+          {
+            file: 'src/lib/push-endpoints.ts',
+            lang: 'ts',
+            caption: 'Solo los servicios de push de los navegadores, por HTTPS.',
+            code: `export const isPushServiceEndpoint = (endpoint: string) => {
+  let url: URL;
+  try {
+    url = new URL(endpoint);
+  } catch {
+    return false;
+  }
+  if (url.protocol !== 'https:' || url.port || url.username || url.password) return false;
+  const host = url.hostname.toLowerCase();
+  return EXACT_HOSTS.has(host) || HOST_SUFFIXES.some((suffix) => host.endsWith(suffix));
+};`,
+          },
+          {
+            file: 'public/sw.js',
+            lang: 'js',
+            code: `self.addEventListener('push', (event) => {
+  // …
+  event.waitUntil(
+    self.registration.showNotification(payload.title || 'programaConNosotros', {
+      body: payload.body || '',
+      tag: payload.tag,
+      icon: '/pwa-icon-192.png',
+      badge: '/pwa-icon-192.png',
+      lang: 'es',
+      data: { url: payload.url || '/notificaciones' },
+    }),
+  );
+});`,
+          },
+        ],
+        docsUrl: 'https://developer.mozilla.org/en-US/docs/Web/API/Push_API',
+        sourcePath: 'src/lib/web-push.ts',
       },
     ],
   },

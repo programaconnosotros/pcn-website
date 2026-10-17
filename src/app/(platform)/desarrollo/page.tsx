@@ -3,6 +3,7 @@ import { PageTitle } from '@/components/ui/page-title';
 import { StickyHeader } from '@/components/ui/sticky-header';
 import type { Metadata } from 'next';
 import {
+  Bot,
   Database,
   GitBranch,
   GitPullRequest,
@@ -132,13 +133,20 @@ const conventions = [
   {
     icon: GitPullRequest,
     title: 'Título de la PR',
-    detail: 'El formato es: [ID del ticket de Notion] - Título del ticket en Notion.',
+    detail:
+      'Sigue Conventional Commits, en inglés: feat(forum): quote replies. Si resuelve un issue de GitHub, la descripción lo cierra con Closes #123. La skill create-pr arma todo por vos.',
+  },
+  {
+    icon: Bot,
+    title: 'Code review',
+    detail:
+      'CodeRabbit revisa sola cada PR hacia testing con las reglas del repo (.coderabbit.yaml). Comentá @coderabbitai review para pedir otra pasada; después la aprueba una persona del equipo.',
   },
   {
     icon: Package,
     title: 'pnpm es obligatorio',
     detail:
-      'Este proyecto usa pnpm como package manager. No uses npm ni yarn — el proyecto está configurado para pnpm@9.4.0.',
+      'Este proyecto usa pnpm 10 como package manager (la versión exacta está en packageManager del package.json). No uses npm ni yarn.',
   },
   {
     icon: Sparkles,
@@ -508,12 +516,23 @@ const DesarrolloPage = () => (
                 <dt className="font-mono text-pcnGreen">Tests E2E (Playwright)</dt>
                 <dd className="leading-relaxed text-muted-foreground">
                   Tests end-to-end en <Code>tests/</Code> que corren en Chromium, Firefox y WebKit.
-                  Se ejecutan con <Code>npx playwright test</Code>.
+                  Se ejecutan con <Code>pnpm test:e2e</Code>.
+                </dd>
+                <dt className="font-mono text-pcnGreen">Integración (Postgres)</dt>
+                <dd className="leading-relaxed text-muted-foreground">
+                  Los <Code>*.db.test.ts</Code> corren contra un Postgres local descartable con{' '}
+                  <Code>pnpm test:db</Code>: queries, server actions y la búsqueda full-text.
                 </dd>
                 <dt className="font-mono text-pcnGreen">Calidad automatizada</dt>
                 <dd className="leading-relaxed text-muted-foreground">
                   El hook pre-push de Husky ejecuta lint, format check, tests y build antes de cada
                   push. No se puede pushear código que rompa alguno de estos checks.
+                </dd>
+                <dt className="font-mono text-pcnGreen">Code review (CodeRabbit)</dt>
+                <dd className="leading-relaxed text-muted-foreground">
+                  Cada PR hacia <Code>testing</Code> recibe una review automática con las reglas del
+                  repo (<Code>.coderabbit.yaml</Code>). Con <Code>@coderabbitai review</Code> pedís
+                  otra pasada.
                 </dd>
               </dl>
               <p className="mt-3 text-xs text-muted-foreground">
