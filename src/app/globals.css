@@ -2225,8 +2225,10 @@
   }
 }
 
-/* Home hero: figures that count up from 0 in CSS alone. The number lives in a registered
-   integer property, interpolated by the animation and printed through a counter. */
+/* Home hero: figures that count up from 0 in CSS. The number lives in a registered integer
+   property, interpolated by the animation and printed through a counter. It holds at 0 until
+   CountUp (src/components/home/count-up.tsx) sets data-counting once hydration is over: a
+   custom property animates on the main thread, so it can't run while hydration blocks it. */
 @property --count {
   syntax: '<integer>';
   initial-value: 0;
@@ -2235,7 +2237,15 @@
 .count-up {
   --count: var(--count-to);
   counter-reset: count var(--count);
-  animation: count-up 1.8s cubic-bezier(0.22, 1, 0.36, 1) 0.3s both;
+  animation: count-up 1.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.count-up:not([data-counting]) {
+  animation-play-state: paused;
+}
+@media (scripting: none) {
+  .count-up {
+    animation: none;
+  }
 }
 .count-up::after {
   content: counter(count);

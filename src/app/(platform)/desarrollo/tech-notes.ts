@@ -2529,7 +2529,7 @@ if (suspended !== prevSuspended) {
           {
             term: '@property',
             detail:
-              'Registra una custom property con un tipo (por ejemplo `<integer>`) para que se pueda interpolar en una animación. Con un contador de CSS se imprime un número que sube sin JavaScript.',
+              'Registra una custom property con un tipo (por ejemplo `<integer>`) para que se pueda interpolar en una animación. Con un contador de CSS se imprime un número que sube, ya presente en el HTML del servidor. Ojo: una custom property se anima en el hilo principal, así que si arranca mientras la página hidrata no pinta ningún frame y salta del 0 al final; conviene largarla cuando el hilo queda libre.',
           },
           {
             term: 'content-visibility',
@@ -2577,7 +2577,10 @@ if (suspended !== prevSuspended) {
 .count-up {
   --count: var(--count-to);
   counter-reset: count var(--count);
-  animation: count-up 1.8s cubic-bezier(0.22, 1, 0.36, 1) 0.3s both;
+  animation: count-up 1.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.count-up:not([data-counting]) {
+  animation-play-state: paused;
 }
 .count-up::after {
   content: counter(count);
@@ -2589,14 +2592,17 @@ if (suspended !== prevSuspended) {
 }`,
           },
           {
-            file: 'src/components/home/home-hero.tsx',
+            file: 'src/components/home/count-up.tsx',
             lang: 'tsx',
-            code: `const CountUp = ({ value }: { value: number }) => (
-  <span className="tabular-nums tracking-tight">
-    <span aria-hidden className="count-up" style={{ '--count-to': value } as CSSProperties} />
-    <span className="sr-only">{value}</span>
-  </span>
-);`,
+            caption:
+              'La cuenta arranca recién cuando la hidratación terminó y el hilo principal está libre.',
+            code: `useEffect(() => {
+  const id = requestIdleCallback(
+    () => ref.current?.setAttribute('data-counting', ''),
+    { timeout: 1000 },
+  );
+  return () => cancelIdleCallback(id);
+}, []);`,
           },
           {
             file: 'next.config.mjs',

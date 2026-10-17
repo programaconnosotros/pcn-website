@@ -1,4 +1,5 @@
 import { Button } from '@/components/ui/button';
+import { CountUp } from '@/components/home/count-up';
 import { HeroInstallButton } from '@/components/ui/install-app-button';
 import { cn } from '@/lib/utils';
 import { GeistMono } from 'geist/font/mono';
@@ -217,18 +218,6 @@ const TerminalOutput = ({ lines }: { lines: OutputLine[] }) => (
       </li>
     ))}
   </ul>
-);
-
-/**
- * Counts from 0 up to `value` in CSS alone (an animated, registered custom property shown
- * through a CSS counter; see `.count-up` in globals.css), so the figure is in the server HTML
- * and needs no JavaScript. Browsers without `@property` just show the final number.
- */
-const CountUp = ({ value }: { value: number }) => (
-  <span className="tracking-tight tabular-nums">
-    <span aria-hidden className="count-up" style={{ '--count-to': value } as CSSProperties} />
-    <span className="sr-only">{value}</span>
-  </span>
 );
 
 const StatsPanel = () => {
