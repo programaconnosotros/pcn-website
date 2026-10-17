@@ -1,0 +1,20 @@
+{
+  "baseBranch": "testing",
+  "pr": {
+    "titleFormat": "conventional",
+    "language": "en",
+    "checklist": [
+      "`pnpm lint` passes",
+      "`pnpm format:check` passes",
+      "`pnpm test` passes",
+      "`pnpm build` passes",
+      "`pnpm test:db` passes (when the change touches queries, the schema or server actions)"
+    ],
+    "screenshots": {
+      "mode": "auto",
+      "uiPaths": ["src/app/**", "src/components/**"],
+      "artifactPaths": [".pr-screenshots/*.png"],
+      "captureCommand": "pnpm screenshot /route-a /route-b"
+    }
+  }
+}
