@@ -175,6 +175,17 @@ describe('ProfileForm', () => {
     expect(error(new Error('x'))).toBe('Error al actualizar el perfil');
   });
 
+  it('counts only the fields that changed, also after picking a country', async () => {
+    renderForm({ stackItems: [] });
+
+    fireEvent.change(screen.getByLabelText('slogan'), { target: { value: 'Hola mundo' } });
+    await userEvent.click(screen.getByRole('combobox', { name: 'país' }));
+    await userEvent.click(await screen.findByRole('option', { name: 'Uruguay' }));
+
+    // Las redes vacías y las categorías del stack sin cargar no cuentan como modificadas
+    expect(screen.getByText('2 campos modificados')).toBeInTheDocument();
+  });
+
   it('asks for the province only for Argentina and clears it when the country changes', async () => {
     renderForm();
 

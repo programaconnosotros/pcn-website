@@ -1,5 +1,6 @@
 import type { Page } from '@playwright/test';
 import type { PrismaClient } from '../../src/generated/prisma/client';
+import { displayName } from '../../src/lib/people-names';
 import { PROJECT } from './support/data';
 import { createUser, expireCachedReads, signIn, uniqueId } from './support/content-helpers';
 import { expect as baseExpect, test } from './support/fixtures';
@@ -53,6 +54,8 @@ test.describe('con un usuario propio', () => {
   test('TC-PRO-001 Publicar un proyecto open-source', async ({ page, db }) => {
     const author = await createUser(db, 'e2e-pro');
     const teammate = await createUser(db, 'e2e-pro', { name: `Compañera ${uniqueId('pro')}` });
+    // Como lo muestra el sitio: con mayúscula en cada palabra larga (src/lib/people-names.ts)
+    const teammateName = displayName(teammate.name);
     await signIn(page, author);
     await page.goto('/proyectos');
 
@@ -79,8 +82,8 @@ test.describe('con un usuario propio', () => {
     const search = dialog.getByPlaceholder('Buscar compañeros por nombre...');
     await search.fill(teammate.name);
     // El botón del resultado lleva la inicial del avatar delante del nombre
-    await dialog.getByRole('button', { name: new RegExp(`${teammate.name}$`) }).click();
-    await dialog.getByLabel(`Rol de ${teammate.name}`).fill('Backend');
+    await dialog.getByRole('button', { name: new RegExp(`${teammateName}$`) }).click();
+    await dialog.getByLabel(`Rol de ${teammateName}`).fill('Backend');
 
     await dialog.getByRole('button', { name: 'publicarProyecto();' }).click();
     await expect(page.getByText('Proyecto publicado')).toBeVisible();
@@ -99,7 +102,7 @@ test.describe('con un usuario propio', () => {
       techStack: ['E2eStack', 'Postgres'],
     });
     expect(saved.members).toEqual([
-      expect.objectContaining({ userId: teammate.id, memberName: teammate.name, role: 'Backend' }),
+      expect.objectContaining({ userId: teammate.id, memberName: teammateName, role: 'Backend' }),
     ]);
 
     // Aparece con el filtro open-source, con años y equipo
@@ -108,7 +111,7 @@ test.describe('con un usuario propio', () => {
     await expect(card).toBeVisible();
     await expect(card).toContainText('open-source');
     await expect(card).toContainText('2023 → 2025');
-    await expect(card.getByRole('link', { name: teammate.name })).toBeVisible();
+    await expect(card.getByRole('link', { name: teammateName })).toBeVisible();
     await expect(
       card.getByRole('link', { name: `Ver el repositorio de ${title} en GitHub` }),
     ).toHaveAttribute('href', 'https://github.com/example/e2e-pro');
@@ -395,7 +398,9 @@ test.describe('sin sesión', () => {
 
     await search.fill('zzz-ningun-proyecto-e2e');
     await expect(page.getByRole('article')).toHaveCount(0);
-    await expect(page.getByText(/grep: 0 proyectos/)).toBeVisible();
+    await expect(
+      page.getByRole('heading', { name: /Ningún proyecto coincide con los filtros/ }),
+    ).toBeVisible();
   });
 
   test('tocar una tecnología de la tarjeta filtra por ese stack', async ({ page }) => {

@@ -143,7 +143,14 @@ export const ProfileForm = ({
       specialties: user.specialties ?? [],
       operatingSystems: user.operatingSystems ?? [],
       favoriteIde: user.favoriteIde ?? null,
-      stack: Object.fromEntries((user.stackItems ?? []).map((item) => [item.category, item.name])),
+      // Todas las categorías, también las vacías: cada una es un input registrado y, si faltara
+      // acá, quedaría como modificada en cuanto el formulario recalcula qué cambió.
+      stack: Object.fromEntries(
+        STACK_CATEGORIES.map(({ id }) => [
+          id,
+          user.stackItems?.find((item) => item.category === id)?.name ?? '',
+        ]),
+      ),
       programmingLanguages: languages || [],
     },
   });
@@ -602,10 +609,8 @@ export const ProfileForm = ({
                       type="url"
                       className="rounded-l-none"
                       placeholder={link.placeholder}
-                      {...form.register(link.name, {
-                        setValueAs: (v) => (v === '' ? null : v),
-                      })}
-                      value={values[link.name] || ''}
+                      // Vacío queda '' como el valor inicial; el schema lo guarda como null
+                      {...form.register(link.name)}
                     />
                   </div>
                   <FormError error={form.formState.errors[link.name]} />

@@ -6,6 +6,7 @@ import { deleteRegistration } from '@/actions/events/delete-registration';
 import { getEventRegistrations, getEventWaitlist } from '@/actions/events/get-event-registrations';
 import { updateEvent } from '@/actions/events/update-event';
 import { getWaitlistPosition } from '@/lib/event-waitlist';
+import { AuthRequiredError } from '@/lib/auth-required';
 import { actAs } from '@/test/db/fixtures';
 import {
   createAdmin,
@@ -82,7 +83,7 @@ describe('registerEvent', () => {
     const event = await createTestEvent();
     await actAs();
 
-    await expect(register(event.id)).rejects.toThrow('Debes estar autenticado');
+    await expect(register(event.id)).rejects.toThrow(AuthRequiredError);
     expect(await prisma.eventRegistration.count({ where: { eventId: event.id } })).toBe(0);
   });
 
@@ -95,7 +96,7 @@ describe('registerEvent', () => {
       data: { expires: new Date(Date.now() - 1000) },
     });
 
-    await expect(register(event.id)).rejects.toThrow('Sesión no válida');
+    await expect(register(event.id)).rejects.toThrow(AuthRequiredError);
     expect(await prisma.eventRegistration.count({ where: { eventId: event.id } })).toBe(0);
   });
 

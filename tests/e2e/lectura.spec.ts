@@ -291,7 +291,7 @@ test('the books tab lists books and searches them', async ({ page }) => {
 
   await search.fill('zzz-no-existe-e2e');
   await expect(
-    panel.getByText('No se encontraron libros con los filtros seleccionados.'),
+    panel.getByRole('heading', { name: /Ningún libro coincide con los filtros/ }),
   ).toBeVisible();
 });
 

@@ -138,21 +138,25 @@ test('a notification without a link to an event shows no event links', async ({ 
   await expect(row.getByRole('link')).toHaveCount(0);
 });
 
-test.describe('as a regular member', () => {
-  test.use({ as: 'member' });
-
-  test('TC-NOT-003 Notificaciones solo para admins', async ({ page }) => {
-    await page.goto('/eventos');
-    // El sidebar ya cargó (Changelog es uno de sus links), pero sin la sección de administración
-    await expect(page.getByRole('link', { name: 'Changelog', exact: true })).toBeVisible();
-    await expect(sidebarLink(page)).toHaveCount(0);
-
-    // El caso manual espera "No tienes notificaciones"; la página manda a quien no es admin al
-    // inicio, sin mostrar ninguna notificación
-    await page.goto('/notificaciones');
-    await page.waitForURL((url) => url.pathname === '/');
-    await expect(page.getByText(/sin leer \[\d+\]/)).toHaveCount(0);
+test('TC-NOT-003 Cada miembro ve solo sus notificaciones', async ({ page, db }) => {
+  // Desde 8abc2f8b la bandeja es de todos, no solo de admins: cada quien ve las suyas
+  const [member, admin] = [
+    await createUser(db, PREFIX),
+    await createUser(db, PREFIX, { role: 'ADMIN' }),
+  ];
+  const [own, other] = [`Aviso propio ${uniqueId(PREFIX)}`, `Aviso ajeno ${uniqueId(PREFIX)}`];
+  await db.notification.createMany({
+    data: [
+      { userId: member.id, type: 'e2e_test', title: own, message: `Mensaje de ${own}` },
+      { userId: admin.id, type: 'e2e_test', title: other, message: `Mensaje de ${other}` },
+    ],
   });
+
+  await signIn(page, member, '/notificaciones');
+  await expect(page).toHaveURL('/notificaciones');
+  await expect(sidebarLink(page)).toBeVisible();
+  await expect(page.getByText(`Mensaje de ${own}`, { exact: true })).toBeVisible();
+  await expect(page.getByText(`Mensaje de ${other}`, { exact: true })).toHaveCount(0);
 });
 
 test('anonymous visitors are sent home from /notificaciones', async ({ page }) => {

@@ -12,7 +12,7 @@ test('the tab bar navigates between the main sections and marks the current one'
 }) => {
   await page.goto('/');
   await expect(tabBar(page)).toBeVisible();
-  for (const name of ['Inicio', 'Eventos', 'Cursos', 'Conversaciones']) {
+  for (const name of ['Inicio', 'Feed', 'Eventos', 'Conversaciones']) {
     await expect(tabBar(page).getByRole('link', { name })).toBeVisible();
   }
   await expect(tabBar(page).getByRole('link', { name: 'Inicio' })).toHaveAttribute(
@@ -80,14 +80,16 @@ test('main sections have no horizontal scroll on a phone and filters fold away',
       })
       .toBeLessThanOrEqual(0);
   }
-  // Las barras de filtros se pliegan detrás de "filtros"
+  // Las barras de filtros se pliegan detrás de "filtros"; en /conversaciones se abren en una hoja
+  // de abajo (modal: el resto de la página queda aria-hidden, por eso el botón incluye lo oculto)
   await page.goto('/conversaciones');
   const toggle = page
-    .getByRole('button', { name: /filtros/ })
+    .getByRole('button', { name: /filtros/, includeHidden: true })
     .filter({ visible: true })
     .first();
   await expect(page.getByRole('button', { name: /--muchos-participantes/ })).toBeHidden();
   await toggle.click();
   await expect(toggle).toHaveAttribute('aria-expanded', 'true');
-  await expect(page.getByRole('button', { name: /--muchos-participantes/ })).toBeVisible();
+  const sheet = page.getByRole('dialog', { name: 'filtros y estadísticas' });
+  await expect(sheet.getByRole('button', { name: /--muchos-participantes/ })).toBeVisible();
 });

@@ -147,6 +147,8 @@ test.describe('keyboard', () => {
     await page.keyboard.press('Tab');
     await expect(page.getByLabel('Contraseña')).toBeFocused();
     await page.keyboard.type('incorrecta-e2e');
+    // Enter no envía mientras el captcha (proof-of-work) se resuelve y el botón sigue deshabilitado
+    await expect(page.getByRole('button', { name: /ingresar/ })).toBeEnabled();
     await page.keyboard.press('Enter');
     await expect(page.getByText('Credenciales incorrectas.')).toBeVisible();
     await expect(page).toHaveURL(/\/iniciar-sesion/);
@@ -353,7 +355,7 @@ test.describe('rate limits', () => {
     await signInAs(context, db, user.id);
     await page.goto(`/consejos/${advice.id}`);
 
-    const box = page.getByPlaceholder('Escribe tu comentario...');
+    const box = page.getByPlaceholder('Escribí acá tu comentario');
     const send = page.getByRole('button', { name: 'enviarComentario();' });
     for (let i = 1; i <= 20; i++) {
       await box.fill(`comentario ${i}`);

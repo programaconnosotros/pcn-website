@@ -1,6 +1,7 @@
 import { truncate, writeFile } from 'node:fs/promises';
 import type { FileChooser, Page } from '@playwright/test';
 import type { PrismaClient } from '../../src/generated/prisma/client';
+import { displayName } from '../../src/lib/people-names';
 import { createUser, seededUserId, signIn, uniqueId } from './support/content-helpers';
 import { EVENTS } from './support/data';
 import { expect as baseExpect, test } from './support/fixtures';
@@ -87,6 +88,8 @@ test('TC-GAL-005 Filtros de la galería en la URL', async ({ page, db }) => {
   const event = await createEvent(db, `Evento ${token}`);
   const other = await createEvent(db, `Otro ${token}`);
   const person = await createUser(db, PREFIX, { name: `Persona ${token}` });
+  // El sitio muestra los nombres con mayúscula en cada palabra larga (src/lib/people-names.ts)
+  const shown = displayName(person.name);
   const newer = await createItem(db, {
     description: `Foto nueva ${token}`,
     eventId: event.id,
@@ -127,7 +130,7 @@ test('TC-GAL-005 Filtros de la galería en la URL', async ({ page, db }) => {
   await expect(page).toHaveURL(`/galeria?tipo=fotos&evento=${event.id}`);
 
   await page.getByRole('combobox', { name: 'Filtrar por persona' }).click();
-  await page.getByRole('option', { name: new RegExp(`^Persona ${token}`) }).click();
+  await page.getByRole('option', { name: new RegExp(`^${shown}`) }).click();
   await expect(page).toHaveURL(`/galeria?tipo=fotos&evento=${event.id}&persona=${person.id}`);
 
   const expectFiltered = async (target: Page) => {
@@ -148,7 +151,7 @@ test('TC-GAL-005 Filtros de la galería en la URL', async ({ page, db }) => {
     `Evento ${token}`,
   );
   await expect(otherTab.getByRole('combobox', { name: 'Filtrar por persona' })).toContainText(
-    `Persona ${token}`,
+    shown,
   );
   await otherTab.close();
 
@@ -245,8 +248,10 @@ test.describe('anonymous visitor', () => {
     await expect(page.getByText('1:05')).toBeVisible();
 
     await page.goto(`/galeria?evento=${empty.id}`);
-    await expect(page.getByRole('main').getByText('No hay nada con estos filtros.')).toBeVisible();
-    await page.getByRole('link', { name: 'ver todo', exact: true }).click();
+    await expect(
+      page.getByRole('main').getByRole('heading', { name: 'No hay nada con estos filtros' }),
+    ).toBeVisible();
+    await page.getByRole('link', { name: 'cd ~/galeria --todo' }).click();
     await expect(page).toHaveURL(/\/galeria$/);
   });
 
@@ -269,7 +274,11 @@ test.describe('anonymous visitor', () => {
     await expect(page.getByText(/1\s*\/\s*2\s*coincidencias/)).toBeVisible();
 
     await search.fill('nada-que-ver-xyz');
-    await expect(page.getByText('grep: sin coincidencias para')).toBeVisible();
+    await expect(
+      page
+        .getByRole('main')
+        .getByRole('heading', { name: 'Ninguna foto coincide con la búsqueda' }),
+    ).toBeVisible();
   });
 });
 
@@ -306,15 +315,15 @@ test('TC-GAL-009 Descargar una foto', async ({ page, db }) => {
 test.describe('signed in as a member', () => {
   test.use({ as: 'member' });
 
-  test('TC-GAL-004 Solo admins pueden subir', async ({ page, db }) => {
+  test('TC-GAL-004 Miembros suben a revisión, solo admins editan', async ({ page, db }) => {
     const photo = await createItem(db, { description: `Foto de miembro ${uniqueId('x')}` });
 
+    // Cualquier miembro sube fotos, que esperan la aprobación de un admin; no edita en masa
     await page.goto('/galeria');
-    await expect(page.getByRole('button', { name: 'subir();' })).toHaveCount(0);
     await expect(page.getByRole('button', { name: 'seleccionar' })).toHaveCount(0);
-
-    await page.goto('/galeria/subir');
-    await expect(page).toHaveURL(/\/$/);
+    await page.getByRole('button', { name: 'subir();' }).click();
+    await expect(page).toHaveURL(/\/galeria\/subir$/);
+    await expect(page.getByRole('note')).toContainText('cuando un admin las aprueba');
 
     // Tampoco puede editar ni eliminar una foto
     await page.goto(`/galeria/${photo.id}`);
@@ -366,6 +375,7 @@ test('TC-GAL-008 Edición masiva', async ({ page, db }) => {
   const token = uniqueId('masiva');
   const admin = await createUser(db, PREFIX, { role: 'ADMIN' });
   const person = await createUser(db, PREFIX, { name: `Persona ${token}` });
+  const shown = displayName(person.name);
   const source = await createEvent(db, `Origen ${token}`);
   const target = await createEvent(db, `Destino ${token}`);
   const photos = await Promise.all(
@@ -399,8 +409,8 @@ test('TC-GAL-008 Edición masiva', async ({ page, db }) => {
 
   // Etiquetar a una persona en las 3
   await bar.getByRole('textbox', { name: 'buscar persona' }).fill(token);
-  await page.getByRole('option', { name: new RegExp(`Persona ${token}`) }).click();
-  await expectToast(page, `Etiquetaste a Persona ${token} en 3 archivos`);
+  await page.getByRole('option', { name: new RegExp(shown) }).click();
+  await expectToast(page, `Etiquetaste a ${shown} en 3 archivos`);
   await expect
     .poll(() => db.galleryItemTag.count({ where: { itemId: { in: ids }, userId: person.id } }))
     .toBe(3);
@@ -424,19 +434,20 @@ test('an admin tags someone else on a photo and removes them', async ({ page, db
   const token = uniqueId('etiqueta');
   const admin = await createUser(db, PREFIX, { role: 'ADMIN' });
   const person = await createUser(db, PREFIX, { name: `Persona ${token}` });
+  const shown = displayName(person.name);
   const photo = await createItem(db, { description: `Foto ${token}` });
 
   await signIn(page, admin);
   await page.goto(`/galeria/${photo.id}`);
   await page.getByRole('textbox', { name: 'etiquetar persona' }).fill(token);
-  await page.getByRole('option', { name: new RegExp(`Persona ${token}`) }).click();
-  await expectToast(page, `Etiquetaste a Persona ${token}`);
+  await page.getByRole('option', { name: new RegExp(shown) }).click();
+  await expectToast(page, `Etiquetaste a ${shown}`);
   await expect
     .poll(() => db.galleryItemTag.findFirst({ where: { itemId: photo.id, userId: person.id } }))
     .toMatchObject({ taggedById: admin.id });
 
-  await page.getByRole('button', { name: `Quitar a Persona ${token} de la foto` }).click();
-  await expectToast(page, `Quitaste a Persona ${token}`);
+  await page.getByRole('button', { name: `Quitar a ${shown} de la foto` }).click();
+  await expectToast(page, `Quitaste a ${shown}`);
   await expect
     .poll(() => db.galleryItemTag.count({ where: { itemId: photo.id, userId: person.id } }))
     .toBe(0);
@@ -514,7 +525,9 @@ test.describe('signed in as an admin', () => {
     };
 
     await pick({ name: 'foto.heic', mimeType: 'image/heic', buffer: Buffer.from('no es heic') });
-    await expect(page.getByText('HEIC no está soportado: exportala como JPG.')).toBeVisible();
+    await expect(
+      page.getByText('No se pudo convertir la foto HEIC: exportala como JPG.'),
+    ).toBeVisible();
 
     await pick({ name: 'video.avi', mimeType: 'video/x-msvideo', buffer: Buffer.from('avi') });
     await expect(

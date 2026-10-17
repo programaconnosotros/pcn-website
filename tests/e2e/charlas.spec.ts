@@ -1,5 +1,6 @@
 import type { Page } from '@playwright/test';
 import type { PrismaClient } from '../../src/generated/prisma/client';
+import { displayName } from '../../src/lib/people-names';
 import { EVENTS } from './support/data';
 import {
   expect,
@@ -45,7 +46,8 @@ test('TC-CHA-001 Proponer una charla', async ({ page, factory, db }) => {
 
   // El orador 1 viene del perfil
   const first = speakerBlock(page, 1);
-  await expect(first.getByLabel('Nombre del orador')).toHaveValue(user.name);
+  // Con el nombre como lo muestra el sitio (mayúscula en cada palabra larga)
+  await expect(first.getByLabel('Nombre del orador')).toHaveValue(displayName(user.name));
   await expect(first.getByLabel('Teléfono (WhatsApp)')).toHaveValue('5493815550000');
   await expect(first.getByLabel('Soy profesional')).toBeChecked();
   await expect(first.getByLabel('Rol / Puesto')).toHaveValue('Desarrolladora');
@@ -71,7 +73,7 @@ test('TC-CHA-001 Proponer una charla', async ({ page, factory, db }) => {
   expect(proposal.speakers).toHaveLength(1);
   expect(proposal.speakers[0]).toMatchObject({
     userId: user.id,
-    speakerName: user.name,
+    speakerName: displayName(user.name),
     speakerPhone: '5493815550000',
     isProfessional: true,
     enterprise: 'ACME',
@@ -90,6 +92,8 @@ test('TC-CHA-002 Validaciones de oradores en la propuesta', async ({ page, facto
   const event = await factory.event({ callForSpeakersEnabled: true });
   await signInWithSession(db, page.context(), user.id);
   await page.goto(proposeUrl(event.id));
+  // Mientras la página llega por streaming el formulario puede estar dos veces (una oculta)
+  await expect(page.getByLabel('Título de la charla')).toHaveCount(1);
 
   // Con un solo orador no hay botón para quitarlo
   await expect(removeSpeakerButton(page, 1)).toHaveCount(0);
@@ -165,7 +169,8 @@ test('TC-CHA-004 Aceptar una propuesta y crear la charla', async ({ page, factor
 
   await page.goto('/charlas');
   await page.getByRole('textbox', { name: /Buscar charlas/ }).fill(proposal.title);
-  await expect(page.getByText(proposal.title)).toBeVisible();
+  // El título también puede pasar por la marquesina de novedades: el de la lista es un encabezado
+  await expect(page.getByRole('heading', { name: proposal.title })).toBeVisible();
 });
 
 test.describe('organizador de otro evento', () => {
@@ -298,7 +303,7 @@ test('TC-CHA-006 Buscar y filtrar charlas', async ({ page, factory }) => {
   const all = [video, slides, plain];
   const expectVisible = async (visible: string[]) => {
     for (const title of all) {
-      await expect(page.getByText(title, { exact: true })).toHaveCount(
+      await expect(page.getByRole('article').getByText(title, { exact: true })).toHaveCount(
         visible.includes(title) ? 1 : 0,
       );
     }
@@ -346,7 +351,7 @@ test.describe('como miembro', () => {
 
   test('TC-CHA-007 Solo admins gestionan charlas desde /charlas', async ({ page }) => {
     await page.goto('/charlas');
-    await expect(page.getByText('Charla E2E sobre Playwright')).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Charla E2E sobre Playwright' })).toBeVisible();
     await expect(page.getByRole('button', { name: /nuevaCharla/ })).toHaveCount(0);
     await expect(page.getByRole('link', { name: /quiero dar una charla/ })).toBeVisible();
     await expect(talkMenus(page)).toHaveCount(0);
@@ -371,7 +376,7 @@ test.describe('extra', () => {
 
   test('anónimo: /charlas no muestra controles de admin', async ({ page }) => {
     await page.goto('/charlas');
-    await expect(page.getByText('Charla E2E sobre Playwright')).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Charla E2E sobre Playwright' })).toBeVisible();
     await expect(page.getByRole('button', { name: /nuevaCharla/ })).toHaveCount(0);
     await expect(talkMenus(page)).toHaveCount(0);
   });
@@ -385,6 +390,7 @@ test.describe('extra', () => {
     const event = await factory.event({ callForSpeakersEnabled: true });
     await signInWithSession(db, page.context(), user.id);
     await page.goto(proposeUrl(event.id));
+    await expect(page.getByLabel('Título de la charla')).toHaveCount(1);
 
     await page.getByLabel('Título de la charla').fill('Charla a dos voces');
     await page.getByLabel('Descripción de la charla').fill('Dos oradores, una charla.');
@@ -402,7 +408,10 @@ test.describe('extra', () => {
       where: { eventId: event.id },
       include: { speakers: { orderBy: { order: 'asc' } } },
     });
-    expect(proposal.speakers.map((s) => s.speakerName)).toEqual([user.name, 'Segunda Oradora']);
+    expect(proposal.speakers.map((s) => s.speakerName)).toEqual([
+      displayName(user.name),
+      'Segunda Oradora',
+    ]);
     await db.notification.deleteMany({
       where: { type: 'talk_proposal_created', metadata: { contains: proposal.id } },
     });

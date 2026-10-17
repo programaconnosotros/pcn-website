@@ -10,13 +10,20 @@ export const dynamic = 'force-dynamic';
 /** Longer than this and the database counts as down: the proxy retries anyway. */
 const DATABASE_TIMEOUT_MS = 3000;
 
-const pingDatabase = () =>
-  Promise.race([
-    prisma.$queryRaw`SELECT 1`,
-    new Promise((_resolve, reject) =>
-      setTimeout(() => reject(new Error('timeout')), DATABASE_TIMEOUT_MS),
-    ),
-  ]);
+const pingDatabase = async () => {
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  try {
+    return await Promise.race([
+      prisma.$queryRaw`SELECT 1`,
+      new Promise((_resolve, reject) => {
+        timer = setTimeout(() => reject(new Error('timeout')), DATABASE_TIMEOUT_MS);
+      }),
+    ]);
+  } finally {
+    // Si la base contesta antes, el timer no queda vivo 3 segundos por cada chequeo
+    clearTimeout(timer);
+  }
+};
 
 export async function GET() {
   try {

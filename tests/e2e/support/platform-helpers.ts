@@ -7,6 +7,7 @@ import type { BrowserContext, Page } from '@playwright/test';
 import type { PrismaClient } from '../../../src/generated/prisma/client';
 import { E2E_BASE_URL } from './env';
 import { PASSWORD } from './data';
+import { displayName } from '../../../src/lib/people-names';
 
 /** Un id corto y único, prefijado por área (`e2e-plt-…`). */
 export const platformId = (prefix: string) => `${prefix}-${randomUUID().slice(0, 8)}`;
@@ -24,7 +25,7 @@ export const createPlatformUser = async (
   const user = await db.user.create({
     data: {
       email,
-      name: data.name ?? `Usuario ${id}`,
+      name: data.name ?? displayName(`Usuario ${id}`),
       password: await bcrypt.hash(PASSWORD, 4),
       emailVerified: true,
       countryOfOrigin: 'Argentina',

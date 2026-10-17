@@ -61,7 +61,9 @@ test('TC-CNV-001 Buscar conversaciones sin importar acentos', async ({ page }) =
 test('a search with no matches shows 0 resultados and Escape clears it', async ({ page }) => {
   await search(page).fill('zzzqqqxxx');
   await expect(counter(page)).toHaveText(`0/${TOTAL} resultados`);
-  await expect(page.getByText('0 resultados para "zzzqqqxxx"')).toBeVisible();
+  await expect(page.getByRole('status').filter({ hasText: 'grep -i "zzzqqqxxx"' })).toContainText(
+    'Ninguna conversación coincide',
+  );
   await expect(rows(page)).toHaveCount(0);
 
   await search(page).press('Escape');

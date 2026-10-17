@@ -59,6 +59,22 @@ describe('RealtimeRefresh', () => {
   });
 });
 
+describe('useRealtime', () => {
+  it('shares one connection per set of topics and closes it after the last listener leaves', () => {
+    const first = render(<RealtimeRefresh topics={['feed']} />);
+    const second = render(<LiveNews />);
+    expect(FakeEventSource.instances).toHaveLength(1);
+
+    latest().emit({ topic: 'feed', data: { kind: 'foro', title: 'Un tema', href: '/foro' } });
+    expect(toast).toHaveBeenCalledTimes(1);
+
+    first.unmount();
+    expect(latest().close).not.toHaveBeenCalled();
+    second.unmount();
+    expect(latest().close).toHaveBeenCalled();
+  });
+});
+
 describe('LiveNews', () => {
   it('toasts what is new with a link to it', async () => {
     render(<LiveNews />);

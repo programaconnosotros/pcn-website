@@ -52,6 +52,13 @@ describe('/offline', () => {
     const { unmount } = render(<OfflinePage />);
 
     expect(screen.getByText('[sin conexión]')).toBeInTheDocument();
+    // Chrome can fire `online` while still offline: reloading then would cancel a navigation
+    act(() => {
+      window.dispatchEvent(new Event('online'));
+    });
+    expect(reloads()).toBe(0);
+
+    online = true;
     act(() => {
       window.dispatchEvent(new Event('online'));
     });

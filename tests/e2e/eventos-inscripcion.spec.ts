@@ -1,5 +1,6 @@
 import type { Page } from '@playwright/test';
 import { EVENTS } from './support/data';
+import { displayName } from '../../src/lib/people-names';
 import { expect as baseExpect, test } from './support/fixtures';
 import {
   createEvent,
@@ -155,7 +156,7 @@ test('TC-EVT-004 Al cancelar una inscripción sube el primero de la lista de esp
   await expect
     .poll(() =>
       db.notification.count({
-        where: { type: 'event_waitlist_promoted', message: { contains: first.name } },
+        where: { type: 'event_waitlist_promoted', message: { contains: displayName(first.name) } },
       }),
     )
     .toBeGreaterThan(0);
@@ -220,7 +221,7 @@ test('TC-EVT-007 Evento con inscripción externa', async ({ page, db }) => {
 test('TC-EVT-008 Evento terminado se muestra como recuerdo', async ({ page }) => {
   await page.goto(`/eventos/${EVENTS.past.id}`);
 
-  await expect(page.getByText(/así fue/)).toBeVisible();
+  await expect(page.getByText(/así fue/).filter({ visible: true })).toBeVisible();
   await expect(page.getByRole('heading', { name: EVENTS.past.name }).first()).toBeVisible();
   await expect(page.getByRole('button', { name: 'inscribirme();' })).toHaveCount(0);
   await expect(page.getByRole('button', { name: 'unirmeAListaDeEspera();' })).toHaveCount(0);
@@ -336,12 +337,12 @@ test.describe('registration: alternative paths', () => {
       externalRegistrationUrl: 'https://example.com/e2e-evt-pasado',
     });
     await page.goto(`/eventos/${event.id}`);
-    await expect(page.getByText(/así fue/)).toBeVisible();
+    await expect(page.getByText(/así fue/).filter({ visible: true })).toBeVisible();
     await expect(page.getByRole('button', { name: 'inscribirme();' })).toHaveCount(0);
   });
 
   test('a missing event shows the not-found message', async ({ page }) => {
     await page.goto('/eventos/e2e-evt-no-existe');
-    await expect(page.getByText('No se encontró el evento solicitado.')).toBeVisible();
+    await expect(page.getByText('No encontramos este evento')).toBeVisible();
   });
 });

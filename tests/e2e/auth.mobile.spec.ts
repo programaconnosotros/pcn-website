@@ -27,7 +27,7 @@ test('cerrar sesión desde el menú del celular', async ({ page, factory, db }) 
   await page.goto('/eventos');
 
   await page.getByRole('button', { name: 'Abrir menú' }).click();
-  await page.getByRole('button', { name: new RegExp(user.name) }).click();
+  await page.getByRole('button', { name: new RegExp(user.name, 'i') }).click();
   await page.getByRole('menuitem', { name: 'Cerrar sesión' }).click();
 
   await expect(page).toHaveURL('/iniciar-sesion');

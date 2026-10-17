@@ -159,7 +159,11 @@ export const OfflineScreen = () => {
   const [checking, setChecking] = useState(false);
 
   useEffect(() => {
-    const reload = () => window.location.reload();
+    // Chrome can fire `online` while still offline (e.g. when a navigation away starts); reloading
+    // then would cancel that navigation and leave the visitor on this screen.
+    const reload = () => {
+      if (navigator.onLine) window.location.reload();
+    };
     window.addEventListener('online', reload);
     return () => window.removeEventListener('online', reload);
   }, []);

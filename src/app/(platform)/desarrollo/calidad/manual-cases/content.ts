@@ -45,11 +45,15 @@ export const galleryCases = defineManualCases('galeria', [
       'Se ve con la orientación correcta (se aplica la rotación EXIF) y el archivo descargado no tiene coordenadas GPS ni metadata.',
   },
   {
-    title: 'Solo admins pueden subir',
+    title: 'Miembros suben a revisión, solo admins editan',
     priority: 'alta',
     pre: ['Usuario común logueado'],
-    steps: ['Abrir /galeria', 'Navegar directo a /galeria/subir'],
-    expected: 'No ve subir(); ni "seleccionar"; /galeria/subir lo redirige.',
+    steps: [
+      'Abrir /galeria y tocar subir();',
+      'Abrir una foto de otra persona y navegar directo a /galeria/<id>/editar',
+    ],
+    expected:
+      'Ve subir(); pero no "seleccionar"; /galeria/subir avisa que sus fotos se publican cuando un admin las aprueba. En la foto no ve editar ni portada y /editar lo redirige.',
   },
   {
     title: 'Filtros de la galería en la URL',

@@ -124,12 +124,18 @@ test.describe('extra', () => {
     expect(user).toMatchObject({ countryOfOrigin: 'Chile', province: null });
   });
 
-  test('sin país no se puede crear la cuenta', async ({ page, db }) => {
+  test('el país arranca en Argentina y sin provincia no se puede crear la cuenta', async ({
+    page,
+    db,
+  }) => {
     const email = newEmail();
     await page.goto(SIGN_UP);
+    await expect(page.getByLabel('País')).toContainText('Argentina');
     await fillAccount(page, { name: 'Grace Hopper', email, password: 'una-clave-larga' });
     await submit(page);
-    await expect(page.locator('form').getByText('El país es requerido')).toBeVisible();
+    await expect(
+      page.locator('form').getByText('La provincia es requerida si el país es Argentina'),
+    ).toBeVisible();
     expect(await db.user.count({ where: { email } })).toBe(0);
   });
 

@@ -1,5 +1,6 @@
 import type { Page } from '@playwright/test';
 import { storageStatePath, USERS } from './support/data';
+import { displayName } from '../../src/lib/people-names';
 import { expect as baseExpect, test } from './support/fixtures';
 import {
   createEvent,
@@ -48,6 +49,12 @@ const fillInPersonEvent = async (page: Page, name: string) => {
   await page.getByLabel('Dirección').fill('Calle Falsa 123');
 };
 
+/** Un evento futuro avisa a toda la comunidad: el formulario lo confirma antes de crearlo. */
+const confirmNotice = async (page: Page, action: string) => {
+  const dialog = page.getByRole('alertdialog', { name: 'Esto le avisa a la comunidad' });
+  await dialog.getByRole('button', { name: `${action} y avisar` }).click();
+};
+
 /** Espera a que la edición termine y vuelva al detalle del evento. */
 const waitForDetail = (page: Page, eventId: string) =>
   page.waitForURL((url) => url.pathname === `/eventos/${eventId}`);
@@ -65,6 +72,7 @@ test.describe('as an admin', () => {
     await fillInPersonEvent(page, name);
     await page.getByLabel('Cupo máximo').fill('30');
     await page.getByRole('button', { name: 'crearEvento();' }).click();
+    await confirmNotice(page, 'crearEvento');
 
     await page.waitForURL((url) => /^\/eventos\/(?!nuevo)[^/]+$/.test(url.pathname));
     const eventId = new URL(page.url()).pathname.split('/').pop()!;
@@ -157,6 +165,7 @@ test.describe('as an admin', () => {
     await expect(page.getByLabel('Dirección')).toHaveCount(0);
     await page.getByLabel('Link de transmisión').fill('https://meet.google.com/e2e-evt');
     await page.getByRole('button', { name: 'crearEvento();' }).click();
+    await confirmNotice(page, 'crearEvento');
 
     await page.waitForURL((url) => /^\/eventos\/(?!nuevo)[^/]+$/.test(url.pathname));
     await expect(page.getByRole('link', { name: 'ver transmisión' })).toBeVisible();
@@ -215,7 +224,7 @@ test.describe('as an admin', () => {
     const deleted = await db.event.findUniqueOrThrow({ where: { id: event.id } });
     expect(deleted.deletedAt).not.toBeNull();
     await page.goto(`/eventos/${event.id}`);
-    await expect(page.getByText('No se encontró el evento solicitado.')).toBeVisible();
+    await expect(page.getByText('No encontramos este evento')).toBeVisible();
   });
 
   test('TC-EVT-018 Anuncios de un evento', async ({ page, db, browser }) => {
@@ -326,7 +335,7 @@ test.describe('as an organizer of an event someone else created', () => {
     // El email de "Conseguiste un lugar" no se puede leer en la suite; los admins reciben el aviso
     expect(
       await db.notification.count({
-        where: { type: 'event_waitlist_promoted', message: { contains: second.name } },
+        where: { type: 'event_waitlist_promoted', message: { contains: displayName(second.name) } },
       }),
     ).toBeGreaterThan(0);
   });
@@ -400,7 +409,7 @@ test.describe('as an organizer of an event someone else created', () => {
 
     await page.getByRole('row').filter({ hasText: professional.email }).getByRole('button').click();
     const dialog = page.getByRole('alertdialog', { name: '¿Eliminar inscripción?' });
-    await expect(dialog).toContainText(professional.name);
+    await expect(dialog).toContainText(displayName(professional.name));
     await dialog.getByRole('button', { name: 'Eliminar' }).click();
     await expect(page.getByText('Inscripción eliminada exitosamente')).toBeVisible();
 

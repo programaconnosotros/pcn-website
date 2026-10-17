@@ -46,7 +46,8 @@ test('TC-AUT-010 Verificar email con el código correcto', async ({ page, factor
   await submitCode(page, code);
   await expect(page.getByRole('heading', { name: '¡Email verificado!' })).toBeVisible();
   await expect(page.getByText('¡Email verificado! Redirigiendo...')).toBeVisible();
-  await expect(page).toHaveURL('/');
+  // La primera verificación es el alta: sin otra página de destino, aterriza en la bienvenida
+  await expect(page).toHaveURL('/bienvenida');
 
   expect((await db.user.findUniqueOrThrow({ where: { id: user.id } })).emailVerified).toBe(true);
   expect(await db.session.count({ where: { userId: user.id } })).toBe(1);
@@ -66,10 +67,14 @@ test('TC-AUT-011 El código se invalida después de 5 intentos fallidos', async 
   for (let attempt = 1; attempt <= 5; attempt++) {
     await submitCode(page, wrongCode(code));
     await expect(error).toBeVisible();
-    const token = await db.emailVerificationToken.findFirstOrThrow({
-      where: { email: user.email },
-    });
-    expect(token.attempts).toBe(attempt);
+    // La respuesta que espera submitCode puede ser la de otra server action: se espera a la base
+    await expect
+      .poll(
+        async () =>
+          (await db.emailVerificationToken.findFirstOrThrow({ where: { email: user.email } }))
+            .attempts,
+      )
+      .toBe(attempt);
   }
 
   // El correcto también falla: el código quedó quemado
@@ -140,7 +145,7 @@ test.describe('extra', () => {
     await expect(page).toHaveURL('/eventos');
   });
 
-  test('un redirect a otro dominio después de verificar termina en el inicio', async ({
+  test('un redirect a otro dominio después de verificar termina en la bienvenida', async ({
     page,
     factory,
     db,
@@ -148,7 +153,7 @@ test.describe('extra', () => {
     const user = await factory.user({ emailVerified: false });
     await page.goto(verifyUrl(user.email, 'https://evil.com'));
     await submitCode(page, await sentCode(page, db, user.email));
-    await expect(page).toHaveURL('/');
+    await expect(page).toHaveURL('/bienvenida');
   });
 
   test('un código vencido no verifica el email', async ({ page, factory, db }) => {

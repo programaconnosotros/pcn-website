@@ -21,7 +21,7 @@ const SIGN_IN = '/iniciar-sesion';
 /** Cierra sesión desde el menú de usuario del sidebar (que arranca colapsado, solo con el avatar). */
 const signOutFromUserMenu = async (page: Page, name: string) => {
   await page.getByRole('button', { name: 'Mostrar barra lateral' }).first().click();
-  await page.getByRole('button', { name: new RegExp(name) }).click();
+  await page.getByRole('button', { name: new RegExp(name, 'i') }).click();
   await page.getByRole('menuitem', { name: 'Cerrar sesión' }).click();
 };
 

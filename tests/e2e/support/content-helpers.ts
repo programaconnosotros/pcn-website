@@ -6,6 +6,7 @@ import type { Browser, Page } from '@playwright/test';
 import type { PrismaClient } from '../../../src/generated/prisma/client';
 import { AUTH_PATH, PASSWORD, USERS, type Role } from './data';
 import { E2E_BASE_URL } from './env';
+import { displayName } from '../../../src/lib/people-names';
 
 /** Un id corto y único, prefijado por área (`e2e-con-…`). */
 export const uniqueId = (prefix: string) => `${prefix}-${randomUUID().slice(0, 8)}`;
@@ -28,7 +29,7 @@ export const createUser = async (
 ): Promise<CreatedUser> => {
   const id = uniqueId(prefix);
   const email = `${id}@e2e.pcn`;
-  const name = data.name ?? `Usuario ${id}`;
+  const name = data.name ?? displayName(`Usuario ${id}`);
   const user = await db.user.create({
     data: {
       email,

@@ -284,21 +284,23 @@ test.describe('public metrics', () => {
     const now = Date.now();
     const from = isoDate(new Date(now - 90 * 86_400_000));
     await expect(
-      page.getByText(`metrics --from ${from} --to ${isoDate(new Date(now))}`),
+      page.getByRole('main').getByText(`metrics --from ${from} --to ${isoDate(new Date(now))}`),
     ).toBeVisible();
 
     await page.goto('/metricas?desde=2026-01-01&hasta=2026-02-01');
-    await expect(page.getByText('metrics --from 2026-01-01 --to 2026-02-01')).toBeVisible();
+    await expect(
+      page.getByRole('main').getByText('metrics --from 2026-01-01 --to 2026-02-01'),
+    ).toBeVisible();
     await expect(ranges.getByRole('button', { pressed: true })).toHaveCount(0);
-    await expect(page.getByLabel('Desde')).toHaveValue('2026-01-01');
-    await expect(page.getByLabel('Hasta')).toHaveValue('2026-02-01');
+    await expect(page.getByRole('main').getByLabel('Desde')).toHaveValue('2026-01-01');
+    await expect(page.getByRole('main').getByLabel('Hasta')).toHaveValue('2026-02-01');
   });
 
   test('a custom range can be applied from the date inputs', async ({ page }) => {
     await page.goto('/metricas');
     await page.waitForLoadState('networkidle');
-    await page.getByLabel('Desde').fill('2026-03-01');
-    await page.getByLabel('Hasta').fill('2026-03-15');
+    await page.getByRole('main').getByLabel('Desde').fill('2026-03-01');
+    await page.getByRole('main').getByLabel('Hasta').fill('2026-03-15');
     await page.getByRole('button', { name: 'aplicar' }).click();
     await page.waitForURL(/desde=2026-03-01&hasta=2026-03-15/);
     await expect(page.getByText('metrics --from 2026-03-01 --to 2026-03-15')).toBeVisible();

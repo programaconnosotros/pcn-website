@@ -41,7 +41,7 @@ test('TC-BUS-001 Búsqueda global con ⌘K / Ctrl+K', async ({ page, request }) 
   await expect(searchInput(page)).toBeFocused();
   await expect(searchInput(page)).toHaveAttribute(
     'placeholder',
-    'eventos, cursos, charlas, conversaciones…',
+    'perfiles, eventos, conversaciones, consejos, historia…',
   );
 
   await searchInput(page).fill('Meetup');
@@ -246,7 +246,9 @@ test('TC-BUS-003 Buscar miembros de forma tolerante', async ({ page, db }) => {
 
   // Una palabra que no está en ningún dato no matchea
   await search.fill(`${tag} pepe`);
-  await expect(page.getByText(`0 resultados para "${tag} pepe"`)).toBeVisible();
+  await expect(page.getByRole('status').filter({ hasText: `grep -i "${tag} pepe"` })).toContainText(
+    'Nadie coincide con la búsqueda',
+  );
 });
 
 test('the members search finds seeded people by reversed name without accents', async ({

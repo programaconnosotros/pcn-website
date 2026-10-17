@@ -137,7 +137,7 @@ test.describe('404 handling', () => {
 
   test('a missing event shows its own not-found message inside the platform', async ({ page }) => {
     await page.goto('/eventos/no-existe-e2e-plt');
-    await expect(page.getByText('No se encontró el evento solicitado.')).toBeVisible();
+    await expect(page.getByText('No encontramos este evento')).toBeVisible();
     await expect(page.getByRole('heading', { level: 1 })).toContainText('404');
   });
 });

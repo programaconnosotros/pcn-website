@@ -1,6 +1,7 @@
 import type { Page } from '@playwright/test';
 import type { PrismaClient } from '../../src/generated/prisma/client';
 import { ADVICE, PROJECT, USERS } from './support/data';
+import { displayName } from '../../src/lib/people-names';
 import { expect as baseExpect, test } from './support/fixtures';
 import {
   createUser,
@@ -90,7 +91,9 @@ test.describe('editing my profile', () => {
 
     await page.goto(`/perfil/${user.id}`);
     await expect(
-      page.getByRole('main').getByRole('heading', { level: 1, name: user.name, exact: true }),
+      page
+        .getByRole('main')
+        .getByRole('heading', { level: 1, name: displayName(user.name), exact: true }),
     ).toBeVisible();
     await expect(page.getByRole('main').getByText(slogan)).toBeVisible();
     await expect(page.getByRole('main').getByText('Uruguay')).toBeVisible();
@@ -445,16 +448,26 @@ test.describe('achievements', () => {
         },
       });
     }
-    await db.talk.create({
-      data: {
-        title: `Charla logros ${uniqueId(PREFIX)}`,
-        description: 'Una charla para el logro Speaker.',
-        manualEventTitle: 'Meetup externa',
-        speakers: {
-          create: { speakerName: user.name, speakerPhone: '+5493510000001', userId: user.id },
+    const giveTalk = (speaker: CreatedUser) =>
+      db.talk.create({
+        data: {
+          title: `Charla logros ${uniqueId(PREFIX)}`,
+          description: 'Una charla para el logro Speaker.',
+          manualEventTitle: 'Meetup externa',
+          speakers: {
+            create: {
+              speakerName: speaker.name,
+              speakerPhone: '+5493510000001',
+              userId: speaker.id,
+            },
+          },
         },
-      },
-    });
+      });
+    await giveTalk(user);
+    // Alguien con más charlas: si no, empataría el primer puesto y "Top speaker" reemplaza a Speaker
+    const rival = await createUser(db, PREFIX);
+    await giveTalk(rival);
+    await giveTalk(rival);
 
     await page.goto(`/perfil/${user.id}`);
     const badges = page

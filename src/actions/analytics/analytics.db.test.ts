@@ -4,7 +4,13 @@ import { enforceRateLimit } from '@/lib/rate-limit';
 import { trackPageVisit } from '@/actions/analytics/track-page-visit';
 import { fetchPageVisits, getPageVisitStats } from '@/actions/analytics/fetch-page-visits';
 import { actAs } from '@/test/db/fixtures';
-import { createAdmin, createUser, daysFromNow, uniqueId } from '@/test/db/content-fixtures';
+import {
+  createAdmin,
+  createTestEvent,
+  createUser,
+  daysFromNow,
+  uniqueId,
+} from '@/test/db/content-fixtures';
 
 // Registro de visitas y su panel de admins contra Postgres real.
 
@@ -12,7 +18,7 @@ const visitsTo = (path: string) => prisma.pageVisit.findMany({ where: { path } }
 
 describe('trackPageVisit', () => {
   it('stores an anonymous visit with the request data', async () => {
-    const path = `/eventos/${uniqueId()}`;
+    const path = `/eventos/${(await createTestEvent()).id}`;
     await actAs();
     (headers as jest.Mock).mockResolvedValue(
       new Headers({
@@ -36,7 +42,7 @@ describe('trackPageVisit', () => {
 
   it('links the visit to whoever is logged in, admins included, but the panel leaves admins out', async () => {
     const [user, admin] = [await createUser(), await createAdmin()];
-    const path = `/perfil/${uniqueId()}`;
+    const path = `/perfil/${user.id}`;
 
     await actAs(user.id);
     await trackPageVisit(path);
@@ -48,24 +54,20 @@ describe('trackPageVisit', () => {
     expect(listed.map((visit) => visit.userId)).toEqual([user.id]);
   });
 
-  it('ignores paths that are not routes and clips long ones', async () => {
+  it('ignores paths that are not routes, name nothing that exists or are too long', async () => {
     await actAs();
     const marker = uniqueId();
     await trackPageVisit(`https://evil.test/${marker}`);
     await trackPageVisit(undefined as unknown as string);
+    await trackPageVisit(`/estafa-${marker}`);
+    await trackPageVisit(`/eventos/${marker}`);
+    await trackPageVisit(`/perfil/${marker}${'a'.repeat(2000)}`);
     expect(await prisma.pageVisit.count({ where: { path: { contains: marker } } })).toBe(0);
-
-    const long = `/${marker}${'a'.repeat(2000)}`;
-    await trackPageVisit(long);
-    const [visit] = await prisma.pageVisit.findMany({
-      where: { path: { startsWith: `/${marker}` } },
-    });
-    expect(visit.path).toHaveLength(500);
   });
 
   it('drops the visit silently when rate limited', async () => {
     await actAs();
-    const path = `/limitado/${uniqueId()}`;
+    const path = `/eventos/${(await createTestEvent()).id}`;
     (enforceRateLimit as jest.Mock).mockRejectedValueOnce(new Error('Demasiados pedidos'));
 
     await expect(trackPageVisit(path)).resolves.toBeUndefined();

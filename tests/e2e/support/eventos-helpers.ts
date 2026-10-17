@@ -11,6 +11,7 @@ import type { Browser, Page } from '@playwright/test';
 import type { PrismaClient } from '../../../src/generated/prisma/client';
 import { E2E_BASE_URL } from './env';
 import { PASSWORD, USERS, type Role } from './data';
+import { displayName } from '../../../src/lib/people-names';
 
 const DAY = 86_400_000;
 
@@ -39,7 +40,7 @@ export const createUser = async (
     data: {
       id,
       email,
-      name: data.name ?? `Persona ${id}`,
+      name: data.name ?? displayName(`Persona ${id}`),
       password: await bcrypt.hash(PASSWORD, 4),
       emailVerified: true,
       countryOfOrigin: 'Argentina',

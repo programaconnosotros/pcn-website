@@ -241,17 +241,21 @@ test.describe('full mode', () => {
     const home = windowFrame(page, 'Inicio');
     await home.locator(`a[href="/eventos/${EVENTS.past.id}"]`).first().click();
 
-    // El evento abre en una ventana nueva y la de inicio sigue ahí
+    // Un link navega la ventana en la que se tocó, como una pestaña: la de inicio pasa al evento
     await expect(page).toHaveURL(new RegExp(`/eventos/${EVENTS.past.id}$`));
     const eventWindows = osWindow(page, 'Eventos');
     await expect(eventWindows).toHaveCount(1);
-    await expect(osWindow(page, 'Inicio')).toBeVisible();
+    await expect(osWindow(page, 'Inicio')).toHaveCount(0);
     const event = windowFrame(page, 'Eventos');
     await expect(event.getByText(EVENTS.past.name).first()).toBeVisible({ timeout: 30_000 });
     await waitForWindowReady(page, 'Eventos');
 
-    // Un perfil dentro de la ventana del evento abre otra ventana
-    await event.locator('a[href^="/perfil/"]').first().click();
+    // Click derecho en un perfil: "Abrir en nueva ventana" abre otra ventana y deja la del evento
+    await event.locator('a[href^="/perfil/"]').first().click({ button: 'right' });
+    await event
+      .getByRole('menu', { name: 'Opciones del enlace' })
+      .getByRole('menuitem', { name: 'Abrir en nueva ventana' })
+      .click();
     await expect(osWindow(page, 'Perfil')).toBeVisible();
     await expect(page).toHaveURL(/\/perfil\/[^/]+$/);
     await expect(eventWindows).toHaveCount(1);
@@ -275,7 +279,8 @@ test.describe('full mode', () => {
     await page.goto('/eventos');
     await waitForWindowReady(page, 'Eventos');
     const listing = windowFrame(page, 'Eventos');
-    await listing.locator(`a[href="/eventos/${EVENTS.upcoming.id}"]`).first().click();
+    // El mismo link también está en el panel de próximos eventos, oculto a este ancho
+    await listing.locator(`a[href="/eventos/${EVENTS.upcoming.id}"]`).visible().first().click();
     await expect(page).toHaveURL(new RegExp(`/eventos/${EVENTS.upcoming.id}$`));
     await expect(osWindow(page, 'Eventos')).toHaveCount(1);
   });

@@ -7,6 +7,7 @@ import type { BrowserContext, Page } from '@playwright/test';
 import type { PrismaClient } from '../../../src/generated/prisma/client';
 import { expect as baseExpect, test as base } from './fixtures';
 import { E2E_BASE_URL } from './env';
+import { displayName } from '../../../src/lib/people-names';
 
 /**
  * El login, el registro y el reseteo hashean con bcrypt (costo 12) en el server, que comparte la
@@ -120,7 +121,8 @@ export const test = base.extend<{ area: string; factory: Factory }>({
       user: async (input = {}) => {
         const id = unique();
         const password = input.password ?? `clave-${id}`;
-        const name = input.name ?? `Persona ${area.toUpperCase()} ${id.replace(/\d/g, 'x')}`;
+        const name =
+          input.name ?? displayName(`Persona ${area.toUpperCase()} ${id.replace(/\d/g, 'x')}`);
         const user = await db.user.create({
           data: {
             email: `e2e-${area}-${id}@e2e.pcn`,

@@ -111,7 +111,7 @@ test.describe('con un usuario propio', () => {
     await page.getByRole('menuitem', { name: 'Editar' }).click();
     const edit = page.getByRole('dialog', { name: 'Editar consejo' });
     const edited = `${content} (editado)`;
-    await edit.getByRole('textbox').fill(edited);
+    await edit.getByRole('textbox', { name: 'Consejo' }).fill(edited);
     await edit.getByRole('button', { name: 'guardarCambios();' }).click();
     await expect(page.getByText('Tu consejo fue editado exitosamente.')).toBeVisible();
     await expect(card(page, edited)).toBeVisible();
@@ -160,7 +160,7 @@ test.describe('con un usuario propio', () => {
     await card(page, content).getByRole('button', { name: 'Opciones' }).click();
     await page.getByRole('menuitem', { name: 'Editar' }).click();
     const edit = page.getByRole('dialog', { name: 'Editar consejo' });
-    await edit.getByRole('textbox').fill('corto');
+    await edit.getByRole('textbox', { name: 'Consejo' }).fill('corto');
     await edit.getByRole('button', { name: 'guardarCambios();' }).click();
     await expect(edit.getByText('Tenés que escribir al menos 10 caracteres')).toBeVisible();
     expect((await db.advice.findUniqueOrThrow({ where: { id: advice.id } })).content).toBe(content);
@@ -264,7 +264,10 @@ test.describe('con un usuario propio', () => {
 
     const comment = `Comentario ${uniqueId('e2e-con')}`;
     // Next puede dejar oculta una copia de la página anterior: solo el campo visible
-    await page.getByPlaceholder('Escribe tu comentario...').filter({ visible: true }).fill(comment);
+    await page
+      .getByPlaceholder('Escribí acá tu comentario')
+      .filter({ visible: true })
+      .fill(comment);
     await page
       .getByRole('button', { name: 'enviarComentario();' })
       .filter({ visible: true })
@@ -372,7 +375,7 @@ test.describe('como admin', () => {
     await card(page, content).getByRole('button', { name: 'Opciones' }).click();
     await page.getByRole('menuitem', { name: 'Editar' }).click();
     const edit = page.getByRole('dialog', { name: 'Editar consejo' });
-    await edit.getByRole('textbox').fill(`${content} [moderado]`);
+    await edit.getByRole('textbox', { name: 'Consejo' }).fill(`${content} [moderado]`);
     await edit.getByRole('button', { name: 'guardarCambios();' }).click();
     await expect(page.getByText('Tu consejo fue editado exitosamente.')).toBeVisible();
     await expect
@@ -411,7 +414,7 @@ test.describe('sin sesión', () => {
     await page.goto(`/consejos/${ADVICE.id}`);
     await expect(page.getByText(ADVICE.content.split(':')[0])).toBeVisible();
     await expect(page.getByText(/Debes\s+iniciar sesión\s+para poder comentar\./)).toBeVisible();
-    await expect(page.getByPlaceholder('Escribe tu comentario...')).toHaveCount(0);
+    await expect(page.getByPlaceholder('Escribí acá tu comentario')).toHaveCount(0);
     await expect(page.getByRole('button', { name: 'Responder' })).toHaveCount(0);
     await page.getByRole('link', { name: 'iniciar sesión' }).click();
     await expect(page).toHaveURL(/\/iniciar-sesion/);
@@ -446,7 +449,7 @@ test.describe('sin sesión', () => {
 
     await search.fill('zzz-nada-coincide-e2e');
     await expect(page.getByRole('article')).toHaveCount(0);
-    await expect(page.getByText(/0 resultados para/)).toBeVisible();
+    await expect(page.getByRole('heading', { name: /Ningún consejo coincide/ })).toBeVisible();
 
     await page.getByRole('button', { name: 'reset' }).click();
     await expect(search).toHaveValue('');
