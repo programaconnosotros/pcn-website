@@ -60,6 +60,31 @@ Este es el repositorio del website de PCN. El website está construido con Next.
 >
 > También charlamos el desarrollo en un [grupo de WhatsApp](https://chat.whatsapp.com/LAHHq1vtgY6ApnPCyZXX4X): aunque no vayas a programar, podés sumarte a leer o a preguntar lo que quieras.
 
+## 🐰 Code review con CodeRabbit
+
+Cada pull request hacia `testing` recibe una review automática de [CodeRabbit](https://www.coderabbit.ai/). **No tenés que activar nada**: cuando abrís la PR, CodeRabbit publica un resumen de los cambios y deja comentarios en las líneas donde encuentra problemas. Cada vez que pusheás commits nuevos a la misma PR, revisa solo lo que cambió.
+
+La configuración está en [`.coderabbit.yaml`](./.coderabbit.yaml): revisa en español, conoce las reglas del repo (las de [`CLAUDE.md`](./CLAUDE.md) y [`docs/seguridad-owasp.md`](./docs/seguridad-owasp.md)) e ignora los archivos generados.
+
+Hay casos en los que no revisa sola:
+
+- **PRs en borrador (draft):** no se revisan hasta que las marcás como _Ready for review_.
+- **PRs de Dependabot:** se saltean para no llenar de ruido las actualizaciones de dependencias.
+- **PRs hacia otra rama que no sea `testing`.**
+
+En cualquiera de esos casos, o si querés que vuelva a revisar, comentá en la PR:
+
+| Comentario                  | Qué hace                                                                |
+| --------------------------- | ----------------------------------------------------------------------- |
+| `@coderabbitai review`      | Revisa los cambios que todavía no revisó.                               |
+| `@coderabbitai full review` | Revisa toda la PR de cero.                                              |
+| `@coderabbitai pause`       | Deja de revisar los pushes nuevos (`@coderabbitai resume` lo reactiva). |
+| `@coderabbitai help`        | Lista todos los comandos.                                               |
+
+También podés responderle a cualquiera de sus comentarios mencionando `@coderabbitai` para preguntarle por qué lo marcó o pedirle una alternativa. Sus comentarios son sugerencias: si no estás de acuerdo con uno, respondé explicando por qué y resolvelo. La aprobación final la dan los administradores del repo.
+
+Si trabajás con un agente, la skill `pr-review` hace una revisión parecida antes de abrir la PR (ver [Desarrollo con agentes](#-desarrollo-con-agentes)), así llegás a CodeRabbit con menos para corregir.
+
 ## 🤖 Desarrollo con agentes
 
 El repo está preparado para trabajar con agentes de código como [Claude Code](https://claude.com/claude-code). Las convenciones del proyecto (cómo se escribe el nombre de la comunidad, la caché de datos, las reglas de seguridad, cómo se testea) están en [`CLAUDE.md`](./CLAUDE.md) y [`AGENTS.md`](./AGENTS.md), y el agente las lee solo al empezar cada sesión: no hace falta que se las expliques.

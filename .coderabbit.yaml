@@ -1,0 +1,71 @@
+# yaml-language-server: $schema=https://coderabbit.ai/integrations/schema.v2.json
+# CodeRabbit reviews every PR opened against testing. Contributors can run the pr-review skill
+# before opening one; this is the safety net for everyone else.
+language: es-AR
+
+reviews:
+  profile: chill
+  request_changes_workflow: false
+  high_level_summary: true
+  poem: false
+  sequence_diagrams: false
+  in_progress_fortune: false
+  review_status: true
+
+  auto_review:
+    enabled: true
+    drafts: false
+    # PRs go to testing, not to the default branch (main), so it has to be listed here or
+    # every review is skipped.
+    base_branches:
+      - ^testing$
+    ignore_usernames:
+      - dependabot[bot]
+
+  path_filters:
+    - '!src/generated/**'
+    - '!pnpm-lock.yaml'
+    - '!src/data/github-stats.json'
+    - '!src/app/(platform)/desarrollo/db-schema.ts'
+
+  path_instructions:
+    - path: '**/*'
+      instructions: >-
+        The community is spelled programaConNosotros (one word, lowercase p, capital C and N)
+        in UI copy, emails, metadata and docs. Flag "Programa Con Nosotros", "Programa con
+        nosotros" or "ProgramaConNosotros". Lowercase programaconnosotros is only valid in
+        domains, handles and repo names.
+    - path: 'src/actions/**'
+      instructions: >-
+        Every server action must check the session or the user's permissions itself, validate
+        its input with zod and talk to the database only through Prisma or tagged $queryRaw.
+        Thrown error messages are hidden in production: rate limits ride RateLimitError and UIs
+        show errors through actionErrorMessage. Server actions must not invalidate cached reads by hand:
+        Prisma writes expire them automatically.
+    - path: 'src/**/*.{ts,tsx}'
+      instructions: >-
+        Reads that are the same for everyone go through cached() from src/lib/cache.ts and must
+        declare every table they read. Don't cache signed URLs or results filtered by the
+        current time; a cached value that depends on the date carries the day in its key. Code
+        that signs URLs or depends on the request calls `await connection()` before querying.
+        User-supplied URLs are fetched only through safeFetch. Import Prisma from
+        @/generated/prisma/client (or @/generated/prisma/browser in client components), never
+        from @prisma/client. Member names are shown through displayName.
+    - path: 'prisma/migrations/**'
+      instructions: >-
+        Migrations are written by hand. Check that they match prisma/schema.prisma, don't drop
+        or rewrite data unintentionally, and can run on a production database that already has
+        rows.
+    - path: 'tests/e2e/**'
+      instructions: >-
+        Locate what the user sees (getByRole('main'), headings, visible elements): some pages
+        keep hidden copies of the same text. Users created in a test store their name already
+        passed through displayName.
+
+knowledge_base:
+  code_guidelines:
+    enabled: true
+    filePatterns:
+      - CLAUDE.md
+      - AGENTS.md
+      - docs/seguridad-owasp.md
