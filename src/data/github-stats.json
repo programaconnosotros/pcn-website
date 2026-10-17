@@ -1,55 +1,55 @@
 {
-  "updatedAt": "2026-10-07T06:29:14.332Z",
-  "stars": 21,
-  "forks": 9,
-  "commits": 1918,
-  "contributors": 17,
-  "mergedPrs": 101,
-  "openPrs": 3,
-  "medianHoursToMerge": 1.6497222222222223,
+  "updatedAt": "2026-10-17T06:09:48.533Z",
+  "stars": 23,
+  "forks": 10,
+  "commits": 2177,
+  "contributors": 18,
+  "mergedPrs": 110,
+  "openPrs": 2,
+  "medianHoursToMerge": 1.9290277777777778,
   "createdAt": "2024-06-21T03:44:11Z",
-  "pushedAt": "2026-10-07T04:15:34Z",
+  "pushedAt": "2026-10-17T05:21:02Z",
   "weeklyCommits": [
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 143, 281, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 36, 19, 84, 3,
-    10, 0, 15, 0, 20, 47, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 570
+    0, 0, 0, 0, 0, 0, 0, 0, 6, 226, 197, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 47, 39, 13,
+    0, 12, 3, 0, 67, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 422, 346, 66
   ],
   "languages": [
     {
       "name": "TypeScript",
-      "percent": 98.6128492430871
+      "percent": 98.52332158874195
     },
     {
       "name": "JavaScript",
-      "percent": 0.7508489263392683
+      "percent": 0.6888959217887086
     },
     {
       "name": "CSS",
-      "percent": 0.4507213239336708
+      "percent": 0.6354015295601968
     },
     {
       "name": "Shell",
-      "percent": 0.13621361088311826
+      "percent": 0.11175130700119469
     },
     {
       "name": "Ruby",
-      "percent": 0.042887415415984446
+      "percent": 0.03518535846430188
     },
     {
       "name": "Dockerfile",
-      "percent": 0.003902140577023016
+      "percent": 0.003329813480053281
     },
     {
       "name": "Makefile",
-      "percent": 0.0025773397638361897
+      "percent": 0.002114480963594665
     }
   ],
-  "linesOfCode": 141466,
+  "linesOfCode": 262594,
   "topContributors": [
     {
       "login": "agustin-sanc",
       "avatarUrl": "https://avatars.githubusercontent.com/u/55034666?v=4",
       "htmlUrl": "https://github.com/agustin-sanc",
-      "commits": 1865,
+      "commits": 2114,
       "mergedPrs": 49,
       "pulls": [
         {
@@ -321,12 +321,12 @@
         },
         {
           "number": 91,
-          "title": "Like advice optimistic",
+          "title": "Like advise optimistic",
           "mergedAt": "2025-05-20T02:40:31Z"
         },
         {
           "number": 85,
-          "title": "Like advice",
+          "title": "Like advises",
           "mergedAt": "2025-05-09T22:28:59Z"
         },
         {
@@ -539,7 +539,7 @@
         },
         {
           "number": 48,
-          "title": "feat: add comment section on advice page",
+          "title": "feat: add comment section on advise page",
           "mergedAt": "2025-04-07T20:43:32Z"
         },
         {
@@ -668,6 +668,23 @@
       "linesAdded": 1541,
       "linesDeleted": 299,
       "firstContributionWeek": "2026-09-27T00:00:00.000Z"
+    },
+    {
+      "login": "Ismaeldevs",
+      "avatarUrl": "https://avatars.githubusercontent.com/u/32105395?v=4",
+      "htmlUrl": "https://github.com/Ismaeldevs",
+      "commits": 1,
+      "mergedPrs": 1,
+      "pulls": [
+        {
+          "number": 335,
+          "title": "docs(security): add a security policy for reporting vulnerabilities",
+          "mergedAt": "2026-10-12T21:33:11Z"
+        }
+      ],
+      "linesAdded": null,
+      "linesDeleted": null,
+      "firstContributionWeek": null
     },
     {
       "login": "luki1qq",
