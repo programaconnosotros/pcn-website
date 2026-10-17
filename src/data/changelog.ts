@@ -22,6 +22,24 @@ export interface ChangelogEntry {
 export const changelog: ChangelogEntry[] = [
   {
     date: '2026-10-17',
+    area: 'feed',
+    title: 'Bienvenidas con perfil',
+    description:
+      'Cuando una sola persona se suma a la comunidad en el día, su bienvenida en /feed abre su perfil, para conocerla y saludarla. Los días con varias siguen llevando a /miembros.',
+    authors: ['agustin-sanc'],
+    href: '/feed',
+  },
+  {
+    date: '2026-10-17',
+    area: 'perfil',
+    title: 'Vistas previas sin huecos',
+    description:
+      'Las vistas previas de charlas, artículos, eventos y setups en cada perfil, y los cursos y artículos relacionados de un curso, muestran filas completas en cualquier ancho de pantalla: cuatro en dos columnas, tres en tres, nunca uno solo con un espacio vacío al lado.',
+    authors: ['agustin-sanc'],
+    href: '/miembros',
+  },
+  {
+    date: '2026-10-17',
     area: 'admin',
     title: 'Ocultar items del feed',
     description:
@@ -236,6 +254,15 @@ export const changelog: ChangelogEntry[] = [
     description:
       'La pestaña timeline de cada perfil muestra todo lo que la persona fue haciendo en la comunidad, mes a mes: proyectos, consejos, charlas, artículos, eventos que organizó, setups, temas del foro, conversaciones, lo que construyó en el sitio, sus badges y el día que se sumó.',
     authors: ['agustin-sanc'],
+  },
+  {
+    date: '2026-10-12',
+    area: 'seguridad',
+    title: 'Política para reportar vulnerabilidades',
+    description:
+      'El repositorio tiene una política de seguridad (SECURITY.md) con un canal privado para avisar de una vulnerabilidad del sitio, qué entra en el alcance y qué esperar después del reporte, en lugar de abrir un issue público.',
+    authors: ['Ismaeldevs'],
+    href: '/desarrollo',
   },
   {
     date: '2026-10-12',
