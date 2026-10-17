@@ -471,26 +471,30 @@ describe('fetchFeed', () => {
     );
   });
 
-  it('groups new members by day, naming a few', async () => {
+  it('groups new members by day, naming a few, and links a lone newcomer to their profile', async () => {
     prismaMock.user.findMany.mockResolvedValue([
       { name: 'Ana Pérez', createdAt: at('2026-05-10T20:00:00Z') },
       { name: 'Bruno Díaz', createdAt: at('2026-05-10T18:00:00Z') },
       { name: 'Caro Gómez', createdAt: at('2026-05-10T17:00:00Z') },
       { name: 'Dani Ruiz', createdAt: at('2026-05-10T16:00:00Z') },
-      { name: 'Eva Sosa', createdAt: at('2026-05-08T16:00:00Z') },
+      { id: 'u-eva', name: 'Eva Sosa', createdAt: at('2026-05-08T16:00:00Z') },
     ] as never);
 
     const members = (await fetchFeed()).filter((item) => item.kind === 'miembros');
-    expect(members.map(({ day, title, description }) => ({ day, title, description }))).toEqual([
+    expect(
+      members.map(({ day, title, description, href }) => ({ day, title, description, href })),
+    ).toEqual([
       {
         day: '2026-05-10',
         title: '4 personas se sumaron a la comunidad',
         description: 'Ana, Bruno, Caro y 1 más. ¡Denles la bienvenida!',
+        href: '/miembros',
       },
       {
         day: '2026-05-08',
         title: 'Eva se sumó a la comunidad',
         description: '¡Dale la bienvenida!',
+        href: '/perfil/u-eva',
       },
     ]);
   });

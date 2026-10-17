@@ -400,7 +400,7 @@ const memberItems = async (): Promise<FeedItem[]> => {
     where: { ...ACTIVE_USER, emailVerified: true },
     orderBy: { createdAt: 'desc' },
     take: 60,
-    select: { name: true, createdAt: true },
+    select: { id: true, name: true, createdAt: true },
   });
   const byDay = new Map<string, typeof users>();
   for (const user of users) {
@@ -424,7 +424,8 @@ const memberItems = async (): Promise<FeedItem[]> => {
         joined.length === 1
           ? '¡Dale la bienvenida!'
           : `${shown}${rest > 0 ? ` y ${rest} más` : ''}. ¡Denles la bienvenida!`,
-      href: '/miembros',
+      // One newcomer goes to their profile; several, to the members list.
+      href: joined.length === 1 ? `/perfil/${joined[0].id}` : '/miembros',
     };
   });
 };
